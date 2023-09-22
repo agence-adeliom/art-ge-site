@@ -1,3 +1,11 @@
+parameters:
+    mailer_sender_mail: '%env(MAILER_SENDER_MAIL)%'
+    mailer_sender_name: '%env(MAILER_SENDER_NAME)%'
+
 framework:
     mailer:
         dsn: '%env(MAILER_DSN)%'
+        envelope:
+            sender: '%env(MAILER_SENDER_MAIL)%'
+        headers:
+            From: '%env(MAILER_SENDER_MAIL)%'
