@@ -4,8 +4,121 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "215903b55e6528e63be863e92114c4f9",
+    "content-hash": "7d3f9943a069d26c4c46ed93ec0c6161",
     "packages": [
+        {
+            "name": "agence-adeliom/easy-admin-user-bundle",
+            "version": "2.0.111",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/agence-adeliom/easy-admin-user-bundle.git",
+                "reference": "c5bd1dc7fe1130add190f28b6ed376aa54e8df42"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/agence-adeliom/easy-admin-user-bundle/zipball/c5bd1dc7fe1130add190f28b6ed376aa54e8df42",
+                "reference": "c5bd1dc7fe1130add190f28b6ed376aa54e8df42",
+                "shasum": ""
+            },
+            "require": {
+                "agence-adeliom/easy-common-bundle": "^2.0.111",
+                "easycorp/easyadmin-bundle": "^3.4 || ^v4.0",
+                "ext-json": "*",
+                "php": ">=8.0.2",
+                "symfony/config": "^5.4 || ^6.0",
+                "symfony/dependency-injection": "^5.4 || ^6.0",
+                "symfony/form": "^5.4 || ^6.0",
+                "symfony/http-kernel": "^5.4 || ^6.0",
+                "symfony/mailer": "^5.4 || ^6.0",
+                "symfony/mime": "^5.4 || ^6.0",
+                "symfony/options-resolver": "^5.4 || ^6.0",
+                "symfony/password-hasher": "^5.4 || ^6.0",
+                "symfony/stopwatch": "^5.4 || ^6.0",
+                "symfony/validator": "^5.4 || ^6.0",
+                "symfonycasts/reset-password-bundle": "^1.8"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Adeliom\\EasyAdminUserBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arnaud RITTI",
+                    "homepage": "https://github.com/arnaud-ritti"
+                }
+            ],
+            "description": "A Symfony bundle for EasyAdmin that provide basic user authentification flow",
+            "homepage": "https://github.com/agence-adeliom/easy-admin-user-bundle",
+            "keywords": [
+                "easyadmin",
+                "symfony",
+                "user"
+            ],
+            "support": {
+                "issues": "https://github.com/agence-adeliom/easy-admin-user-bundle/issues",
+                "source": "https://github.com/agence-adeliom/easy-admin-user-bundle/tree/2.0.111"
+            },
+            "time": "2023-09-14T08:42:21+00:00"
+        },
+        {
+            "name": "agence-adeliom/easy-common-bundle",
+            "version": "2.0.111",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/agence-adeliom/easy-common-bundle.git",
+                "reference": "99003acfe3263358a06a86a4dd4188c3c5dc5673"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/agence-adeliom/easy-common-bundle/zipball/99003acfe3263358a06a86a4dd4188c3c5dc5673",
+                "reference": "99003acfe3263358a06a86a4dd4188c3c5dc5673",
+                "shasum": ""
+            },
+            "require": {
+                "easycorp/easyadmin-bundle": "^3.4 || ^v4.0",
+                "ext-json": "*",
+                "php": ">=8.0.2",
+                "symfony/config": "^5.4 || ^6.0",
+                "symfony/dependency-injection": "^5.4 || ^6.0",
+                "symfony/http-kernel": "^5.4 || ^6.0",
+                "symfony/serializer": "^5.4 || ^6.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Adeliom\\EasyCommonBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arnaud RITTI",
+                    "homepage": "https://github.com/arnaud-ritti"
+                }
+            ],
+            "description": "A Symfony bundle for EasyAdmin that provide basic entity traits and a enum helper",
+            "homepage": "https://github.com/agence-adeliom/easy-common-bundle",
+            "keywords": [
+                "easyadmin",
+                "enum",
+                "helper",
+                "symfony"
+            ],
+            "support": {
+                "issues": "https://github.com/agence-adeliom/easy-common-bundle/issues",
+                "source": "https://github.com/agence-adeliom/easy-common-bundle/tree/2.0.111"
+            },
+            "time": "2023-06-26T10:05:17+00:00"
+        },
         {
             "name": "doctrine/cache",
             "version": "2.2.0",
@@ -7341,6 +7454,56 @@
                 }
             ],
             "time": "2023-07-31T07:08:24+00:00"
+        },
+        {
+            "name": "symfonycasts/reset-password-bundle",
+            "version": "v1.18.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SymfonyCasts/reset-password-bundle.git",
+                "reference": "9906cebac5676adf5d05384dfeebd7cac7c0da83"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SymfonyCasts/reset-password-bundle/zipball/9906cebac5676adf5d05384dfeebd7cac7c0da83",
+                "reference": "9906cebac5676adf5d05384dfeebd7cac7c0da83",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.2.5",
+                "symfony/config": "^5.4 | ^6.0",
+                "symfony/dependency-injection": "^5.4 | ^6.0",
+                "symfony/deprecation-contracts": "^2.2 | ^3.0",
+                "symfony/http-kernel": "^5.4 | ^6.0"
+            },
+            "conflict": {
+                "doctrine/orm": "<2.7",
+                "php": ">=8.1 <8.1.10"
+            },
+            "require-dev": {
+                "doctrine/annotations": "^1.0",
+                "doctrine/doctrine-bundle": "^2.0.3",
+                "doctrine/orm": "^2.7",
+                "symfony/framework-bundle": "^5.4 | ^6.0",
+                "symfony/phpunit-bridge": "^5.4 | ^6.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "SymfonyCasts\\Bundle\\ResetPassword\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Symfony bundle that adds password reset functionality.",
+            "support": {
+                "issues": "https://github.com/SymfonyCasts/reset-password-bundle/issues",
+                "source": "https://github.com/SymfonyCasts/reset-password-bundle/tree/v1.18.0"
+            },
+            "time": "2023-09-19T14:10:50+00:00"
         },
         {
             "name": "twig/extra-bundle",

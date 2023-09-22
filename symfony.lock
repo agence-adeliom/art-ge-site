@@ -1,4 +1,31 @@
 {
+    "agence-adeliom/easy-admin-user-bundle": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/agence-adeliom/symfony-recipes",
+            "branch": "main",
+            "version": "2.0",
+            "ref": "a3173e67283b5abe49d726228b851c2b5ae45670"
+        },
+        "files": [
+            "config/packages/easy_admin_user.yaml",
+            "config/routes/easy_admin_user.yaml",
+            "src/Controller/Admin/EasyAdminUser/EasyAdminUserCrudController.php",
+            "src/Entity/EasyAdmin/ResetPasswordRequest.php",
+            "src/Entity/EasyAdmin/User.php",
+            "src/Repository/EasyAdmin/ResetPasswordRequestRepository.php",
+            "src/Repository/EasyAdmin/UserRepository.php"
+        ]
+    },
+    "agence-adeliom/easy-common-bundle": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/agence-adeliom/symfony-recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "9769be4ed518a81b8ee9dc5610b12f0879883392"
+        }
+    },
     "doctrine/doctrine-bundle": {
         "version": "2.10",
         "recipe": {
@@ -290,6 +317,18 @@
             "config/packages/webpack_encore.yaml",
             "package.json",
             "webpack.config.js"
+        ]
+    },
+    "symfonycasts/reset-password-bundle": {
+        "version": "1.18",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "97c1627c0384534997ae1047b93be517ca16de43"
+        },
+        "files": [
+            "config/packages/reset_password.yaml"
         ]
     },
     "twig/extra-bundle": {
