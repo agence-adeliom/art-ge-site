@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ChartController!{% endblock %}
+
+{% block body %}
+    <div id="app"></div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">Générer</button>
+    <div id="offcanvas" style="width: 1240px; height: 3000px; position: absolute; left: -1240px;"></div>
+
+    <script>
+        let datas = [];
+        document.querySelector('button').addEventListener('click', function () {
+            const thematiques = 15;
+            const formData = new FormData();
+
+            for (let i = 0; i < thematiques; i++) {
+                const off = document.querySelector('#offcanvas')
+                const canvas = document.createElement('canvas');
+                new Chart(canvas, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                        datasets: [{
+                            label: '# of Votes',
+                            data: [12, 19, 3, 5, 2, 3],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        animation: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            customCanvasBackgroundColor: {
+                                color: 'white',
+                            }
+                        },
+                    },
+                    plugins: [
+                        {
+                            id: 'customCanvasBackgroundColor',
+                            beforeDraw: (chart, args, options) => {
+                                const {ctx} = chart;
+                                ctx.save();
+                                ctx.globalCompositeOperation = 'destination-over';
+                                ctx.fillStyle = options.color || '#99ffff';
+                                ctx.fillRect(0, 0, chart.width, chart.height);
+                                ctx.restore();
+                            }
+                        }
+                    ],
+                });
+
+                off.appendChild(canvas);
+                setTimeout(() => {
+                    const imageRaw = canvas.toDataURL('image/jpeg');
+                    formData.set(`images[${i}]`, imageRaw);
+                }, 1);
+            }
+
+            setTimeout(() => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '{{ path('app_save_images') }}', true);
+                xhr.setRequestHeader("X-Requested-With", 'XMLHttpRequest');
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        console.log(xhr);
+                    }
+                };
+                xhr.send(formData);
+            }, thematiques + 1);
+        });
+    </script>
+{% endblock %}
