@@ -188,7 +188,6 @@ class QuestionsFixtures extends Fixture
                 "Je n'ai rien entrepris en ce sens",
             ],
             "Votre établissement dispose-t-il d'un de ces labels ?" => [
-                "",
                 "Clef Verte",
                 "Ecogite - Gîtes de France",
                 "Gite Panda - Gites de France",
