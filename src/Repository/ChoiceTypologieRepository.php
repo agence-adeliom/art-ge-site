@@ -21,28 +21,43 @@ class ChoiceTypologieRepository extends ServiceEntityRepository
         parent::__construct($registry, ChoiceTypologie::class);
     }
 
-//    /**
-//     * @return ChoiceRepondantTypologie[] Returns an array of ChoiceRepondantTypologie objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
+     */
+    public function getPonderation(int $choice, int $typologie, int $restauration, int $greenSpace): int
+    {
+        return $this->createQueryBuilder('crt')
+            ->select('crt.ponderation')
+            ->andWhere('crt.choice = :choice')
+            ->andWhere('crt.typologie = :typologie')
+            ->andWhere('crt.restauration = :restauration')
+            ->andWhere('crt.greenSpace = :greenSpace')
+            ->setParameter(':choice', $choice)
+            ->setParameter(':typologie', $typologie)
+            ->setParameter(':restauration', $restauration)
+            ->setParameter(':greenSpace', $greenSpace)
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
 
-//    public function findOneBySomeField($value): ?ChoiceRepondantTypologie
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    /**
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
+     */
+    public function getTotalBasedOnTypologie(int $typologie, int $restauration, int $greenSpace): int
+    {
+        return $this->createQueryBuilder('crt')
+            ->select('SUM(crt.ponderation) as total')
+            ->andWhere('crt.typologie = :typologie')
+            ->andWhere('crt.restauration = :restauration')
+            ->andWhere('crt.greenSpace = :greenSpace')
+            ->setParameter(':typologie', $typologie)
+            ->setParameter(':restauration', $restauration)
+            ->setParameter(':greenSpace', $greenSpace)
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
 }

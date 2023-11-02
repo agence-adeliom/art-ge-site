@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-
+{% form_theme form 'tailwind_2_layout.html.twig' %}
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
@@ -7,5 +7,100 @@
         Hello world styled by tailwindcss
     </h1>
 
-    <div id="app"></div>
+    <form name="reponse" method="post">
+        <div id="reponse">
+            <div class="mb-6">
+                <label class="block text-gray-800 required">Repondant</label>
+                <div id="reponse_repondant">
+                    <div class="mb-6">
+                        <label class="block text-gray-800 required" for="reponse_repondant_email">Email</label>
+                        <input type="text" id="reponse_repondant_email" name="reponse[repondant][email]" required="required" class="mt-1 w-full border">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-800 required" for="reponse_repondant_firstname">Firstname</label>
+                        <input type="text" id="reponse_repondant_firstname" name="reponse[repondant][firstname]" required="required" class="mt-1 w-full border">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-800 required" for="reponse_repondant_lastname">Lastname</label>
+                        <input type="text" id="reponse_repondant_lastname" name="reponse[repondant][lastname]" required="required" class="mt-1 w-full border">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-800 required" for="reponse_repondant_phone">Phone</label>
+                        <input type="text" id="reponse_repondant_phone" name="reponse[repondant][phone]" required="required" class="mt-1 w-full border">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-800 required" for="reponse_repondant_company">Company</label>
+                        <input type="text" id="reponse_repondant_company" name="reponse[repondant][company]" required="required" class="mt-1 w-full border">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-800 required" for="reponse_repondant_address">Address</label>
+                        <input type="text" id="reponse_repondant_address" name="reponse[repondant][address]" required="required" class="mt-1 w-full border">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-800 required" for="reponse_repondant_city">City</label>
+                        <input type="text" id="reponse_repondant_city" name="reponse[repondant][city]" required="required" class="mt-1 w-full border">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-800 required" for="reponse_repondant_zip">Zip</label>
+                        <input type="text" id="reponse_repondant_zip" name="reponse[repondant][zip]" required="required" class="mt-1 w-full border">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-800 required" for="reponse_repondant_country">Country</label>
+                        <input type="text" id="reponse_repondant_country" name="reponse[repondant][country]" required="required" class="mt-1 w-full border">
+                    </div>
+                    <div class="mb-6">
+                        <div class="inline-flex items-center">
+                            <input type="checkbox" id="reponse_repondant_restauration" name="reponse[repondant][restauration]" required="required" class="mr-2" value="1">
+                            <label class="block text-gray-800 required" for="reponse_repondant_restauration">Restauration</label>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <div class="inline-flex items-center">
+                            <input type="checkbox" id="reponse_repondant_greenSpace" name="reponse[repondant][greenSpace]" required="required" class="mr-2" value="1">
+                            <label class="block text-gray-800 required" for="reponse_repondant_greenSpace">Green space</label>
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-800 required" for="reponse_repondant_department">Department</label>
+                        <select id="reponse_repondant_department" name="reponse[repondant][department]" class="mt-1 w-full border">
+                            <option value="1">Ardennes</option>
+                            <option value="2">Aube</option>
+                            <option value="3">Marne</option>
+                            <option value="4">Haute-Marne</option>
+                            <option value="5">Meurthe-et-Moselle</option>
+                            <option value="6">Meuse</option>
+                            <option value="7">Moselle</option>
+                            <option value="8">Bas-Rhin</option>
+                            <option value="9">Haut-Rhin</option>
+                            <option value="10">Vosges</option>
+                        </select>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-800 required" for="reponse_repondant_typologie">Typologie</label>
+                        <select id="reponse_repondant_typologie" name="reponse[repondant][typologie]" class="mt-1 w-full border">
+                            <option value="1">Un hôtel, meublé, résidence, chambre d'hôtes</option>
+                            <option value="2">Un camping</option>
+                            <option value="3">Un lieu de visite / une activité de loisirs</option>
+                            <option value="4">Un restaurant</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-6">
+                <div class="mb-6">
+                    <div class="inline-flex items-center">
+                        <input type="checkbox" name="reponse[form][1][answers][1]" class="mr-2" checked>
+                        <input type="checkbox" name="reponse[form][1][answers][2]" class="mr-2" checked>
+                        <input type="checkbox" name="reponse[form][2][answers][14]" class="mr-2" checked>
+                        <input type="checkbox" name="reponse[form][3][answers][28]" class="mr-2" checked>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button type="submit" id="reponse_submit" name="reponse[submit]">Submit</button>
+            </div>
+        </div>
+    </form>
+
+{#    <div id="app"></div>#}
 {% endblock %}

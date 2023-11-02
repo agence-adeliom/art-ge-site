@@ -21,7 +21,7 @@ class Reponse
     #[ORM\Column(type: 'ulid')]
     private ?Ulid $uuid = null;
 
-    #[ORM\ManyToOne(inversedBy: 'reponses')]
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'reponses')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Repondant $repondant = null;
 

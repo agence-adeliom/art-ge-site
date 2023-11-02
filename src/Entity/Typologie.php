@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TypologieRepository::class)]
-class Typologie
+class Typologie implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -122,5 +122,10 @@ class Typologie
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
     }
 }
