@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ReponseRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity(repositoryClass: ReponseRepository::class)]
 class Reponse
@@ -15,6 +18,9 @@ class Reponse
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(type: 'ulid')]
+    private ?Ulid $uuid = null;
+
     #[ORM\ManyToOne(inversedBy: 'reponses')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Repondant $repondant = null;
@@ -22,21 +28,48 @@ class Reponse
     #[ORM\Column]
     private ?bool $completed = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['comment' => 'Date du commencement du formulaire'])]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: true, options: ['comment' => 'Date de la soumission du formulaire'])]
     private ?\DateTimeImmutable $submittedAt = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $score = null;
+    #[ORM\Column(nullable: true, options: ['comment' => 'Somme des points obtenus'])]
+    private ?float $points = null;
+
+    #[ORM\Column(options: ['comment' => 'Somme des points possible d\'obtenir'])]
+    private ?int $total = null;
+
+    #[ORM\ManyToMany(targetEntity: Choice::class, inversedBy: 'reponses')]
+    private Collection $choices;
 
     #[ORM\Column]
     private array $form = [];
 
+    #[ORM\OneToMany(mappedBy: 'reponse', targetEntity: Score::class, orphanRemoval: true)]
+    private Collection $scores;
+
+    public function __construct()
+    {
+        $this->choices = new ArrayCollection();
+        $this->scores = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUuid(): ?Ulid
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(Ulid $uuid): static
+    {
+        $this->uuid = $uuid;
+
+        return $this;
     }
 
     public function getRepondant(): ?Repondant
@@ -87,14 +120,50 @@ class Reponse
         return $this;
     }
 
-    public function getScore(): ?float
+    public function getPoints(): ?float
     {
-        return $this->score;
+        return $this->points;
     }
 
-    public function setScore(?float $score): static
+    public function setPoints(?float $points): static
     {
-        $this->score = $score;
+        $this->points = $points;
+
+        return $this;
+    }
+
+    public function getTotal(): ?int
+    {
+        return $this->total;
+    }
+
+    public function setTotal(int $total): static
+    {
+        $this->total = $total;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Choice>
+     */
+    public function getChoices(): Collection
+    {
+        return $this->choices;
+    }
+
+    public function addChoice(Choice $choice): static
+    {
+        if (!$this->choices->contains($choice)) {
+            $this->choices->add($choice);
+        }
+
+        return $this;
+    }
+
+    public function removeChoice(Choice $choice): static
+    {
+        $this->choices->removeElement($choice);
 
         return $this;
     }
@@ -107,6 +176,36 @@ class Reponse
     public function setForm(array $form): static
     {
         $this->form = $form;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Score>
+     */
+    public function getScores(): Collection
+    {
+        return $this->scores;
+    }
+
+    public function addScore(Score $score): static
+    {
+        if (!$this->scores->contains($score)) {
+            $this->scores->add($score);
+            $score->setReponse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScore(Score $score): static
+    {
+        if ($this->scores->removeElement($score)) {
+            // set the owning side to null (unless already changed)
+            if ($score->getReponse() === $this) {
+                $score->setReponse(null);
+            }
+        }
 
         return $this;
     }

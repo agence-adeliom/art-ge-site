@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ThematiqueRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ThematiqueRepository::class)]
@@ -21,6 +23,14 @@ class Thematique
 
     #[ORM\OneToOne(mappedBy: 'thematique', cascade: ['persist', 'remove'])]
     private ?Question $question = null;
+
+    #[ORM\OneToMany(mappedBy: 'thematique', targetEntity: Score::class, orphanRemoval: true)]
+    private Collection $scores;
+
+    public function __construct()
+    {
+        $this->scores = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -64,6 +74,36 @@ class Thematique
         }
 
         $this->question = $question;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Score>
+     */
+    public function getScores(): Collection
+    {
+        return $this->scores;
+    }
+
+    public function addScore(Score $score): static
+    {
+        if (!$this->scores->contains($score)) {
+            $this->scores->add($score);
+            $score->setThematique($this);
+        }
+
+        return $this;
+    }
+
+    public function removeScore(Score $score): static
+    {
+        if ($this->scores->removeElement($score)) {
+            // set the owning side to null (unless already changed)
+            if ($score->getThematique() === $this) {
+                $score->setThematique(null);
+            }
+        }
 
         return $this;
     }

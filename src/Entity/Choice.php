@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ChoiceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ChoiceRepository::class)]
@@ -13,16 +15,43 @@ class Choice
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'choices')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Question $question = null;
+
     #[ORM\Column(length: 255)]
     private ?string $libelle = null;
 
-    #[ORM\ManyToOne(inversedBy: 'choices')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Question $question = null;
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
+    #[ORM\ManyToMany(targetEntity: Reponse::class, mappedBy: 'choices')]
+    private Collection $reponses;
+
+    #[ORM\OneToMany(mappedBy: 'choice', targetEntity: ChoiceTypologie::class)]
+    private Collection $choiceTypologies;
+
+    public function __construct()
+    {
+        $this->reponses = new ArrayCollection();
+        $this->choiceTypologies = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getQuestion(): ?Question
+    {
+        return $this->question;
+    }
+
+    public function setQuestion(?Question $question): static
+    {
+        $this->question = $question;
+
+        return $this;
     }
 
     public function getLibelle(): ?string
@@ -37,14 +66,71 @@ class Choice
         return $this;
     }
 
-    public function getQuestion(): ?Question
+    public function getSlug(): ?string
     {
-        return $this->question;
+        return $this->slug;
     }
 
-    public function setQuestion(?Question $question): static
+    public function setSlug(string $slug): static
     {
-        $this->question = $question;
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reponse>
+     */
+    public function getReponses(): Collection
+    {
+        return $this->reponses;
+    }
+
+    public function addReponse(Reponse $reponse): static
+    {
+        if (!$this->reponses->contains($reponse)) {
+            $this->reponses->add($reponse);
+            $reponse->addChoice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReponse(Reponse $reponse): static
+    {
+        if ($this->reponses->removeElement($reponse)) {
+            $reponse->removeChoice($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ChoiceTypologie>
+     */
+    public function getChoiceTypologies(): Collection
+    {
+        return $this->choiceTypologies;
+    }
+
+    public function addChoiceTypology(ChoiceTypologie $choiceTypology): static
+    {
+        if (!$this->choiceTypologies->contains($choiceTypology)) {
+            $this->choiceTypologies->add($choiceTypology);
+            $choiceTypology->setChoice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChoiceTypology(ChoiceTypologie $choiceTypology): static
+    {
+        if ($this->choiceTypologies->removeElement($choiceTypology)) {
+            // set the owning side to null (unless already changed)
+            if ($choiceTypology->getChoice() === $this) {
+                $choiceTypology->setChoice(null);
+            }
+        }
 
         return $this;
     }

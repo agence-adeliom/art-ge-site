@@ -50,20 +50,24 @@ class Repondant
 
     #[ORM\ManyToOne(inversedBy: 'repondants')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?RepondantTypologie $typologie = null;
+    private ?Typologie $typologie = null;
 
     #[ORM\Column]
     private ?bool $restauration = null;
 
     #[ORM\Column]
-    private ?bool $greenSpacee = null;
+    private ?bool $greenSpace = null;
 
     #[ORM\OneToMany(mappedBy: 'repondant', targetEntity: Reponse::class)]
     private Collection $reponses;
 
+    #[ORM\OneToMany(mappedBy: 'repondant', targetEntity: Score::class, orphanRemoval: true)]
+    private Collection $scores;
+
     public function __construct()
     {
         $this->reponses = new ArrayCollection();
+        $this->scores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -191,12 +195,12 @@ class Repondant
         return $this;
     }
 
-    public function getTypologie(): ?RepondantTypologie
+    public function getTypologie(): ?Typologie
     {
         return $this->typologie;
     }
 
-    public function setTypologie(?RepondantTypologie $typologie): static
+    public function setTypologie(?Typologie $typologie): static
     {
         $this->typologie = $typologie;
 
@@ -215,14 +219,14 @@ class Repondant
         return $this;
     }
 
-    public function isGreenSpacee(): ?bool
+    public function isGreenSpace(): ?bool
     {
-        return $this->greenSpacee;
+        return $this->greenSpace;
     }
 
-    public function setGreenSpacee(bool $greenSpacee): static
+    public function setGreenSpace(bool $greenSpace): static
     {
-        $this->greenSpacee = $greenSpacee;
+        $this->greenSpace = $greenSpace;
 
         return $this;
     }

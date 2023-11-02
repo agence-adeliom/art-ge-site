@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace DataFixtures;
 
-use App\Entity\EasyAdmin\User;
+use App\Entity\Choice;
+use App\Entity\Question;
+use App\Entity\Thematique;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class QuestionsFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+        $slugger = new AsciiSlugger();
+
         $questions = [
             "Biodiversité et conservation de la Nature sur site" => [
                 "Quelles pratiques avez-vous mis en place dans votre structure pour limiter l'impact sur la biodiversité et conserver la nature ?",
@@ -30,7 +34,7 @@ class QuestionsFixtures extends Fixture
                 "J'ai des partenariats avec des organismes locaux ou nationaux pour la valorisation de la connaissance sur les espèces locales et leur observation.",
                 "Je n'ai rien entrepris en ce sens",
             ],
-            "Gestion de l'eau et de l'érosion"=> [
+            "Gestion de l'eau et de l'érosion" => [
                 "J'évite l'artificialisation des parkings, je privilégie le revêtement poreux. Les espaces bitumés sont limités aux voies de circulation de lourds véhicules et pour les places PMR",
                 "J'ai installé un système de récupération d'eau de pluie qui me permet de couvrir au moins 10% de ma consommation d'eau",
                 "Je recycle l'eau de certains usages (rinçage, eau de cuisson, carafes d'eau …) pour l'arrosage extérieur",
@@ -187,7 +191,8 @@ class QuestionsFixtures extends Fixture
                 "J'emploie / je mets en avant des artistes locaux",
                 "Je n'ai rien entrepris en ce sens",
             ],
-            "Votre établissement dispose-t-il d'un de ces labels ?" => [
+            "Labels" => [
+                "Votre établissement dispose-t-il d'un de ces labels ?",
                 "Clef Verte",
                 "Ecogite - Gîtes de France",
                 "Gite Panda - Gites de France",
@@ -219,5 +224,28 @@ class QuestionsFixtures extends Fixture
                 "Je n'ai rien entrepris en ce sens",
             ],
         ];
+
+        foreach ($questions as $t => $q) {
+            $thematique = new Thematique();
+            $thematique->setName($t);
+            $thematique->setSlug($slugger->slug(strtolower($t))->toString());
+            $manager->persist($thematique);
+
+            $question = new Question();
+            $question->setThematique($thematique);
+            $question->setLibelle($q[0]);
+
+            foreach ($q as $key => $c) {
+                if ($key === 0) {
+                    continue;
+                }
+                $choice = new Choice();
+                $choice->setQuestion($question);
+                $choice->setLibelle($c);
+                $choice->setSlug($slugger->slug(strtolower($c))->toString());
+                $manager->persist($choice);
+            }
+        }
+        $manager->flush();
     }
 }
