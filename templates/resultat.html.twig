@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {{ dump() }}
+
+    <h1>Score</h1>
+    {{ reponse.points }}/{{ reponse.total }}
+    <h2>Scores par thématique</h2>
+    {% for score in reponse.scores %}
+        <h3>{{ score.thematique.name }}</h3>
+        {{ score.points }}/{{ score.total }}
+    {% endfor %}
+{% endblock %}
