@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Form;
 
 use App\Entity\Department;
 use App\Entity\Repondant;

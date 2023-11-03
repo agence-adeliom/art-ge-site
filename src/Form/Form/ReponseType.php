@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Form;
 
 use App\Entity\Reponse;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Event\PreSubmitEvent;
+use Symfony\Component\Form\Event\SubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ReponseType extends AbstractType
@@ -14,8 +17,15 @@ class ReponseType extends AbstractType
     {
         $builder
             ->add('repondant', RepondantType::class)
-            ->add('form', QuestionsType::class)
+            ->add('rawForm', RawFormReponseType::class)
+            ->add('processedForm', ProcessedFormReponseType::class)
             ->add('submit', SubmitType::class)
+            ->addEventListener(FormEvents::PRE_SUBMIT, function(PreSubmitEvent $event) {
+                $data = $event->getData();
+                // on copie les données de rawForm dans processedForm pour les traiter dans son DataTransformer
+                $data['processedForm'] = $data['rawForm'];
+                $event->setData($data);
+            });
         ;
     }
 

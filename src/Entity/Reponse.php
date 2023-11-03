@@ -44,10 +44,16 @@ class Reponse
     private Collection $choices;
 
     /**
-     * @var array<mixed> $form
+     * @var array<mixed> $rawForm
      */
     #[ORM\Column]
-    private array $form = [];
+    private array $rawForm = [];
+
+    /**
+     * @var array<mixed> $processedForm
+     */
+    #[ORM\Column]
+    private array $processedForm = [];
 
     #[ORM\OneToMany(mappedBy: 'reponse', targetEntity: Score::class, orphanRemoval: true)]
     private Collection $scores;
@@ -174,17 +180,35 @@ class Reponse
     /**
      * @return array<mixed>
      */
-    public function getForm(): array
+    public function getRawForm(): array
     {
-        return $this->form;
+        return $this->rawForm;
     }
 
     /**
-     * @param array<mixed> $form
+     * @param array<mixed> $rawForm
      */
-    public function setForm(array $form): static
+    public function setRawForm(array $rawForm): static
     {
-        $this->form = $form;
+        $this->rawForm = $rawForm;
+
+        return $this;
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function getProcessedForm(): array
+    {
+        return $this->processedForm;
+    }
+
+    /**
+     * @param array<mixed> $processedForm
+     */
+    public function setProcessedForm(array $processedForm): static
+    {
+        $this->processedForm = $processedForm;
 
         return $this;
     }
