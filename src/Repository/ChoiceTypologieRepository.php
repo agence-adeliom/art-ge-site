@@ -37,7 +37,7 @@ class ChoiceTypologieRepository extends ServiceEntityRepository
             ->setParameter(':restauration', $restauration)
             ->getQuery()
             ->getSingleScalarResult()
-            ;
+        ;
     }
 
     /**
@@ -54,6 +54,6 @@ class ChoiceTypologieRepository extends ServiceEntityRepository
             ->setParameter(':restauration', $restauration)
             ->getQuery()
             ->getSingleScalarResult()
-            ;
+        ;
     }
 }

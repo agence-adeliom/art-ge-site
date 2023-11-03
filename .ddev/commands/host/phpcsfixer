@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd $DDEV_APPROOT
+ddev php vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix src

@@ -8,7 +8,6 @@ use App\Entity\Typologie;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -30,10 +29,10 @@ class RepondantType extends AbstractType
             ->add('restauration', CheckboxType::class)
             ->add('greenSpace', CheckboxType::class)
             ->add('department', EntityType::class, [
-                'class' => Department::class
+                'class' => Department::class,
             ])
             ->add('typologie', EntityType::class, [
-                'class' => Typologie::class
+                'class' => Typologie::class,
             ])
         ;
     }

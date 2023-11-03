@@ -21,8 +21,7 @@ class ChartController extends AbstractController
         private readonly Pdf $pdf,
         private readonly EntityManagerInterface $entityManager,
         private readonly EncodedImageRepository $encodedImageRepository,
-    )
-    {
+    ) {
     }
 
     #[Route('/chart', name: 'app_chart')]
@@ -39,7 +38,7 @@ class ChartController extends AbstractController
         $images = $request->request->all('images');
         if (!empty($images)) {
             try {
-                foreach ($images as $data){
+                foreach ($images as $data) {
                     $image = new EncodedImage();
                     $image->setData($data);
                     $this->entityManager->persist($image);
@@ -49,6 +48,7 @@ class ChartController extends AbstractController
                 return new Response($e->getMessage(), Response::HTTP_BAD_REQUEST);
             }
         }
+
         return new Response(null, Response::HTTP_CREATED);
     }
 
@@ -58,6 +58,7 @@ class ChartController extends AbstractController
         $template = $this->renderView('test.html.twig', ['images' => $this->encodedImageRepository->findAll()]);
         $filename = 'test.pdf';
         $this->pdf->generateFromHtml($template, $filename, [], true);
+
         return $this->file($filename, $filename, ResponseHeaderBag::DISPOSITION_INLINE);
     }
 }

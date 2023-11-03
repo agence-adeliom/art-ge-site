@@ -18,8 +18,7 @@ class HomeController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly ChoiceTypologieRepository $choiceTypologieRepository,
-    )
-    {
+    ) {
     }
 
     #[Route('/', name: 'home')]
