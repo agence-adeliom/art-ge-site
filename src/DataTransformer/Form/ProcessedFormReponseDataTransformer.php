@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataTransformer\Form;
 
 use App\Repository\ChoiceTypologieRepository;
+use App\ValueObject\RepondantTypologie;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -51,7 +52,7 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
                 foreach ($value as $questionId => $choicesIds) {
                     foreach ($choicesIds as $choiceId) {
                         /** @phpstan-ignore-next-line */
-                        $points[$questionId][] = $this->choiceTypologieRepository->getPonderation($choiceId, $typologie, $restauration);
+                        $points[$questionId][] = $this->choiceTypologieRepository->getPonderation($choiceId, RepondantTypologie::from($typologie, $restauration));
                     }
                     /** @phpstan-ignore-next-line */
                     $points[$questionId] = array_reduce($points[$questionId], fn (int $carry, int $item) => $carry + $item, 0);

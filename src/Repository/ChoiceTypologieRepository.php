@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\ChoiceTypologie;
+use App\ValueObject\RepondantTypologie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -25,7 +26,7 @@ class ChoiceTypologieRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\NoResultException
      */
-    public function getPonderation(int $choice, int $typologie, bool $restauration): int
+    public function getPonderation(int $choice, RepondantTypologie $rt): int
     {
         return (int) $this->createQueryBuilder('crt')
             ->select('crt.ponderation')
@@ -33,8 +34,8 @@ class ChoiceTypologieRepository extends ServiceEntityRepository
             ->andWhere('crt.typologie = :typologie')
             ->andWhere('crt.restauration = :restauration')
             ->setParameter(':choice', $choice)
-            ->setParameter(':typologie', $typologie)
-            ->setParameter(':restauration', $restauration)
+            ->setParameter(':typologie', $rt->getTypologie())
+            ->setParameter(':restauration', $rt->getRestauration())
             ->getQuery()
             ->getSingleScalarResult()
         ;
@@ -44,14 +45,14 @@ class ChoiceTypologieRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\NoResultException
      */
-    public function getTotalBasedOnTypologie(int $typologie, bool $restauration): int
+    public function getTotalBasedOnTypologie(RepondantTypologie $rt): int
     {
         return (int) $this->createQueryBuilder('crt')
             ->select('SUM(crt.ponderation) as total')
             ->andWhere('crt.typologie = :typologie')
             ->andWhere('crt.restauration = :restauration')
-            ->setParameter(':typologie', $typologie)
-            ->setParameter(':restauration', $restauration)
+            ->setParameter(':typologie', $rt->getTypologie())
+            ->setParameter(':restauration', $rt->getRestauration())
             ->getQuery()
             ->getSingleScalarResult()
         ;
@@ -61,7 +62,7 @@ class ChoiceTypologieRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\NoResultException
      */
-    public function getPonderationByQuestionAndTypologie(int $questionId, int $typologie, bool $restauration): int
+    public function getPonderationByQuestionAndTypologie(int $questionId, RepondantTypologie $rt): int
     {
         return (int) $this->createQueryBuilder('crt')
             ->select('SUM(crt.ponderation) as total')
@@ -71,8 +72,8 @@ class ChoiceTypologieRepository extends ServiceEntityRepository
             ->andWhere('crt.typologie = :typologie')
             ->andWhere('crt.restauration = :restauration')
             ->setParameter(':questionId', $questionId)
-            ->setParameter(':typologie', $typologie)
-            ->setParameter(':restauration', $restauration)
+            ->setParameter(':typologie', $rt->getTypologie())
+            ->setParameter(':restauration', $rt->getRestauration())
             ->getQuery()
             ->getSingleScalarResult()
         ;

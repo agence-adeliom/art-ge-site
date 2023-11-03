@@ -8,6 +8,7 @@ use App\Entity\Reponse;
 use App\Entity\Score;
 use App\Repository\ChoiceTypologieRepository;
 use App\Repository\ThematiqueRepository;
+use App\ValueObject\RepondantTypologie;
 use App\ValueObject\ScoreGeneration;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Ulid;
@@ -24,17 +25,15 @@ readonly class HandleScoreGeneration
     {
         /** @var array{answers: array<int, array<int>>, pointsByQuestions: array<int, int>, points: int} $processedForm */
         $processedForm = $reponse->getProcessedForm();
+        $repondantTypologieVO = RepondantTypologie::fromRepondant($reponse->getRepondant());
         $points = $processedForm['points'];
-        $total = $this->choiceTypologieRepository->getTotalBasedOnTypologie(
-            (int) $reponse->getRepondant()->getTypologie()->getId(),
-            $reponse->getRepondant()->isRestauration(),
-        );
+        $total = $this->choiceTypologieRepository->getTotalBasedOnTypologie($repondantTypologieVO);
 
         $scores = [];
         foreach ($processedForm['pointsByQuestions'] as $questionId => $thematiquePoints) {
             $thematique = $this->thematiqueRepository->getOneByQuestionId($questionId);
             if ($thematique) {
-                $thematiqueTotal = $this->choiceTypologieRepository->getPonderationByQuestionAndTypologie($questionId, (int) $reponse->getRepondant()->getTypologie()->getId(), $reponse->getRepondant()->isRestauration());
+                $thematiqueTotal = $this->choiceTypologieRepository->getPonderationByQuestionAndTypologie($questionId, $repondantTypologieVO);
                 if ($thematiqueTotal) {
                     $score = new Score();
                     $score->setTotal($thematiqueTotal);

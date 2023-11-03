@@ -4,42 +4,38 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
-class ScoreGeneration
+use App\Entity\Repondant;
+
+class RepondantTypologie
 {
-    private int $points;
-    private int $total;
+    private int $typologie;
+    private bool $restauration;
 
-    /**
-     * @var array<\App\Entity\Score>
-     */
-    private array $scores;
-
-    /**
-     * @param array<\App\Entity\Score> $scores
-     */
-    public static function from(int $points, int $total, array $scores): ScoreGeneration
+    public static function fromRepondant(Repondant $repondant): RepondantTypologie
     {
-        $scoreGeneration = new ScoreGeneration();
-        $scoreGeneration->points = $points;
-        $scoreGeneration->total = $total;
-        $scoreGeneration->scores = $scores;
+        $repondantTypologie = new RepondantTypologie();
+        $repondantTypologie->typologie = (int) $repondant->getTypologie()->getId();
+        $repondantTypologie->restauration = $repondant->isRestauration();
 
-        return $scoreGeneration;
+        return $repondantTypologie;
     }
 
-    public function getPoints(): int
+    public static function from(int $typologie, bool $restauration): RepondantTypologie
     {
-        return $this->points;
+        $repondantTypologie = new RepondantTypologie();
+        $repondantTypologie->typologie = $typologie;
+        $repondantTypologie->restauration = $restauration;
+
+        return $repondantTypologie;
     }
 
-    public function getTotal(): int
+    public function getTypologie(): int
     {
-        return $this->total;
+        return $this->typologie;
     }
 
-    /** @return array<\App\Entity\Score> */
-    public function getScores(): array
+    public function getRestauration(): bool
     {
-        return $this->scores;
+        return $this->restauration;
     }
 }
