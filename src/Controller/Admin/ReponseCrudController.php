@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Reponse;
-use App\Form\ScoreAdminType;
+use App\Form\Admin\ScoreAdminType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;

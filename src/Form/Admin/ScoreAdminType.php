@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Form;
+declare(strict_types=1);
+
+namespace App\Form\Admin;
 
 use App\Entity\Score;
 use Symfony\Component\Form\AbstractType;

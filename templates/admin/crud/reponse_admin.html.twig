@@ -1,0 +1,22 @@
+{% if not field.value is empty %}
+    <table>
+        <thead>
+            <tr>
+                <th class="p-2">Identifiant unique</th>
+                <th class="p-2">Completée</th>
+                <th class="p-2">Points</th>
+                <th class="p-2">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for value in field.value %}
+            <tr {% if loop.index % 2 %}style="background: #f0f0f0;"{% endif %}>
+                <td class="p-2"><a href="{{ ea_url().setController('App\\Controller\\Admin\\ReponseCrudController').setAction('detail').setEntityId(value.id) }}">{{ value.uuid }}</a></td>
+                <td class="p-2">{{ value.completed ? 'Oui' : 'Non' }}</td>
+                <td class="p-2">{{ value.points }}</td>
+                <td class="p-2">{{ value.total }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

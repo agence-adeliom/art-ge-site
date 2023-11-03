@@ -3,16 +3,14 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Repondant;
+use App\Form\Admin\ReponseAdminType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class RepondantCrudController extends AbstractCrudController
@@ -60,5 +58,10 @@ class RepondantCrudController extends AbstractCrudController
         yield TextField::new('typologie');
         yield BooleanField::new('restauration')->renderAsSwitch(false);
         yield BooleanField::new('greenSpace', 'Espace vert')->renderAsSwitch(false);
+        yield CollectionField::new('reponses')
+            ->setEntryType(ReponseAdminType::class)
+            ->setTemplatePath('admin/crud/reponse_admin.html.twig')
+            ->hideOnIndex()
+        ;
     }
 }
