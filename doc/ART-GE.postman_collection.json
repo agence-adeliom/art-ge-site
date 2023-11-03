@@ -1,0 +1,52 @@
+{
+	"info": {
+		"_postman_id": "dc79e1e4-15fe-42d2-8bca-12a2a4f9513c",
+		"name": "ART-GE",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19051030"
+	},
+	"item": [
+		{
+			"name": "API Résultats",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://art-grand-est.ddev.site/api/resultats",
+					"protocol": "https",
+					"host": [
+						"art-grand-est",
+						"ddev",
+						"site"
+					],
+					"path": [
+						"api",
+						"resultats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "API Form Datas",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://art-grand-est.ddev.site/api/form",
+					"protocol": "https",
+					"host": [
+						"art-grand-est",
+						"ddev",
+						"site"
+					],
+					"path": [
+						"api",
+						"form"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
