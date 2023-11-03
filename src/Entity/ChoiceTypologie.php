@@ -6,8 +6,8 @@ use App\Repository\ChoiceTypologieRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ChoiceTypologieRepository::class)]
-#[ORM\Index(fields: ['choice', 'typologie', 'restauration'])]
-#[ORM\Index(fields: ['typologie', 'restauration'])]
+#[ORM\Index(fields: ['choice', 'typologie', 'restauration'], name: 'idx_choice_typologie_restauration')]
+#[ORM\Index(fields: ['typologie', 'restauration'], name: 'idx_typologie_restauration')]
 class ChoiceTypologie
 {
     #[ORM\Id]
