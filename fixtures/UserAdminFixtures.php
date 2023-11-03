@@ -28,6 +28,16 @@ class UserAdminFixtures extends Fixture
         $user->setPassword($hashedPassword);
         $manager->persist($user);
 
+        $user = new User();
+        $user->setEmail('contact@art-grandest.fr');
+        $user->setRoles(['ROLE_ADMIN']);
+        $user->setFirstname('Contact');
+        $user->setLastname('ART-GE');
+
+        $hashedPassword = $this->passwordHasher->hashPassword($user, '123456789');
+        $user->setPassword($hashedPassword);
+        $manager->persist($user);
+
         $manager->flush();
     }
 }
