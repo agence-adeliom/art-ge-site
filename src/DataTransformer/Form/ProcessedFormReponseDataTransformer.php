@@ -48,13 +48,13 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
 
                 $points = [];
 
-                foreach ($value as $key => $choices) {
-                    foreach ($choices as $choice) {
+                foreach ($value as $questionId => $choicesIds) {
+                    foreach ($choicesIds as $choiceId) {
                         /** @phpstan-ignore-next-line */
-                        $points[$key][] = $this->choiceTypologieRepository->getPonderation($choice, $typologie, $restauration);
+                        $points[$questionId][] = $this->choiceTypologieRepository->getPonderation($choiceId, $typologie, $restauration);
                     }
                     /** @phpstan-ignore-next-line */
-                    $points[$key] = array_reduce($points[$key], fn (int $carry, int $item) => $carry + $item, 0);
+                    $points[$questionId] = array_reduce($points[$questionId], fn (int $carry, int $item) => $carry + $item, 0);
                 }
 
                 /** @phpstan-ignore-next-line */
