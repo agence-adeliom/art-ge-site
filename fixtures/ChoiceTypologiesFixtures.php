@@ -9,18 +9,25 @@ use App\Entity\ChoiceTypologie;
 use App\Entity\Question;
 use App\Entity\Thematique;
 use App\Repository\ChoiceRepository;
+use App\Repository\ChoiceTypologieRepository;
 use App\Repository\TypologieRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterface
 {
+    /** @var string */
+    private const COLUMN_REPONSE = 'Réponse';
+
     public function __construct(
         private readonly ChoiceRepository $choiceRepository,
         private readonly TypologieRepository $typologieRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ChoiceTypologieRepository $choiceTypologieRepository,
     )
     {
     }
@@ -28,26 +35,25 @@ class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterf
     public function load(ObjectManager $manager): void
     {
 
-        $test = file_get_contents('/var/www/html/test.csv');
-        if ($test) {
+        $ponderationsFile = file_get_contents('/var/www/html/var/ponderations.csv');
+        if ($ponderationsFile) {
             $csvEncoder = new CsvEncoder();
-            $decod = $csvEncoder->decode($test, 'csv');
+            $ponderationsDatas = $csvEncoder->decode($ponderationsFile, 'csv');
             $datas = array_map(function (array $row) {
-                return array_merge(['Réponse' => $row["Réponse"]], array_slice($row,  7, 9));
-            }, $decod);
-
+                return array_merge([self::COLUMN_REPONSE => $row[self::COLUMN_REPONSE]], array_slice($row,  7, 9));
+            }, $ponderationsDatas);
         }
 
         foreach ($datas as $key => $data){
             if ($key == 0 || array_filter($data) === []) {
                 continue;
             }
-            if ($data['Réponse'] === 'TOTAL POINT') {
+            if ($data[self::COLUMN_REPONSE] === 'TOTAL POINT') {
                 break;
             }
 
             foreach ($data as $typo => $ponderation) {
-                if ($typo === 'Réponse') {
+                if ($typo === self::COLUMN_REPONSE) {
                     continue;
                 }
 
@@ -68,11 +74,10 @@ class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterf
                     throw new \Exception('typologie ne correspond pas : ' . $typo);
                 }
 
-                $reponse = (new AsciiSlugger())->slug(strtolower($data['Réponse']))->toString();
+                $reponse = (new AsciiSlugger())->slug(strtolower($data[self::COLUMN_REPONSE]))->toString();
 
                 $choice = $this->choiceRepository->findOneBy(['slug' => $reponse]);
                 if (!$choice) {
-                    dd($data);
                     throw new \Exception('slug ne correspond pas : ' . $reponse);
                 }
 
@@ -81,15 +86,19 @@ class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterf
                     throw new \Exception('findOneBy typologieSlug ne correspond pas : ' . $typologie);
                 }
 
+                if ($this->choiceTypologieRepository->findOneBy(['choice' => $choice, 'typologie' => $typologie, 'restauration' => $restauration])) {
+                    continue;
+                }
+
                 $crt = new ChoiceTypologie();
                 $crt->setChoice($choice);
                 $crt->setTypologie($typologie);
                 $crt->setRestauration($restauration);
                 $crt->setPonderation((int) $ponderation);
                 $manager->persist($crt);
+                $manager->flush();
             }
         }
-        $manager->flush();
     }
 
     public function getDependencies(): array
