@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: QuestionRepository::class)]
-class Question
+class Question implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,7 +16,7 @@ class Question
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $libelle = null;
+    private string $libelle;
 
     #[ORM\OneToOne(inversedBy: 'question', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
@@ -35,7 +35,7 @@ class Question
         return $this->id;
     }
 
-    public function getLibelle(): ?string
+    public function getLibelle(): string
     {
         return $this->libelle;
     }
@@ -87,5 +87,10 @@ class Question
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getLibelle();
     }
 }

@@ -256,4 +256,12 @@ class Repondant
     {
         return $this->scores;
     }
+
+    /**
+     * VirtualGetters for EasyAdmin
+     */
+    public function getFullName(): string
+    {
+        return $this->firstname . ' ' . $this->lastname;
+    }
 }
