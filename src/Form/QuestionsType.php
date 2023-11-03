@@ -14,7 +14,6 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Extension\Core\EventListener\ResizeFormListener;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,8 +23,7 @@ class QuestionsType extends CollectionType implements DataTransformerInterface
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly ChoiceTypologieRepository $choiceTypologieRepository,
-    )
-    {
+    ) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -55,10 +53,12 @@ class QuestionsType extends CollectionType implements DataTransformerInterface
         $request = $this->requestStack->getMainRequest()?->request;
         if ($request) {
             $reponse = $request->all('reponse');
-            if (isset($reponse['repondant']['typologie'], $reponse['repondant']['restauration'], $reponse['repondant']['greenSpace'])) {
+            if (isset($reponse['repondant']['typologie'], $reponse['repondant']['restauration'])) {
+                /** @var int $typologie */
                 $typologie = $reponse['repondant']['typologie'];
+                /** @var int $restauration */
                 $restauration = $reponse['repondant']['restauration'];
-                $greenSpace = $reponse['repondant']['greenSpace'];
+                
                 if (null === $value) {
                     return [];
                 }
@@ -70,8 +70,8 @@ class QuestionsType extends CollectionType implements DataTransformerInterface
                 $points = [];
 
                 foreach ($value as $key => $choices) {
-                    foreach ($choices as $ckey => $choice) {
-                        $points[$key][] = $this->choiceTypologieRepository->getPonderation($choice, $typologie, $restauration, $greenSpace);
+                    foreach ($choices as $choice) {
+                        $points[$key][] = $this->choiceTypologieRepository->getPonderation($choice, $typologie, (bool) $restauration);
                     }
                     $points[$key] = array_reduce($points[$key], fn (int $carry, int $item) => $carry + $item, 0);
                 }

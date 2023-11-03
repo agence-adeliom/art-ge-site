@@ -25,18 +25,16 @@ class ChoiceTypologieRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\NoResultException
      */
-    public function getPonderation(int $choice, int $typologie, int $restauration, int $greenSpace): int
+    public function getPonderation(int $choice, int $typologie, bool $restauration): int
     {
         return $this->createQueryBuilder('crt')
             ->select('crt.ponderation')
             ->andWhere('crt.choice = :choice')
             ->andWhere('crt.typologie = :typologie')
             ->andWhere('crt.restauration = :restauration')
-            ->andWhere('crt.greenSpace = :greenSpace')
             ->setParameter(':choice', $choice)
             ->setParameter(':typologie', $typologie)
             ->setParameter(':restauration', $restauration)
-            ->setParameter(':greenSpace', $greenSpace)
             ->getQuery()
             ->getSingleScalarResult()
             ;
@@ -46,16 +44,14 @@ class ChoiceTypologieRepository extends ServiceEntityRepository
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\NoResultException
      */
-    public function getTotalBasedOnTypologie(int $typologie, int $restauration, int $greenSpace): int
+    public function getTotalBasedOnTypologie(int $typologie, bool $restauration): int
     {
         return $this->createQueryBuilder('crt')
             ->select('SUM(crt.ponderation) as total')
             ->andWhere('crt.typologie = :typologie')
             ->andWhere('crt.restauration = :restauration')
-            ->andWhere('crt.greenSpace = :greenSpace')
             ->setParameter(':typologie', $typologie)
             ->setParameter(':restauration', $restauration)
-            ->setParameter(':greenSpace', $greenSpace)
             ->getQuery()
             ->getSingleScalarResult()
             ;

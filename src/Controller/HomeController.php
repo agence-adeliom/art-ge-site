@@ -39,8 +39,7 @@ class HomeController extends AbstractController
             $response->setPoints($points);
             $total = $this->choiceTypologieRepository->getTotalBasedOnTypologie(
                 (int) $response->getRepondant()->getTypologie()->getId(),
-                $response->getRepondant()->isRestauration() ? 1 : 0,
-                $response->getRepondant()->isGreenSpace() ? 1 : 0
+                $response->getRepondant()->isRestauration(),
             );
             $response->setTotal($total);
             $this->entityManager->persist($response);

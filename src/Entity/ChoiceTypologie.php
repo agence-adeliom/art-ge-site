@@ -6,6 +6,8 @@ use App\Repository\ChoiceTypologieRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ChoiceTypologieRepository::class)]
+#[ORM\Index(columns: ['choice', 'typologie', 'restauration'])]
+#[ORM\Index(columns: ['typologie', 'restauration'])]
 class ChoiceTypologie
 {
     #[ORM\Id]
@@ -23,9 +25,6 @@ class ChoiceTypologie
 
     #[ORM\Column]
     private ?bool $restauration = null;
-
-    #[ORM\Column]
-    private ?bool $greenSpace = null;
 
     #[ORM\Column]
     private ?int $ponderation = null;
@@ -67,18 +66,6 @@ class ChoiceTypologie
     public function setRestauration(bool $restauration): static
     {
         $this->restauration = $restauration;
-
-        return $this;
-    }
-
-    public function isGreenSpace(): ?bool
-    {
-        return $this->greenSpace;
-    }
-
-    public function setGreenSpace(bool $greenSpace): static
-    {
-        $this->greenSpace = $greenSpace;
 
         return $this;
     }

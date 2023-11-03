@@ -85,7 +85,6 @@ class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterf
                 $crt->setChoice($choice);
                 $crt->setTypologie($typologie);
                 $crt->setRestauration($restauration);
-                $crt->setGreenSpace(true);
                 $crt->setPonderation((int) $ponderation);
                 $manager->persist($crt);
             }
