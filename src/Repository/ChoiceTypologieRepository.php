@@ -27,7 +27,7 @@ class ChoiceTypologieRepository extends ServiceEntityRepository
      */
     public function getPonderation(int $choice, int $typologie, bool $restauration): int
     {
-        return $this->createQueryBuilder('crt')
+        return (int) $this->createQueryBuilder('crt')
             ->select('crt.ponderation')
             ->andWhere('crt.choice = :choice')
             ->andWhere('crt.typologie = :typologie')
@@ -46,7 +46,7 @@ class ChoiceTypologieRepository extends ServiceEntityRepository
      */
     public function getTotalBasedOnTypologie(int $typologie, bool $restauration): int
     {
-        return $this->createQueryBuilder('crt')
+        return (int) $this->createQueryBuilder('crt')
             ->select('SUM(crt.ponderation) as total')
             ->andWhere('crt.typologie = :typologie')
             ->andWhere('crt.restauration = :restauration')
