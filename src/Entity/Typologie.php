@@ -18,10 +18,10 @@ class Typologie implements \Stringable
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $slug = null;
+    private string $slug;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\OneToMany(mappedBy: 'typologie', targetEntity: Repondant::class)]
     private Collection $repondants;
@@ -40,7 +40,7 @@ class Typologie implements \Stringable
         return $this->id;
     }
 
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }
@@ -52,7 +52,7 @@ class Typologie implements \Stringable
         return $this;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -82,18 +82,6 @@ class Typologie implements \Stringable
         return $this;
     }
 
-    public function removeRepondant(Repondant $repondant): static
-    {
-        if ($this->repondants->removeElement($repondant)) {
-            // set the owning side to null (unless already changed)
-            if ($repondant->getTypologie() === $this) {
-                $repondant->setTypologie(null);
-            }
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, ChoiceTypologie>
      */
@@ -107,18 +95,6 @@ class Typologie implements \Stringable
         if (!$this->choiceTypologies->contains($choiceTypology)) {
             $this->choiceTypologies->add($choiceTypology);
             $choiceTypology->setTypologie($this);
-        }
-
-        return $this;
-    }
-
-    public function removeChoiceTypology(ChoiceTypologie $choiceTypology): static
-    {
-        if ($this->choiceTypologies->removeElement($choiceTypology)) {
-            // set the owning side to null (unless already changed)
-            if ($choiceTypology->getTypologie() === $this) {
-                $choiceTypology->setTypologie(null);
-            }
         }
 
         return $this;

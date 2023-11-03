@@ -20,10 +20,10 @@ class Choice
     private ?Question $question = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $libelle = null;
+    private string $libelle;
 
     #[ORM\Column(length: 255)]
-    private ?string $slug = null;
+    private string $slug;
 
     #[ORM\ManyToMany(targetEntity: Reponse::class, mappedBy: 'choices')]
     private Collection $reponses;
@@ -54,7 +54,7 @@ class Choice
         return $this;
     }
 
-    public function getLibelle(): ?string
+    public function getLibelle(): string
     {
         return $this->libelle;
     }
@@ -66,7 +66,7 @@ class Choice
         return $this;
     }
 
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }
@@ -118,18 +118,6 @@ class Choice
         if (!$this->choiceTypologies->contains($choiceTypology)) {
             $this->choiceTypologies->add($choiceTypology);
             $choiceTypology->setChoice($this);
-        }
-
-        return $this;
-    }
-
-    public function removeChoiceTypology(ChoiceTypologie $choiceTypology): static
-    {
-        if ($this->choiceTypologies->removeElement($choiceTypology)) {
-            // set the owning side to null (unless already changed)
-            if ($choiceTypology->getChoice() === $this) {
-                $choiceTypology->setChoice(null);
-            }
         }
 
         return $this;

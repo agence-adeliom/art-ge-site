@@ -18,7 +18,7 @@ class Repondant
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $email = null;
+    private string $email;
 
     #[ORM\Column(length: 255)]
     private ?string $firstname = null;
@@ -50,13 +50,13 @@ class Repondant
 
     #[ORM\ManyToOne(inversedBy: 'repondants')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Typologie $typologie = null;
+    private Typologie $typologie;
 
     #[ORM\Column]
-    private ?bool $restauration = null;
+    private bool $restauration;
 
     #[ORM\Column]
-    private ?bool $greenSpace = null;
+    private bool $greenSpace;
 
     #[ORM\OneToMany(mappedBy: 'repondant', targetEntity: Reponse::class)]
     private Collection $reponses;
@@ -75,7 +75,7 @@ class Repondant
         return $this->id;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -195,19 +195,19 @@ class Repondant
         return $this;
     }
 
-    public function getTypologie(): ?Typologie
+    public function getTypologie(): Typologie
     {
         return $this->typologie;
     }
 
-    public function setTypologie(?Typologie $typologie): static
+    public function setTypologie(Typologie $typologie): static
     {
         $this->typologie = $typologie;
 
         return $this;
     }
 
-    public function isRestauration(): ?bool
+    public function isRestauration(): bool
     {
         return $this->restauration;
     }
@@ -219,7 +219,7 @@ class Repondant
         return $this;
     }
 
-    public function isGreenSpace(): ?bool
+    public function isGreenSpace(): bool
     {
         return $this->greenSpace;
     }
@@ -249,15 +249,11 @@ class Repondant
         return $this;
     }
 
-    public function removeReponse(Reponse $reponse): static
+    /**
+     * @return Collection<int, Score>
+     */
+    public function getScores(): Collection
     {
-        if ($this->reponses->removeElement($reponse)) {
-            // set the owning side to null (unless already changed)
-            if ($reponse->getRepondant() === $this) {
-                $reponse->setRepondant(null);
-            }
-        }
-
-        return $this;
+        return $this->scores;
     }
 }

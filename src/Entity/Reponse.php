@@ -23,7 +23,7 @@ class Reponse
 
     #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'reponses')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Repondant $repondant = null;
+    private Repondant $repondant;
 
     #[ORM\Column]
     private ?bool $completed = null;
@@ -43,6 +43,9 @@ class Reponse
     #[ORM\ManyToMany(targetEntity: Choice::class, inversedBy: 'reponses')]
     private Collection $choices;
 
+    /**
+     * @var array<mixed> $form
+     */
     #[ORM\Column]
     private array $form = [];
 
@@ -72,12 +75,12 @@ class Reponse
         return $this;
     }
 
-    public function getRepondant(): ?Repondant
+    public function getRepondant(): Repondant
     {
         return $this->repondant;
     }
 
-    public function setRepondant(?Repondant $repondant): static
+    public function setRepondant(Repondant $repondant): static
     {
         $this->repondant = $repondant;
 
@@ -168,11 +171,17 @@ class Reponse
         return $this;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getForm(): array
     {
         return $this->form;
     }
 
+    /**
+     * @param array<mixed> $form
+     */
     public function setForm(array $form): static
     {
         $this->form = $form;
@@ -193,18 +202,6 @@ class Reponse
         if (!$this->scores->contains($score)) {
             $this->scores->add($score);
             $score->setReponse($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScore(Score $score): static
-    {
-        if ($this->scores->removeElement($score)) {
-            // set the owning side to null (unless already changed)
-            if ($score->getReponse() === $this) {
-                $score->setReponse(null);
-            }
         }
 
         return $this;

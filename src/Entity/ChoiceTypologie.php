@@ -6,8 +6,8 @@ use App\Repository\ChoiceTypologieRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ChoiceTypologieRepository::class)]
-#[ORM\Index(columns: ['choice', 'typologie', 'restauration'])]
-#[ORM\Index(columns: ['typologie', 'restauration'])]
+#[ORM\Index(fields: ['choice', 'typologie', 'restauration'])]
+#[ORM\Index(fields: ['typologie', 'restauration'])]
 class ChoiceTypologie
 {
     #[ORM\Id]
@@ -17,48 +17,48 @@ class ChoiceTypologie
 
     #[ORM\ManyToOne(inversedBy: 'choiceTypologies')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Choice $choice = null;
+    private Choice $choice;
 
     #[ORM\ManyToOne(inversedBy: 'choiceTypologies')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Typologie $typologie = null;
+    private Typologie $typologie;
 
     #[ORM\Column]
-    private ?bool $restauration = null;
+    private bool $restauration;
 
     #[ORM\Column]
-    private ?int $ponderation = null;
+    private int $ponderation;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getChoice(): ?Choice
+    public function getChoice(): Choice
     {
         return $this->choice;
     }
 
-    public function setChoice(?Choice $choice): static
+    public function setChoice(Choice $choice): static
     {
         $this->choice = $choice;
 
         return $this;
     }
 
-    public function getTypologie(): ?Typologie
+    public function getTypologie(): Typologie
     {
         return $this->typologie;
     }
 
-    public function setTypologie(?Typologie $typologie): static
+    public function setTypologie(Typologie $typologie): static
     {
         $this->typologie = $typologie;
 
         return $this;
     }
 
-    public function isRestauration(): ?bool
+    public function isRestauration(): bool
     {
         return $this->restauration;
     }
@@ -70,7 +70,7 @@ class ChoiceTypologie
         return $this;
     }
 
-    public function getPonderation(): ?int
+    public function getPonderation(): int
     {
         return $this->ponderation;
     }

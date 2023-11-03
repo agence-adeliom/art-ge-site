@@ -15,41 +15,41 @@ class Score
 
     #[ORM\ManyToOne(inversedBy: 'scores')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Reponse $reponse = null;
+    private Reponse $reponse;
 
     #[ORM\ManyToOne(inversedBy: 'scores')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Thematique $thematique = null;
+    private Thematique $thematique;
 
     #[ORM\Column(options: ['comment' => 'Somme des points obtenus'])]
-    private ?float $points = null;
+    private int $points;
 
     #[ORM\Column(options: ['comment' => 'Somme des points possible d\'obtenir'])]
-    private ?int $total = null;
+    private int $total;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getReponse(): ?Reponse
+    public function getReponse(): Reponse
     {
         return $this->reponse;
     }
 
-    public function setReponse(?Reponse $reponse): static
+    public function setReponse(Reponse $reponse): static
     {
         $this->reponse = $reponse;
 
         return $this;
     }
 
-    public function getThematique(): ?Thematique
+    public function getThematique(): Thematique
     {
         return $this->thematique;
     }
 
-    public function setThematique(?Thematique $thematique): static
+    public function setThematique(Thematique $thematique): static
     {
         $this->thematique = $thematique;
 
@@ -68,7 +68,7 @@ class Score
         return $this;
     }
 
-    public function getTotal(): ?int
+    public function getTotal(): int
     {
         return $this->total;
     }

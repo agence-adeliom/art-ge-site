@@ -18,13 +18,13 @@ class Department implements \Stringable
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\Column(length: 255)]
-    private ?string $slug = null;
+    private string $slug;
 
     #[ORM\Column(length: 255)]
-    private ?string $code = null;
+    private string $code;
 
     #[ORM\OneToMany(mappedBy: 'department', targetEntity: Repondant::class)]
     private Collection $repondants;
@@ -39,7 +39,7 @@ class Department implements \Stringable
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -51,7 +51,7 @@ class Department implements \Stringable
         return $this;
     }
 
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }
@@ -63,7 +63,7 @@ class Department implements \Stringable
         return $this;
     }
 
-    public function getCode(): ?string
+    public function getCode(): string
     {
         return $this->code;
     }

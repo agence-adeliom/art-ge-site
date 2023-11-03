@@ -16,10 +16,10 @@ class Thematique
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private string $name;
 
     #[ORM\Column(length: 255)]
-    private ?string $slug = null;
+    private string $slug;
 
     #[ORM\OneToOne(mappedBy: 'thematique', cascade: ['persist', 'remove'])]
     private ?Question $question = null;
@@ -37,7 +37,7 @@ class Thematique
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -49,7 +49,7 @@ class Thematique
         return $this;
     }
 
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }
@@ -91,18 +91,6 @@ class Thematique
         if (!$this->scores->contains($score)) {
             $this->scores->add($score);
             $score->setThematique($this);
-        }
-
-        return $this;
-    }
-
-    public function removeScore(Score $score): static
-    {
-        if ($this->scores->removeElement($score)) {
-            // set the owning side to null (unless already changed)
-            if ($score->getThematique() === $this) {
-                $score->setThematique(null);
-            }
         }
 
         return $this;
