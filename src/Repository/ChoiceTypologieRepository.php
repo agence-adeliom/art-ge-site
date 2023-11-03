@@ -56,4 +56,25 @@ class ChoiceTypologieRepository extends ServiceEntityRepository
             ->getSingleScalarResult()
         ;
     }
+
+    /**
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
+     */
+    public function getPonderationByQuestionAndTypologie(int $questionId, int $typologie, bool $restauration): int
+    {
+        return (int) $this->createQueryBuilder('crt')
+            ->select('SUM(crt.ponderation) as total')
+            ->innerJoin('crt.choice', 'c')
+            ->innerJoin('c.question', 'q')
+            ->andWhere('q.id = :questionId')
+            ->andWhere('crt.typologie = :typologie')
+            ->andWhere('crt.restauration = :restauration')
+            ->setParameter(':questionId', $questionId)
+            ->setParameter(':typologie', $typologie)
+            ->setParameter(':restauration', $restauration)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
 }
