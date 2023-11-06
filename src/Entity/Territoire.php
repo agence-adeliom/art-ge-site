@@ -6,10 +6,12 @@ namespace App\Entity;
 
 use App\Repository\TerritoireRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity(repositoryClass: TerritoireRepository::class)]
-class Territoire
+class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -23,11 +25,14 @@ class Territoire
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $slug = null;
+    private string $slug;
 
     /** @var array<mixed> $zips */
     #[ORM\Column]
     private array $zips = [];
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $code = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $password = null;
@@ -69,7 +74,7 @@ class Territoire
         return $this;
     }
 
-    public function getSlug(): ?string
+    public function getSlug(): string
     {
         return $this->slug;
     }
@@ -91,6 +96,18 @@ class Territoire
     public function setZips(array $zips): static
     {
         $this->zips = $zips;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(?string $code): static
+    {
+        $this->code = $code;
 
         return $this;
     }
@@ -117,5 +134,17 @@ class Territoire
         $this->useSlug = $useSlug;
 
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return ['TERRITOIRE_ACCESS'];
+    }
+
+    public function eraseCredentials(): void {}
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->getSlug();
     }
 }

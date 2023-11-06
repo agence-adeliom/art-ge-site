@@ -6,10 +6,15 @@ security:
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ADMINISTRATOR, ROLE_ALLOWED_TO_SWITCH, ROLE_EDITOR, ROLE_USER]
         ROLE_ADMINISTRATOR: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH, ROLE_EDITOR, ROLE_USER]
         ROLE_EDITOR:       [ROLE_ADMIN, ROLE_EDITOR, ROLE_USER]
+        TERRITOIRE_ACCESS: [ROLE_USER]
 
     providers:
         easy_admin_user_provider:
             id: easy_admin_user.user_provider
+        territoire_provider:
+            entity:
+                class: 'App\Entity\Territoire'
+                property: 'slug'
 
     firewalls:
         dev:
@@ -32,6 +37,12 @@ security:
                 path: easy_admin_logout
                 target: easy_admin_login
 
+        territoires:
+            pattern: ^/territoire
+            http_basic:
+                realm: Secured Area
+                provider: territoire_provider
+
         main:
             lazy: true
 
@@ -42,6 +53,7 @@ security:
         - { path: ^/admin/logout, roles: PUBLIC_ACCESS }
         - { path: ^/admin/reset-password, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/territoire, roles: ROLE_USER }
         - { path: ^/, role: PUBLIC_ACCESS }
 
 when@test:

@@ -7,6 +7,8 @@ namespace App\Repository;
 use App\Entity\Territoire;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -17,7 +19,7 @@ use Symfony\Component\Uid\Ulid;
  * @method Territoire[]    findAll()
  * @method Territoire[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TerritoireRepository extends ServiceEntityRepository
+class TerritoireRepository extends ServiceEntityRepository implements UserLoaderInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -44,5 +46,10 @@ class TerritoireRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
+    }
+
+    public function loadUserByIdentifier(string $slug): ?UserInterface
+    {
+        return $this->getOneBySlug($slug);
     }
 }
