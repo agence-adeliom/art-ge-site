@@ -11,7 +11,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Form\Type\FileUploadType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -54,8 +57,18 @@ class TerritoireCrudController extends AbstractCrudController
         yield TextField::new('uuid', 'Identifiant')->hideOnForm();
         yield TextField::new('name');
         yield TextField::new('slug');
-        yield BooleanField::new('useSlug', 'Utiliser le slug ?')->renderAsSwitch(Crud::PAGE_EDIT === $pageName);
-        yield TextField::new('password', 'Code');
+        yield BooleanField::new('useSlug', Crud::PAGE_INDEX === $pageName ? 'Utiliser le slug ?' : 'Utiliser le slug comme identifiant de l\'URL du dashboard ?')->renderAsSwitch(Crud::PAGE_EDIT === $pageName);
+        yield TextField::new('code');
+        yield CollectionField::new('zips', 'Codes postaux');
+        yield Field::new('postalCodesFile', 'Fichier CSV des codes postaux de la station')
+            ->hideOnIndex()
+            ->setHelp('Il faut que la première colonne du fichier soit une liste de code postaux / numéros de département. <br /> La première ligne n\'est pas prise en compte car c\'est l\'entête de la colonne')
+            ->setFormType(FileUploadType::class)
+            ->setFormTypeOptions([
+                'mapped' => false,
+                'upload_dir' => 'public/upload/files',
+            ])
+        ;
     }
 
     public function view(AdminContext $context): Response
