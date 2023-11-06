@@ -9,6 +9,7 @@ use App\Entity\EasyAdmin\User;
 use App\Entity\Question;
 use App\Entity\Repondant;
 use App\Entity\Reponse;
+use App\Entity\Territoire;
 use App\Entity\Thematique;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -72,6 +73,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Formulaire');
         yield MenuItem::linkToCrud('Répondants', '', Repondant::class);
         yield MenuItem::linkToCrud('Réponses', '', Reponse::class);
+        yield MenuItem::linkToCrud('Territoires', '', Territoire::class);
 
         yield MenuItem::section('Super Admin')->setPermission('ROLE_SUPER_ADMIN');
         yield MenuItem::linkToCrud('Thématiques', '', Thematique::class)->setPermission('ROLE_SUPER_ADMIN');

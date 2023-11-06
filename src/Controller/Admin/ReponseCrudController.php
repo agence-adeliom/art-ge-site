@@ -27,9 +27,7 @@ class ReponseCrudController extends AbstractCrudController
 {
     public function __construct(
         private readonly RouterInterface $router,
-    )
-    {
-    }
+    ) {}
 
     public static function getEntityFqcn(): string
     {
@@ -63,7 +61,7 @@ class ReponseCrudController extends AbstractCrudController
     {
         yield IdField::new('id');
         yield AssociationField::new('repondant');
-        yield TextField::new('uuid');
+        yield TextField::new('uuid', 'Identifiant');
         yield DateField::new('createdAt', 'Commencé le');
         yield DateField::new('submittedAt', 'Envoyé le');
         yield NumberField::new('points');
