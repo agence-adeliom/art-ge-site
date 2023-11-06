@@ -10,11 +10,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class HomeController extends AbstractController
 {
     public function __construct(
         private readonly HandleFormSubmission $handleFormSubmission,
+        private readonly RouterInterface $router,
     ) {}
 
     #[Route('/', name: 'home')]
@@ -24,11 +27,9 @@ class HomeController extends AbstractController
 
         $reponseForm->handleRequest($request);
         if ($reponseForm->isSubmitted() && $reponseForm->isValid()) {
-            ($this->handleFormSubmission)($reponseForm->getData());
+            $reponse = ($this->handleFormSubmission)($reponseForm->getData());
 
-            return $this->render('success.html.twig', [
-                'form' => $reponseForm,
-            ]);
+            return $this->redirect($this->router->generate('app_resultat_single', ['uuid' => $reponse->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL));
         }
 
         return $this->render('home.html.twig', [
