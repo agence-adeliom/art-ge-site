@@ -19,8 +19,7 @@ class FormApiController extends AbstractController
     public function __construct(
         private readonly ThematiqueRepository $thematiqueRepository,
         private readonly QuestionRepository $questionRepository,
-    ) {
-    }
+    ) {}
 
     #[Route('/api/form', name: 'api_form_get', methods: ['GET'])]
     public function __invoke(): JsonResponse

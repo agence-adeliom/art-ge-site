@@ -21,8 +21,7 @@ class ChartController extends AbstractController
         private readonly Pdf $pdf,
         private readonly EntityManagerInterface $entityManager,
         private readonly EncodedImageRepository $encodedImageRepository,
-    ) {
-    }
+    ) {}
 
     #[Route('/chart', name: 'app_chart')]
     public function index(Request $request): Response

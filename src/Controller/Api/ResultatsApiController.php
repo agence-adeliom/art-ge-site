@@ -17,8 +17,7 @@ class ResultatsApiController extends AbstractController
         private readonly DepartmentRepository $departmentRepository,
         private readonly TypologieRepository $typologieRepository,
         private readonly ReponseRepository $reponseRepository,
-    ) {
-    }
+    ) {}
 
     #[Route('/api/resultats', name: 'api_resultats_get', methods: ['GET'])]
     public function __invoke(): JsonResponse

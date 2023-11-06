@@ -2,11 +2,8 @@
 
 namespace App\Form\Form;
 
-use App\Entity\Repondant;
 use App\Entity\Reponse;
 use App\EventListener\Form\EmailToRepondantSubscriber;
-use App\Repository\RepondantRepository;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -18,8 +15,7 @@ class ReponseType extends AbstractType
 {
     public function __construct(
         private readonly EmailToRepondantSubscriber $emailToRepondantSubscriber,
-    ) {
-    }
+    ) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

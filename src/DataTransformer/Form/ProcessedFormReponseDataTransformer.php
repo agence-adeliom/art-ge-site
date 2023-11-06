@@ -14,8 +14,7 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly ChoiceTypologieRepository $choiceTypologieRepository,
-    ) {
-    }
+    ) {}
 
     public function transform(mixed $value): mixed
     {
@@ -51,10 +50,10 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
 
                 foreach ($value as $questionId => $choicesIds) {
                     foreach ($choicesIds as $choiceId) {
-                        /** @phpstan-ignore-next-line */
+                        /* @phpstan-ignore-next-line */
                         $points[$questionId][] = $this->choiceTypologieRepository->getPonderation($choiceId, RepondantTypologie::from($typologie, $restauration));
                     }
-                    /** @phpstan-ignore-next-line */
+                    /* @phpstan-ignore-next-line */
                     $points[$questionId] = array_reduce($points[$questionId], fn (int $carry, int $item) => $carry + $item, 0);
                 }
 
@@ -63,10 +62,8 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
 
                 return ['answers' => $value, 'pointsByQuestions' => $points, 'points' => $total];
             }
-
         }
 
         return $value;
-
     }
 }

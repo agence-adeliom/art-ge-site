@@ -14,8 +14,7 @@ readonly class EmailToRepondantSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private RepondantRepository $repondantRepository,
-    ) {
-    }
+    ) {}
 
     public function __invoke(PostSubmitEvent $event): void
     {
@@ -24,7 +23,6 @@ readonly class EmailToRepondantSubscriber implements EventSubscriberInterface
             $email = $event->getData()->getRepondant()->getEmail();
             $repondant = $this->repondantRepository->getOneByEmail($email);
             if ($repondant) {
-
                 // TODO make dynamic
                 $repondant->setFirstname((string) $reponse->getRepondant()->getFirstname());
                 $repondant->setLastname((string) $reponse->getRepondant()->getLastname());

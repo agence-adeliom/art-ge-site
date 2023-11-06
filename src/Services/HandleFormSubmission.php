@@ -13,8 +13,7 @@ readonly class HandleFormSubmission
     public function __construct(
         private EntityManagerInterface $entityManager,
         private HandleScoreGeneration $handleScoreGeneration,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Reponse $reponse): Reponse
     {

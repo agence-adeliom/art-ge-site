@@ -11,8 +11,7 @@ class ProcessedFormReponseType extends CollectionType
 {
     public function __construct(
         private readonly ProcessedFormReponseDataTransformer $processedFormReponseDataTransformer,
-    ) {
-    }
+    ) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

@@ -9,7 +9,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class QuestionCrudController extends AbstractCrudController
@@ -25,7 +24,8 @@ class QuestionCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('Question')
             ->setEntityLabelInPlural('Questions')
             ->showEntityActionsInlined()
-            ->setPaginatorPageSize(100);
+            ->setPaginatorPageSize(100)
+        ;
     }
 
     public function configureActions(Actions $actions): Actions
@@ -36,6 +36,7 @@ class QuestionCrudController extends AbstractCrudController
         $actions->add(Crud::PAGE_INDEX, Action::DETAIL);
         $actions->setPermission(Action::DELETE, 'ROLE_SUPER_ADMIN');
         $actions->setPermission(Action::EDIT, 'ROLE_SUPER_ADMIN');
+
         return $actions;
     }
 

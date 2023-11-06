@@ -258,7 +258,7 @@ class Repondant
     }
 
     /**
-     * VirtualGetters for EasyAdmin
+     * VirtualGetters for EasyAdmin.
      */
     public function getFullName(): string
     {

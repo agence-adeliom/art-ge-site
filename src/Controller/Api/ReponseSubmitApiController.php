@@ -19,8 +19,7 @@ class ReponseSubmitApiController extends AbstractController
     public function __construct(
         private readonly HandleFormSubmission $handleFormSubmission,
         private readonly RouterInterface $router,
-    ) {
-    }
+    ) {}
 
     #[Route('/api/submit', name: 'api_submit_get', methods: ['POST'])]
     public function __invoke(Request $request): JsonResponse

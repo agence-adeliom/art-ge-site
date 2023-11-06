@@ -9,7 +9,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ChoiceCrudController extends AbstractCrudController
@@ -25,7 +24,8 @@ class ChoiceCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('Choix')
             ->setEntityLabelInPlural('Choix')
             ->showEntityActionsInlined()
-            ->setPaginatorPageSize(200);
+            ->setPaginatorPageSize(200)
+        ;
     }
 
     public function configureActions(Actions $actions): Actions
@@ -36,6 +36,7 @@ class ChoiceCrudController extends AbstractCrudController
         $actions->add(Crud::PAGE_INDEX, Action::DETAIL);
         $actions->setPermission(Action::DELETE, 'ROLE_SUPER_ADMIN');
         $actions->setPermission(Action::EDIT, 'ROLE_SUPER_ADMIN');
+
         return $actions;
     }
 

@@ -7,12 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ThematiqueCrudController extends AbstractCrudController
@@ -28,7 +23,8 @@ class ThematiqueCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('Thématique')
             ->setEntityLabelInPlural('Thématiques')
             ->showEntityActionsInlined()
-            ->setPaginatorPageSize(100);
+            ->setPaginatorPageSize(100)
+        ;
     }
 
     public function configureActions(Actions $actions): Actions
@@ -39,6 +35,7 @@ class ThematiqueCrudController extends AbstractCrudController
         $actions->add(Crud::PAGE_INDEX, Action::DETAIL);
         $actions->setPermission(Action::DELETE, 'ROLE_SUPER_ADMIN');
         $actions->setPermission(Action::EDIT, 'ROLE_SUPER_ADMIN');
+
         return $actions;
     }
 

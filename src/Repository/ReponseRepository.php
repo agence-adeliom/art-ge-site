@@ -27,53 +27,58 @@ class ReponseRepository extends ServiceEntityRepository
     public function getAverageMeanPointsQB(): QueryBuilder
     {
         return $this->createQueryBuilder('r')
-            ->select('ROUND(AVG(r.points) / AVG(r.total) * 100, 2)');
+            ->select('ROUND(AVG(r.points) / AVG(r.total) * 100, 2)')
+        ;
     }
 
     public function getHighestPointsQB(): QueryBuilder
     {
         return $this->createQueryBuilder('r')
-            ->select('MAX(r.points)');
+            ->select('MAX(r.points)')
+        ;
     }
 
     public function getLowestPointsQB(): QueryBuilder
     {
         return $this->createQueryBuilder('r')
-            ->select('MIN(r.points)');
+            ->select('MIN(r.points)')
+        ;
     }
 
     /** GLOBAL */
-
     public function getAverageMeanPointsOfAllReponses(): float
     {
         return (float) $this->getAverageMeanPointsQB()
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     public function getHighestPointsOfAllReponses(): int
     {
         return (int) $this->getHighestPointsQB()
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     public function getLowestPointsOfAllReponses(): int
     {
         return (int) $this->getLowestPointsQB()
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     /** BY DEPARTMENT */
-
     private function joinByDepartment(QueryBuilder $qb, string $slug): QueryBuilder
     {
         return $qb
             ->innerJoin('r.repondant', 'u')
             ->innerJoin('u.department', 'd')
             ->andWhere('d.slug = :slug')
-            ->setParameter('slug', $slug);
+            ->setParameter('slug', $slug)
+        ;
     }
 
     public function getAverageMeanPointsOfDepartment(string $slug): float
@@ -83,7 +88,8 @@ class ReponseRepository extends ServiceEntityRepository
 
         return (float) $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     public function getHighestPointsOfDepartment(string $slug): int
@@ -93,7 +99,8 @@ class ReponseRepository extends ServiceEntityRepository
 
         return (int) $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     public function getLowestPointsOfDepartment(string $slug): int
@@ -103,18 +110,19 @@ class ReponseRepository extends ServiceEntityRepository
 
         return (int) $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     /** BY TYPOLOGIE */
-
     private function joinByTypologie(QueryBuilder $qb, string $slug): QueryBuilder
     {
         return $qb
             ->innerJoin('r.repondant', 'u')
             ->innerJoin('u.typologie', 't')
             ->andWhere('t.slug = :slug')
-            ->setParameter('slug', $slug);
+            ->setParameter('slug', $slug)
+        ;
     }
 
     public function getAverageMeanPointsOfTypologie(string $slug): float
@@ -124,7 +132,8 @@ class ReponseRepository extends ServiceEntityRepository
 
         return (float) $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     public function getHighestPointsOfTypologie(string $slug): int
@@ -134,7 +143,8 @@ class ReponseRepository extends ServiceEntityRepository
 
         return (int) $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 
     public function getLowestPointsOfTypologie(string $slug): int

@@ -41,6 +41,7 @@ class ReponseCrudController extends AbstractCrudController
         $actions->add(Crud::PAGE_INDEX, Action::DETAIL);
         $actions->setPermission(Action::DELETE, 'ROLE_SUPER_ADMIN');
         $actions->setPermission(Action::EDIT, 'ROLE_SUPER_ADMIN');
+
         return $actions;
     }
 

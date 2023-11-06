@@ -10,16 +10,13 @@ use App\Repository\ChoiceTypologieRepository;
 use App\Repository\ThematiqueRepository;
 use App\ValueObject\RepondantTypologie;
 use App\ValueObject\ScoreGeneration;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Uid\Ulid;
 
 readonly class HandleScoreGeneration
 {
     public function __construct(
         private ThematiqueRepository $thematiqueRepository,
         private ChoiceTypologieRepository $choiceTypologieRepository,
-    ) {
-    }
+    ) {}
 
     public function __invoke(Reponse $reponse): ScoreGeneration
     {
