@@ -11,14 +11,14 @@ use App\Repository\ThematiqueRepository;
 use App\ValueObject\RepondantTypologie;
 use App\ValueObject\ScoreGeneration;
 
-readonly class HandleScoreGeneration
+readonly class ReponseScoreGeneration
 {
     public function __construct(
         private ThematiqueRepository $thematiqueRepository,
         private ChoiceTypologieRepository $choiceTypologieRepository,
     ) {}
 
-    public function __invoke(Reponse $reponse): ScoreGeneration
+    public function generateScore(Reponse $reponse): ScoreGeneration
     {
         /** @var array{answers: array<int, array<int>>, pointsByQuestions: array<int, int>, points: int} $processedForm */
         $processedForm = $reponse->getProcessedForm();

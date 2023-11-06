@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Form\Form\ReponseType;
-use App\Services\HandleFormSubmission;
+use App\Services\ReponseFormSubmission;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +17,7 @@ use Symfony\Component\Routing\RouterInterface;
 class ReponseSubmitApiController extends AbstractController
 {
     public function __construct(
-        private readonly HandleFormSubmission $handleFormSubmission,
+        private readonly ReponseFormSubmission $reponseFormSubmission,
         private readonly RouterInterface $router,
     ) {}
 
@@ -28,7 +28,7 @@ class ReponseSubmitApiController extends AbstractController
 
         $reponseForm->handleRequest($request);
         if ($reponseForm->isSubmitted() && $reponseForm->isValid()) {
-            $reponse = ($this->handleFormSubmission)($reponseForm->getData());
+            $reponse = $this->reponseFormSubmission->updateAndSaveReponse($reponseForm->getData());
 
             return $this->json([
                 'uuid' => $reponse->getUuid(),

@@ -8,20 +8,21 @@ use App\Entity\Reponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Ulid;
 
-readonly class HandleFormSubmission
+readonly class ReponseFormSubmission
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private HandleScoreGeneration $handleScoreGeneration,
+        private ReponseScoreGeneration $reponseScoreGeneration,
+        private ReponseEmailSender $reponseEmailSender
     ) {}
 
-    public function __invoke(Reponse $reponse): Reponse
+    public function updateAndSaveReponse(Reponse $reponse): Reponse
     {
         $reponse->setCompleted(true);
         $reponse->setCreatedAt(new \DateTimeImmutable());
         $reponse->setSubmittedAt(new \DateTimeImmutable());
         $reponse->setUuid(new Ulid());
-        $scoreGeneration = ($this->handleScoreGeneration)($reponse);
+        $scoreGeneration = $this->reponseScoreGeneration->generateScore($reponse);
         $reponse->setPoints($scoreGeneration->getPoints());
         $reponse->setTotal($scoreGeneration->getTotal());
         foreach ($scoreGeneration->getScores() as $score) {
@@ -29,6 +30,7 @@ readonly class HandleFormSubmission
         }
         $this->entityManager->persist($reponse);
         $this->entityManager->flush();
+        $this->reponseEmailSender->sendReponseSubmittedEmail($reponse);
 
         return $reponse;
     }
