@@ -26,7 +26,6 @@ class ProcessedFormReponseType extends CollectionType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'entry_type' => QuestionType::class,
-            'allow_extra_fields' => true,
             'allow_add' => true,
             'allow_delete' => true,
         ]);

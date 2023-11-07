@@ -17,7 +17,6 @@ class QuestionType extends AbstractType
         $builder
             ->add('answers', CollectionType::class, [
                 'entry_type' => TextType::class,
-                'allow_extra_fields' => true,
                 'allow_add' => true,
                 'allow_delete' => true,
             ])
