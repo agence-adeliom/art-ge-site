@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Reponse;
+use App\Message\ReponseConfirmationMessage;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Uid\Ulid;
 
 readonly class ReponseFormSubmission
@@ -13,7 +15,7 @@ readonly class ReponseFormSubmission
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ReponseScoreGeneration $reponseScoreGeneration,
-        private ReponseEmailSender $reponseEmailSender
+        private MessageBusInterface $messageBus,
     ) {}
 
     public function updateAndSaveReponse(Reponse $reponse): Reponse
@@ -30,7 +32,7 @@ readonly class ReponseFormSubmission
         }
         $this->entityManager->persist($reponse);
         $this->entityManager->flush();
-        $this->reponseEmailSender->sendReponseSubmittedEmail($reponse);
+        $this->messageBus->dispatch(new ReponseConfirmationMessage($reponse));
 
         return $reponse;
     }

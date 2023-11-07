@@ -7,6 +7,15 @@ framework:
             async: '%env(MESSENGER_TRANSPORT_DSN)%'
             failed: 'doctrine://default?queue_name=failed'
             sync: 'sync://'
+            reponse-confirmation:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    queue_name: reponse-confirmation
+                retry_strategy:
+                    max_retries: 4
+                    delay: 60 # 1mn
+                    # delay : 1mn, 2mn, 4mn, 8mn
+                    multiplier: 2
 
         routing:
-            Symfony\Component\Mailer\Messenger\SendEmailMessage: sync
+            App\Message\ReponseConfirmationMessage: reponse-confirmation
