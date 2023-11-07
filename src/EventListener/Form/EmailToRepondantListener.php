@@ -6,14 +6,15 @@ namespace App\EventListener\Form;
 
 use App\Entity\Reponse;
 use App\Repository\RepondantRepository;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\FormEvents;
 
-readonly class EmailToRepondantSubscriber implements EventSubscriberInterface
+class EmailToRepondantListener
 {
     public function __construct(
-        private RepondantRepository $repondantRepository,
+        private readonly RepondantRepository $repondantRepository,
     ) {}
 
     public function __invoke(PostSubmitEvent $event): void
@@ -41,12 +42,5 @@ readonly class EmailToRepondantSubscriber implements EventSubscriberInterface
             }
         }
         $event->setData($reponse);
-    }
-
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            FormEvents::POST_SUBMIT => '__invoke',
-        ];
     }
 }
