@@ -60,7 +60,8 @@ class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterf
                 $typologie = match ($typo) {
                     'A', 'B' => 'hotel',
                     'C', 'D' => 'camping',
-                    'E', 'F', 'G', 'H' => 'loisir',
+                    'E', 'F' => 'visite',
+                    'G', 'H' => 'activite',
                     'I' => 'restaurant',
                     default => null,
                 };

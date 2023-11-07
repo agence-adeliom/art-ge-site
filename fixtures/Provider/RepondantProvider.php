@@ -27,7 +27,8 @@ class RepondantProvider extends Base
     protected static $typologies = [
         'hotel',
         'camping',
-        'loisir',
+        'visite',
+        'activite',
         'restaurant',
     ];
 

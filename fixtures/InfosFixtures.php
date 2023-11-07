@@ -19,7 +19,8 @@ class InfosFixtures extends Fixture
         $typologies = [
             'hotel' => 'Un hôtel, meublé, résidence, chambre d\'hôtes',
             'camping' => 'Un camping',
-            'loisir' => 'Un lieu de visite / une activité de loisirs',
+            'visite' => 'Un lieu de visite',
+            'activite' => 'Une activité de loisirs',
             'restaurant' => 'Un restaurant',
         ];
         foreach ($typologies as $k => $t) {
