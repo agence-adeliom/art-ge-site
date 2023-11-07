@@ -6,7 +6,6 @@ namespace App\Form\Form;
 
 use App\Entity\Reponse;
 use App\EventListener\Form\EmailToRepondantListener;
-use App\EventListener\Form\EmailToRepondantSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -29,7 +28,7 @@ class ReponseType extends AbstractType
             ->add('submit', SubmitType::class)
             ->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event) {
                 $data = $event->getData();
-                if (!empty($data['rawForm'])){
+                if (!empty($data['rawForm'])) {
                     // on copie les données de rawForm dans processedForm pour les traiter dans son DataTransformer
                     $data['processedForm'] = $data['rawForm'];
                     $event->setData($data);

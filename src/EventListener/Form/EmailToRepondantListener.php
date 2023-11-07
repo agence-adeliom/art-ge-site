@@ -6,10 +6,7 @@ namespace App\EventListener\Form;
 
 use App\Entity\Reponse;
 use App\Repository\RepondantRepository;
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Event\PostSubmitEvent;
-use Symfony\Component\Form\FormEvents;
 
 class EmailToRepondantListener
 {
