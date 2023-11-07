@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Form\Form\ReponseType;
+use App\Repository\QuestionRepository;
 use App\Services\ReponseFormSubmission;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,11 +19,13 @@ class HomeController extends AbstractController
     public function __construct(
         private readonly ReponseFormSubmission $reponseFormSubmission,
         private readonly RouterInterface $router,
+        private readonly QuestionRepository $questionRepository,
     ) {}
 
     #[Route('/', name: 'home')]
     public function index(Request $request): Response
     {
+        $questions = $this->questionRepository->findAll();
         $reponseForm = $this->createForm(ReponseType::class);
 
         $reponseForm->handleRequest($request);
@@ -34,6 +37,7 @@ class HomeController extends AbstractController
 
         return $this->render('home.html.twig', [
             'form' => $reponseForm,
+            'questions' => $questions,
         ]);
     }
 }
