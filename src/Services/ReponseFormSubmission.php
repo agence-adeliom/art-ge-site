@@ -10,12 +10,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Uid\Ulid;
 
-readonly class ReponseFormSubmission
+class ReponseFormSubmission
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private ReponseScoreGeneration $reponseScoreGeneration,
-        private MessageBusInterface $messageBus,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ReponseScoreGeneration $reponseScoreGeneration,
+        private readonly MessageBusInterface $messageBus,
     ) {}
 
     public function updateAndSaveReponse(Reponse $reponse): Reponse

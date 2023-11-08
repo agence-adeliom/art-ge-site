@@ -11,11 +11,11 @@ use App\Repository\ThematiqueRepository;
 use App\ValueObject\RepondantTypologie;
 use App\ValueObject\ScoreGeneration;
 
-readonly class ReponseScoreGeneration
+class ReponseScoreGeneration
 {
     public function __construct(
-        private ThematiqueRepository $thematiqueRepository,
-        private ChoiceTypologieRepository $choiceTypologieRepository,
+        private readonly ThematiqueRepository $thematiqueRepository,
+        private readonly ChoiceTypologieRepository $choiceTypologieRepository,
     ) {}
 
     public function generateScore(Reponse $reponse): ScoreGeneration

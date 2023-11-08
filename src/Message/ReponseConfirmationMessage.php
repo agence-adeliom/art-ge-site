@@ -6,10 +6,10 @@ namespace App\Message;
 
 use App\Entity\Reponse;
 
-readonly class ReponseConfirmationMessage
+class ReponseConfirmationMessage
 {
     public function __construct(
-        private Reponse $reponse,
+        private readonly Reponse $reponse,
     ) {}
 
     public function getReponse(): Reponse

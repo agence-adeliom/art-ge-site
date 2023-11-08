@@ -12,10 +12,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[AsEventListener(event: BeforeEntityUpdatedEvent::class)]
 #[AsEventListener(event: BeforeEntityPersistedEvent::class)]
-readonly class BeforeTerritoireSavedListener
+class BeforeTerritoireSavedListener
 {
     public function __construct(
-        private UserPasswordHasherInterface $userPasswordHasher,
+        private readonly UserPasswordHasherInterface $userPasswordHasher,
     ) {}
 
     public function __invoke(BeforeEntityPersistedEvent | BeforeEntityUpdatedEvent $event): void

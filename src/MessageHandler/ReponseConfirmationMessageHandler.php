@@ -15,13 +15,13 @@ use Symfony\Component\Mime\Address;
 use Twig\Environment;
 
 #[AsMessageHandler]
-final readonly class ReponseConfirmationMessageHandler
+class ReponseConfirmationMessageHandler
 {
     public function __construct(
-        private MailerInterface $mailer,
-        private Environment $twig,
-        private ParameterBagInterface $parameterBag,
-        private LoggerInterface $logger,
+        private readonly MailerInterface $mailer,
+        private readonly Environment $twig,
+        private readonly ParameterBagInterface $parameterBag,
+        private readonly LoggerInterface $logger,
     ) {}
 
     public function __invoke(ReponseConfirmationMessage $message): void

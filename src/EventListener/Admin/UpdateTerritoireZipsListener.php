@@ -16,10 +16,10 @@ use Symfony\Component\Serializer\Encoder\CsvEncoder;
 #[AsEventListener(event: BeforeCrudActionEvent::class, method: 'setFileDataInRequestAttribute')]
 #[AsEventListener(event: BeforeEntityUpdatedEvent::class, method: 'updateEntityWithRequestAttributes')]
 #[AsEventListener(event: BeforeEntityPersistedEvent::class, method: 'updateEntityWithRequestAttributes')]
-readonly class UpdateTerritoireZipsListener
+class UpdateTerritoireZipsListener
 {
     public function __construct(
-        private RequestStack $requestStack,
+        private readonly RequestStack $requestStack,
     ) {}
 
     public function setFileDataInRequestAttribute(BeforeCrudActionEvent $event): void
