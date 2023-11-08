@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\DataTransformer\Form;
 
+use App\Entity\Choice;
+use App\Repository\ChoiceRepository;
 use App\Repository\ChoiceTypologieRepository;
 use App\ValueObject\RepondantTypologie;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -14,6 +16,7 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly ChoiceTypologieRepository $choiceTypologieRepository,
+        private readonly ChoiceRepository $choiceRepository,
     ) {}
 
     public function transform(mixed $value): mixed
@@ -37,7 +40,7 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
         if ($request) {
             $reponse = $request->all('reponse');
 
-            $restauration = isset($reponse['repondant']['restauration']);
+            $restauration = isset($reponse['repondant']['restauration']) && '1' === $reponse['repondant']['restauration'];
             if (isset($reponse['repondant']['typologie'])) {
                 /** @var int $typologie */
                 $typologie = (int) $reponse['repondant']['typologie'];
@@ -50,8 +53,12 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
 
                 foreach ($value as $questionId => $choicesIds) {
                     foreach ($choicesIds as $choiceId) {
+                        $point = 0;
+                        if (Choice::NOTHING_DONE !== $this->choiceRepository->getSlugById((int) $choiceId)) {
+                            $point = $this->choiceTypologieRepository->getPonderation((int) $choiceId, RepondantTypologie::from($typologie, $restauration));
+                        }
                         /* @phpstan-ignore-next-line */
-                        $points[$questionId][] = $this->choiceTypologieRepository->getPonderation($choiceId, RepondantTypologie::from($typologie, $restauration));
+                        $points[$questionId][] = $point;
                     }
                     /* @phpstan-ignore-next-line */
                     $points[$questionId] = array_reduce($points[$questionId], fn (int $carry, int $item) => $carry + $item, 0);
