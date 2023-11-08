@@ -3,4 +3,17 @@
 {% block body %}
 
     {{ dump() }}
+
+    <div>Thématiques : {{ query.thematiques is empty ? 'Toutes' : query.thematiques | join(', ') }}</div>
+    <div>Typologies : {{ query.typologies | join(', ') }}</div>
+    <div>Restauration : {{ query.restauration ? 'Oui' : 'Non' }}</div>
+    <div>espace vert : {{ query.greenSpace ? 'Oui' : 'Non' }}</div>
+
+    <h1 class="font-bold">Pourcentage Total</h1>
+    {{ percentageGlobal }}
+    <h2 class="font-bold mt-4">Scores par thématique</h2>
+    {% for percentage in percentages %}
+        <h3 class="font-bold mt-2">{{ percentage.name }}</h3>
+        {{ percentage.value }}/100
+    {% endfor %}
 {% endblock %}

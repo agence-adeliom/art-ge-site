@@ -57,7 +57,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
             $repondant->setCompany($this->faker->company());
             $repondant->setAddress($this->faker->address());
             $repondant->setCity($this->faker->city());
-            $repondant->setZip($this->faker->postcode());
+            $repondant->setZip($this->faker->randomElement(['67000', '67500', '68000']));
             $repondant->setCountry('France');
             $repondant->setRestauration($typologie === 'restaurant' ? true : $this->faker->boolean());
             $repondant->setGreenSpace($this->faker->boolean());

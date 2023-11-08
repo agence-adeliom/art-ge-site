@@ -19,3 +19,4 @@ Donc (102 * 2) * 3 + 102 = 714 choice_typologie
 Exemple de requête qu'on voudrait faire : 
 - "le score de la thématique "Gestion de l'eau et de l'érosion" pour les hotels du 
 Bas-Rhin qui ont un restaurant mais pas d'espace vert ?"
+https://art-grand-est.ddev.site/territoire/alsace?thematiques[]=gestion-des-dechets&thematiques[]=eco-construction&typologies[]=hotel&typologies[]=camping&restauration=true&greenSpace=true
