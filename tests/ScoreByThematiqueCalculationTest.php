@@ -68,7 +68,7 @@ class ScoreByThematiqueCalculationTest extends KernelTestCase
         /**
          * GENERATION DES VALEURS REELLES CALCULEES PAR LE CODE
          **/
-        $processedAnswers = EntityFactoryHelper::getProcessedAnswers($repondantTest, $choiceTypologieRepository, $choiceRepository, $typologieRepository);
+        $processedAnswers = EntityFactoryHelper::getProcessedAnswers($repondantTest, $choiceTypologieRepository, $choiceRepository, $thematiqueRepository, $typologieRepository);
 
 
         /**

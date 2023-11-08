@@ -10,6 +10,7 @@ use App\Entity\Reponse;
 use App\Repository\ChoiceRepository;
 use App\Repository\ChoiceTypologieRepository;
 use App\Repository\DepartmentRepository;
+use App\Repository\ThematiqueRepository;
 use App\Repository\TypologieRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -49,7 +50,7 @@ class EntityFactoryHelper {
         return $reponse;
     }
 
-    public static function getProcessedAnswers(RepondantTest $repondantTest, ChoiceTypologieRepository $choiceTypologieRepository, ChoiceRepository $choiceRepository, TypologieRepository $typologieRepository): array
+    public static function getProcessedAnswers(RepondantTest $repondantTest, ChoiceTypologieRepository $choiceTypologieRepository, ChoiceRepository $choiceRepository, ThematiqueRepository $thematiqueRepository, TypologieRepository $typologieRepository): array
     {
         $requestStack = new RequestStack();
         $requestStack->push(new Request([], [
@@ -62,7 +63,7 @@ class EntityFactoryHelper {
         ]));
 
 
-        $processor = new ProcessedFormReponseDataTransformer($requestStack, $choiceTypologieRepository, $choiceRepository);
+        $processor = new ProcessedFormReponseDataTransformer($requestStack, $choiceTypologieRepository, $choiceRepository, $thematiqueRepository);
 
         $rawForm = AnswersHelper::generateFullAnswers();
         $processedAnswers = $processor->reverseTransform($rawForm);
