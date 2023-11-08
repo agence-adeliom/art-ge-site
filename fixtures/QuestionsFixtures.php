@@ -209,10 +209,12 @@ class QuestionsFixtures extends Fixture
             ],
         ];
 
+        $position = 1;
         foreach ($questions as $t => $q) {
             $thematique = new Thematique();
             $thematique->setName(trim($t));
             $thematique->setSlug($slugger->slug(strtolower($t))->toString());
+            $thematique->setPosition($position++);
             $manager->persist($thematique);
 
             $question = new Question();

@@ -8,6 +8,7 @@ use App\Controller\Api\FormApiController;
 use App\Repository\ThematiqueRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -27,6 +28,9 @@ class Thematique implements \Stringable
     #[ORM\Column(length: 255)]
     #[Groups(FormApiController::FORM_API_GROUP)]
     private string $slug;
+
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $position;
 
     #[ORM\OneToOne(mappedBy: 'thematique', cascade: ['persist', 'remove'])]
     private ?Question $question = null;
@@ -64,6 +68,18 @@ class Thematique implements \Stringable
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): static
+    {
+        $this->position = $position;
 
         return $this;
     }
