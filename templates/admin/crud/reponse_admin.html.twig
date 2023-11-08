@@ -6,6 +6,7 @@
                 <th class="p-2">Completée</th>
                 <th class="p-2">Points</th>
                 <th class="p-2">Total</th>
+                <th class="p-2">Dashboard</th>
             </tr>
         </thead>
         <tbody>
@@ -15,6 +16,7 @@
                 <td class="p-2">{{ value.completed ? 'Oui' : 'Non' }}</td>
                 <td class="p-2">{{ value.points }}</td>
                 <td class="p-2">{{ value.total }}</td>
+                <td class="p-2"><a href="{{ url('app_resultat_single', {'uuid' : value.uuid}) }}" target="_blank"><i class="action-icon fas fa-eye"></i> Voir</a></td>
             </tr>
             {% endfor %}
         </tbody>
