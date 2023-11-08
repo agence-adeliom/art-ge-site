@@ -43,8 +43,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Territoire;
 use App\Exception\TerritoireNotFound;
 use App\Repository\TerritoireRepository;
+use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,6 +55,20 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TerritoireController extends AbstractController
 {
+    private ?Territoire $territoire = null;
+
+    private ?QueryBuilder $qb = null;
+
+    /** @var array<string>|null */
+    private ?array $thematiques = null;
+
+    /** @var array<string>|null */
+    private ?array $typologies = null;
+
+    private ?bool $restauration = null;
+
+    private ?bool $greenSpace = null;
+
     public function __construct(
         private readonly TerritoireRepository $territoireRepository,
         private readonly EntityManagerInterface $entityManager,
@@ -73,80 +89,123 @@ class TerritoireController extends AbstractController
         #[MapQueryParameter] ?bool $restauration,
         #[MapQueryParameter(name: 'green_space')] ?bool $greenSpace,
     ): array {
-        $territoire = null;
+        $this->territoire = $this->territoireRepository->getOneByUuidOrSlug($identifier);
 
-        if ($identifier) {
-            $territoire = $this->territoireRepository->getOneByUuid($identifier);
-            if (!$territoire) {
-                $territoire = $this->territoireRepository->getOneBySlug($identifier);
-            }
-        }
-
-        if (!$territoire) {
+        if (!$this->territoire) {
             throw new TerritoireNotFound();
         }
 
-        $qb = $this->entityManager->getConnection()->createQueryBuilder();
-        $qb->addSelect('COUNT(R.id) ')
+        $this->thematiques = $thematiques;
+        $this->typologies = $typologies;
+        $this->restauration = $restauration;
+        $this->greenSpace = $greenSpace;
+
+        $numberOfReponses = $this->getNumberOfReponses();
+
+        $percentageGlobal = $this->getPercentageGlobal();
+
+        $percentages = $this->getPercentages();
+
+        return [
+            'territoire' => $this->territoire,
+            'numberOfReponses' => $numberOfReponses,
+            'percentageGlobal' => $percentageGlobal,
+            'percentages' => $percentages,
+            'query' => [
+                'thematiques' => $thematiques,
+                'typologies' => $typologies,
+                'restauration' => $restauration,
+                'greenSpace' => $greenSpace,
+            ],
+        ];
+    }
+
+    private function addFiltersToQueryBuilder(): void
+    {
+        if (!$this->qb) {
+            return;
+        }
+
+        if ($this->territoire) {
+            $ors = [];
+            foreach ($this->territoire->getZips() as $key => $zip) {
+                $ors[] = $this->qb->expr()->eq('U.zip', ':zip' . $key);
+                $this->qb->setParameter('zip' . $key, $zip);
+            }
+            $this->qb->andWhere($this->qb->expr()->or(...$ors));
+        }
+
+        if (!empty($this->thematiques)) {
+            $ors = [];
+            foreach ($this->thematiques as $key => $thematique) {
+                $ors[] = $this->qb->expr()->eq('TH.slug', ':thematique' . $key);
+                $this->qb->setParameter('thematique' . $key, $thematique);
+            }
+            $this->qb->andWhere($this->qb->expr()->or(...$ors));
+        }
+
+        if (!empty($this->typologies)) {
+            $ors = [];
+            foreach ($this->typologies as $key => $typologie) {
+                $ors[] = $this->qb->expr()->eq('T.slug', ':typologie' . $key);
+                $this->qb->setParameter('typologie' . $key, $typologie);
+            }
+            $this->qb->andWhere($this->qb->expr()->or(...$ors));
+        }
+
+        if (null !== $this->restauration) {
+            $this->qb->andWhere('U.restauration = :restauration')
+                ->setParameter('restauration', $this->restauration)
+            ;
+        }
+
+        if (null !== $this->greenSpace) {
+            $this->qb->andWhere('U.green_space = :greenSpace')
+                ->setParameter('greenSpace', $this->greenSpace)
+            ;
+        }
+    }
+
+    private function getNumberOfReponses(): mixed
+    {
+        $this->qb = $this->entityManager->getConnection()->createQueryBuilder();
+        $this->qb->addSelect('COUNT(R.id)')
             ->from('reponse', 'R')
             ->innerJoin('R', 'repondant', 'U', 'U.id = R.repondant_id')
             ->innerJoin('U', 'typologie', 'T', 'T.id = U.typologie_id')
         ;
 
-        $ors = [];
-        foreach ($territoire->getZips() as $key => $zip) {
-            $ors[] = $qb->expr()->eq('U.zip', ':zip' . $key);
-            $qb->setParameter('zip' . $key, $zip);
-        }
-        $qb->andWhere($qb->expr()->or(...$ors));
+        $this->addFiltersToQueryBuilder();
 
-        if (!empty($thematiques)) {
-            $ors = [];
-            foreach ($thematiques as $key => $thematique) {
-                $ors[] = $qb->expr()->eq('TH.slug', ':thematique' . $key);
-                $qb->setParameter('thematique' . $key, $thematique);
-            }
-            $qb->andWhere($qb->expr()->or(...$ors));
-        }
+        /* @phpstan-ignore-next-line */
+        return $this->qb->executeQuery()->fetchOne();
+    }
 
-        if (!empty($typologies)) {
-            $ors = [];
-            foreach ($typologies as $key => $typologie) {
-                $ors[] = $qb->expr()->eq('T.slug', ':typologie' . $key);
-                $qb->setParameter('typologie' . $key, $typologie);
-            }
-            $qb->andWhere($qb->expr()->or(...$ors));
-        }
-
-        if (null !== $restauration) {
-            $qb->andWhere('U.restauration = :restauration')
-                ->setParameter('restauration', $restauration)
-            ;
-        }
-
-        if (null !== $greenSpace) {
-            $qb->andWhere('U.green_space = :greenSpace')
-                ->setParameter('greenSpace', $greenSpace)
-            ;
-        }
-
-        $numberOfReponses = $qb->executeQuery()->fetchOne();
-
-        $qb = $this->entityManager->getConnection()->createQueryBuilder();
-        $percentageGlobalQuery = $qb->select('ROUND(SUM(R.points) / SUM(R.total) * 100, 2) as percentage')
+    private function getPercentageGlobal(): float
+    {
+        $this->qb = $this->entityManager->getConnection()->createQueryBuilder();
+        $percentageGlobalQuery = $this->qb->select('ROUND(SUM(R.points) / SUM(R.total) * 100, 2) as percentage')
             ->from('reponse', 'R')
             ->innerJoin('R', 'repondant', 'U', 'U.id = R.repondant_id')
         ;
-        foreach ($territoire->getZips() as $zip) {
-            $qb->orWhere('U.zip = :zip')
-                ->setParameter('zip', $zip)
-            ;
+        if ($this->territoire) {
+            foreach ($this->territoire->getZips() as $zip) {
+                $this->qb->orWhere('U.zip = :zip')
+                    ->setParameter('zip', $zip)
+                ;
+            }
         }
 
-        $percentageGlobal = (float) $percentageGlobalQuery->executeQuery()->fetchOne();
+        return (float) $percentageGlobalQuery->executeQuery()->fetchOne();
+    }
 
-        $qb = $this->entityManager->getConnection()->createQueryBuilder();
-        $qb->addSelect('ROUND(AVG(S.points)) as avg_points')
+    /**
+     * @return array<mixed>
+     */
+    private function getPercentages(): array
+    {
+        $this->qb = $this->entityManager->getConnection()->createQueryBuilder();
+        $this->qb->addSelect('ROUND(AVG(S.points)) as avg_points')
             ->addSelect('ROUND(AVG(S.total)) as avg_total')
             ->addSelect('ROUND((SUM(S.points) / SUM(S.total)) * 100, 2) as value')
             ->addSelect('TH.name as name')
@@ -159,56 +218,9 @@ class TerritoireController extends AbstractController
             ->groupBy('S.thematique_id')
         ;
 
-        $ors = [];
-        foreach ($territoire->getZips() as $key => $zip) {
-            $ors[] = $qb->expr()->eq('U.zip', ':zip' . $key);
-            $qb->setParameter('zip' . $key, $zip);
-        }
-        $qb->andWhere($qb->expr()->or(...$ors));
+        $this->addFiltersToQueryBuilder();
 
-        if (!empty($thematiques)) {
-            $ors = [];
-            foreach ($thematiques as $key => $thematique) {
-                $ors[] = $qb->expr()->eq('TH.slug', ':thematique' . $key);
-                $qb->setParameter('thematique' . $key, $thematique);
-            }
-            $qb->andWhere($qb->expr()->or(...$ors));
-        }
-
-        if (!empty($typologies)) {
-            $ors = [];
-            foreach ($typologies as $key => $typologie) {
-                $ors[] = $qb->expr()->eq('T.slug', ':typologie' . $key);
-                $qb->setParameter('typologie' . $key, $typologie);
-            }
-            $qb->andWhere($qb->expr()->or(...$ors));
-        }
-
-        if (null !== $restauration) {
-            $qb->andWhere('U.restauration = :restauration')
-                ->setParameter('restauration', $restauration)
-            ;
-        }
-
-        if (null !== $greenSpace) {
-            $qb->andWhere('U.green_space = :greenSpace')
-                ->setParameter('greenSpace', $greenSpace)
-            ;
-        }
-
-        $percentages = $qb->executeQuery()->fetchAllAssociative();
-
-        return [
-            'territoire' => $territoire,
-            'numberOfReponses' => $numberOfReponses,
-            'percentageGlobal' => $percentageGlobal,
-            'percentages' => $percentages,
-            'query' => [
-                'thematiques' => $thematiques,
-                'typologies' => $typologies,
-                'restauration' => $restauration,
-                'greenSpace' => $greenSpace,
-            ],
-        ];
+        /* @phpstan-ignore-next-line */
+        return $this->qb->executeQuery()->fetchAllAssociative();
     }
 }

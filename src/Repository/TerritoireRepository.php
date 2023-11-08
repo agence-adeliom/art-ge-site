@@ -26,6 +26,16 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
         parent::__construct($registry, Territoire::class);
     }
 
+    public function getOneByUuidOrSlug(string $identifier): ?Territoire
+    {
+        $territoire = $this->getOneByUuid($identifier);
+        if ($territoire) {
+            return $territoire;
+        }
+
+        return $this->getOneBySlug($identifier);
+    }
+
     public function getOneByUuid(string $uuid): ?Territoire
     {
         try {
