@@ -28,7 +28,12 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
 
     public function getOneByUuid(string $uuid): ?Territoire
     {
-        $uuid = Ulid::fromString($uuid)->toBinary();
+        try {
+            $uuid = Ulid::fromString($uuid)->toBinary();
+        } catch (\InvalidArgumentException) {
+            // $uuid is probably a slug so return null
+            return null;
+        }
 
         return $this->createQueryBuilder('t')
             ->andWhere('t.uuid = :uuid')
