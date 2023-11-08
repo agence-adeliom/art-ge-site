@@ -18,4 +18,5 @@ framework:
                     multiplier: 2
 
         routing:
+            Symfony\Component\Mailer\Messenger\SendEmailMessage: sync
             App\Message\ReponseConfirmationMessage: reponse-confirmation
