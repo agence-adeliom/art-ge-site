@@ -211,13 +211,13 @@ class QuestionsFixtures extends Fixture
 
         foreach ($questions as $t => $q) {
             $thematique = new Thematique();
-            $thematique->setName($t);
+            $thematique->setName(trim($t));
             $thematique->setSlug($slugger->slug(strtolower($t))->toString());
             $manager->persist($thematique);
 
             $question = new Question();
             $question->setThematique($thematique);
-            $question->setLibelle($q[0]);
+            $question->setLibelle(trim($q[0]));
 
             foreach ($q as $key => $c) {
                 if ($key === 0) {
@@ -225,7 +225,7 @@ class QuestionsFixtures extends Fixture
                 }
                 $choice = new Choice();
                 $choice->setQuestion($question);
-                $choice->setLibelle($c);
+                $choice->setLibelle(trim($c));
                 $choice->setSlug($slugger->slug(strtolower($c))->toString());
                 $manager->persist($choice);
             }
