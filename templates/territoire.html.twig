@@ -4,6 +4,7 @@
 
     {{ dump() }}
 
+    <div>Nombres de réponses : {{ numberOfReponses }}</div>
     <div>Thématiques : {{ query.thematiques is empty ? 'Toutes' : query.thematiques | join(', ') }}</div>
     <div>Typologies : {{ query.typologies | join(', ') }}</div>
     <div>Restauration : {{ query.restauration ? 'Oui' : 'Non' }}</div>

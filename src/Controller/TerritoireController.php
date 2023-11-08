@@ -1,6 +1,15 @@
 <?php
 
 /**
+ * NOMBRE DE REPONSES LIEES AUX FILTRES.
+ *
+ * SELECT COUNT(R.id) FROM reponse R
+ * INNER JOIN repondant U ON R.repondant_id = U.id
+ * INNER JOIN typologie T ON U.typologie_id = T.id
+ * WHERE U.zip = '67000' AND T.slug IN ('hotel');
+ * */
+
+/*
  * SCORE GLOBAL DU TERRITOIRE.
  *
  * SELECT ROUND(SUM(R.points) / SUM(R.total) * 100, 2) as percentage
@@ -78,7 +87,52 @@ class TerritoireController extends AbstractController
         }
 
         $qb = $this->entityManager->getConnection()->createQueryBuilder();
+        $qb->addSelect('COUNT(R.id) ')
+            ->from('reponse', 'R')
+            ->innerJoin('R', 'repondant', 'U', 'U.id = R.repondant_id')
+            ->innerJoin('U', 'typologie', 'T', 'T.id = U.typologie_id')
+        ;
 
+        $ors = [];
+        foreach ($territoire->getZips() as $key => $zip) {
+            $ors[] = $qb->expr()->eq('U.zip', ':zip' . $key);
+            $qb->setParameter('zip' . $key, $zip);
+        }
+        $qb->andWhere($qb->expr()->or(...$ors));
+
+        if (!empty($thematiques)) {
+            $ors = [];
+            foreach ($thematiques as $key => $thematique) {
+                $ors[] = $qb->expr()->eq('TH.slug', ':thematique' . $key);
+                $qb->setParameter('thematique' . $key, $thematique);
+            }
+            $qb->andWhere($qb->expr()->or(...$ors));
+        }
+
+        if (!empty($typologies)) {
+            $ors = [];
+            foreach ($typologies as $key => $typologie) {
+                $ors[] = $qb->expr()->eq('T.slug', ':typologie' . $key);
+                $qb->setParameter('typologie' . $key, $typologie);
+            }
+            $qb->andWhere($qb->expr()->or(...$ors));
+        }
+
+        if (null !== $restauration) {
+            $qb->andWhere('U.restauration = :restauration')
+                ->setParameter('restauration', $restauration)
+            ;
+        }
+
+        if (null !== $greenSpace) {
+            $qb->andWhere('U.green_space = :greenSpace')
+                ->setParameter('greenSpace', $greenSpace)
+            ;
+        }
+
+        $numberOfReponses = $qb->executeQuery()->fetchOne();
+
+        $qb = $this->entityManager->getConnection()->createQueryBuilder();
         $percentageGlobalQuery = $qb->select('ROUND(SUM(R.points) / SUM(R.total) * 100, 2) as percentage')
             ->from('reponse', 'R')
             ->innerJoin('R', 'repondant', 'U', 'U.id = R.repondant_id')
@@ -146,6 +200,7 @@ class TerritoireController extends AbstractController
 
         return [
             'territoire' => $territoire,
+            'numberOfReponses' => $numberOfReponses,
             'percentageGlobal' => $percentageGlobal,
             'percentages' => $percentages,
             'query' => [
