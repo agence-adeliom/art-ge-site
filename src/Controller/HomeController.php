@@ -7,9 +7,10 @@ namespace App\Controller;
 use App\Form\Form\ReponseType;
 use App\Repository\QuestionRepository;
 use App\Services\ReponseFormSubmission;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -22,8 +23,10 @@ class HomeController extends AbstractController
         private readonly QuestionRepository $questionRepository,
     ) {}
 
+    /** @return array<mixed> */
     #[Route('/', name: 'home')]
-    public function index(Request $request): Response
+    #[Template('home.html.twig')]
+    public function index(Request $request): array | RedirectResponse
     {
         $questions = $this->questionRepository->findAll();
         $reponseForm = $this->createForm(ReponseType::class);
@@ -35,9 +38,9 @@ class HomeController extends AbstractController
             return $this->redirect($this->router->generate('app_resultat_single', ['uuid' => $reponse->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL));
         }
 
-        return $this->render('home.html.twig', [
+        return [
             'form' => $reponseForm,
             'questions' => $questions,
-        ]);
+        ];
     }
 }

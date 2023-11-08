@@ -8,6 +8,7 @@ use App\Entity\EncodedImage;
 use App\Repository\EncodedImageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Snappy\Pdf;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,12 +24,12 @@ class ChartController extends AbstractController
         private readonly EncodedImageRepository $encodedImageRepository,
     ) {}
 
+    /** @return array<mixed> */
     #[Route('/chart', name: 'app_chart')]
-    public function index(Request $request): Response
+    #[Template('chart/index.html.twig')]
+    public function index(): array
     {
-        return $this->render('chart/index.html.twig', [
-            'controller_name' => 'ChartController',
-        ]);
+        return [];
     }
 
     #[Route('/save-images', name: 'app_save_images', methods: ['POST'])]

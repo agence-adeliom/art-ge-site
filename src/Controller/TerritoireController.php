@@ -37,8 +37,8 @@ namespace App\Controller;
 use App\Exception\TerritoireNotFound;
 use App\Repository\TerritoireRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -52,15 +52,18 @@ class TerritoireController extends AbstractController
     /**
      * @param array<string>|null $thematiques
      * @param array<string>|null $typologies
+     *
+     * @return array<mixed>
      */
     #[Route('/territoire/{identifier}', name: 'app_territoire_single')]
+    #[Template('territoire.html.twig')]
     public function __invoke(
         string $identifier,
         #[MapQueryParameter] ?array $thematiques,
         #[MapQueryParameter] ?array $typologies,
         #[MapQueryParameter] ?bool $restauration,
         #[MapQueryParameter(name: 'green_space')] ?bool $greenSpace,
-    ): Response {
+    ): array {
         $territoire = null;
 
         if ($identifier) {
@@ -141,7 +144,7 @@ class TerritoireController extends AbstractController
 
         $percentages = $qb->executeQuery()->fetchAllAssociative();
 
-        return $this->render('territoire.html.twig', [
+        return [
             'territoire' => $territoire,
             'percentageGlobal' => $percentageGlobal,
             'percentages' => $percentages,
@@ -151,6 +154,6 @@ class TerritoireController extends AbstractController
                 'restauration' => $restauration,
                 'greenSpace' => $greenSpace,
             ],
-        ]);
+        ];
     }
 }
