@@ -24,47 +24,70 @@ class ReponseRepository extends ServiceEntityRepository
         parent::__construct($registry, Reponse::class);
     }
 
-    public function getAverageMeanPointsQB(): QueryBuilder
+    private function prepareQueryQB(?bool $restauration, ?bool $greenSpace): QueryBuilder
     {
-        return $this->createQueryBuilder('r')
+        $qb = $this->createQueryBuilder('r');
+
+        if (null !== $restauration || null !== $greenSpace) {
+            $qb->innerJoin('r.repondant', 'u');
+        }
+
+        if (null !== $restauration) {
+            $qb->andWhere('u.restauration = :restauration')
+                ->setParameter('restauration', $restauration)
+            ;
+        }
+
+        if (null !== $greenSpace) {
+            $qb->andWhere('u.greenSpace = :greenSpace')
+                ->setParameter('greenSpace', $greenSpace)
+            ;
+        }
+
+        return $qb;
+    }
+
+    public function getAverageMeanPointsQB(?bool $restauration, ?bool $greenSpace): QueryBuilder
+    {
+        return $this->prepareQueryQB($restauration, $greenSpace)
             ->select('ROUND(AVG(r.points) / AVG(r.total) * 100, 2)')
         ;
     }
 
-    public function getHighestPointsQB(): QueryBuilder
+    public function getHighestPointsQB(?bool $restauration, ?bool $greenSpace): QueryBuilder
     {
-        return $this->createQueryBuilder('r')
+        return $this->prepareQueryQB($restauration, $greenSpace)
             ->select('MAX(r.points)')
         ;
     }
 
-    public function getLowestPointsQB(): QueryBuilder
+    public function getLowestPointsQB(?bool $restauration, ?bool $greenSpace): QueryBuilder
     {
-        return $this->createQueryBuilder('r')
+        return $this->prepareQueryQB($restauration, $greenSpace)
             ->select('MIN(r.points)')
         ;
     }
 
     /** GLOBAL */
-    public function getAverageMeanPointsOfAllReponses(): float
+    public function getAverageMeanPointsOfAllReponses(?bool $restauration, ?bool $greenSpace): float
     {
-        return (float) $this->getAverageMeanPointsQB()
+        return (float) $this->getAverageMeanPointsQB($restauration, $greenSpace)
             ->getQuery()
             ->getSingleScalarResult()
         ;
     }
 
-    public function getHighestPointsOfAllReponses(): int
+    public function getHighestPointsOfAllReponses(?bool $restauration, ?bool $greenSpace): int
     {
-        return (int) $this->getHighestPointsQB()
+        return (int) $this->getHighestPointsQB($restauration, $greenSpace)
             ->getQuery()
             ->getSingleScalarResult()
         ;
     }
 
-    public function getLowestPointsOfAllReponses(): int
+    public function getLowestPointsOfAllReponses(?bool $restauration, ?bool $greenSpace): int
     {
-        return (int) $this->getLowestPointsQB()
+        return (int) $this->getLowestPointsQB($restauration, $greenSpace)
             ->getQuery()
             ->getSingleScalarResult()
         ;
@@ -73,17 +96,20 @@ class ReponseRepository extends ServiceEntityRepository
     /** BY DEPARTMENT */
     private function joinByDepartment(QueryBuilder $qb, string $slug): QueryBuilder
     {
+        if (!in_array('r', array_keys($qb->getDQLPart('join')))) {
+            $qb->innerJoin('r.repondant', 'u');
+        }
+
         return $qb
-            ->innerJoin('r.repondant', 'u')
             ->innerJoin('u.department', 'd')
             ->andWhere('d.slug = :slug')
             ->setParameter('slug', $slug)
         ;
     }
 
-    public function getAverageMeanPointsOfDepartment(string $slug): float
+    public function getAverageMeanPointsOfDepartment(string $slug, ?bool $restauration, ?bool $greenSpace): float
     {
-        $qb = $this->getAverageMeanPointsQB();
+        $qb = $this->getAverageMeanPointsQB($restauration, $greenSpace);
         $qb = $this->joinByDepartment($qb, $slug);
 
         return (float) $qb
@@ -92,9 +118,9 @@ class ReponseRepository extends ServiceEntityRepository
         ;
     }
 
-    public function getHighestPointsOfDepartment(string $slug): int
+    public function getHighestPointsOfDepartment(string $slug, ?bool $restauration, ?bool $greenSpace): int
     {
-        $qb = $this->getHighestPointsQB();
+        $qb = $this->getHighestPointsQB($restauration, $greenSpace);
         $qb = $this->joinByDepartment($qb, $slug);
 
         return (int) $qb
@@ -103,9 +129,9 @@ class ReponseRepository extends ServiceEntityRepository
         ;
     }
 
-    public function getLowestPointsOfDepartment(string $slug): int
+    public function getLowestPointsOfDepartment(string $slug, ?bool $restauration, ?bool $greenSpace): int
     {
-        $qb = $this->getLowestPointsQB();
+        $qb = $this->getLowestPointsQB($restauration, $greenSpace);
         $qb = $this->joinByDepartment($qb, $slug);
 
         return (int) $qb
@@ -117,17 +143,20 @@ class ReponseRepository extends ServiceEntityRepository
     /** BY TYPOLOGIE */
     private function joinByTypologie(QueryBuilder $qb, string $slug): QueryBuilder
     {
+        if (!in_array('r', array_keys($qb->getDQLPart('join')))) {
+            $qb->innerJoin('r.repondant', 'u');
+        }
+
         return $qb
-            ->innerJoin('r.repondant', 'u')
             ->innerJoin('u.typologie', 't')
             ->andWhere('t.slug = :slug')
             ->setParameter('slug', $slug)
         ;
     }
 
-    public function getAverageMeanPointsOfTypologie(string $slug): float
+    public function getAverageMeanPointsOfTypologie(string $slug, ?bool $restauration, ?bool $greenSpace): float
     {
-        $qb = $this->getAverageMeanPointsQB();
+        $qb = $this->getAverageMeanPointsQB($restauration, $greenSpace);
         $qb = $this->joinByTypologie($qb, $slug);
 
         return (float) $qb
@@ -136,9 +165,9 @@ class ReponseRepository extends ServiceEntityRepository
         ;
     }
 
-    public function getHighestPointsOfTypologie(string $slug): int
+    public function getHighestPointsOfTypologie(string $slug, ?bool $restauration, ?bool $greenSpace): int
     {
-        $qb = $this->getHighestPointsQB();
+        $qb = $this->getHighestPointsQB($restauration, $greenSpace);
         $qb = $this->joinByTypologie($qb, $slug);
 
         return (int) $qb
@@ -147,13 +176,14 @@ class ReponseRepository extends ServiceEntityRepository
         ;
     }
 
-    public function getLowestPointsOfTypologie(string $slug): int
+    public function getLowestPointsOfTypologie(string $slug, ?bool $restauration, ?bool $greenSpace): int
     {
-        $qb = $this->getLowestPointsQB();
+        $qb = $this->getLowestPointsQB($restauration, $greenSpace);
         $qb = $this->joinByTypologie($qb, $slug);
 
         return (int) $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 }

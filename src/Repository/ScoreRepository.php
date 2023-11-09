@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Score;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -23,28 +24,74 @@ class ScoreRepository extends ServiceEntityRepository
         parent::__construct($registry, Score::class);
     }
 
-    //    /**
-    //     * @return Score[] Returns an array of Score objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    private function prepareScoresByThematiqueQB(string $slug, ?bool $restauration, ?bool $greenSpace): QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->innerJoin('s.reponse', 'r')
+            ->innerJoin('r.repondant', 'u')
+            ->innerJoin('u.typologie', 't')
+            ->innerJoin('s.thematique', 'th')
+            ->andWhere('th.slug = :slug')
+            ->setParameter('slug', $slug)
+        ;
 
-    //    public function findOneBySomeField($value): ?Score
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (null !== $restauration) {
+            $qb->andWhere('u.restauration = :restauration')
+                ->setParameter('restauration', $restauration)
+            ;
+        }
+
+        if (null !== $greenSpace) {
+            $qb->andWhere('u.greenSpace = :greenSpace')
+                ->setParameter('greenSpace', $greenSpace)
+            ;
+        }
+
+        return $qb;
+    }
+
+    private function getAverageMeanPointsOfThematiqueQB(string $slug, ?bool $restauration, ?bool $greenSpace): QueryBuilder
+    {
+        return $this->prepareScoresByThematiqueQB($slug, $restauration, $greenSpace)
+            ->select('ROUND(AVG(s.points), 2)')
+        ;
+    }
+
+    public function getAverageMeanPointsOfThematique(string $slug, ?bool $restauration, ?bool $greenSpace): float
+    {
+        return (float) $this->getAverageMeanPointsOfThematiqueQB($slug, $restauration, $greenSpace)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    private function getHighestPointsOfThematiqueQB(string $slug, ?bool $restauration, ?bool $greenSpace): QueryBuilder
+    {
+        return $this->prepareScoresByThematiqueQB($slug, $restauration, $greenSpace)
+            ->select('MAX(s.points)')
+        ;
+    }
+
+    public function getHighestPointsOfThematique(string $slug, ?bool $restauration, ?bool $greenSpace): int
+    {
+        return (int) $this->getHighestPointsOfThematiqueQB($slug, $restauration, $greenSpace)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    private function getLowestPointsOfThematiqueQB(string $slug, ?bool $restauration, ?bool $greenSpace): QueryBuilder
+    {
+        return $this->prepareScoresByThematiqueQB($slug, $restauration, $greenSpace)
+            ->select('MIN(s.points)')
+        ;
+    }
+
+    public function getLowestPointsOfThematique(string $slug, ?bool $restauration, ?bool $greenSpace): int
+    {
+        return (int) $this->getLowestPointsOfThematiqueQB($slug, $restauration, $greenSpace)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
 }
