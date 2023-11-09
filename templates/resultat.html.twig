@@ -10,7 +10,7 @@
     <div>espace vert : {{ reponse.repondant.greenSpace ? 'Oui' : 'Non' }}</div>
 
     <h1 class="font-bold">Score Total</h1>
-    {{ reponse.points }}/{{ reponse.total }}
+    {{ reponse | reponse_percentage }}%/100
     <h2 class="font-bold mt-4">Scores par thématique</h2>
     {% for score in reponse.scores %}
         <h3 class="font-bold mt-2">{{ score.thematique.name }}</h3>

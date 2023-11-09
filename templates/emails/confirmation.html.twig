@@ -1,2 +1,9 @@
+<p>Vous avez un score de {{ reponse | reponse_percentage }}%/100</p>
+
+<p>Vous pouvez retrouver votre résultat en cliquant sur le lien ci-dessous.</p>
 {% set url = url('app_resultat_single', { uuid: reponse.uuid }) %}
 <a href="{{ url }}">{{ url }}</a>
+
+{#<p>Ou télécharger le récapitulatif en PDF en cliquant sur le lien ci-dessous.</p>#}
+{#{% set url = url('app_resultat_single', { uuid: reponse.uuid }) %}#}
+{#<a href="{{ url }}">{{ url }}</a>#}
