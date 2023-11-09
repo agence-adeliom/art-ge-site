@@ -1,19 +1,52 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Résultats{% endblock %}
+
 {% block body %}
 
     {{ dump(reponse) }}
+
+    Soumis le {{ reponse.submittedAt | date("d/m/Y à H:i")  }}
 
     <div>Département : {{ reponse.repondant.department.slug }}</div>
     <div>Typologie : {{ reponse.repondant.typologie.slug }}</div>
     <div>Restauration : {{ reponse.repondant.restauration ? 'Oui' : 'Non' }}</div>
     <div>espace vert : {{ reponse.repondant.greenSpace ? 'Oui' : 'Non' }}</div>
 
+    <hr class="my-4">
+
     <h1 class="font-bold">Score Total</h1>
     {{ reponse | reponse_percentage }}%/100
+
+    <hr class="my-4">
+
     <h2 class="font-bold mt-4">Scores par thématique</h2>
     {% for score in reponse.scores %}
-        <h3 class="font-bold mt-2">{{ score.thematique.name }}</h3>
-        {{ score.points }}/{{ score.total }}
+        <div class="p-4">
+            <h3 class="font-bold mt-2">{{ score.thematique.name }}</h3>
+            {{ score.points }}/{{ score.total }}
+
+            <details>
+                <summary>Réponses choisies</summary>
+                {% if score.chosenChoices %}
+                    <ul class="list-disc list-inside">
+                    {% for chosen in score.chosenChoices %}
+                        <li>{{ chosen.libelle }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </details>
+
+            <details>
+                <summary>Réponses <strong>non</strong> choisies</summary>
+                {% if score.notChosenChoices %}
+                    <ul class="list-disc list-inside">
+                    {% for notChosen in score.notChosenChoices %}
+                        <li>{{ notChosen.libelle }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </details>
+        </div>
     {% endfor %}
 {% endblock %}

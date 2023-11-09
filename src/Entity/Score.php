@@ -29,6 +29,12 @@ class Score
     #[ORM\Column(options: ['comment' => 'Somme des points possible d\'obtenir'])]
     private int $total;
 
+    /** @var array<Choice> */
+    private array $chosenChoices;
+
+    /** @var array<Choice> */
+    private array $notChosenChoices;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -78,6 +84,42 @@ class Score
     public function setTotal(int $total): static
     {
         $this->total = $total;
+
+        return $this;
+    }
+
+    /**
+     * @return array<Choice>
+     */
+    public function getChosenChoices(): array
+    {
+        return $this->chosenChoices;
+    }
+
+    /**
+     * @param array<Choice> $chosenChoices
+     */
+    public function setChosenChoices(array $chosenChoices): static
+    {
+        $this->chosenChoices = $chosenChoices;
+
+        return $this;
+    }
+
+    /**
+     * @return array<Choice>
+     */
+    public function getNotChosenChoices(): array
+    {
+        return $this->notChosenChoices;
+    }
+
+    /**
+     * @param array<Choice> $notChosenChoices
+     */
+    public function setNotChosenChoices(array $notChosenChoices): static
+    {
+        $this->notChosenChoices = $notChosenChoices;
 
         return $this;
     }
