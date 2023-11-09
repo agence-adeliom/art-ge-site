@@ -26,7 +26,6 @@ class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterf
     public function __construct(
         private readonly ChoiceRepository $choiceRepository,
         private readonly TypologieRepository $typologieRepository,
-        private readonly EntityManagerInterface $entityManager,
         private readonly ChoiceTypologieRepository $choiceTypologieRepository,
     )
     {

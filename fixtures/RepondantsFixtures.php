@@ -61,7 +61,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
             $repondant->setCountry('France');
             $repondant->setRestauration($typologie === 'restaurant' ? true : $this->faker->boolean());
             $repondant->setGreenSpace($this->faker->boolean());
-            $repondant->setDepartment($this->departmentRepository->findOneBy(['slug' => $this->faker->departement()]));
+            $repondant->setDepartment($this->departmentRepository->findOneBy(['slug' => $repondant->getZip() === '68000' ? 'haut-rhin' : 'bas-rhin']));
             $repondant->setTypologie($this->typologieRepository->findOneBy(['slug' => $typologie]));
             $manager->persist($repondant);
 
