@@ -69,9 +69,9 @@ class ReponseRepository extends ServiceEntityRepository
     }
 
     /** GLOBAL */
-    public function getAverageMeanPointsOfAllReponses(?bool $restauration, ?bool $greenSpace): float
+    public function getAverageMeanPointsOfAllReponses(?bool $restauration, ?bool $greenSpace): int
     {
-        return (float) $this->getAverageMeanPointsQB($restauration, $greenSpace)
+        return (int) $this->getAverageMeanPointsQB($restauration, $greenSpace)
             ->getQuery()
             ->getSingleScalarResult()
         ;
@@ -107,12 +107,12 @@ class ReponseRepository extends ServiceEntityRepository
         ;
     }
 
-    public function getAverageMeanPointsOfDepartment(string $slug, ?bool $restauration, ?bool $greenSpace): float
+    public function getAverageMeanPointsOfDepartment(string $slug, ?bool $restauration, ?bool $greenSpace): int
     {
         $qb = $this->getAverageMeanPointsQB($restauration, $greenSpace);
         $qb = $this->joinByDepartment($qb, $slug);
 
-        return (float) $qb
+        return (int) $qb
             ->getQuery()
             ->getSingleScalarResult()
         ;
@@ -154,12 +154,12 @@ class ReponseRepository extends ServiceEntityRepository
         ;
     }
 
-    public function getAverageMeanPointsOfTypologie(string $slug, ?bool $restauration, ?bool $greenSpace): float
+    public function getAverageMeanPointsOfTypologie(string $slug, ?bool $restauration, ?bool $greenSpace): int
     {
         $qb = $this->getAverageMeanPointsQB($restauration, $greenSpace);
         $qb = $this->joinByTypologie($qb, $slug);
 
-        return (float) $qb
+        return (int) $qb
             ->getQuery()
             ->getSingleScalarResult()
         ;

@@ -31,8 +31,8 @@ class ResultatsApiController extends AbstractController
         response: 200,
         description: 'Retourne tous les scores des réponses basés sur différents filtres',
         content: new OA\JsonContent(
-//            type: 'array',
-//            items: new OA\Items(ref: new Model(type: AlbumDto::class, groups: ['full']))
+            //            type: 'array',
+            //            items: new OA\Items(ref: new Model(type: AlbumDto::class, groups: ['full']))
         )
     )]
     #[OA\Parameter(

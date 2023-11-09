@@ -57,9 +57,9 @@ class ScoreRepository extends ServiceEntityRepository
         ;
     }
 
-    public function getAverageMeanPointsOfThematique(string $slug, ?bool $restauration, ?bool $greenSpace): float
+    public function getAverageMeanPointsOfThematique(string $slug, ?bool $restauration, ?bool $greenSpace): int
     {
-        return (float) $this->getAverageMeanPointsOfThematiqueQB($slug, $restauration, $greenSpace)
+        return (int) $this->getAverageMeanPointsOfThematiqueQB($slug, $restauration, $greenSpace)
             ->getQuery()
             ->getSingleScalarResult()
         ;

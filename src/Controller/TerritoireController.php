@@ -12,7 +12,7 @@
 /*
  * SCORE GLOBAL DU TERRITOIRE.
  *
- * SELECT ROUND(SUM(R.points) / SUM(R.total) * 100, 2) as percentage
+ * SELECT ROUND(SUM(R.points) / SUM(R.total) * 100) as percentage
  * FROM reponse R
  * INNER JOIN repondant U ON U.id = R.repondant_id
  * WHERE U.zip IN ('67000', '67500');
@@ -21,7 +21,7 @@
 /*
  * SCORE GLOBAL DU TERRITOIRE PAR THEMATIQUE
  *
- * SELECT SUM(S.points) as avg_points, SUM(S.total) as avg_total, ROUND((SUM(S.points) / SUM(S.total)) * 100, 2) as percentage FROM `score` S
+ * SELECT SUM(S.points) as avg_points, SUM(S.total) as avg_total, ROUND((SUM(S.points) / SUM(S.total)) * 100) as percentage FROM `score` S
  * INNER JOIN reponse R ON S.reponse_id = R.id
  * INNER JOIN repondant U ON R.repondant_id = U.id
  * WHERE U.zip = '67000'
@@ -31,7 +31,7 @@
 /*
  * SCORE GLOBAL DU TERRITOIRE PAR THEMATIQUE AND TYPOLOGIE
  *
- * SELECT SUM(S.points) as avg_points, SUM(S.total) as avg_total, ROUND((SUM(S.points) / SUM(S.total)) * 100, 2) as percentage FROM `score` S
+ * SELECT SUM(S.points) as avg_points, SUM(S.total) as avg_total, ROUND((SUM(S.points) / SUM(S.total)) * 100) as percentage FROM `score` S
  * INNER JOIN reponse R ON S.reponse_id = R.id
  * INNER JOIN repondant U ON R.repondant_id = U.id
  * INNER JOIN typologie T ON U.typologie_id = T.id
@@ -75,7 +75,6 @@ class TerritoireController extends AbstractController
     ) {}
 
     /**
-     * @param array<string>|null $thematiques
      * @param array<string>|null $typologies
      *
      * @return array<mixed>
@@ -181,7 +180,7 @@ class TerritoireController extends AbstractController
     private function getPercentageGlobal(): float
     {
         $this->qb = $this->entityManager->getConnection()->createQueryBuilder();
-        $percentageGlobalQuery = $this->qb->select('ROUND(SUM(R.points) / SUM(R.total) * 100, 2) as percentage')
+        $percentageGlobalQuery = $this->qb->select('ROUND(SUM(R.points) / SUM(R.total) * 100) as percentage')
             ->from('reponse', 'R')
             ->innerJoin('R', 'repondant', 'U', 'U.id = R.repondant_id')
         ;
@@ -193,7 +192,7 @@ class TerritoireController extends AbstractController
             }
         }
 
-        return (float) $percentageGlobalQuery->executeQuery()->fetchOne();
+        return (int) $percentageGlobalQuery->executeQuery()->fetchOne();
     }
 
     /**
@@ -204,7 +203,7 @@ class TerritoireController extends AbstractController
         $this->qb = $this->entityManager->getConnection()->createQueryBuilder();
         $this->qb->addSelect('ROUND(AVG(S.points)) as avg_points')
             ->addSelect('ROUND(AVG(S.total)) as avg_total')
-            ->addSelect('ROUND((SUM(S.points) / SUM(S.total)) * 100, 2) as value')
+            ->addSelect('ROUND((SUM(S.points) / SUM(S.total)) * 100) as value')
             ->addSelect('TH.name as name')
             ->addSelect('TH.slug as slug')
             ->from('score', 'S')
