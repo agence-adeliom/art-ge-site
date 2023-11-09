@@ -9,6 +9,8 @@ use App\Repository\ReponseRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\ThematiqueRepository;
 use App\Repository\TypologieRepository;
+use Nelmio\ApiDocBundle\Model\Model;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
@@ -24,6 +26,27 @@ class ResultatsApiController extends AbstractController
         private readonly ScoreRepository $scoreRepository,
     ) {}
 
+    #[OA\Tag(name: 'Resultats')]
+    #[OA\Response(
+        response: 200,
+        description: 'Retourne tous les scores des réponses basés sur différents filtres',
+        content: new OA\JsonContent(
+//            type: 'array',
+//            items: new OA\Items(ref: new Model(type: AlbumDto::class, groups: ['full']))
+        )
+    )]
+    #[OA\Parameter(
+        name: 'restauration',
+        description: 'Filtre les données en fonction de si les répondant ont une offre de restauration ou non',
+        in: 'query',
+        schema: new OA\Schema(type: 'boolean')
+    )]
+    #[OA\Parameter(
+        name: 'green_space',
+        description: 'Filtre les données en fonction de si les répondant ont espace vert supérieur à 100m2 ou non',
+        in: 'query',
+        schema: new OA\Schema(type: 'boolean')
+    )]
     #[Route('/api/resultats', name: 'api_resultats_get', methods: ['GET'])]
     public function __invoke(
         #[MapQueryParameter] ?bool $restauration,
