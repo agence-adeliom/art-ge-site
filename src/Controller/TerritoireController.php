@@ -84,7 +84,6 @@ class TerritoireController extends AbstractController
     #[Template('territoire.html.twig')]
     public function __invoke(
         string $identifier,
-        #[MapQueryParameter] ?array $thematiques,
         #[MapQueryParameter] ?array $typologies,
         #[MapQueryParameter] ?bool $restauration,
         #[MapQueryParameter(name: 'green_space')] ?bool $greenSpace,
@@ -95,7 +94,6 @@ class TerritoireController extends AbstractController
             throw new TerritoireNotFound();
         }
 
-        $this->thematiques = $thematiques;
         $this->typologies = $typologies;
         $this->restauration = $restauration;
         $this->greenSpace = $greenSpace;
@@ -112,7 +110,6 @@ class TerritoireController extends AbstractController
             'percentageGlobal' => $percentageGlobal,
             'percentages' => $percentages,
             'query' => [
-                'thematiques' => $thematiques,
                 'typologies' => $typologies,
                 'restauration' => $restauration,
                 'greenSpace' => $greenSpace,
