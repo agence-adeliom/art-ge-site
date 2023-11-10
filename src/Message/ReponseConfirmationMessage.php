@@ -8,12 +8,16 @@ use App\Entity\Reponse;
 
 class ReponseConfirmationMessage
 {
-    public function __construct(
-        private readonly Reponse $reponse,
-    ) {}
+    private int $reponseId;
 
-    public function getReponse(): Reponse
+    public function __construct(
+        readonly Reponse $reponse
+    ) {
+        $this->reponseId = (int) $reponse->getId();
+    }
+
+    public function getReponseId(): int
     {
-        return $this->reponse;
+        return $this->reponseId;
     }
 }

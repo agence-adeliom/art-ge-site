@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MessageHandler;
 
 use App\Message\ReponseConfirmationMessage;
+use App\Repository\ReponseRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\BodyRenderer;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -22,11 +23,15 @@ class ReponseConfirmationMessageHandler
         private readonly Environment $twig,
         private readonly ParameterBagInterface $parameterBag,
         private readonly LoggerInterface $logger,
+        private readonly ReponseRepository $reponseRepository,
     ) {}
 
     public function __invoke(ReponseConfirmationMessage $message): void
     {
-        $reponse = $message->getReponse();
+        $reponseId = $message->getReponseId();
+        if (! ($reponse = $this->reponseRepository->find($reponseId))) {
+            return;
+        }
 
         $recipient = $reponse->getRepondant()->getEmail();
         $emailSubject = 'Voici vos résultats';
