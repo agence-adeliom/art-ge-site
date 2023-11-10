@@ -8,7 +8,7 @@ Soumis le {{ reponse.submittedAt | date("d/m/Y à H:i")  }}
 <hr class="my-4">
 
 <h1 class="font-bold">Score Total</h1>
-{{ reponse | reponse_percentage }}%/100
+{{ display_percentage(reponse) }}
 
 <hr class="my-4">
 
@@ -16,7 +16,7 @@ Soumis le {{ reponse.submittedAt | date("d/m/Y à H:i")  }}
 {% for score in reponse.scores %}
     <div class="p-4">
         <h3 class="font-bold mt-2">{{ score.thematique.name }}</h3>
-        {{ score.points }}/{{ score.total }}
+        {{ display_percentage(score.points, score.total) }}
 
         <div>
             <strong>Réponses choisies</strong>

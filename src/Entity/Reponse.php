@@ -35,10 +35,10 @@ class Reponse
     private ?\DateTimeImmutable $submittedAt = null;
 
     #[ORM\Column(nullable: true, options: ['comment' => 'Somme des points obtenus'])]
-    private ?float $points = null;
+    private float $points;
 
     #[ORM\Column(options: ['comment' => 'Somme des points possible d\'obtenir'])]
-    private ?int $total = null;
+    private int $total;
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Choice::class)]
     private Collection $choices;
@@ -129,19 +129,19 @@ class Reponse
         return $this;
     }
 
-    public function getPoints(): ?float
+    public function getPoints(): float
     {
         return $this->points;
     }
 
-    public function setPoints(?float $points): static
+    public function setPoints(float $points): static
     {
         $this->points = $points;
 
         return $this;
     }
 
-    public function getTotal(): ?int
+    public function getTotal(): int
     {
         return $this->total;
     }
