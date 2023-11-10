@@ -29,11 +29,8 @@ class Score
     #[ORM\Column(options: ['comment' => 'Somme des points possible d\'obtenir'])]
     private int $total;
 
-    /** @var array<Choice> */
-    private array $chosenChoices;
-
-    /** @var array<Choice> */
-    private array $notChosenChoices;
+    /** @var array{chosenChoices: array<Choice>, notChosenChoices: array<Choice>} */
+    private array $allChoices = ['chosenChoices' => [], 'notChosenChoices' => []];
 
     public function getId(): ?int
     {
@@ -89,38 +86,52 @@ class Score
     }
 
     /**
+     * @return array{chosenChoices: array<Choice>, notChosenChoices: array<Choice>}
+     */
+    public function getAllChoices(): array
+    {
+        // little memoization
+        if (!empty($this->allChoices['chosenChoices'] || !empty($this->allChoices['notChosenChoices']))) {
+            return $this->allChoices;
+        }
+
+        $rawForm = $this->getReponse()->getRawForm();
+        $thematique = $this->getThematique();
+
+        if (isset($rawForm[$thematique->getId()]['answers'])) {
+            $choices = $thematique->getQuestion()->getChoices();
+            $answers = array_keys(array_filter($rawForm[$thematique->getId()]['answers'], function (string $answer) {
+                return 'on' === $answer;
+            }));
+            $choices->map(function (Choice $choice) use ($answers): void {
+                if (in_array($choice->getId(), $answers)) {
+                    $this->allChoices['chosenChoices'][] = $choice;
+                } else {
+                    $this->allChoices['notChosenChoices'][] = $choice;
+                }
+            });
+        }
+
+        return $this->allChoices;
+    }
+
+    /**
      * @return array<Choice>
+     * Used in the result page and PDF templates to display the list of chosen
+     * choice for the current score displayed (check score.chosenChoices)
      */
     public function getChosenChoices(): array
     {
-        return $this->chosenChoices;
-    }
-
-    /**
-     * @param array<Choice> $chosenChoices
-     */
-    public function setChosenChoices(array $chosenChoices): static
-    {
-        $this->chosenChoices = $chosenChoices;
-
-        return $this;
+        return $this->getAllChoices()['chosenChoices'];
     }
 
     /**
      * @return array<Choice>
+     *  Used in the result page and PDF templates to display the list of chosen
+     *  choice for the current score displayed (check score.notChosenChoices)
      */
     public function getNotChosenChoices(): array
     {
-        return $this->notChosenChoices;
-    }
-
-    /**
-     * @param array<Choice> $notChosenChoices
-     */
-    public function setNotChosenChoices(array $notChosenChoices): static
-    {
-        $this->notChosenChoices = $notChosenChoices;
-
-        return $this;
+        return $this->getAllChoices()['notChosenChoices'];
     }
 }
