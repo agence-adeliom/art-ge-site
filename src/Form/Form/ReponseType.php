@@ -26,7 +26,7 @@ class ReponseType extends AbstractType
             ->add('rawForm', RawFormReponseType::class)
             ->add('processedForm', ProcessedFormReponseType::class)
             ->add('submit', SubmitType::class)
-            ->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event) {
+            ->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event): void {
                 $data = $event->getData();
                 if (!empty($data['rawForm'])) {
                     // on copie les données de rawForm dans processedForm pour les traiter dans son DataTransformer

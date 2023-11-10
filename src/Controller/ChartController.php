@@ -53,7 +53,7 @@ class ChartController extends AbstractController
     }
 
     #[Route('/create-pdf', name: 'app_save_pdf')]
-    public function savePdf(Request $request): BinaryFileResponse
+    public function savePdf(): BinaryFileResponse
     {
         $template = $this->renderView('test.html.twig', ['images' => $this->encodedImageRepository->findAll()]);
         $filename = 'test.pdf';

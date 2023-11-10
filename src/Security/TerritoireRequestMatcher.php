@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 class TerritoireRequestMatcher implements RequestMatcherInterface
 {
     public function __construct(
-        private TerritoireRepository $territoireRepository,
+        private readonly TerritoireRepository $territoireRepository,
     ) {}
 
     public function matches(Request $request): bool

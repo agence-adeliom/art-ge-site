@@ -8,7 +8,7 @@ use App\Entity\Reponse;
 
 class ReponseConfirmationMessage
 {
-    private int $reponseId;
+    private readonly int $reponseId;
 
     public function __construct(
         readonly Reponse $reponse

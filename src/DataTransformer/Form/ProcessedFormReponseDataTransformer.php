@@ -53,7 +53,7 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
                 }
 
                 $points = $this->getPointsByThematique($values, $typologie, $restauration);
-                $total = array_reduce($points, fn (int $carry, int $item) => $carry + $item, 0);
+                $total = array_reduce($points, fn (int $carry, int $item): int => $carry + $item, 0);
 
                 return ['answers' => $value, 'pointsByQuestions' => $points, 'points' => $total];
             }
@@ -86,7 +86,7 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
                 $points[$questionId][] = $point;
             }
             /* @phpstan-ignore-next-line */
-            $points[$questionId] = array_reduce($points[$questionId], fn (int $carry, int $item) => $carry + $item, 0);
+            $points[$questionId] = array_reduce($points[$questionId], fn (int $carry, int $item): int => $carry + $item, 0);
         }
 
         return $points;

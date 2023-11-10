@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Choice
 {
     /** @var string NOTHING_DONE */
-    public const NOTHING_DONE = 'je-n-ai-rien-entrepris-en-ce-sens';
+    final public const NOTHING_DONE = 'je-n-ai-rien-entrepris-en-ce-sens';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

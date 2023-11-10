@@ -38,13 +38,14 @@ class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterf
         if ($ponderationsFile) {
             $csvEncoder = new CsvEncoder();
             $ponderationsDatas = $csvEncoder->decode($ponderationsFile, 'csv');
-            $datas = array_map(function (array $row) {
-                return array_merge([self::COLUMN_REPONSE => $row[self::COLUMN_REPONSE]], array_slice($row,  7, 9));
-            }, $ponderationsDatas);
+            $datas = array_map(fn(array $row): array => [self::COLUMN_REPONSE => $row[self::COLUMN_REPONSE], ...array_slice($row,  7, 9)], $ponderationsDatas);
         }
 
         foreach ($datas as $key => $data){
-            if ($key == 0 || array_filter($data) === []) {
+            if ($key == 0) {
+                continue;
+            }
+            if (array_filter($data) === []) {
                 continue;
             }
             if ($data[self::COLUMN_REPONSE] === 'TOTAL POINT') {
@@ -74,7 +75,7 @@ class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterf
                     throw new \Exception('typologie ne correspond pas : ' . $typo);
                 }
 
-                $reponse = (new AsciiSlugger())->slug(strtolower($data[self::COLUMN_REPONSE]))->toString();
+                $reponse = (new AsciiSlugger())->slug(strtolower((string) $data[self::COLUMN_REPONSE]))->toString();
 
                 $choice = $this->choiceRepository->findOneBy(['slug' => $reponse]);
                 if (!$choice) {

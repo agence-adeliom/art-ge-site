@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class FormApiController extends AbstractController
 {
     /** @var string */
-    public const FORM_API_GROUP = 'form:read';
+    final public const FORM_API_GROUP = 'form:read';
 
     public function __construct(
         private readonly ThematiqueRepository $thematiqueRepository,

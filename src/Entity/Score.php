@@ -100,9 +100,7 @@ class Score
 
         if (isset($rawForm[$thematique->getId()]['answers'])) {
             $choices = $thematique->getQuestion()->getChoices();
-            $answers = array_keys(array_filter($rawForm[$thematique->getId()]['answers'], function (string $answer) {
-                return 'on' === $answer;
-            }));
+            $answers = array_keys(array_filter($rawForm[$thematique->getId()]['answers'], fn (string $answer): bool => 'on' === $answer));
             $choices->map(function (Choice $choice) use ($answers): void {
                 if (in_array($choice->getId(), $answers)) {
                     $this->allChoices['chosenChoices'][] = $choice;
@@ -116,9 +114,10 @@ class Score
     }
 
     /**
-     * @return array<Choice>
      * Used in the result page and PDF templates to display the list of chosen
-     * choice for the current score displayed (check score.chosenChoices)
+     * choice for the current score displayed (check score.chosenChoices).
+     *
+     * @return array<Choice>
      */
     public function getChosenChoices(): array
     {
@@ -126,9 +125,10 @@ class Score
     }
 
     /**
+     * Used in the result page and PDF templates to display the list of chosen
+     * choice for the current score displayed (check score.notChosenChoices).
+     *
      * @return array<Choice>
-     *  Used in the result page and PDF templates to display the list of chosen
-     *  choice for the current score displayed (check score.notChosenChoices)
      */
     public function getNotChosenChoices(): array
     {

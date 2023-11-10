@@ -160,6 +160,6 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return (string) $this->getSlug();
+        return $this->getSlug();
     }
 }
