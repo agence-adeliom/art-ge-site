@@ -33,7 +33,7 @@ class Thematique implements \Stringable
     private int $position;
 
     #[ORM\OneToOne(mappedBy: 'thematique', cascade: ['persist', 'remove'])]
-    private ?Question $question = null;
+    private Question $question;
 
     #[ORM\OneToMany(mappedBy: 'thematique', targetEntity: Score::class, orphanRemoval: true)]
     private Collection $scores;
@@ -84,7 +84,7 @@ class Thematique implements \Stringable
         return $this;
     }
 
-    public function getQuestion(): ?Question
+    public function getQuestion(): Question
     {
         return $this->question;
     }

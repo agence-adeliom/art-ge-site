@@ -40,6 +40,9 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $useSlug = false;
 
+    #[ORM\Column]
+    private bool $isPublic = false;
+
     public function __construct()
     {
         $this->uuid = new Ulid();
@@ -132,6 +135,18 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUseSlug(bool $useSlug): static
     {
         $this->useSlug = $useSlug;
+
+        return $this;
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): static
+    {
+        $this->isPublic = $isPublic;
 
         return $this;
     }

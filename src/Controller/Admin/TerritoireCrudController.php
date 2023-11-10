@@ -57,6 +57,7 @@ class TerritoireCrudController extends AbstractCrudController
         yield TextField::new('name');
         yield TextField::new('slug');
         yield BooleanField::new('useSlug', Crud::PAGE_INDEX === $pageName ? 'Utiliser le slug ?' : 'Utiliser le slug comme identifiant de l\'URL du dashboard ?')->renderAsSwitch(Crud::PAGE_EDIT === $pageName);
+        yield BooleanField::new('isPublic', 'Public')->renderAsSwitch(Crud::PAGE_EDIT === $pageName)->setHelp('Si public est activé, la page n\'est pas protégé par un mot de passe');
         yield TextField::new('code');
         yield CollectionField::new('zips', 'Codes postaux');
         yield ImageField::new('postalCodesFile', 'Fichier CSV des codes postaux de la station')

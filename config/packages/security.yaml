@@ -53,7 +53,7 @@ security:
         - { path: ^/admin/logout, roles: PUBLIC_ACCESS }
         - { path: ^/admin/reset-password, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/territoire, roles: ROLE_USER }
+        - { request_matcher: App\Security\TerritoireRequestMatcher, roles: ROLE_USER }
         - { path: ^/, role: PUBLIC_ACCESS }
 
 when@test:
