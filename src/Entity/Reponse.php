@@ -19,7 +19,7 @@ class Reponse
     private ?int $id = null;
 
     #[ORM\Column(type: 'ulid')]
-    private ?Ulid $uuid = null;
+    private Ulid $uuid;
 
     #[ORM\ManyToOne(cascade: ['persist'], inversedBy: 'reponses')]
     #[ORM\JoinColumn(nullable: false)]
@@ -69,7 +69,7 @@ class Reponse
         return $this->id;
     }
 
-    public function getUuid(): ?Ulid
+    public function getUuid(): Ulid
     {
         return $this->uuid;
     }

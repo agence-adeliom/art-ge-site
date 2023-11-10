@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Entity\Reponse;
-use App\Message\ReponseConfirmationMessage;
+use App\Message\GenerateReponsePDF;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Uid\Ulid;
@@ -32,7 +32,7 @@ class ReponseFormSubmission
         }
         $this->entityManager->persist($reponse);
         $this->entityManager->flush();
-        $this->messageBus->dispatch(new ReponseConfirmationMessage($reponse));
+        $this->messageBus->dispatch(new GenerateReponsePDF($reponse));
 
         return $reponse;
     }

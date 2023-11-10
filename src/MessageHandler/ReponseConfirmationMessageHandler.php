@@ -29,7 +29,7 @@ class ReponseConfirmationMessageHandler
     public function __invoke(ReponseConfirmationMessage $message): void
     {
         $reponseId = $message->getReponseId();
-        if (! ($reponse = $this->reponseRepository->find($reponseId))) {
+        if (!($reponse = $this->reponseRepository->find($reponseId))) {
             return;
         }
 

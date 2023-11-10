@@ -4,6 +4,6 @@
 {% set url = url('app_resultat_single', { uuid: reponse.uuid }) %}
 <a href="{{ url }}">{{ url }}</a>
 
-{#<p>Ou télécharger le récapitulatif en PDF en cliquant sur le lien ci-dessous.</p>#}
-{#{% set url = url('app_resultat_single', { uuid: reponse.uuid }) %}#}
-{#<a href="{{ url }}">{{ url }}</a>#}
+<p>Ou télécharger le récapitulatif en PDF en cliquant sur le lien ci-dessous.</p>
+{% set url = url('app_resultat_pdf', { uuid: reponse.uuid, extension: '.pdf' }) %}
+<a href="{{ url }}">{{ url }}</a>
