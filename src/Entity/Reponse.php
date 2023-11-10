@@ -40,7 +40,7 @@ class Reponse
     #[ORM\Column(options: ['comment' => 'Somme des points possible d\'obtenir'])]
     private ?int $total = null;
 
-    #[ORM\ManyToMany(targetEntity: Choice::class, inversedBy: 'reponses')]
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Choice::class)]
     private Collection $choices;
 
     /**

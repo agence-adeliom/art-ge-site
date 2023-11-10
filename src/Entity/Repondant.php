@@ -61,13 +61,9 @@ class Repondant
     #[ORM\OneToMany(mappedBy: 'repondant', targetEntity: Reponse::class)]
     private Collection $reponses;
 
-    #[ORM\OneToMany(mappedBy: 'repondant', targetEntity: Score::class, orphanRemoval: true)]
-    private Collection $scores;
-
     public function __construct()
     {
         $this->reponses = new ArrayCollection();
-        $this->scores = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -247,21 +243,5 @@ class Repondant
         }
 
         return $this;
-    }
-
-    /**
-     * @return Collection<int, Score>
-     */
-    public function getScores(): Collection
-    {
-        return $this->scores;
-    }
-
-    /**
-     * VirtualGetters for EasyAdmin.
-     */
-    public function getFullName(): string
-    {
-        return $this->firstname . ' ' . $this->lastname;
     }
 }

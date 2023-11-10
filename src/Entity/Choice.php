@@ -35,15 +35,11 @@ class Choice
     #[Groups(FormApiController::FORM_API_GROUP)]
     private string $slug;
 
-    #[ORM\ManyToMany(targetEntity: Reponse::class, mappedBy: 'choices')]
-    private Collection $reponses;
-
     #[ORM\OneToMany(mappedBy: 'choice', targetEntity: ChoiceTypologie::class)]
     private Collection $choiceTypologies;
 
     public function __construct()
     {
-        $this->reponses = new ArrayCollection();
         $this->choiceTypologies = new ArrayCollection();
     }
 
@@ -84,33 +80,6 @@ class Choice
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Reponse>
-     */
-    public function getReponses(): Collection
-    {
-        return $this->reponses;
-    }
-
-    public function addReponse(Reponse $reponse): static
-    {
-        if (!$this->reponses->contains($reponse)) {
-            $this->reponses->add($reponse);
-            $reponse->addChoice($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReponse(Reponse $reponse): static
-    {
-        if ($this->reponses->removeElement($reponse)) {
-            $reponse->removeChoice($this);
-        }
 
         return $this;
     }
