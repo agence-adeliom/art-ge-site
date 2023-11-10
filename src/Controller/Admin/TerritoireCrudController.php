@@ -14,6 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -22,6 +23,7 @@ use Symfony\Component\Routing\RouterInterface;
 class TerritoireCrudController extends AbstractCrudController
 {
     public function __construct(
+        private readonly ParameterBagInterface $parameterBag,
         private readonly RouterInterface $router,
     ) {}
 
@@ -60,10 +62,13 @@ class TerritoireCrudController extends AbstractCrudController
         yield BooleanField::new('isPublic', 'Public')->renderAsSwitch(Crud::PAGE_EDIT === $pageName)->setHelp('Si public est activé, la page n\'est pas protégé par un mot de passe');
         yield TextField::new('code');
         yield CollectionField::new('zips', 'Codes postaux');
+
+        /** @var string $uploadDirectory */
+        $uploadDirectory = $this->parameterBag->get('upload_directory');
         yield ImageField::new('postalCodesFile', 'Fichier CSV des codes postaux de la station')
             ->hideOnIndex()
             ->setHelp('Il faut que la première colonne du fichier soit une liste de code postaux / numéros de département. <br /> La première ligne n\'est pas prise en compte car c\'est l\'entête de la colonne')
-            ->setUploadDir('var/upload/files')
+            ->setUploadDir($uploadDirectory)
             ->setFormTypeOption('mapped', false)
             ->setUploadedFileNamePattern('[year]/[month]/[day]/[slug]-[contenthash].[extension]')
         ;
