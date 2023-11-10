@@ -23,6 +23,7 @@
     <h2 class="font-bold mt-4">Scores par thématique</h2>
     {% for score in reponse.scores %}
         <div class="p-4">
+            <img src="{{ asset('build/icones/' ~ score.thematique.slug ~ '.jpg') }}" alt="" width="48" height="48">
             <h3 class="font-bold mt-2">{{ score.thematique.name }}</h3>
             {{ display_percentage(score.points, score.total) }}
 
