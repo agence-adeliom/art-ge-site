@@ -33,7 +33,6 @@ class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterf
 
     public function load(ObjectManager $manager): void
     {
-
         $ponderationsFile = file_get_contents('/var/www/html/var/ponderations.csv');
         if ($ponderationsFile) {
             $csvEncoder = new CsvEncoder();
