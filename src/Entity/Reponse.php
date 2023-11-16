@@ -56,7 +56,7 @@ class Reponse
     private array $processedForm = [];
 
     #[ORM\OneToMany(mappedBy: 'reponse', targetEntity: Score::class, orphanRemoval: true)]
-    #[ORM\OrderBy(["thematique" => "ASC"])]
+    #[ORM\OrderBy(['thematique' => 'ASC'])]
     private Collection $scores;
 
     public function __construct()

@@ -27,7 +27,7 @@ class Question implements \Stringable
     #[ORM\OneToOne(inversedBy: 'question', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(FormApiController::FORM_API_GROUP)]
-    private ?Thematique $thematique = null;
+    private Thematique $thematique;
 
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: Choice::class)]
     #[Groups(FormApiController::FORM_API_GROUP)]
@@ -55,7 +55,7 @@ class Question implements \Stringable
         return $this;
     }
 
-    public function getThematique(): ?Thematique
+    public function getThematique(): Thematique
     {
         return $this->thematique;
     }
