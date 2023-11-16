@@ -35,4 +35,20 @@ class CityRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    /**
+     * @return array<string> Returns an array of zip codes for autocompletion
+     */
+    public function getZipCompletion(string $zip): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.zip')
+            ->andWhere('c.zip LIKE :zip')
+            ->setParameter('zip', $zip . '%')
+            ->orderBy('c.zip', 'ASC')
+            ->groupBy('c.zip')
+            ->getQuery()
+            ->getSingleColumnResult()
+        ;
+    }
 }
