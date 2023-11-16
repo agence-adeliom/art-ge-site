@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Repository\CityRepository;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,13 @@ class InseeApiController extends AbstractController
         private readonly CityRepository $cityRepository,
     ) {}
 
+    #[OA\Tag(name: 'Insee')]
+    #[OA\Get(summary: 'Retourne la liste de toutes les villes correspondant au code postal')]
+    #[OA\PathParameter(
+        name: 'zip',
+        description: 'Code postal sur lequel faire la recherche de ville',
+        schema: new OA\Schema(type: 'string'),
+    )]
     #[Route('/api/insee/{zip}', name: 'api_insee_get', methods: ['GET'])]
     public function __invoke(string $zip): JsonResponse
     {

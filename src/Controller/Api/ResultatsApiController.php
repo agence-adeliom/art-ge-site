@@ -9,7 +9,6 @@ use App\Repository\ReponseRepository;
 use App\Repository\ScoreRepository;
 use App\Repository\ThematiqueRepository;
 use App\Repository\TypologieRepository;
-use Nelmio\ApiDocBundle\Model\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,14 +26,7 @@ class ResultatsApiController extends AbstractController
     ) {}
 
     #[OA\Tag(name: 'Resultats')]
-    #[OA\Response(
-        response: 200,
-        description: 'Retourne tous les scores des réponses basés sur différents filtres',
-        content: new OA\JsonContent(
-            //            type: 'array',
-            //            items: new OA\Items(ref: new Model(type: AlbumDto::class, groups: ['full']))
-        )
-    )]
+    #[OA\Get(summary: 'Retourne tous les scores des réponses basés sur différents filtres')]
     #[OA\Parameter(
         name: 'restauration',
         description: 'Filtre les données en fonction de si les répondant ont une offre de restauration ou non',

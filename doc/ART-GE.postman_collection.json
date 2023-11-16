@@ -1,218 +1,333 @@
 {
 	"info": {
-		"_postman_id": "dc79e1e4-15fe-42d2-8bca-12a2a4f9513c",
+		"_postman_id": "d4216b88-5835-4089-8583-21a79a548160",
 		"name": "ART-GE",
+		"description": "Retourne les données sur les résultats des réponses aux formulaires",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "19051030"
 	},
 	"item": [
 		{
-			"name": "API Résultats",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://art-grand-est.ddev.site/api/resultats",
-					"protocol": "https",
-					"host": [
-						"art-grand-est",
-						"ddev",
-						"site"
-					],
-					"path": [
-						"api",
-						"resultats"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "API Form Datas",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://art-grand-est.ddev.site/api/form",
-					"protocol": "https",
-					"host": [
-						"art-grand-est",
-						"ddev",
-						"site"
-					],
-					"path": [
-						"api",
-						"form"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "API Submit",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
+			"name": "api",
+			"item": [
+				{
+					"name": "form",
+					"item": [
 						{
-							"key": "reponse[repondant][email]",
-							"value": "jdd@adeliom.com",
-							"type": "text"
-						},
-						{
-							"key": "reponse[repondant][firstname]",
-							"value": "Jean-David",
-							"type": "text"
-						},
-						{
-							"key": "reponse[repondant][lastname]",
-							"value": "Daviet",
-							"type": "text"
-						},
-						{
-							"key": "reponse[repondant][phone]",
-							"value": "0687851869",
-							"type": "text"
-						},
-						{
-							"key": "reponse[repondant][company]",
-							"value": "Adeliom",
-							"type": "text"
-						},
-						{
-							"key": "reponse[repondant][address]",
-							"value": "3 Place de Haguenau",
-							"type": "text"
-						},
-						{
-							"key": "reponse[repondant][city]",
-							"value": "Strasbourg",
-							"type": "text"
-						},
-						{
-							"key": "reponse[repondant][zip]",
-							"value": "67000",
-							"type": "text"
-						},
-						{
-							"key": "reponse[repondant][country]",
-							"value": "France",
-							"type": "text"
-						},
-						{
-							"key": "reponse[repondant][restauration]",
-							"value": "1",
-							"type": "text"
-						},
-						{
-							"key": "reponse[repondant][greenSpace]",
-							"value": "1",
-							"type": "text"
-						},
-						{
-							"key": "reponse[repondant][department]",
-							"value": "1",
-							"type": "text"
-						},
-						{
-							"key": "reponse[repondant][typologie]",
-							"value": "1",
-							"type": "text"
-						},
-						{
-							"key": "reponse[submit]",
-							"value": "",
-							"type": "text"
-						},
-						{
-							"key": "reponse[rawForm][1][answers][1]",
-							"value": "on",
-							"type": "text"
-						},
-						{
-							"key": "reponse[rawForm][2][answers][14]",
-							"value": "on",
-							"type": "text"
-						},
-						{
-							"key": "reponse[rawForm][3][answers][28]",
-							"value": "on",
-							"type": "text"
-						},
-						{
-							"key": "reponse[rawForm][4][answers][38]",
-							"value": "on",
-							"type": "text"
-						},
-						{
-							"key": "reponse[rawForm][5][answers][46]",
-							"value": "on",
-							"type": "text"
-						},
-						{
-							"key": "reponse[rawForm][6][answers][60]",
-							"value": "on",
-							"type": "text"
-						},
-						{
-							"key": "reponse[rawForm][7][answers][66]",
-							"value": "on",
-							"type": "text"
-						},
-						{
-							"key": "reponse[rawForm][8][answers][74]",
-							"value": "on",
-							"type": "text"
-						},
-						{
-							"key": "reponse[rawForm][9][answers][83]",
-							"value": "on",
-							"type": "text"
-						},
-						{
-							"key": "reponse[rawForm][10][answers][87]",
-							"value": "on",
-							"type": "text"
-						},
-						{
-							"key": "reponse[rawForm][11][answers][95]",
-							"value": "on",
-							"type": "text"
-						},
-						{
-							"key": "reponse[rawForm][12][answers][100]",
-							"value": "on",
-							"type": "text"
-						},
-						{
-							"key": "reponse[rawForm][13][answers][105]",
-							"value": "on",
-							"type": "text"
-						},
-						{
-							"key": "reponse[rawForm][14][answers][110]",
-							"value": "on",
-							"type": "text"
+							"name": "Retourne la liste des questions et des réponses associés ainsi que la liste des thématiques",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/form?green_space=<boolean>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"form"
+									],
+									"query": [
+										{
+											"key": "green_space",
+											"value": "<boolean>",
+											"description": "Est-ce que le répondant à une offre d'espace vert ou non ?"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Untitled Response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/form?green_space=<boolean>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"form"
+											],
+											"query": [
+												{
+													"key": "green_space",
+													"value": "<boolean>",
+													"description": "Est-ce que le répondant à une offre d'espace vert ou non ?"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
 						}
 					]
 				},
-				"url": {
-					"raw": "https://art-grand-est.ddev.site/api/submit",
-					"protocol": "https",
-					"host": [
-						"art-grand-est",
-						"ddev",
-						"site"
-					],
-					"path": [
-						"api",
-						"submit"
+				{
+					"name": "insee",
+					"item": [
+						{
+							"name": "{zip}",
+							"item": [
+								{
+									"name": "Retourne la liste de toutes les villes correspondant au code postal",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/insee/:zip",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"insee",
+												":zip"
+											],
+											"variable": [
+												{
+													"key": "zip",
+													"value": "<string>",
+													"description": "(Required) Code postal sur lequel faire la recherche de ville"
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "Untitled Response",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/api/insee/:zip",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"insee",
+														":zip"
+													],
+													"variable": [
+														{
+															"key": "zip"
+														}
+													]
+												}
+											},
+											"status": "Internal Server Error",
+											"code": 500,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "submit",
+					"item": [
+						{
+							"name": "Soumet un formulaire pour validation",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/submit",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"submit"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Untitled Response",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/submit",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"submit"
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "resultats",
+					"item": [
+						{
+							"name": "Retourne tous les scores des réponses basés sur différents filtres",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/resultats?restauration=<boolean>&green_space=<boolean>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"resultats"
+									],
+									"query": [
+										{
+											"key": "restauration",
+											"value": "<boolean>",
+											"description": "Filtre les données en fonction de si les répondant ont une offre de restauration ou non"
+										},
+										{
+											"key": "green_space",
+											"value": "<boolean>",
+											"description": "Filtre les données en fonction de si les répondant ont espace vert supérieur à 100m2 ou non"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Untitled Response",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/resultats?restauration=<boolean>&green_space=<boolean>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"resultats"
+											],
+											"query": [
+												{
+													"key": "restauration",
+													"value": "<boolean>",
+													"description": "Filtre les données en fonction de si les répondant ont une offre de restauration ou non"
+												},
+												{
+													"key": "green_space",
+													"value": "<boolean>",
+													"description": "Filtre les données en fonction de si les répondant ont espace vert supérieur à 100m2 ou non"
+												}
+											]
+										}
+									},
+									"status": "Internal Server Error",
+									"code": 500,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "zip",
+					"item": [
+						{
+							"name": "{zip}",
+							"item": [
+								{
+									"name": "Retourne tous les codes postaux pour l'autocompletion",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/zip/:zip",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"zip",
+												":zip"
+											],
+											"variable": [
+												{
+													"key": "zip",
+													"value": "<string>",
+													"description": "(Required) Code postal sur lequel faire l'autocompletion"
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "Untitled Response",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/api/zip/:zip",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"zip",
+														":zip"
+													],
+													"variable": [
+														{
+															"key": "zip"
+														}
+													]
+												}
+											},
+											"status": "Internal Server Error",
+											"code": 500,
+											"_postman_previewlanguage": "text",
+											"header": [],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						}
 					]
 				}
-			},
-			"response": []
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "/"
 		}
 	]
 }

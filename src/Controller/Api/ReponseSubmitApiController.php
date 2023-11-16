@@ -6,6 +6,7 @@ namespace App\Controller\Api;
 
 use App\Form\Form\ReponseType;
 use App\Services\ReponseFormSubmission;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +22,8 @@ class ReponseSubmitApiController extends AbstractController
         private readonly RouterInterface $router,
     ) {}
 
+    #[OA\Tag(name: 'Formulaire')]
+    #[OA\Post(summary: 'Soumet un formulaire pour validation')]
     #[Route('/api/submit', name: 'api_submit_get', methods: ['POST'])]
     public function __invoke(Request $request): JsonResponse
     {

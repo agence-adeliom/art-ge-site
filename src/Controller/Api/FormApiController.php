@@ -7,6 +7,7 @@ namespace App\Controller\Api;
 use App\Repository\QuestionRepository;
 use App\Repository\ThematiqueRepository;
 use App\Services\QuestionChoiceExcluder;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +25,14 @@ class FormApiController extends AbstractController
         private readonly QuestionChoiceExcluder $questionChoiceExcluder,
     ) {}
 
+    #[OA\Tag(name: 'Formulaire')]
+    #[OA\Get(summary: 'Retourne la liste des questions et des réponses associés ainsi que la liste des thématiques')]
+    #[OA\Parameter(
+        name: 'green_space',
+        description: 'Est-ce que le répondant à une offre d\'espace vert ou non ?',
+        in: 'query',
+        schema: new OA\Schema(type: 'boolean'),
+    )]
     #[Route('/api/form', name: 'api_form_get', methods: ['GET'])]
     public function __invoke(#[MapQueryParameter(name: 'green_space')] ?bool $greenSpace = false): JsonResponse
     {
