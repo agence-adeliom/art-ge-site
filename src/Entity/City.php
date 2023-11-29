@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CityRepository::class)]
+#[ORM\Index(fields: ['zip'], name: 'idx_zip')]
+#[ORM\Index(fields: ['insee'], name: 'idx_insee')]
 class City
 {
     #[ORM\Id]

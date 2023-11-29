@@ -22,6 +22,18 @@ class CityRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return string[] Returns an array of zip codes
+     */
+    public function getAllZipCodes(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.zip')
+            ->getQuery()
+            ->getSingleColumnResult()
+        ;
+    }
+
+    /**
      * @return City[] Returns an array of City objects
      */
     public function getByZipCode(string $zip): array

@@ -15,7 +15,7 @@ class CitiesFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $slugger = new AsciiSlugger();
-        $citiesFile = file_get_contents('/var/www/html/var/ExportCPxCOMMUNES_nov2023.txt');
+        $citiesFile = file_get_contents('/var/www/html/var/datas/ExportCPxCOMMUNES_nov2023.txt');
         if ($citiesFile) {
             $csvEncoder = new CsvEncoder(['csv_delimiter' => '	']);
             /** @var array{Code_Postal: string, codeINSEE_commuune: string, Nom_de_la_commune: string} $citiesDatas */
