@@ -78,7 +78,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
 
             $departementsCodes = [];
             foreach ($cityCodes as $k => $v){
-                $departementsCodes[$k] = array_unique(array_map(fn($v) => substr($v, 0, 2), $v));
+                $departementsCodes[$k] = array_unique(array_map(fn($v): string => substr((string) $v, 0, 2), $v));
             }
 
             $ecpisImported = [];

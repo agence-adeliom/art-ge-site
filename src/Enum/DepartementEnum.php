@@ -36,16 +36,16 @@ enum DepartementEnum: string
     public static function getCode(DepartementEnum $value): string
     {
         return match ($value) {
-            self::ARDENNES => "08",
-            self::AUBE => "10",
-            self::MARNE => "51",
-            self::HAUTE_MARNE => "52",
-            self::MEURTHE_ET_MOSELLE => "54",
-            self::MEUSE => "55",
-            self::MOSELLE => "57",
-            self::BAS_RHIN => "67",
-            self::HAUT_RHIN => "68",
-            self::VOSGES => "88",
+            self::ARDENNES => '08',
+            self::AUBE => '10',
+            self::MARNE => '51',
+            self::HAUTE_MARNE => '52',
+            self::MEURTHE_ET_MOSELLE => '54',
+            self::MEUSE => '55',
+            self::MOSELLE => '57',
+            self::BAS_RHIN => '67',
+            self::HAUT_RHIN => '68',
+            self::VOSGES => '88',
         };
     }
 }

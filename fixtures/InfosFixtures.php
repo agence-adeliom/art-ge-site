@@ -15,8 +15,6 @@ class InfosFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $slugger = new AsciiSlugger();
-
         $typologies = [
             'hotel' => 'Un hôtel, meublé, résidence, chambre d\'hôtes',
             'camping' => 'Un camping',
