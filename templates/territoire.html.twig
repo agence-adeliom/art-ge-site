@@ -18,4 +18,17 @@
         <h3 class="font-bold mt-2">{{ percentage.name }}</h3>
         {{ display_percentage(percentage.value) }}
     {% endfor %}
+
+    <h2 class="font-bold mt-4">Liste des répondants</h2>
+    {% if repondants is not empty %}
+        <ul class="grid">
+        {% for repondant in repondants %}
+            <li>
+                <div>{{ repondant.typologie }}</div>
+                <div><a href="{{ url('app_resultat_single', { uuid: repondant.uuid }) }}">{{ repondant.company }}</a></div>
+                <div>{{ display_percentage(repondant.points, repondant.total) }}</div>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}

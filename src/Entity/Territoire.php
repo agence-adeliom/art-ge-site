@@ -43,6 +43,9 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isPublic = false;
 
+    #[ORM\Column(length: 255)]
+    private TerritoireAreaEnum $area = TerritoireAreaEnum::OT;
+
     public function __construct()
     {
         $this->uuid = new Ulid();
@@ -147,6 +150,18 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsPublic(bool $isPublic): static
     {
         $this->isPublic = $isPublic;
+
+        return $this;
+    }
+
+    public function getArea(): TerritoireAreaEnum
+    {
+        return $this->area;
+    }
+
+    public function setArea(TerritoireAreaEnum $area): static
+    {
+        $this->area = $area;
 
         return $this;
     }

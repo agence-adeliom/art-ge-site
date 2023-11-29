@@ -103,8 +103,12 @@ class TerritoireController extends AbstractController
 
         $percentages = $this->getPercentages();
 
+        $repondants = $this->getRepondants();
+        $repondants = array_map(static fn(array $repondant): array => [...$repondant, ...['uuid' => Uuid::fromBinary($repondant['uuid'])->toBase32()]], $repondants);
+
         return [
             'territoire' => $this->territoire,
+            'repondants' => $repondants,
             'numberOfReponses' => $numberOfReponses,
             'percentageGlobal' => $percentageGlobal,
             'percentages' => $percentages,
@@ -122,11 +126,19 @@ class TerritoireController extends AbstractController
             return;
         }
 
-        if ($this->territoire) {
+        if ($this->territoire && $this->territoire->getArea() !== TerritoireAreaEnum::REGION) {
             $ors = [];
-            foreach ($this->territoire->getZips() as $key => $zip) {
-                $ors[] = $this->qb->expr()->eq('U.zip', ':zip' . $key);
-                $this->qb->setParameter('zip' . $key, $zip);
+            if ($this->territoire->getArea() === TerritoireAreaEnum::DEPARTEMENT) {
+                $department = DepartementEnum::tryFrom($this->territoire->getSlug());
+                if ($department) {
+                    $ors[] = $this->qb->expr()->like('U.zip', ':zip');
+                    $this->qb->setParameter('zip', DepartementEnum::getCode($department) . '%');
+                }
+            } else {
+                foreach ($this->territoire->getZips() as $key => $zip) {
+                    $ors[] = $this->qb->expr()->eq('U.zip', ':zip' . $key);
+                    $this->qb->setParameter('zip' . $key, $zip);
+                }
             }
             $this->qb->andWhere($this->qb->expr()->or(...$ors));
         }
@@ -212,6 +224,23 @@ class TerritoireController extends AbstractController
             ->innerJoin('U', 'typologie', 'T', 'T.id = U.typologie_id')
             ->innerJoin('S', 'thematique', 'TH', 'TH.id = S.thematique_id')
             ->groupBy('S.thematique_id')
+        ;
+
+        $this->addFiltersToQueryBuilder();
+
+        /* @phpstan-ignore-next-line */
+        return $this->qb->executeQuery()->fetchAllAssociative();
+    }
+
+    private function getRepondants(): mixed
+    {
+        $this->qb = $this->entityManager->getConnection()->createQueryBuilder();
+        $this->qb
+            ->select('T.name as typologie, R.uuid, U.company, MAX(R.points) as points, R.total')
+            ->from('reponse', 'R')
+            ->innerJoin('R', 'repondant', 'U', 'U.id = R.repondant_id')
+            ->innerJoin('U', 'typologie', 'T', 'T.id = U.typologie_id')
+            ->groupBy('U.id')
         ;
 
         $this->addFiltersToQueryBuilder();
