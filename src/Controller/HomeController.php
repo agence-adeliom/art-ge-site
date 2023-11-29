@@ -28,19 +28,19 @@ class HomeController extends AbstractController
     #[Template('home.html.twig')]
     public function index(Request $request): array | RedirectResponse
     {
-        $questions = $this->questionRepository->findAll();
-        $reponseForm = $this->createForm(ReponseType::class);
+        // $questions = $this->questionRepository->findAll();
+        // $reponseForm = $this->createForm(ReponseType::class);
 
-        $reponseForm->handleRequest($request);
-        if ($reponseForm->isSubmitted() && $reponseForm->isValid()) {
-            $reponse = $this->reponseFormSubmission->updateAndSaveReponse($reponseForm->getData());
+        // $reponseForm->handleRequest($request);
+        // if ($reponseForm->isSubmitted() && $reponseForm->isValid()) {
+        //     $reponse = $this->reponseFormSubmission->updateAndSaveReponse($reponseForm->getData());
 
-            return $this->redirect($this->router->generate('app_resultat_single', ['uuid' => $reponse->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL));
-        }
+        //     return $this->redirect($this->router->generate('app_resultat_single', ['uuid' => $reponse->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL));
+        // }
 
         return [
-            'form' => $reponseForm,
-            'questions' => $questions,
+            // 'form' => $reponseForm,
+            // 'questions' => $questions,
         ];
     }
 }

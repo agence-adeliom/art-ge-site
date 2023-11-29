@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+/* Typography */
+/* @import "./tailwind/components/typography/index.pcss"; */
+
+body {
+    @apply text-neutral-700
+}
+
+.containerBleed {
+    @apply w-screen lg:w-[calc(100%+(50vw-512px)+1rem)] xl:w-[calc(100%+(50vw-640px)+1rem)] 2xl:w-[calc(100%+(50vw-768px)+1rem)]
+}
+
+.mobileLeftBleed {
+    /* @apply -left-4 md:left-[calc((100%-769px-1rem))] */
+    @apply -left-[calc(1rem)] sm:-left-[calc(((100vw-640px)/2)+1rem)] md:-left-[calc((100vw-768px)/2+1rem)] 
+}
+
+.classic-link {
+    @apply underline text-primary-600
+}
+.checkbox {
+    @apply text-primary-600 w-6 h-6 border-neutral-400 focus:ring-1 focus:ring-primary-600
+}

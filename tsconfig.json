@@ -14,6 +14,13 @@
     "jsx": "preserve",
     "incremental": true,
     "typeRoots" : ["node_modules/@types", "assets/react/types"],
+    "baseUrl": "./assets",
+    "paths": {
+      "@components/*": ["react/components/*"],
+      "@screens/*": ["react/screens/*"],
+      "@images/*": ["images/*"],
+      "@icones/*": ["icones/*"],
+    },
   },
   "include": ["assets/**/*.ts", "assets/**/*.tsx"],
   "exclude": ["node_modules"]
