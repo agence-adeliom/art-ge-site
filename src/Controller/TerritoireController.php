@@ -44,6 +44,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Territoire;
+use App\Enum\DepartementEnum;
+use App\Enum\TerritoireAreaEnum;
 use App\Exception\TerritoireNotFound;
 use App\Repository\TerritoireRepository;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -52,6 +54,7 @@ use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Uid\Uuid;
 
 class TerritoireController extends AbstractController
 {
@@ -104,10 +107,16 @@ class TerritoireController extends AbstractController
         $percentages = $this->getPercentages();
 
         $repondants = $this->getRepondants();
-        $repondants = array_map(static fn(array $repondant): array => [...$repondant, ...['uuid' => Uuid::fromBinary($repondant['uuid'])->toBase32()]], $repondants);
+        $repondants = array_map(static fn (array $repondant): array => [...$repondant, ...['uuid' => Uuid::fromBinary($repondant['uuid'])->toBase32()]], $repondants);
+
+        $children = [];
+        if (in_array($this->territoire->getArea(), [TerritoireAreaEnum::DEPARTEMENT, TerritoireAreaEnum::REGION])) {
+            $children = $this->territoire->getChildren();
+        }
 
         return [
             'territoire' => $this->territoire,
+            'children' => $children,
             'repondants' => $repondants,
             'numberOfReponses' => $numberOfReponses,
             'percentageGlobal' => $percentageGlobal,
@@ -126,9 +135,9 @@ class TerritoireController extends AbstractController
             return;
         }
 
-        if ($this->territoire && $this->territoire->getArea() !== TerritoireAreaEnum::REGION) {
+        if ($this->territoire && TerritoireAreaEnum::REGION !== $this->territoire->getArea()) {
             $ors = [];
-            if ($this->territoire->getArea() === TerritoireAreaEnum::DEPARTEMENT) {
+            if (TerritoireAreaEnum::DEPARTEMENT === $this->territoire->getArea()) {
                 $department = DepartementEnum::tryFrom($this->territoire->getSlug());
                 if ($department) {
                     $ors[] = $this->qb->expr()->like('U.zip', ':zip');

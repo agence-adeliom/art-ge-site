@@ -47,6 +47,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
             $region->setArea(TerritoireAreaEnum::REGION);
             $manager->persist($region);
 
+            $departements = [];
             foreach (DepartementEnum::cases() as $departementEnum) {
                 $departement = new Territoire();
                 $departement->setUuid(new Ulid());
@@ -54,38 +55,52 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                 $departement->setSlug($departementEnum->value);
                 $departement->setUseSlug(true);
                 $departement->setIsPublic(true);
+                $departement->setParent($region);
                 $departement->setZips([]);
                 $departement->setArea(TerritoireAreaEnum::DEPARTEMENT);
+                $departements[DepartementEnum::getCode($departementEnum)] = $departement;
                 $manager->persist($departement);
             }
 
             /** IMPORT DES TERRITOIRES */
             $cityCodes = [];
             foreach ($ecpiDatas as $e){
-                if (!array_key_exists($e['sirenEPCI'], $cityCodes)) {
-                    $cityCodes[$e['sirenEPCI']] = [];
+                $inseeCommune = $e['INSEE_commune'];
+                $sirenEPCI = $e['sirenEPCI'];
+                if (!array_key_exists($sirenEPCI, $cityCodes)) {
+                    $cityCodes[$sirenEPCI] = [];
                 }
-                $city = $this->cityRepository->findOneBy(['insee' => $e['INSEE_commune']]);
+                $city = $this->cityRepository->findOneBy(['insee' => $inseeCommune]);
                 if ($city) {
-                    $cityCodes[$e['sirenEPCI']][] = $e['INSEE_commune'];
+                    $cityCodes[$sirenEPCI][] = $inseeCommune;
                 }
+            }
+
+            $departementsCodes = [];
+            foreach ($cityCodes as $k => $v){
+                $departementsCodes[$k] = array_unique(array_map(fn($v) => substr($v, 0, 2), $v));
             }
 
             $ecpisImported = [];
             foreach ($ecpiDatas as $e){
-                if (in_array($e['sirenEPCI'], $ecpisImported)) {
+                $nameEPCI = $e['Nom_EPCI'];
+                $sirenEPCI = $e['sirenEPCI'];
+                if (in_array($sirenEPCI, $ecpisImported)) {
                     continue;
                 }
                 $territoire = new Territoire();
                 $territoire->setUuid(new Ulid());
-                $territoire->setName($e['Nom_EPCI']);
-                $territoire->setSlug($slugger->slug(strtolower((string) $e['Nom_EPCI']))->toString());
+                $territoire->setName($nameEPCI);
+                $territoire->setSlug($slugger->slug(strtolower((string) $nameEPCI))->toString());
                 $territoire->setUseSlug(true);
                 $territoire->setIsPublic(true);
-                $territoire->setZips($cityCodes[$e['sirenEPCI']]);
+                foreach ($departementsCodes[$sirenEPCI] as $departmentParentCode) {
+                    $territoire->setParent($departements[$departmentParentCode]);
+                }
+                $territoire->setZips($cityCodes[$sirenEPCI]);
                 $territoire->setArea(TerritoireAreaEnum::OT);
                 $manager->persist($territoire);
-                $ecpisImported[] = $e['sirenEPCI'];
+                $ecpisImported[] = $sirenEPCI;
                 $manager->flush();
             }
             $manager->flush();

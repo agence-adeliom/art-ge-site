@@ -19,6 +19,32 @@
         {{ display_percentage(percentage.value) }}
     {% endfor %}
 
+    {% if territoire.area.value == 'region' %}
+        <h2 class="font-bold mt-4">Liste des département du {{ territoire.name }}</h2>
+        {% if children is not empty %}
+            <ul class="grid">
+                {% for child in children %}
+                    <li>
+                        <div><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a></div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endif %}
+
+    {% if territoire.area.value == 'departement' %}
+        <h2 class="font-bold mt-4">Liste des OT du {{ territoire.name }}</h2>
+        {% if children is not empty %}
+            <ul class="grid">
+                {% for child in children %}
+                    <li>
+                        <div><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a></div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endif %}
+
     <h2 class="font-bold mt-4">Liste des répondants</h2>
     {% if repondants is not empty %}
         <ul class="grid">
