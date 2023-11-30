@@ -3,7 +3,7 @@ import { weight } from '@components/Typography/Typography.styles';
 
 export const buttonStyles = cva(
   [
-    'relative flex items-center w-fit h-fit gap-4 transition-colors text-center',
+    'relative w-full md:w-fit flex items-center w-fit h-fit gap-4 transition-colors text-center',
   ],
   {
     variants: {
@@ -15,8 +15,8 @@ export const buttonStyles = cva(
       },
       size: {
         sm: 'text-xs py-1 px-2',
-        md: 'text-sm py-3 px-5',
-        lg: 'text-base py-4 px-5',
+        md: 'text-sm py-2 px-5',
+        lg: 'text-base py-3 px-5',
       },
       iconSide: {
         left: 'flex-row-reverse',

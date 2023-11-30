@@ -4,14 +4,15 @@ import { color } from '@components/Typography/Typography.styles';
 export const iconStyles = cva('', {
   variants: {
     variant: {
-      regular: 'fa',
-      solid: 'fas',
+      regular: 'fa fa-regular',
+      solid: 'fa-solid',
       duotone: 'fad',
       light: 'fal',
       thin: 'fat',
       brands: 'fab',
     },
     size: {
+      xxs: 'text-[10px]',
       xs: 'text-xs',
       sm: 'text-sm',
       base: 'text-base',
@@ -27,6 +28,6 @@ export const iconStyles = cva('', {
   defaultVariants: {
     variant: 'regular',
     size: 'base',
-    color: 'white',
+    color: 'inherhit',
   },
 });

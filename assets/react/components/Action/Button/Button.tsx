@@ -34,7 +34,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
   const content = (
     <>
       {children}
-      {icon && !loading ? <Icon icon={icon} size="xs" /> : null}
+      {icon && !loading ? <Icon icon={icon} size={'xxs'} variant={'solid'}  /> : null}
       {loading ? (
         <Icon
           icon="spinner-third"

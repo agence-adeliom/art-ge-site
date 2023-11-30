@@ -39,4 +39,5 @@ export const weight = {
     'white': 'text-white',
     'black': 'text-black',
     'none': '',
+    'inherhit': 'text-inherhit',
   };

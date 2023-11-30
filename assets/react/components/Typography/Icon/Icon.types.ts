@@ -6,7 +6,7 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 export interface IconProps
   extends Omit<ComponentProps<'i' | 'div'>, 'color'>,
     VariantProps<typeof iconStyles> {
-  icon: IconProp;
+  icon: string;
 }
 
 export type IconVariants = VariantProps<typeof iconStyles>['variant'];
