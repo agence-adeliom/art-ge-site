@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const plugin = require('tailwindcss/plugin');
 module.exports = {
   darkMode: 'class',
   content: [
@@ -78,6 +79,9 @@ module.exports = {
     },
   },
   plugins: [
+    plugin(function ({ addVariant }) {
+      addVariant('is-active', ['&.is-active', '.is-active &']);
+    }),
     require('@tailwindcss/forms'),
   ]
 }
