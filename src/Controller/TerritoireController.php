@@ -129,11 +129,15 @@ class TerritoireController extends AbstractController
         return [
             'territoire' => $this->territoire,
             'children' => $children,
-            'repondants' => $repondants,
-            'numberOfReponses' => $numberOfReponses,
-            'percentageGlobal' => $percentageGlobal,
-            'percentagesByThematiques' => $percentagesByThematiques,
-            'percentagesByThematiquesAndTypology' => $percentagesByThematiquesAndTypology,
+            'reponses' => [
+                'repondants' => $repondants,
+                'numberOfReponses' => $numberOfReponses,
+            ],
+            'scores' => [
+                'percentageGlobal' => $percentageGlobal,
+                'percentagesByThematiques' => $percentagesByThematiques,
+                'percentagesByThematiquesAndTypology' => $percentagesByThematiquesAndTypology,
+            ],
             'query' => [
                 'typologies' => $typologies,
                 'restauration' => $restauration,
@@ -298,7 +302,7 @@ class TerritoireController extends AbstractController
                 ->setParameter('typology', $typology)
             ;
             /* @phpstan-ignore-next-line */
-            $percentagesByThematiquesAndTypology[$typology->getSlug()] = $this->qb->executeQuery()->fetchAllAssociative();
+            $percentagesByThematiquesAndTypology[$typology] = $this->qb->executeQuery()->fetchAllAssociative();
         }
 
         return $percentagesByThematiquesAndTypology;
