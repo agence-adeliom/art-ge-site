@@ -78,7 +78,6 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                 ]
             ]));
 
-            $ponderationTotals = [134,147,129,147,132,150,132,149,141];
             for ($j = 0; $j < 3; $j++) {
                 $reponse = new Reponse();
                 $reponse->setUuid(Ulid::fromString($this->faker->uuid()));

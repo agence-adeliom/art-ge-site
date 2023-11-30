@@ -301,7 +301,6 @@ class TerritoireController extends AbstractController
             $this->qb->orWhere('T.slug = :typology')
                 ->setParameter('typology', $typology)
             ;
-            /* @phpstan-ignore-next-line */
             $percentagesByThematiquesAndTypology[$typology] = $this->qb->executeQuery()->fetchAllAssociative();
         }
 

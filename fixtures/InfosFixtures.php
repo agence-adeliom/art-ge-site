@@ -16,8 +16,11 @@ class InfosFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $typologies = [
-            'hotel' => 'Un hôtel, meublé, résidence, chambre d\'hôtes',
+            'hotel' => 'Un hôtel',
+            'location' => 'Une location de vacances (gîte et meublé)',
+            'chambre' => 'Une chambre d\'hôtes',
             'camping' => 'Un camping',
+            'insolite' => 'Hébergement insolite (bulles, cabanes, tiny house...)',
             'visite' => 'Un lieu de visite',
             'activite' => 'Une activité de loisirs',
             'restaurant' => 'Un restaurant',

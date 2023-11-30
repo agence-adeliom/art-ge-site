@@ -8,6 +8,7 @@ use App\Entity\Choice;
 use App\Entity\ChoiceTypologie;
 use App\Entity\Question;
 use App\Entity\Thematique;
+use App\Enum\TypologieEnum;
 use App\Repository\ChoiceRepository;
 use App\Repository\ChoiceTypologieRepository;
 use App\Repository\TypologieRepository;
@@ -37,7 +38,7 @@ class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterf
         if ($ponderationsFile) {
             $csvEncoder = new CsvEncoder();
             $ponderationsDatas = $csvEncoder->decode($ponderationsFile, 'csv');
-            $datas = array_map(fn(array $row): array => [self::COLUMN_REPONSE => $row[self::COLUMN_REPONSE], ...array_slice($row,  7, 9)], $ponderationsDatas);
+            $datas = array_map(fn(array $row): array => [self::COLUMN_REPONSE => $row[self::COLUMN_REPONSE], ...array_slice($row,  7, 15)], $ponderationsDatas);
         }
 
         foreach ($datas as $key => $data){
@@ -57,16 +58,19 @@ class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterf
                 }
 
                 $typologie = match ($typo) {
-                    'A', 'B' => 'hotel',
-                    'C', 'D' => 'camping',
-                    'E', 'F' => 'visite',
-                    'G', 'H' => 'activite',
-                    'I' => 'restaurant',
+                    'A', 'B' => TypologieEnum::HOTEL,
+                    'C', 'D' => TypologieEnum::LOCATION,
+                    'E', 'F' => TypologieEnum::CHAMBRE,
+                    'G', 'H' => TypologieEnum::CAMPING,
+                    'I', 'J' => TypologieEnum::INSOLITE,
+                    'K', 'L' => TypologieEnum::VISITE,
+                    'M', 'N' => TypologieEnum::ACTIVITE,
+                    'O' => TypologieEnum::RESTAURANT,
                     default => null,
                 };
 
                 $restauration = match ($typo) {
-                    'B', 'D', 'F', 'H', 'I' => true,
+                    'B', 'D', 'F', 'H', 'I', 'L', 'N', 'O' => true,
                     default => false,
                 };
 
@@ -81,7 +85,7 @@ class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterf
                     throw new \Exception('slug ne correspond pas : ' . $reponse);
                 }
 
-                $typologie = $this->typologieRepository->findOneBy(['slug' => $typologie]);
+                $typologie = $this->typologieRepository->findOneBy(['slug' => $typologie->value]);
                 if (!$typologie) {
                     throw new \Exception('findOneBy typologieSlug ne correspond pas : ' . $typologie);
                 }
