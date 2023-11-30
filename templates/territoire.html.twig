@@ -2,9 +2,20 @@
 
 {% block title %}Territoire {{ territoire.name }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('chart') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('chart') }}
+{% endblock %}
+
 {% block body %}
 
     {{ dump() }}
+    <div id="radar"><canvas style="max-width: 800px; max-height: 600px"></canvas></div>s
 
     <div>Nombres de réponses : {{ numberOfReponses }}</div>
     <div>Typologies : {{ query.typologies is empty ? 'Toutes' : query.typologies | join(', ') }}</div>

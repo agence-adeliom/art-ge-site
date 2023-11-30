@@ -72,6 +72,10 @@ class TerritoireController extends AbstractController
 
     private ?bool $greenSpace = null;
 
+    private ?\DateTimeImmutable $from = null;
+
+    private ?\DateTimeImmutable $to = null;
+
     public function __construct(
         private readonly TerritoireRepository $territoireRepository,
         private readonly EntityManagerInterface $entityManager,
@@ -89,6 +93,8 @@ class TerritoireController extends AbstractController
         #[MapQueryParameter] ?array $typologies,
         #[MapQueryParameter] ?bool $restauration,
         #[MapQueryParameter(name: 'green_space')] ?bool $greenSpace,
+        #[MapQueryParameter] ?string $from,
+        #[MapQueryParameter] ?string $to,
     ): array {
         $this->territoire = $this->territoireRepository->getOneByUuidOrSlug($identifier);
 
@@ -99,6 +105,8 @@ class TerritoireController extends AbstractController
         $this->typologies = $typologies;
         $this->restauration = $restauration;
         $this->greenSpace = $greenSpace;
+        $this->from = \DateTimeImmutable::createFromFormat('!Y-m-d', (string) $from) ?: null;
+        $this->to = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string) $to . ' 23:59:59') ?: null;
 
         $numberOfReponses = $this->getNumberOfReponses();
 
@@ -180,6 +188,24 @@ class TerritoireController extends AbstractController
             $this->qb->andWhere('U.green_space = :greenSpace')
                 ->setParameter('greenSpace', $this->greenSpace)
             ;
+        }
+
+        if (null !== $this->from || null !== $this->to) {
+            $dateFormat = 'Y-m-d H:i:s';
+            if (null !== $this->from && null !== $this->to) {
+                $this->qb->andWhere('R.created_at BETWEEN :from AND :to')
+                    ->setParameter('from', $this->from->format($dateFormat))
+                    ->setParameter('to', $this->to->format($dateFormat))
+                ;
+            } elseif (null !== $this->from && null === $this->to) {
+                $this->qb->andWhere('R.created_at >= :from')
+                    ->setParameter('from', $this->from->format($dateFormat))
+                ;
+            } elseif (null === $this->to && null !== $this->from) {
+                $this->qb->andWhere('R.created_at <= :to')
+                    ->setParameter('to', $this->to->format($dateFormat))
+                ;
+            }
         }
     }
 

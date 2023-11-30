@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
@@ -14,7 +13,7 @@ class HomeController extends AbstractController
     /** @return array<mixed> */
     #[Route('/', name: 'home')]
     #[Template('home.html.twig')]
-    public function index() : array
+    public function index(): array
     {
         return [];
     }
