@@ -44,10 +44,12 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Territoire;
+use App\Entity\Typologie;
 use App\Enum\DepartementEnum;
 use App\Enum\TerritoireAreaEnum;
 use App\Exception\TerritoireNotFound;
 use App\Repository\TerritoireRepository;
+use App\Repository\TypologieRepository;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -78,6 +80,7 @@ class TerritoireController extends AbstractController
 
     public function __construct(
         private readonly TerritoireRepository $territoireRepository,
+        private readonly TypologieRepository $typologieRepository,
         private readonly EntityManagerInterface $entityManager,
     ) {}
 
@@ -106,13 +109,14 @@ class TerritoireController extends AbstractController
         $this->restauration = $restauration;
         $this->greenSpace = $greenSpace;
         $this->from = \DateTimeImmutable::createFromFormat('!Y-m-d', (string) $from) ?: null;
-        $this->to = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', (string) $to . ' 23:59:59') ?: null;
+        $this->to = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $to . ' 23:59:59') ?: null;
 
         $numberOfReponses = $this->getNumberOfReponses();
 
         $percentageGlobal = $this->getPercentageGlobal();
 
-        $percentages = $this->getPercentages();
+        $percentagesByThematiques = $this->getPercentagesByThematiques();
+        $percentagesByThematiquesAndTypology = $this->getPercentagesByThematiquesAndTypology();
 
         $repondants = $this->getRepondants();
         $repondants = array_map(static fn (array $repondant): array => [...$repondant, ...['uuid' => Uuid::fromBinary($repondant['uuid'])->toBase32()]], $repondants);
@@ -128,7 +132,8 @@ class TerritoireController extends AbstractController
             'repondants' => $repondants,
             'numberOfReponses' => $numberOfReponses,
             'percentageGlobal' => $percentageGlobal,
-            'percentages' => $percentages,
+            'percentagesByThematiques' => $percentagesByThematiques,
+            'percentagesByThematiquesAndTypology' => $percentagesByThematiquesAndTypology,
             'query' => [
                 'typologies' => $typologies,
                 'restauration' => $restauration,
@@ -201,7 +206,7 @@ class TerritoireController extends AbstractController
                 $this->qb->andWhere('R.created_at >= :from')
                     ->setParameter('from', $this->from->format($dateFormat))
                 ;
-            } elseif (null === $this->to && null !== $this->from) {
+            } elseif (null === $this->from && null !== $this->to) {
                 $this->qb->andWhere('R.created_at <= :to')
                     ->setParameter('to', $this->to->format($dateFormat))
                 ;
@@ -242,10 +247,7 @@ class TerritoireController extends AbstractController
         return (int) $percentageGlobalQuery->executeQuery()->fetchOne();
     }
 
-    /**
-     * @return array<mixed>
-     */
-    private function getPercentages(): array
+    private function getPercentagesByThematiquesQuery(): QueryBuilder
     {
         $this->qb = $this->entityManager->getConnection()->createQueryBuilder();
         $this->qb->addSelect('ROUND(AVG(S.points)) as avg_points')
@@ -264,7 +266,42 @@ class TerritoireController extends AbstractController
         $this->addFiltersToQueryBuilder();
 
         /* @phpstan-ignore-next-line */
+        return $this->qb;
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function getPercentagesByThematiques(): array
+    {
+        $this->qb = $this->getPercentagesByThematiquesQuery();
+
         return $this->qb->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function getPercentagesByThematiquesAndTypology(): array
+    {
+        $percentagesByThematiquesAndTypology = [];
+
+        if (null === $this->typologies || empty($this->typologies)) {
+            $typologies = array_map(static fn (Typologie $typologie): string => $typologie->getSlug(), $this->typologieRepository->findAll());
+        } else {
+            $typologies = $this->typologies;
+        }
+
+        foreach ($typologies as $typology) {
+            $this->qb = $this->getPercentagesByThematiquesQuery();
+            $this->qb->orWhere('T.slug = :typology')
+                ->setParameter('typology', $typology)
+            ;
+            /* @phpstan-ignore-next-line */
+            $percentagesByThematiquesAndTypology[$typology->getSlug()] = $this->qb->executeQuery()->fetchAllAssociative();
+        }
+
+        return $percentagesByThematiquesAndTypology;
     }
 
     private function getRepondants(): mixed

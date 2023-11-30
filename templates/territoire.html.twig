@@ -25,7 +25,7 @@
     <h1 class="font-bold">Pourcentage Total</h1>
     {{ display_percentage(percentageGlobal) }}
     <h2 class="font-bold mt-4">Scores par thématique</h2>
-    {% for percentage in percentages %}
+    {% for percentage in percentagesByThematiques %}
         <h3 class="font-bold mt-2">{{ percentage.name }}</h3>
         {{ display_percentage(percentage.value) }}
     {% endfor %}
