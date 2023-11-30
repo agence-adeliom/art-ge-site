@@ -44,14 +44,19 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Territoire;
+use App\Entity\Typologie;
+use App\Enum\DepartementEnum;
+use App\Enum\TerritoireAreaEnum;
 use App\Exception\TerritoireNotFound;
 use App\Repository\TerritoireRepository;
+use App\Repository\TypologieRepository;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Uid\Uuid;
 
 class TerritoireController extends AbstractController
 {
@@ -69,8 +74,13 @@ class TerritoireController extends AbstractController
 
     private ?bool $greenSpace = null;
 
+    private ?\DateTimeImmutable $from = null;
+
+    private ?\DateTimeImmutable $to = null;
+
     public function __construct(
         private readonly TerritoireRepository $territoireRepository,
+        private readonly TypologieRepository $typologieRepository,
         private readonly EntityManagerInterface $entityManager,
     ) {}
 
@@ -86,6 +96,8 @@ class TerritoireController extends AbstractController
         #[MapQueryParameter] ?array $typologies,
         #[MapQueryParameter] ?bool $restauration,
         #[MapQueryParameter(name: 'green_space')] ?bool $greenSpace,
+        #[MapQueryParameter] ?string $from,
+        #[MapQueryParameter] ?string $to,
     ): array {
         $this->territoire = $this->territoireRepository->getOneByUuidOrSlug($identifier);
 
@@ -96,18 +108,32 @@ class TerritoireController extends AbstractController
         $this->typologies = $typologies;
         $this->restauration = $restauration;
         $this->greenSpace = $greenSpace;
+        $this->from = \DateTimeImmutable::createFromFormat('!Y-m-d', (string) $from) ?: null;
+        $this->to = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $to . ' 23:59:59') ?: null;
 
         $numberOfReponses = $this->getNumberOfReponses();
 
         $percentageGlobal = $this->getPercentageGlobal();
 
-        $percentages = $this->getPercentages();
+        $percentagesByThematiques = $this->getPercentagesByThematiques();
+        $percentagesByThematiquesAndTypology = $this->getPercentagesByThematiquesAndTypology();
+
+        $repondants = $this->getRepondants();
+        $repondants = array_map(static fn (array $repondant): array => [...$repondant, ...['uuid' => Uuid::fromBinary($repondant['uuid'])->toBase32()]], $repondants);
+
+        $children = [];
+        if (in_array($this->territoire->getArea(), [TerritoireAreaEnum::DEPARTEMENT, TerritoireAreaEnum::REGION])) {
+            $children = $this->territoire->getChildren();
+        }
 
         return [
             'territoire' => $this->territoire,
+            'children' => $children,
+            'repondants' => $repondants,
             'numberOfReponses' => $numberOfReponses,
             'percentageGlobal' => $percentageGlobal,
-            'percentages' => $percentages,
+            'percentagesByThematiques' => $percentagesByThematiques,
+            'percentagesByThematiquesAndTypology' => $percentagesByThematiquesAndTypology,
             'query' => [
                 'typologies' => $typologies,
                 'restauration' => $restauration,
@@ -122,11 +148,19 @@ class TerritoireController extends AbstractController
             return;
         }
 
-        if ($this->territoire) {
+        if ($this->territoire && TerritoireAreaEnum::REGION !== $this->territoire->getArea()) {
             $ors = [];
-            foreach ($this->territoire->getZips() as $key => $zip) {
-                $ors[] = $this->qb->expr()->eq('U.zip', ':zip' . $key);
-                $this->qb->setParameter('zip' . $key, $zip);
+            if (TerritoireAreaEnum::DEPARTEMENT === $this->territoire->getArea()) {
+                $department = DepartementEnum::tryFrom($this->territoire->getSlug());
+                if ($department) {
+                    $ors[] = $this->qb->expr()->like('U.zip', ':zip');
+                    $this->qb->setParameter('zip', DepartementEnum::getCode($department) . '%');
+                }
+            } else {
+                foreach ($this->territoire->getZips() as $key => $zip) {
+                    $ors[] = $this->qb->expr()->eq('U.zip', ':zip' . $key);
+                    $this->qb->setParameter('zip' . $key, $zip);
+                }
             }
             $this->qb->andWhere($this->qb->expr()->or(...$ors));
         }
@@ -159,6 +193,24 @@ class TerritoireController extends AbstractController
             $this->qb->andWhere('U.green_space = :greenSpace')
                 ->setParameter('greenSpace', $this->greenSpace)
             ;
+        }
+
+        if (null !== $this->from || null !== $this->to) {
+            $dateFormat = 'Y-m-d H:i:s';
+            if (null !== $this->from && null !== $this->to) {
+                $this->qb->andWhere('R.created_at BETWEEN :from AND :to')
+                    ->setParameter('from', $this->from->format($dateFormat))
+                    ->setParameter('to', $this->to->format($dateFormat))
+                ;
+            } elseif (null !== $this->from && null === $this->to) {
+                $this->qb->andWhere('R.created_at >= :from')
+                    ->setParameter('from', $this->from->format($dateFormat))
+                ;
+            } elseif (null === $this->from && null !== $this->to) {
+                $this->qb->andWhere('R.created_at <= :to')
+                    ->setParameter('to', $this->to->format($dateFormat))
+                ;
+            }
         }
     }
 
@@ -195,10 +247,7 @@ class TerritoireController extends AbstractController
         return (int) $percentageGlobalQuery->executeQuery()->fetchOne();
     }
 
-    /**
-     * @return array<mixed>
-     */
-    private function getPercentages(): array
+    private function getPercentagesByThematiquesQuery(): QueryBuilder
     {
         $this->qb = $this->entityManager->getConnection()->createQueryBuilder();
         $this->qb->addSelect('ROUND(AVG(S.points)) as avg_points')
@@ -212,6 +261,58 @@ class TerritoireController extends AbstractController
             ->innerJoin('U', 'typologie', 'T', 'T.id = U.typologie_id')
             ->innerJoin('S', 'thematique', 'TH', 'TH.id = S.thematique_id')
             ->groupBy('S.thematique_id')
+        ;
+
+        $this->addFiltersToQueryBuilder();
+
+        /* @phpstan-ignore-next-line */
+        return $this->qb;
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function getPercentagesByThematiques(): array
+    {
+        $this->qb = $this->getPercentagesByThematiquesQuery();
+
+        return $this->qb->executeQuery()->fetchAllAssociative();
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    private function getPercentagesByThematiquesAndTypology(): array
+    {
+        $percentagesByThematiquesAndTypology = [];
+
+        if (null === $this->typologies || empty($this->typologies)) {
+            $typologies = array_map(static fn (Typologie $typologie): string => $typologie->getSlug(), $this->typologieRepository->findAll());
+        } else {
+            $typologies = $this->typologies;
+        }
+
+        foreach ($typologies as $typology) {
+            $this->qb = $this->getPercentagesByThematiquesQuery();
+            $this->qb->orWhere('T.slug = :typology')
+                ->setParameter('typology', $typology)
+            ;
+            /* @phpstan-ignore-next-line */
+            $percentagesByThematiquesAndTypology[$typology->getSlug()] = $this->qb->executeQuery()->fetchAllAssociative();
+        }
+
+        return $percentagesByThematiquesAndTypology;
+    }
+
+    private function getRepondants(): mixed
+    {
+        $this->qb = $this->entityManager->getConnection()->createQueryBuilder();
+        $this->qb
+            ->select('T.name as typologie, R.uuid, U.company, MAX(R.points) as points, R.total')
+            ->from('reponse', 'R')
+            ->innerJoin('R', 'repondant', 'U', 'U.id = R.repondant_id')
+            ->innerJoin('U', 'typologie', 'T', 'T.id = U.typologie_id')
+            ->groupBy('U.id')
         ;
 
         $this->addFiltersToQueryBuilder();

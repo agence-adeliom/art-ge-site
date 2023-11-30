@@ -10,6 +10,7 @@ use App\Entity\Thematique;
 use App\Message\ReponseConfirmationMessage;
 use App\Repository\ChoiceRepository;
 use App\Repository\ChoiceTypologieRepository;
+use App\Repository\CityRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\ThematiqueRepository;
 use App\Repository\TypologieRepository;
@@ -36,6 +37,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
         private readonly ChoiceTypologieRepository $choiceTypologieRepository,
         private readonly ChoiceRepository $choiceRepository,
         private readonly ReponseScoreGeneration $reponseScoreGeneration,
+        private readonly CityRepository $cityRepository,
     ) {
         $this->faker = Factory::create('fr_FR');
         $this->faker->seed('artge');
@@ -44,6 +46,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
+        $zips = $this->cityRepository->getAllZipCodes();
         $thematiques = $this->thematiqueRepository->findAll();
 
         for ($i = 0; $i < 100; $i++) {
@@ -57,7 +60,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
             $repondant->setCompany($this->faker->company());
             $repondant->setAddress($this->faker->address());
             $repondant->setCity($this->faker->city());
-            $repondant->setZip($this->faker->randomElement(['67000', '67500', '68000']));
+            $repondant->setZip($this->faker->randomElement($zips));
             $repondant->setCountry('France');
             $repondant->setRestauration($typologie === 'restaurant' ? true : $this->faker->boolean());
             $repondant->setGreenSpace($this->faker->boolean());
@@ -115,6 +118,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             ChoiceTypologiesFixtures::class,
+            CitiesFixtures::class,
         ];
     }
 }

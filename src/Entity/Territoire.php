@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\TerritoireAreaEnum;
 use App\Repository\TerritoireRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -43,9 +46,19 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isPublic = false;
 
+    #[ORM\Column(length: 255)]
+    private TerritoireAreaEnum $area = TerritoireAreaEnum::OT;
+
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
+    private ?self $parent = null;
+
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
+    private Collection $children;
+
     public function __construct()
     {
         $this->uuid = new Ulid();
+        $this->children = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -151,6 +164,18 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getArea(): TerritoireAreaEnum
+    {
+        return $this->area;
+    }
+
+    public function setArea(TerritoireAreaEnum $area): static
+    {
+        $this->area = $area;
+
+        return $this;
+    }
+
     public function getRoles(): array
     {
         return ['TERRITOIRE_ACCESS'];
@@ -161,5 +186,47 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->getSlug();
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): static
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getChildren(): Collection
+    {
+        return $this->children;
+    }
+
+    public function addChild(self $territoire): static
+    {
+        if (!$this->children->contains($territoire)) {
+            $this->children->add($territoire);
+            $territoire->setParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChild(self $territoire): static
+    {
+        if ($this->children->removeElement($territoire)) {
+            // set the owning side to null (unless already changed)
+            if ($territoire->getParent() === $this) {
+                $territoire->setParent(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -6,6 +6,7 @@ namespace DataFixtures;
 
 use App\Entity\Department;
 use App\Entity\Typologie;
+use App\Enum\DepartementEnum;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\String\Slugger\AsciiSlugger;
@@ -14,8 +15,6 @@ class InfosFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $slugger = new AsciiSlugger();
-
         $typologies = [
             'hotel' => 'Un hôtel, meublé, résidence, chambre d\'hôtes',
             'camping' => 'Un camping',
@@ -30,23 +29,11 @@ class InfosFixtures extends Fixture
             $manager->persist($typology);
         }
 
-        $departments = [
-            '08' => 'Ardennes',
-            '10' => 'Aube',
-            '51' => 'Marne',
-            '52' => 'Haute-Marne',
-            '54' => 'Meurthe-et-Moselle',
-            '55' => 'Meuse',
-            '57' => 'Moselle',
-            '67' => 'Bas-Rhin',
-            '68' => 'Haut-Rhin',
-            '88' => 'Vosges',
-        ];
-        foreach ($departments as $code => $d) {
+        foreach (DepartementEnum::cases() as $departementEnum) {
             $department = new Department();
-            $department->setName($d);
-            $department->setSlug($slugger->slug(strtolower($d))->toString());
-            $department->setCode((string) $code);
+            $department->setName(DepartementEnum::getLabel($departementEnum));
+            $department->setSlug($departementEnum->value);
+            $department->setCode(DepartementEnum::getCode($departementEnum));
             $manager->persist($department);
         }
 

@@ -2,9 +2,20 @@
 
 {% block title %}Territoire {{ territoire.name }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('chart') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('chart') }}
+{% endblock %}
+
 {% block body %}
 
     {{ dump() }}
+    <div id="radar"><canvas style="max-width: 800px; max-height: 600px"></canvas></div>s
 
     <div>Nombres de réponses : {{ numberOfReponses }}</div>
     <div>Typologies : {{ query.typologies is empty ? 'Toutes' : query.typologies | join(', ') }}</div>
@@ -14,8 +25,47 @@
     <h1 class="font-bold">Pourcentage Total</h1>
     {{ display_percentage(percentageGlobal) }}
     <h2 class="font-bold mt-4">Scores par thématique</h2>
-    {% for percentage in percentages %}
+    {% for percentage in percentagesByThematiques %}
         <h3 class="font-bold mt-2">{{ percentage.name }}</h3>
         {{ display_percentage(percentage.value) }}
     {% endfor %}
+
+    {% if territoire.area.value == 'region' %}
+        <h2 class="font-bold mt-4">Liste des département du {{ territoire.name }}</h2>
+        {% if children is not empty %}
+            <ul class="grid">
+                {% for child in children %}
+                    <li>
+                        <div><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a></div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endif %}
+
+    {% if territoire.area.value == 'departement' %}
+        <h2 class="font-bold mt-4">Liste des OT du {{ territoire.name }}</h2>
+        {% if children is not empty %}
+            <ul class="grid">
+                {% for child in children %}
+                    <li>
+                        <div><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a></div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endif %}
+
+    <h2 class="font-bold mt-4">Liste des répondants</h2>
+    {% if repondants is not empty %}
+        <ul class="grid">
+        {% for repondant in repondants %}
+            <li>
+                <div>{{ repondant.typologie }}</div>
+                <div><a href="{{ url('app_resultat_single', { uuid: repondant.uuid }) }}">{{ repondant.company }}</a></div>
+                <div>{{ display_percentage(repondant.points, repondant.total) }}</div>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}
