@@ -8,8 +8,11 @@ const Header = ({step} : {
     step: number
 }) => {
 
-    const totalSteps = 4;
+    const totalSteps = 5;
     let actualStep = ((step) / totalSteps) * 100;
+    if (actualStep > 100) {
+        actualStep = 100;
+    }
     return (
         <>
             <div className="container flex justify-between items-center py-8">

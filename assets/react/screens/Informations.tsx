@@ -7,8 +7,8 @@ import StepTwo from '@screens/StepTwo';
 import StepThree from '@screens/StepThree';
 import StepFour from '@screens/StepFour';
 import {Icon} from '@components/Typography/Icon'
-import { Heading } from '@components/Typography/Heading';
-import leafs from '@icones/leafs.svg';
+import Confirmation from '@screens/Confirmation';
+
 
 
 import { object, string, number, InferType,  setLocale } from 'yup';
@@ -165,16 +165,15 @@ const Informations = () => {
                                         nextStep={nextStep}
                                     />
                                 ) : step === 5 ? (
-                                    <div className="fixed bg-primary-600 z-50 flex items-center justify-center top-0 left-0 w-screen h-screen">
-                                        <div className="text-center">
-                                            <Heading variant="display-2" color="white">Merci pour ces informations.</Heading>
-                                            <Heading variant="display-4" color="white">Parlons à présent de vos actions...</Heading>
-                                            <img src={leafs} alt="image"></img>
-                                        </div>
-                                    </div>
+                                    <Confirmation
+                                        title="Merci pour ces informations."
+                                        subTitle="Parlons à présent de vos actions..."
+                                    ></Confirmation>
                                 ) : (
                                     <p>fallback</p>
                                 )
+
+                                
                             }
                             
                             
