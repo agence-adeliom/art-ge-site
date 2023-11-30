@@ -1,11 +1,19 @@
 import React, {useState} from 'react';
 import Header from '@components/Navigation/Header';
-import InfoImage from '@images/informations-image.jpeg';
-import { Heading } from '@components/Typography/Heading'
-import { Text } from '@components/Typography/Text'
-import { Button } from '@components/Action/Button'
+import InfoImage1 from '@images/informations-image.jpeg';
+import InfoImage2 from '@images/informations-image-2.jpeg';
+import StepOne from '@screens/StepOne';
+import StepTwo from '@screens/StepTwo';
+import StepThree from '@screens/StepThree';
+import StepFour from '@screens/StepFour';
+import {Icon} from '@components/Typography/Icon'
+import { Heading } from '@components/Typography/Heading';
+import leafs from '@icones/leafs.svg';
 
-import { object, string, number, InferType } from 'yup';
+
+import { object, string, number, InferType,  setLocale } from 'yup';
+
+import * as yup from 'yup';
 
 const Informations = () => {
     
@@ -16,95 +24,172 @@ const Informations = () => {
         tel: ''
     }
 
-    //const user = await userSchema.validate(await fetchUser());
-
-    //type User = InferType<typeof userSchema>;
+    const establishmentInfo = {
+        establishmentName: '',
+        address: '',
+        zipCode: '',
+        city: ''
+    }
 
     
+    const [errorMessage, seterrorMessage] = useState('');
 
+    // Step 1 : User information 
     const [userData, setUserData] = useState(data);
     const [legalChecked, setLegalChecked] = useState(false);
-    
+    // Step 2 : Type d'établissement 
+    const [etablissement, setEtablissement] = useState('');
+    // Step 3 : Offre de restaurant ? 
+    const [isRestaurant, setIsRestaurant] = useState('');
+    // Step 3 : Espace vert ? 
+    const [isGreenSpace, setIsGreenSpace] = useState('');
+    // Step 4 : Establishment information 
+    const [establishmentData, setEstablishmentData] = useState(establishmentInfo);
+   
+    // Current step + setStep
+    const [step, setStep] = useState(1);
+
+    // User information destructuring
     const {firstname, lastname, email, tel} = userData;
 
-    let userSchema = object({
-        firstname: string().required(),
-        lastname: string().required(),
-        email: string().email(),
-        tel: string().required()
+    // Establishment information destructuring
+    const {establishmentName, address, zipCode, city} = establishmentData;
+
+    // Validation rules
+    setLocale({
+        mixed: {
+          default: 'Não é válido',
+        },
+        string: {
+            matches: 'Le numéro de téléphone ne doit pas contenir de lettres',
+            min: 'Le numéro doit contenir ${min} chiffres',
+            max: 'Le numéro doit contenir ${min} chiffres',
+            email: 'Adresse email invalide',
+        },
+      });
+    // Step 1 User schema
+    let userSchema =  yup.object().shape({
+        firstname: yup.string(),
+        lastname: yup.string(),
+        email: yup.string().email(),
+        tel: yup.string().matches(/[0-9]/).min(10).max(10),
+    })
+
+    // Step 2 Establishment schema
+    let establishmentSchema =  yup.object().shape({
+        establishmentName: yup.string(),
+        address: yup.string(),
+        zipCode: yup.string().matches(/[0-9]/).min(5).max(5),
+        city: yup.string(),
     })
     
-
+    // Set Input value in the userState
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUserData({...userData, [event.target.id]: event.target.value })
+    }
+    // Set Input value in the establishmentState
+    const handleChangeEstablishment = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setEstablishmentData({...establishmentData, [event.target.id]: event.target.value })
     }
 
    const acceptLegal = (event : React.ChangeEvent<HTMLInputElement>) => {
        setLegalChecked(event.target.checked)
+       console.log(event.target.checked)
    }
 
-   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+   const nextStep = () => {
+       setStep(step + 1)
+   }
+
+   // First step validation
+   const handleSubmit = async (event: React.FormEvent) => {
        event.preventDefault();
-       userSchema.isValid({
-        firstname: firstname,
-        lastname: lastname,
-        email: email,
-        tel: tel,
-      })
-      .then(function (valid) {
-        valid; 
-        console.log(valid)
-      });
-   }
-   
+       
+       try {
+        await userSchema.validate( userData );
+        console.log('true');
+        nextStep();
+        console.log(step)
+      } catch (error: any) {
+        console.log('false' + error)
+      }
+     
+    }
 
-
-    const inputClass = 'border-0 border-b border-neutral-500 block w-full mt-4 pb-2 focus:ring-0 focus:border-primary-600'
-    
+    const inputClass : string = 'border-0 border-b border-neutral-500 block w-full mt-4 pb-2 focus:ring-0 focus:border-secondary-200 trans-default'
     return (
         <div className="">
-            <Header></Header>
-            <div className="container grid grid-cols-12 gap-6 h-[calc(100vh-108px)] ">
-                <div className="col-span-7 flex items-center py-10">
-                    <form>
-                        <Heading variant="display-4">Pour commencer</Heading>
-                        <Text className="mt-6" color="neutral-500" weight={400} size="sm">Renseignez ces informations afin que nous puissions vous identifier.</Text>
-                        <div className="flex gap-6 w-full mt-8">
-                            <div className="w-full md:w-1/2">
-                                <label className="block" htmlFor="firstname">Prénom</label>
-                                <input onChange={handleChange} value={firstname} className={inputClass} id="firstname" placeholder="Ex : Julie" type="text" name="firstname" ></input>
-                            </div>
-                            <div className="w-full md:w-1/2">
-                                <label className="block" htmlFor="lastname">Nom</label>
-                                <input onChange={handleChange} value={lastname} className={inputClass} id="lastname" placeholder="Ex : Dupont" type="text" name="lastname" ></input>
-                            </div>
-                        </div>
-                        <div className="flex gap-6 w-full mt-8">
-                            <div className="w-full md:w-1/2">
-                                <label className="block" htmlFor="tel">Téléphone</label>
-                                <input onChange={handleChange} value={tel} className={inputClass} id="tel" placeholder="Ex : 0612345678" type="tel" name="tel" ></input>
-                            </div>
-                            <div className="w-full md:w-1/2">
-                                <label className="block" htmlFor="email">Email</label>
-                                <input onChange={handleChange} value={email} className={inputClass} id="email" placeholder="Ex : julie.dupont@mail.com" type="email" name="email" ></input>
-                            </div>
-                        </div>
-                        <div className="flex gap-2 mt-8">
-                            <input type="checkbox" name="legal" id="legal" className="checkbox" onChange={acceptLegal} />
-                            <Text weight={400} color="neutral-800"><label htmlFor="legal">J’accepte que mes données soient transmises à l’ART GE et à ses partenaires. Pour en savoir plus, consultez la <a href="#" className="classic-link">politique de confidentialité</a></label></Text>
+            <Header step={step}></Header>
+            <div className="container max-lg:pb-6 grid grid-cols-12 gap-6 md:h-[calc(100vh-108px)]">
+                <div className="col-span-full lg:col-span-7 flex items-center md:py-10 overflow-auto relative">
+                    <form className="h-full w-full pl-1 flex items-center">
+
+                        <div className="bg-white w-full">
+
+                            { 
+                                step === 1 ? (
+                                    <StepOne 
+                                    handleChange={handleChange} 
+                                    handleSubmit={handleSubmit} 
+                                    acceptLegal={acceptLegal} 
+                                    firstname={firstname} 
+                                    lastname={lastname} 
+                                    email={email} tel={tel}
+                                    inputClass={inputClass}
+                                    legalChecked={legalChecked}
+                                    ></StepOne>
+                                ) 
+                                : step === 2 ? (
+                                    <StepTwo
+                                    setEtablissement={setEtablissement}
+                                    etablissement={etablissement}
+                                    nextStep={nextStep}
+                                    ></StepTwo>
+                                ) 
+                                : step === 3 ? (
+                                    <StepThree
+                                        isRestaurant={isRestaurant}
+                                        setIsRestaurant={setIsRestaurant}
+                                        isGreenSpace={isGreenSpace}
+                                        setIsGreenSpace={setIsGreenSpace}
+                                        nextStep={nextStep}
+                                    ></StepThree>
+                                )
+                                : step === 4 ? (
+                                    <StepFour 
+                                        establishmentName={establishmentName} 
+                                        handleChange={handleChangeEstablishment}
+                                        address={address}
+                                        zipCode={zipCode}
+                                        city={city}
+                                        nextStep={nextStep}
+                                    />
+                                ) : step === 5 ? (
+                                    <div className="fixed bg-primary-600 z-50 flex items-center justify-center top-0 left-0 w-screen h-screen">
+                                        <div className="text-center">
+                                            <Heading variant="display-2" color="white">Merci pour ces informations.</Heading>
+                                            <Heading variant="display-4" color="white">Parlons à présent de vos actions...</Heading>
+                                            <img src={leafs} alt="image"></img>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <p>fallback</p>
+                                )
+                            }
+                            
+                            
                         </div>
 
-                        <Button size="lg" className="mt-8" 
-                        disabled={firstname === '' || lastname === '' || email === '' || tel === '' || legalChecked === false ? true : false} 
-                        onClick={(event) => handleSubmit(event)}
-                       >
-                            Suivant
-                        </Button>
+                        
+
+                        
+                            
                         
                     </form>
                 </div>
-                <div className="bg-neutral-600 col-start-9 col-span-4 containerBleed relative">
-                    <img src={InfoImage} alt="image de paysage" className="absolute object-cover w-full h-full"></img>
+                <div className="bg-neutral-600 max-lg:h-32 mobileLeftBleed lg:left-0 max-lg:order-first lg:col-start-9 lg:col-span-4 containerBleed relative">
+                    <img src={InfoImage1} alt="image de paysage" className={`${step === 1 ? 'opacity-100' : 'opacity-0'} trans-default absolute object-cover w-full h-full`}></img>
+                    <img src={InfoImage2} alt="image de paysage" className={`${step === 2 ? 'opacity-100' : 'opacity-0'} trans-default absolute object-cover w-full h-full`}></img>
                 </div>
             </div>
         </div>

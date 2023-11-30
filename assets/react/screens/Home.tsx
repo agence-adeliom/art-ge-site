@@ -40,10 +40,12 @@ function Home() {
                                 <li className="font-normal"><strong>Accès à des ressources</strong> pour continuellement optimiser vos pratiques.</li>
                             </ul>
                         </div>
-                        <Link to="/info" replace={true}>
+                        <Link to="/informations" replace={true}>
                             <Button 
                             size="lg" 
                             className="mt-8"
+                            icon="fa-minus"
+                            iconSide="left"
                             onClick={ () => navigateToFirstStep(event) }>
                                 Commencer
                             </Button>
@@ -62,7 +64,7 @@ function Home() {
                         <div className="flex flex-col gap-10 relative z-2">
                             {/* First Element */}
                             <div className="flex gap-4">
-                                <div className="flex items-center justify-center w-10 h-10 bg-secondary-200 flex-shrink-0">
+                                <div className="iconClass bg-secondary-200">
                                     <img src={peopleGroup} alt="icon groupe"/>
                                 </div>
                                 <div className="flex flex-col gap-2">
@@ -72,7 +74,7 @@ function Home() {
                             </div>
                             {/* Second Element */}
                             <div className="flex gap-4">
-                                <div className="flex items-center justify-center w-10 h-10 bg-secondary-200 flex-shrink-0">
+                                <div className="iconClass bg-secondary-200">
                                     <img src={lapTop} alt="icon ordinateur"/>
                                 </div>
                                 <div className="flex flex-col gap-2">
@@ -82,7 +84,7 @@ function Home() {
                             </div>
                             {/* Third Element */}
                             <div className="flex gap-4">
-                                <div className="flex items-center justify-center w-10 h-10 bg-secondary-200 flex-shrink-0">
+                                <div className="iconClass bg-secondary-200">
                                     <img src={bioDiversity} alt="icon bio diversité"/>
                                 </div>
                                 <div className="flex flex-col gap-2">
