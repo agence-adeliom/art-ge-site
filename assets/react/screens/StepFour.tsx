@@ -4,14 +4,20 @@ import { Text } from '@components/Typography/Text'
 import { Button } from '@components/Action/Button'
 import Input from '@components/Forms/Input'
 
-const StepFour = ( {handleChange, address, establishmentName, city, zipCode, nextStep} : {
+const StepFour = ( {handleChange, address, establishmentName, city, zipCode, nextStep, zipResult, setEstablishmentData, establishmentData, openDropdown, setOpenDropdown} : {
     handleChange: Function,
     address: string,
     establishmentName: string,
     city: string,
     zipCode: string,
-    nextStep: Function
+    nextStep: Function,
+    zipResult: Array<any>,
+    setEstablishmentData: Function,
+    establishmentData: object,
+    openDropdown: boolean,
+    setOpenDropdown: Function
 }) => {
+
     return (
         <>
             <Heading variant="display-4">L’adresse de votre établissement...</Heading>
@@ -31,12 +37,28 @@ const StepFour = ( {handleChange, address, establishmentName, city, zipCode, nex
                 ></Input>
             </div>
             <div className="flex-wrap md:flex-nowrap flex gap-6 w-full mt-8"> 
-                <Input 
-                    containerClass="w-full md:w-1/2" 
-                    label={{className:"block", name: "Code postal"}}
-                    id="zipCode"
-                    input={{type: 'text', className:"block", value: zipCode, handleChange: handleChange, placeHolder: "Ex : 67000"}}
-                ></Input>
+                <div className="relative w-full md:w-1/2">
+                    <Input 
+                        containerClass="w-full" 
+                        label={{className:"block", name: "Code postal"}}
+                        id="zipCode"
+                        input={{type: 'text', className:"block", value: zipCode, handleChange: handleChange, placeHolder: "Ex : 67000"}}
+                    ></Input>
+                    <div className={`${zipResult.length === 0 || openDropdown === false ? 'hidden' : 'block'} bg-white w-full z-50 h-[200px] overflow-auto mt-6  absolute shadow-[0_0_8px_2px_rgba(0,0,0,.05)]`}>
+                        { zipResult !== null &&
+                            zipResult.map((item : any, index: number) => (
+                                <div 
+                                    className="result-zip" 
+                                    key={index}
+                                    onClick={() => {setEstablishmentData({...establishmentData, zipCode: item.zip, city: item.name}); setOpenDropdown(false)}}
+                                    >
+                                        {item.zip} {item.name}
+                                </div>
+                            ))
+                        }
+                    </div>
+                </div>
+                
                 <Input 
                     containerClass="w-full md:w-1/2" 
                     label={{className:"block", name: "Ville"}}
@@ -44,8 +66,6 @@ const StepFour = ( {handleChange, address, establishmentName, city, zipCode, nex
                     input={{type: 'text', className:"block", value: city, handleChange: handleChange, placeHolder: "Ex : Strasbourg"}}
                 ></Input>
             </div>
-
-             
             
             <Button 
             size="lg" 

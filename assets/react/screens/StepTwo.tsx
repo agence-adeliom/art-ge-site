@@ -20,7 +20,6 @@ const StepTwo = ({nextStep, setEtablissement, etablissement} : {
 
     const selectEl = (event : any) => {
         setEtablissement(event.target.dataset.type)
-        //event.target.classList.add('is-active')
         console.log(etablissement)
     }
     return (
@@ -63,7 +62,7 @@ const StepTwo = ({nextStep, setEtablissement, etablissement} : {
                 disabled={etablissement === '' ? true : false}
                 icon="fa-minus"
                 iconSide="left"
-                onClick={ () => nextStep() }>
+                onClick={ (event) => {event.preventDefault(); nextStep()} }>
                     Suivant
             </Button>
         </>

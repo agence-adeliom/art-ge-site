@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from '@components/Navigation/Header';
 import InfoImage1 from '@images/informations-image.jpeg';
 import InfoImage2 from '@images/informations-image-2.jpeg';
@@ -8,6 +8,10 @@ import StepThree from '@screens/StepThree';
 import StepFour from '@screens/StepFour';
 import {Icon} from '@components/Typography/Icon'
 import Confirmation from '@screens/Confirmation';
+import { motion, AnimatePresence } from "framer-motion"
+
+import {StepAnim} from '@components/Animation/Step';
+import {Button} from '@components/Action/Button';
 
 
 
@@ -90,7 +94,31 @@ const Informations = () => {
     // Set Input value in the establishmentState
     const handleChangeEstablishment = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEstablishmentData({...establishmentData, [event.target.id]: event.target.value })
+        zipCodeAutocomplete(event)
     }
+
+    const [zipResult, setZipResult] = useState([]);
+
+    const [openDropdown, setOpenDropdown] = useState(false)
+
+    // Function d'autocompletion du zip
+    const zipCodeAutocomplete = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let inputId = event.target.id;
+        let autoCompleteAPI = 'https://art-grand-est.ddev.site/api/insee/'
+        if (inputId === 'zipCode') {
+            setOpenDropdown(true)
+            let resultValue = event.target.value
+            let apiResult = autoCompleteAPI + resultValue
+            fetch(apiResult)
+            .then(async (response: Response) => {
+                setZipResult(await response.json());
+            })
+            .catch(() => {
+                console.log('error')
+            });
+        } else {}
+    }
+    
 
    const acceptLegal = (event : React.ChangeEvent<HTMLInputElement>) => {
        setLegalChecked(event.target.checked)
@@ -116,6 +144,8 @@ const Informations = () => {
      
     }
 
+
+
     const inputClass : string = 'border-0 border-b border-neutral-500 block w-full mt-4 pb-2 focus:ring-0 focus:border-secondary-200 trans-default'
     return (
         <div className="">
@@ -126,9 +156,8 @@ const Informations = () => {
 
                         <div className="bg-white w-full">
 
-                            { 
-                                step === 1 ? (
-                                    <StepOne 
+                            <StepAnim isVisible={step === 4 ? true : false}>
+                                <StepOne 
                                     handleChange={handleChange} 
                                     handleSubmit={handleSubmit} 
                                     acceptLegal={acceptLegal} 
@@ -137,45 +166,46 @@ const Informations = () => {
                                     email={email} tel={tel}
                                     inputClass={inputClass}
                                     legalChecked={legalChecked}
-                                    ></StepOne>
-                                ) 
-                                : step === 2 ? (
-                                    <StepTwo
+                                ></StepOne>
+                            </StepAnim> 
+                            <StepAnim isVisible={step === 2 ? true : false}>
+                                <StepTwo
                                     setEtablissement={setEtablissement}
                                     etablissement={etablissement}
                                     nextStep={nextStep}
-                                    ></StepTwo>
-                                ) 
-                                : step === 3 ? (
-                                    <StepThree
-                                        isRestaurant={isRestaurant}
-                                        setIsRestaurant={setIsRestaurant}
-                                        isGreenSpace={isGreenSpace}
-                                        setIsGreenSpace={setIsGreenSpace}
-                                        nextStep={nextStep}
-                                    ></StepThree>
-                                )
-                                : step === 4 ? (
-                                    <StepFour 
-                                        establishmentName={establishmentName} 
-                                        handleChange={handleChangeEstablishment}
-                                        address={address}
-                                        zipCode={zipCode}
-                                        city={city}
-                                        nextStep={nextStep}
-                                    />
-                                ) : step === 5 ? (
-                                    <Confirmation
-                                        title="Merci pour ces informations."
-                                        subTitle="Parlons à présent de vos actions..."
-                                    ></Confirmation>
-                                ) : (
-                                    <p>fallback</p>
-                                )
+                                ></StepTwo>
+                            </StepAnim> 
+                            <StepAnim isVisible={step === 3 ? true : false}>
+                                <StepThree
+                                    isRestaurant={isRestaurant}
+                                    setIsRestaurant={setIsRestaurant}
+                                    isGreenSpace={isGreenSpace}
+                                    setIsGreenSpace={setIsGreenSpace}
+                                    nextStep={nextStep}
+                                ></StepThree>
+                            </StepAnim> 
+                            <StepAnim isVisible={step === 1 ? true : false}>
+                                <StepFour 
+                                    establishmentName={establishmentName} 
+                                    handleChange={handleChangeEstablishment}
+                                    address={address}
+                                    zipCode={zipCode}
+                                    city={city}
+                                    nextStep={nextStep}
+                                    zipResult={zipResult}
+                                    setEstablishmentData={setEstablishmentData}
+                                    establishmentData={establishmentData}
+                                    openDropdown={openDropdown}
+                                    setOpenDropdown={setOpenDropdown}
+                                />
+                            </StepAnim> 
+                            <StepAnim isVisible={step === 5 ? true : false}>
+                                <Confirmation
+                                    title="Merci pour ces informations."
+                                    subTitle="Parlons à présent de vos actions..."
+                                ></Confirmation>
+                            </StepAnim> 
 
-                                
-                            }
-                            
                             
                         </div>
 

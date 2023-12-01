@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { ReactElement } from "react"
 
-const Input = ({containerClass, label, id, input} : {
+const Input = ( { containerClass, label, id, input } : {
     containerClass: string,
     id: string,
     label: {
@@ -13,7 +13,7 @@ const Input = ({containerClass, label, id, input} : {
         className: string,
         value: string,
         handleChange: Function,
-        placeHolder: string
+        placeHolder: string,
     }
 }
 ) => {
@@ -26,7 +26,15 @@ const Input = ({containerClass, label, id, input} : {
     return (
         <div className={containerClass}>
             <label className={className && className} htmlFor={id && id}>{name}</label>
-            <input className={`${type != 'checkbox' && inputClass} ${inputCustomClass} && ${inputCustomClass}`} placeholder={placeHolder && placeHolder} type={type && type} id={id && id} value={value && value} onChange={handleChange && (event => handleChange(event))}></input>
+            <input 
+            className={`${type != 'checkbox' && inputClass} ${inputCustomClass} && ${inputCustomClass}`} 
+            placeholder={placeHolder && placeHolder} 
+            type={type && type} id={id && id} 
+            value={value && value} 
+            onChange={
+                (handleChange && (event => handleChange(event)))
+            }
+            ></input>
         </div>
     )
 }
