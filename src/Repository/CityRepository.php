@@ -39,8 +39,8 @@ class CityRepository extends ServiceEntityRepository
     public function getByZipCode(string $zip): array
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.zip = :zip')
-            ->setParameter('zip', $zip)
+            ->andWhere('c.zip LIKE :zip')
+            ->setParameter('zip', $zip . '%')
             ->orderBy('c.name', 'ASC')
             ->groupBy('c.name')
             ->getQuery()

@@ -83,21 +83,14 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{baseUrl}}/api/insee/:zip",
+											"raw": "{{baseUrl}}/api/insee/6722",
 											"host": [
 												"{{baseUrl}}"
 											],
 											"path": [
 												"api",
 												"insee",
-												":zip"
-											],
-											"variable": [
-												{
-													"key": "zip",
-													"value": "<string>",
-													"description": "(Required) Code postal sur lequel faire la recherche de ville"
-												}
+												"6722"
 											]
 										}
 									},
@@ -145,6 +138,90 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "reponse[repondant][email]",
+											"value": "john.doe@adeliom.com",
+											"type": "text"
+										},
+										{
+											"key": "reponse[repondant][firstname]",
+											"value": "John",
+											"type": "text"
+										},
+										{
+											"key": "reponse[repondant][lastname]",
+											"value": "Doe",
+											"type": "text"
+										},
+										{
+											"key": "reponse[repondant][phone]",
+											"value": "0123456789",
+											"type": "text"
+										},
+										{
+											"key": "reponse[repondant][company]",
+											"value": "Adeliom",
+											"type": "text"
+										},
+										{
+											"key": "reponse[repondant][address]",
+											"value": "3 Place de Haguenau",
+											"type": "text"
+										},
+										{
+											"key": "reponse[repondant][city]",
+											"value": "Strasbourg",
+											"type": "text"
+										},
+										{
+											"key": "reponse[repondant][zip]",
+											"value": "67000",
+											"type": "text"
+										},
+										{
+											"key": "reponse[repondant][country]",
+											"value": "France",
+											"type": "text"
+										},
+										{
+											"key": "reponse[repondant][restauration]",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "reponse[repondant][greenSpace]",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "reponse[repondant][department]",
+											"value": "8",
+											"description": "1 = Ardennes, 2 = Aube, 3 = Marne, 4 = Haute-Marne, 5 = Meurthe-et-Moselle, 6 = Meuse, 7 = Moselle, 8 = Bas-Rhin, 9 = Haut-Rhin, 10 = Vosges",
+											"type": "text"
+										},
+										{
+											"key": "reponse[repondant][typologie]",
+											"value": "1",
+											"description": "1 = hotel, 2 = location, 3 = chambre, 4 = camping, 5 = insolite, 6 = visite, 7 = activite, 8 = restaurant",
+											"type": "text"
+										},
+										{
+											"key": "reponse[rawForm][1][answers][1]",
+											"value": "on",
+											"description": "\"Quelles pratiques avez-vous mis en place dans ...\"",
+											"type": "text"
+										},
+										{
+											"key": "reponse[rawForm][1][answers][1]",
+											"value": "on",
+											"description": "\"J'ai aménagé un jardin avec différentes ...\"",
+											"type": "text"
+										}
+									]
+								},
 								"url": {
 									"raw": "{{baseUrl}}/api/submit",
 									"host": [
@@ -324,10 +401,30 @@
 			]
 		}
 	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "/"
+			"value": "https://art-grand-est.ddev.site"
 		}
 	]
 }
