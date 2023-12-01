@@ -58,8 +58,8 @@ function Home() {
                     </div>
                     {/* Aside */}
                     <div className="col-span-full lg:col-start-9 lg:row-span-2 lg:col-span-4 dark  h-full lg:min-h-screen py-10 lg:p-10 pr-0 flex items-center relative">
-                        <div className="mobileLeftBleed containerBleed h-full absolute top-0 lg:left-0 z-0 bg-secondary-950">
-                            <img src={leafs} className="block absolute bottom-0 right-0 w-72 aspect-square" alt="background feuilles" />
+                        <div className="mobileLeftBleed containerBleed h-full absolute top-0 lg:left-0 z-0 bg-secondary-950 overflow-hidden">
+                            <img src={leafs} className="block absolute -bottom-7 -right-7 w-72 aspect-square" alt="background feuilles" />
                         </div>
                         <div className="flex flex-col gap-10 relative z-2">
                             {/* First Element */}
