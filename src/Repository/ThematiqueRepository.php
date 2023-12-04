@@ -33,4 +33,17 @@ class ThematiqueRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+
+    /**
+     * @return array<Thematique>
+     */
+    public function getAllExceptLabel(): array
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.slug != :label')
+            ->setParameter('label', 'labels')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

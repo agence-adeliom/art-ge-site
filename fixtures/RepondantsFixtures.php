@@ -49,7 +49,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
         $zips = $this->cityRepository->getAllZipCodes();
         $thematiques = $this->thematiqueRepository->findAll();
 
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 300; $i++) {
             $repondant = new Repondant();
             $typologie = $this->faker->typologie();
 
@@ -78,37 +78,37 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                 ]
             ]));
 
-            for ($j = 0; $j < 3; $j++) {
-                $reponse = new Reponse();
-                $reponse->setUuid(Ulid::fromString($this->faker->uuid()));
-                $reponse->setRepondant($repondant);
-                $date = $this->faker->dateTimeBetween('2023-01-01 00:00:00', '2023-11-01 00:00:00', 'Europe/Paris');
-                $reponse->setCreatedAt(\DateTimeImmutable::createFromMutable($date));
-                $reponse->setSubmittedAt(\DateTimeImmutable::createFromMutable($date->add(new \DateInterval('PT1H'))));
-                $reponse->setCompleted($this->faker->boolean(95));
+//            for ($j = 0; $j < 3; $j++) {
+            $reponse = new Reponse();
+            $reponse->setUuid(Ulid::fromString($this->faker->uuid()));
+            $reponse->setRepondant($repondant);
+            $date = $this->faker->dateTimeBetween('2023-01-01 00:00:00', '2023-11-01 00:00:00', 'Europe/Paris');
+            $reponse->setCreatedAt(\DateTimeImmutable::createFromMutable($date));
+            $reponse->setSubmittedAt(\DateTimeImmutable::createFromMutable($date->add(new \DateInterval('PT1H'))));
+            $reponse->setCompleted($this->faker->boolean(95));
 
-                $rawForm = [];
-                foreach ($thematiques as $thematique) {
-                    $question = $thematique->getQuestion();
-                    $choices = $this->faker->randomElements($question->getChoices(), null);
-                    foreach ($choices as $choice) {
-                        $rawForm[$question->getId()]['answers'][$choice->getId()] = 'on';
-                    }
+            $rawForm = [];
+            foreach ($thematiques as $thematique) {
+                $question = $thematique->getQuestion();
+                $choices = $this->faker->randomElements($question->getChoices(), null);
+                foreach ($choices as $choice) {
+                    $rawForm[$question->getId()]['answers'][$choice->getId()] = 'on';
                 }
-                $reponse->setRawForm($rawForm);
-
-                $processor = new ProcessedFormReponseDataTransformer($requestStack, $this->choiceTypologieRepository, $this->choiceRepository, $this->thematiqueRepository);
-                $processedAnswers = $processor->reverseTransform($reponse->getRawForm());
-                $reponse->setProcessedForm($processedAnswers);
-
-                $scoreGeneration = $this->reponseScoreGeneration->generateScore($reponse);
-                $reponse->setPoints($scoreGeneration->getPoints());
-                $reponse->setTotal($scoreGeneration->getTotal());
-                foreach ($scoreGeneration->getScores() as $score) {
-                    $manager->persist($score);
-                }
-                $manager->persist($reponse);
             }
+            $reponse->setRawForm($rawForm);
+
+            $processor = new ProcessedFormReponseDataTransformer($requestStack, $this->choiceTypologieRepository, $this->choiceRepository, $this->thematiqueRepository);
+            $processedAnswers = $processor->reverseTransform($reponse->getRawForm());
+            $reponse->setProcessedForm($processedAnswers);
+
+            $scoreGeneration = $this->reponseScoreGeneration->generateScore($reponse);
+            $reponse->setPoints($scoreGeneration->getPoints());
+            $reponse->setTotal($scoreGeneration->getTotal());
+            foreach ($scoreGeneration->getScores() as $score) {
+                $manager->persist($score);
+            }
+            $manager->persist($reponse);
+//            }
         }
         $manager->flush();
     }
