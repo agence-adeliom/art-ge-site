@@ -47,6 +47,7 @@ use App\Entity\Territoire;
 use App\Entity\Thematique;
 use App\Entity\Typologie;
 use App\Enum\DepartementEnum;
+use App\Enum\PilierEnum;
 use App\Enum\TerritoireAreaEnum;
 use App\Exception\TerritoireNotFound;
 use App\Repository\TerritoireRepository;
@@ -136,6 +137,7 @@ class TerritoireController extends AbstractController
         $percentagesByThematiquesAndTypologies = $this->getPercentagesByThematiquesAndTypologies();
         $percentagesByTypologiesAndThematiques = $this->getPercentagesByTypologiesAndThematiques(); // internal use only
         $percentagesByTypology = $this->getPercentagesByTypology($percentagesByTypologiesAndThematiques);
+        $percentagesByPiliersGlobal = $this->getPercentagesByPiliersGlobal($percentagesByTypologiesAndThematiques);
 
         $children = [];
         if (in_array($this->territoire->getArea(), [TerritoireAreaEnum::DEPARTEMENT, TerritoireAreaEnum::REGION])) {
@@ -154,6 +156,7 @@ class TerritoireController extends AbstractController
             'scores' => [
                 'percentageGlobal' => $percentageGlobal,
                 'percentageRegionGlobal' => $percentageRegionGlobal,
+                'percentagesByPiliersGlobal' => $percentagesByPiliersGlobal,
                 'percentagesByThematiques' => $percentagesByThematiques,
                 'percentagesByTypology' => $percentagesByTypology,
                 'percentagesByThematiquesAndTypologies' => $percentagesByThematiquesAndTypologies,
@@ -365,6 +368,31 @@ class TerritoireController extends AbstractController
         }
 
         return $percentagesByTypology;
+    }
+
+    /**
+     * @param array<mixed> $percentagesByTypologiseAndThematiques
+     *
+     * @return array<string, float>
+     */
+    private function getPercentagesByPiliersGlobal(array $percentagesByTypologiseAndThematiques): array
+    {
+        $percentagesByPiliers = [];
+
+        foreach (PilierEnum::cases() as $key => $pilier) {
+            $thematiques = PilierEnum::getThematiquesSlugsByPilier($pilier);
+
+            $sql = 'SELECT ROUND(AVG(temp.percentage)) FROM (';
+            $sqlUnion = [];
+            foreach ($thematiques as $thematique) {
+                $sqlUnion[] = 'SELECT ROUND((SUM(S.points) / SUM(S.total)) * 100) as percentage FROM `score` S INNER JOIN thematique TH ON S.thematique_id = TH.id WHERE TH.slug = ?';
+            }
+            $sql .= implode(' UNION ', $sqlUnion) . ') as temp';
+
+            $percentagesByPiliers[$pilier->value] = $this->entityManager->getConnection()->executeQuery($sql, array_column($thematiques, 'value'))->fetchOne();;
+        }
+
+        return $percentagesByPiliers;
     }
 
     /**

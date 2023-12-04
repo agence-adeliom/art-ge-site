@@ -6,39 +6,47 @@
 
     {{ dump() }}
 
-    <div>
-        <div class="flex">
+    <div class="flex">
+        <div>
             <div class="bg-primary-50">
                 <p>Score de votre territoire</p>
                 <p>{{ display_percentage(scores.percentageGlobal) }} (pour {{ reponses.numberOfReponsesGlobal }} répondants)</p>
                 <p>Score de la région</p>
                 <p>{{ display_percentage(scores.percentageRegionGlobal) }} (pour {{ reponses.numberOfReponsesRegionGlobal }} répondants)</p>
             </div>
-            <div class="bg-primary-200">
-                <p>Nombres de répondants</p>
-                <div>{{ reponses.numberOfReponsesGlobal }} répondants dont : </div>
+            <div class="bg-primary-250">
+                <p>Détail par piliers du développement durable</p>
                 <ul>
-                    {% for typologie, repondantsByTypologieGlobal in reponses.repondantsByTypologieGlobal %}
-                        <li>{{ typologie }} : {{ repondantsByTypologieGlobal }}</li>
+                    {% for pilier, percentageByPilier in scores.percentagesByPiliersGlobal %}
+                        <li>{{ pilier }} : {{ display_percentage(percentageByPilier) }}</li>
                     {% endfor %}
                 </ul>
             </div>
         </div>
-        <div class="flex">
-            <div class="bg-primary-50">
-                <p>Score total par établissement</p>
-                {% for typologie, percentageByTypology in scores.percentagesByTypology %}
-                    <li>{{ typologie }} : {{ display_percentage(percentageByTypology) }}</li>
+        <div class="bg-primary-200">
+            <p>Nombres de répondants</p>
+            <div>{{ reponses.numberOfReponsesGlobal }} répondants dont : </div>
+            <ul>
+                {% for typologie, repondantsByTypologieGlobal in reponses.repondantsByTypologieGlobal %}
+                    <li>{{ typologie }} : {{ repondantsByTypologieGlobal }}</li>
                 {% endfor %}
-            </div>
+            </ul>
+        </div>
+    </div>
+    <div class="flex">
+        <div class="bg-primary-50">
+            <p>Score total par établissement</p>
+            {% for typologie, percentageByTypology in scores.percentagesByTypology %}
+                <li>{{ typologie }} : {{ display_percentage(percentageByTypology) }}</li>
+            {% endfor %}
         </div>
     </div>
 
     <hr>
 
     <div>Typologies : {{ query.typologies is empty ? 'Toutes' : query.typologies | join(', ') }}</div>
-    <div>Restauration : {{ query.restauration is defined ? 'N/A' : (query.restauration ? 'Oui' : 'Non') }}</div>
-    <div>Espace vert : {{ query.greenSpace is defined ? 'N/A' : (query.greenSpace ? 'Oui' : 'Non') }}</div>
+    <div>Restauration : {{ query.restauration is not defined ? 'N/A' : (query.restauration ? 'Oui' : 'Non') }}</div>
+    <div>Espace vert : {{ query.greenSpace is not defined ? 'N/A' : (query.greenSpace ? 'Oui' : 'Non') }}</div>
 
     <h1 class="font-bold">Pourcentage Total</h1>
     {{ display_percentage(scores.percentageGlobal) }}
