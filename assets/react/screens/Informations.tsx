@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef, useContext} from 'react';
 import Header from '@components/Navigation/Header';
 import InfoImage1 from '@images/informations-image.jpeg';
 import InfoImage2 from '@images/informations-image-2.jpeg';
@@ -9,10 +9,9 @@ import StepFour from '@screens/StepFour';
 import {Icon} from '@components/Typography/Icon'
 import Confirmation from '@screens/Confirmation';
 import { motion, AnimatePresence } from "framer-motion"
-
+import {useNavigate} from 'react-router-dom'
 import {StepAnim} from '@components/Animation/Step';
-import {Button} from '@components/Action/Button';
-
+import {QuestionsContext, UserContext} from '@components/Context/Context';
 
 
 import { object, string, number, InferType,  setLocale } from 'yup';
@@ -20,26 +19,27 @@ import { object, string, number, InferType,  setLocale } from 'yup';
 import * as yup from 'yup';
 
 const Informations = () => {
-    
-    const data = {
-        firstname: '',
-        lastname: '',
-        email: '',
-        tel: ''
-    }
+
+
+    const userContext = useContext(UserContext)
+    const data : Object = userContext.data
+
 
     const establishmentInfo = {
         establishmentName: '',
         address: '',
         zipCode: '',
         city: ''
-    }
+    } 
 
     
     const [errorMessage, seterrorMessage] = useState('');
 
     // Step 1 : User information 
-    const [userData, setUserData] = useState(data);
+    let userData = userContext.userData
+    let setUserData : any = userContext.setUserData
+    
+
     const [legalChecked, setLegalChecked] = useState(false);
     // Step 2 : Type d'établissement 
     const [etablissement, setEtablissement] = useState('');
@@ -54,15 +54,15 @@ const Informations = () => {
     const [step, setStep] = useState(1);
 
     // User information destructuring
-    const {firstname, lastname, email, tel} = userData;
-
+    const {firstname, lastname, email, tel} = userContext.userData;
+ 
     // Establishment information destructuring
     const {establishmentName, address, zipCode, city} = establishmentData;
 
     // Validation rules
     setLocale({
         mixed: {
-          default: 'Não é válido',
+          default: 'Non valide',
         },
         string: {
             matches: 'Le numéro de téléphone ne doit pas contenir de lettres',
@@ -89,7 +89,7 @@ const Informations = () => {
     
     // Set Input value in the userState
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUserData({...userData, [event.target.id]: event.target.value })
+        setUserData({...userData, [event.target.id]: event.target.value })        
     }
     // Set Input value in the establishmentState
     const handleChangeEstablishment = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,13 +116,12 @@ const Informations = () => {
             .catch(() => {
                 console.log('error')
             });
-        } else {}
+        } 
     }
     
 
    const acceptLegal = (event : React.ChangeEvent<HTMLInputElement>) => {
        setLegalChecked(event.target.checked)
-       console.log(event.target.checked)
    }
 
    const nextStep = () => {
@@ -137,13 +136,46 @@ const Informations = () => {
         await userSchema.validate( userData );
         console.log('true');
         nextStep();
-        console.log(step)
       } catch (error: any) {
         console.log('false' + error)
       }
      
     }
 
+    const questionContext = useContext(QuestionsContext)
+    let setQuestions : any = questionContext.setQuestions
+    let questions : any = questionContext.questions
+    let initialQuestions : any = questionContext.initialQuestions
+
+    const prevCountRef = useRef(initialQuestions);
+
+    const handleSubmitToForm = () => {
+
+        let formAPI = 'api/form?green_space='
+        let greenSpaceChoice = isGreenSpace === 'true' ? true : isGreenSpace === 'false' ? false : null
+        let formAPIresults = formAPI + greenSpaceChoice
+        if (greenSpaceChoice !== null) {
+            fetch(formAPIresults)
+            .then(async (response: Response) => {
+                setQuestions(await response.json())
+            })
+            .catch(() => {
+                console.log('error')
+            });
+        }
+        
+     }
+
+
+     const redirectToForm = useNavigate()
+
+     useEffect(() => {
+        if (questions != prevCountRef.current) {
+            setTimeout(() => {
+                redirectToForm('/form', {replace: true})
+             }, 2000)
+        }
+     }, [questions])
 
 
     const inputClass : string = 'border-0 border-b border-neutral-500 block w-full mt-4 pb-2 focus:ring-0 focus:border-secondary-200 trans-default'
@@ -152,11 +184,11 @@ const Informations = () => {
             <Header step={step}></Header>
             <div className="container max-lg:pb-6 grid grid-cols-12 gap-6 md:h-[calc(100vh-108px)]">
                 <div className="col-span-full lg:col-span-7 flex items-center md:py-10 overflow-auto relative">
-                    <form className="h-full w-full pl-1 flex items-center">
+                    <form className="h-full w-full pl-1 flex">
 
                         <div className="bg-white w-full">
 
-                            <StepAnim isVisible={step === 4 ? true : false}>
+                             <StepAnim isVisible={step === 1 ? true : false}>
                                 <StepOne 
                                     handleChange={handleChange} 
                                     handleSubmit={handleSubmit} 
@@ -174,7 +206,7 @@ const Informations = () => {
                                     etablissement={etablissement}
                                     nextStep={nextStep}
                                 ></StepTwo>
-                            </StepAnim> 
+                            </StepAnim>  
                             <StepAnim isVisible={step === 3 ? true : false}>
                                 <StepThree
                                     isRestaurant={isRestaurant}
@@ -184,7 +216,7 @@ const Informations = () => {
                                     nextStep={nextStep}
                                 ></StepThree>
                             </StepAnim> 
-                            <StepAnim isVisible={step === 1 ? true : false}>
+                            <StepAnim isVisible={step === 4 ? true : false}>
                                 <StepFour 
                                     establishmentName={establishmentName} 
                                     handleChange={handleChangeEstablishment}
@@ -197,22 +229,18 @@ const Informations = () => {
                                     establishmentData={establishmentData}
                                     openDropdown={openDropdown}
                                     setOpenDropdown={setOpenDropdown}
+                                    handleSubmitToForm={handleSubmitToForm}
                                 />
                             </StepAnim> 
-                            <StepAnim isVisible={step === 5 ? true : false}>
+
+                            {step === 5 && 
                                 <Confirmation
                                     title="Merci pour ces informations."
                                     subTitle="Parlons à présent de vos actions..."
                                 ></Confirmation>
-                            </StepAnim> 
+                            }
 
-                            
-                        </div>
-
-                        
-
-                        
-                            
+                        </div>    
                         
                     </form>
                 </div>
