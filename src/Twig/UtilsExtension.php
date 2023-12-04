@@ -25,7 +25,7 @@ class UtilsExtension extends AbstractExtension
             $percentage = $this->getPercentage($amount, $total);
         }
 
-        return $percentage . '% / 100';
+        return $percentage . '%';
     }
 
     private function getPercentage(float | int $amount, float | int $total): int
