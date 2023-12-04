@@ -4,8 +4,9 @@ import { Text } from '@components/Typography/Text';
 import { Button } from '@components/Action/Button';
 import { Link } from "react-router-dom";
 
-const Header = ({step} : {
-    step: number
+const Header = ({step, ...props} : {
+    step: number, 
+    title ? : string | null
 }) => {
 
     const totalSteps = 5;
@@ -20,7 +21,7 @@ const Header = ({step} : {
                     <img src={Logo} alt="Logo ART GE"/>
                 </Link>
                 <Text color="neutral-500" className="hidden md:block" weight={400}>
-                    Vos engagements pour un tourisme durable et responsable
+                    { props.title === null ? props.title : ' Vos engagements pour un tourisme durable et responsable'}
                 </Text>
                 <Button variant="textOnly" icon={ 'fa-x' } weight={600}>Quitter</Button>
             </div>

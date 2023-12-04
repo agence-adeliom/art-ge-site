@@ -23,6 +23,8 @@ const StepThree = ({isRestaurant, setIsRestaurant, setIsGreenSpace, isGreenSpace
                 <YesNoCard handleChoice={setIsRestaurant} choice={isRestaurant} className={cardClassName} id="restaurant"></YesNoCard>            
             </div>
             <div className="mt-8">
+                <Text className="mb-4" color="neutral-700" weight={400} size="sm">Disposez-vous d'un espace vert, d'un espace extérieur de plus de 100m2 ?</Text>
+
                 <YesNoCard handleChoice={setIsGreenSpace} choice={isGreenSpace} className={cardClassName} id="greenSpace"></YesNoCard>            
             </div>
             

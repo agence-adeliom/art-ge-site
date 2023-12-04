@@ -4,7 +4,7 @@ import { Text } from '@components/Typography/Text'
 import { Button } from '@components/Action/Button'
 import Input from '@components/Forms/Input'
 
-const StepFour = ( {handleChange, address, establishmentName, city, zipCode, nextStep, zipResult, setEstablishmentData, establishmentData, openDropdown, setOpenDropdown} : {
+const StepFour = ( {handleChange, address, establishmentName, city, zipCode, nextStep, zipResult, setEstablishmentData, establishmentData, openDropdown, setOpenDropdown, handleSubmitToForm} : {
     handleChange: Function,
     address: string,
     establishmentName: string,
@@ -15,7 +15,8 @@ const StepFour = ( {handleChange, address, establishmentName, city, zipCode, nex
     setEstablishmentData: Function,
     establishmentData: object,
     openDropdown: boolean,
-    setOpenDropdown: Function
+    setOpenDropdown: Function,
+    handleSubmitToForm: Function
 }) => {
 
     return (
@@ -73,7 +74,7 @@ const StepFour = ( {handleChange, address, establishmentName, city, zipCode, nex
             icon="fa-minus"
             iconSide="left"
             disabled={establishmentName === '' || address === '' || zipCode === '' || city === '' ? true : false} 
-            onClick={(event) => {event.preventDefault(); nextStep()}}
+            onClick={(event) => {event.preventDefault(); nextStep(); handleSubmitToForm()}}
             >
                 Suivant
             </Button> 
