@@ -1,64 +1,15 @@
 <?php
 
-/**
- * NOMBRE DE REPONSES LIEES AUX FILTRES.
- *
- * SELECT COUNT(R.id) FROM reponse R
- * INNER JOIN repondant U ON R.repondant_id = U.id
- * INNER JOIN typologie T ON U.typologie_id = T.id
- * WHERE U.zip = '67000' AND T.slug IN ('hotel');
- * */
-
-/*
- * SCORE GLOBAL DU TERRITOIRE.
- *
- * SELECT ROUND(SUM(R.points) / SUM(R.total) * 100) as percentage
- * FROM reponse R
- * INNER JOIN repondant U ON U.id = R.repondant_id
- * WHERE U.zip IN ('67000', '67500');
- * */
-
-/*
- * SCORE GLOBAL DU TERRITOIRE PAR THEMATIQUE
- *
- * SELECT SUM(S.points) as avg_points, SUM(S.total) as avg_total, ROUND((SUM(S.points) / SUM(S.total)) * 100) as percentage FROM `score` S
- * INNER JOIN reponse R ON S.reponse_id = R.id
- * INNER JOIN repondant U ON R.repondant_id = U.id
- * WHERE U.zip = '67000'
- * GROUP BY thematique_id;
- * */
-
-/*
- * SCORE GLOBAL DU TERRITOIRE PAR THEMATIQUE AND TYPOLOGIE
- *
- * SELECT SUM(S.points) as avg_points, SUM(S.total) as avg_total, ROUND((SUM(S.points) / SUM(S.total)) * 100) as percentage FROM `score` S
- * INNER JOIN reponse R ON S.reponse_id = R.id
- * INNER JOIN repondant U ON R.repondant_id = U.id
- * INNER JOIN typologie T ON U.typologie_id = T.id
- * WHERE U.zip = '67000' AND T.slug IN ('hotel')
- * GROUP BY thematique_id;
- * */
-
 declare(strict_types=1);
 
 namespace App\Controller;
 
 use App\Dto\TerritoireFilterDTO;
-use App\Entity\Territoire;
-use App\Entity\Thematique;
-use App\Entity\Typologie;
-use App\Enum\DepartementEnum;
-use App\Enum\PilierEnum;
 use App\Enum\TerritoireAreaEnum;
 use App\Event\TerritoireDashboardGlobalEvent;
+use App\Event\TerritoireDashboardScoresEvent;
 use App\Exception\TerritoireNotFound;
-use App\Repository\ReponseRepository;
-use App\Repository\ScoreRepository;
 use App\Repository\TerritoireRepository;
-use App\Repository\ThematiqueRepository;
-use App\Repository\TypologieRepository;
-use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -67,29 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TerritoireController extends AbstractController
 {
-    private ?Territoire $territoire = null;
-
-    private ?QueryBuilder $qb = null;
-
-    /** @var array<string>|null */
-    private ?array $thematiques = null;
-
-    /** @var array<string>|null */
-    private ?array $typologies = null;
-
-    private ?bool $restauration = null;
-
-    private ?bool $greenSpace = null;
-
-    private ?\DateTimeImmutable $from = null;
-
-    private ?\DateTimeImmutable $to = null;
-
     public function __construct(
         private readonly TerritoireRepository $territoireRepository,
-        private readonly TypologieRepository $typologieRepository,
-        private readonly ThematiqueRepository $thematiqueRepository,
-        private readonly EntityManagerInterface $entityManager,
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
@@ -109,20 +39,14 @@ class TerritoireController extends AbstractController
         #[MapQueryParameter] ?string $from,
         #[MapQueryParameter] ?string $to,
     ): array {
-        $this->territoire = $this->territoireRepository->getOneByUuidOrSlug($identifier);
+        $territoire = $this->territoireRepository->getOneByUuidOrSlug($identifier);
 
-        if (!$this->territoire) {
+        if (!$territoire) {
             throw new TerritoireNotFound();
         }
 
-        $this->typologies = $typologies;
-        $this->restauration = $restauration;
-        $this->greenSpace = $greenSpace;
-        $this->from = \DateTimeImmutable::createFromFormat('!Y-m-d', (string) $from) ?: null;
-        $this->to = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $to . ' 23:59:59') ?: null;
-
         $territoireFilterDTO = TerritoireFilterDTO::from([
-            'territoire' => $this->territoire,
+            'territoire' => $territoire,
             'typologies' => $typologies,
             'thematiques' => $thematiques,
             'restauration' => $restauration,
@@ -131,300 +55,40 @@ class TerritoireController extends AbstractController
             'to' => $to,
         ]);
 
-        if (null === $this->typologies || [] === $this->typologies) {
-            $this->typologies = array_map(static fn (Typologie $typologie): string => $typologie->getSlug(), $this->typologieRepository->findAll());
-        }
-
-        if (null === $this->thematiques || [] === $this->thematiques) {
-            $this->thematiques = array_map(static fn (Thematique $thematique): string => $thematique->getSlug(), $this->thematiqueRepository->getAllExceptLabel());
-        }
+        //        if (null === $this->typologies || [] === $this->typologies) {
+        //            $this->typologies = array_map(static fn (Typologie $typologie): string => $typologie->getSlug(), $this->typologieRepository->findAll());
+        //        }
+        //
+        //        if (null === $this->thematiques || [] === $this->thematiques) {
+        //            $this->thematiques = array_map(static fn (Thematique $thematique): string => $thematique->getSlug(), $this->thematiqueRepository->getAllExceptLabel());
+        //        }
 
         $event = new TerritoireDashboardGlobalEvent($territoireFilterDTO);
         $this->eventDispatcher->dispatch($event);
         $globals = $event->getGlobals();
 
-
-        $percentagesByThematiques = $this->getPercentagesByThematiques();
-        $percentagesByThematiquesAndTypologies = $this->getPercentagesByThematiquesAndTypologies();
-        $percentagesByTypologiesAndThematiques = $this->getPercentagesByTypologiesAndThematiques(); // internal use only
-        $percentagesByTypology = $this->getPercentagesByTypology($percentagesByTypologiesAndThematiques);
-        $percentagesByPiliersGlobal = $this->getPercentagesByPiliersGlobal($percentagesByTypologiesAndThematiques);
+        $event = new TerritoireDashboardScoresEvent($territoireFilterDTO);
+        $this->eventDispatcher->dispatch($event);
+        $scores = $event->getScores();
 
         $children = [];
-        if (in_array($this->territoire->getArea(), [TerritoireAreaEnum::DEPARTEMENT, TerritoireAreaEnum::REGION])) {
-            $children = $this->territoire->getChildren();
+        if (in_array($territoire->getArea(), [TerritoireAreaEnum::DEPARTEMENT, TerritoireAreaEnum::REGION])) {
+            $children = $territoire->getChildren();
         }
 
         return [
-            'territoire' => $this->territoire,
+            'territoire' => $territoire,
             'children' => $children,
             'globals' => $globals,
-            'scores' => [
-                'percentagesByPiliersGlobal' => $percentagesByPiliersGlobal,
-                'percentagesByThematiques' => $percentagesByThematiques,
-                'percentagesByTypology' => $percentagesByTypology,
-                'percentagesByThematiquesAndTypologies' => $percentagesByThematiquesAndTypologies,
-            ],
+            'scores' => $scores,
             'query' => [
-                'territoire' => $territoireFilterDTO->getTerritoire(),
                 'typologies' => $territoireFilterDTO->getTypologies(),
                 'thematiques' => $territoireFilterDTO->getThematiques(),
                 'restauration' => $territoireFilterDTO->getRestauration(),
                 'greenSpace' => $territoireFilterDTO->getGreenSpace(),
                 'from' => $territoireFilterDTO->getFrom(),
-                'to' => $territoireFilterDTO->getTo()
+                'to' => $territoireFilterDTO->getTo(),
             ],
         ];
-    }
-
-    /**
-     * GLOBAL.
-     */
-
-    /**
-     * @return array<mixed>
-     */
-
-    /**
-     * DEPENDENT ON FILTERS.
-     */
-    private function getPercentagesByThematiquesQuery(): QueryBuilder
-    {
-        $this->qb = $this->entityManager->getConnection()->createQueryBuilder();
-        $this->qb->addSelect('ROUND(AVG(S.points)) as avg_points')
-            ->addSelect('ROUND(AVG(S.total)) as avg_total')
-            ->addSelect('ROUND((SUM(S.points) / SUM(S.total)) * 100) as value')
-            ->addSelect('TH.name as name')
-            ->addSelect('TH.slug as slug')
-            ->from('score', 'S')
-            ->innerJoin('S', 'reponse', 'R', 'R.id = S.reponse_id')
-            ->innerJoin('R', 'repondant', 'U', 'U.id = R.repondant_id')
-            ->innerJoin('U', 'typologie', 'T', 'T.id = U.typologie_id')
-            ->innerJoin('S', 'thematique', 'TH', 'TH.id = S.thematique_id')
-            ->groupBy('S.thematique_id')
-        ;
-
-        $this->addFiltersToQueryBuilder();
-
-        /* @phpstan-ignore-next-line */
-        return $this->qb;
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    private function getPercentagesByThematiques(): array
-    {
-        $this->qb = $this->getPercentagesByThematiquesQuery();
-
-        return $this->qb->executeQuery()->fetchAllAssociative();
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    private function getPercentagesByThematiquesAndTypologies(): array
-    {
-        $thematiquesAndTypologies = [];
-        foreach ($this->thematiques ?? [] as $key => $thematique) {
-            foreach ($this->typologies ?? [] as $typology) {
-                //                $this->qb = $this->getPercentagesByThematiquesQuery();
-                //                $this->qb->andWhere('TH.slug = :thematique')
-                //                    ->setParameter('thematique', $thematique)
-                //                    ->andWhere('T.slug = :typology')
-                //                    ->setParameter('typology', $typology)
-                //                ;
-                $thematiquesAndTypologies[$key][$typology] = [];
-            }
-        }
-
-        return $thematiquesAndTypologies;
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    private function getPercentagesByTypologiesAndThematiques(): array
-    {
-        $percentagesByTypologiseAndThematiques = [];
-
-        foreach ($this->typologies ?? [] as $typology) {
-            $this->qb = $this->getPercentagesByThematiquesQuery();
-            $this->qb->andWhere('T.slug = :typology')
-                ->setParameter('typology', $typology)
-            ;
-            $percentagesByTypologiseAndThematiques[$typology] = $this->qb->executeQuery()->fetchAllAssociative();
-        }
-
-        return $percentagesByTypologiseAndThematiques;
-    }
-
-    /**
-     * @param array<mixed> $percentagesByTypologiseAndThematiques
-     *
-     * @return array<string, float>
-     */
-    private function getPercentagesByTypology(array $percentagesByTypologiseAndThematiques): array
-    {
-        $percentagesByTypology = [];
-
-        foreach ($percentagesByTypologiseAndThematiques as $typology => $scores) {
-            $typologyPercentages = array_column($scores, 'value'); // la liste des pourcentages par thematique pour la typologie
-            $percentagesByTypology[$typology] = round(array_sum($typologyPercentages) / count($typologyPercentages));
-        }
-
-        return $percentagesByTypology;
-    }
-
-    /**
-     * @param array<mixed> $percentagesByTypologiseAndThematiques
-     *
-     * @return array<string, float>
-     */
-    private function getPercentagesByPiliersGlobal(array $percentagesByTypologiseAndThematiques): array
-    {
-        $percentagesByPiliers = [];
-
-        foreach (PilierEnum::cases() as $key => $pilier) {
-            $thematiques = PilierEnum::getThematiquesSlugsByPilier($pilier);
-
-            $sql = 'SELECT ROUND(AVG(temp.percentage)) FROM (';
-            $sqlUnion = [];
-            foreach ($thematiques as $thematique) {
-                $sqlUnion[] = 'SELECT ROUND((SUM(S.points) / SUM(S.total)) * 100) as percentage FROM `score` S INNER JOIN thematique TH ON S.thematique_id = TH.id WHERE TH.slug = ?';
-            }
-            $sql .= implode(' UNION ', $sqlUnion) . ') as temp';
-
-            $percentagesByPiliers[$pilier->value] = $this->entityManager->getConnection()->executeQuery($sql, array_column($thematiques, 'value'))->fetchOne();;
-        }
-
-        return $percentagesByPiliers;
-    }
-
-    /**
-     * FILTERS.
-     */
-    private function addFiltersToQueryBuilder(): void
-    {
-        if (!$this->qb) {
-            return;
-        }
-
-        $this->filterByAreaZipCodes($this->qb);
-
-        $this->filterByThematique($this->qb);
-
-        $this->filterByTypology($this->qb);
-
-        $this->filterByRestauration($this->qb);
-
-        $this->filterByGreenSpace($this->qb);
-
-        $this->filterByDateRange($this->qb);
-    }
-
-    private function filterByAreaZipCodes(QueryBuilder $qb): void
-    {
-        if ($this->territoire && TerritoireAreaEnum::REGION !== $this->territoire->getArea()) {
-            $ors = [];
-            if (TerritoireAreaEnum::DEPARTEMENT === $this->territoire->getArea()) {
-                $department = DepartementEnum::tryFrom($this->territoire->getSlug());
-                if ($department) {
-                    $ors[] = $qb->expr()->like('U.zip', ':zip');
-                    $qb->setParameter('zip', DepartementEnum::getCode($department) . '%');
-                }
-            } else {
-                $zips = implode(',', $this->territoire->getZips());
-                $ors[] = $qb->expr()->in('U.zip', ':zip');
-                $qb->setParameter('zip', $zips);
-            }
-            if ([] !== $ors) {
-                $qb->andWhere($qb->expr()->and(...$ors));
-            }
-        }
-    }
-
-    private function filterByThematique(?QueryBuilder $qb): void
-    {
-        if (!$qb) {
-            return;
-        }
-
-        if (array_key_exists('TH', $qb->getQueryParts()['join'] ?? []) && !empty($this->thematiques)) {
-            $ors = [];
-            foreach ($this->thematiques as $key => $thematique) {
-                $ors[] = $qb->expr()->eq('TH.slug', ':thematique' . $key);
-                $qb->setParameter('thematique' . $key, $thematique);
-            }
-            $qb->andWhere($qb->expr()->or(...$ors));
-        }
-    }
-
-    private function filterByTypology(?QueryBuilder $qb): void
-    {
-        if (!$qb) {
-            return;
-        }
-
-        if (!empty($this->typologies)) {
-            $ors = [];
-            foreach ($this->typologies as $key => $typologie) {
-                $ors[] = $qb->expr()->eq('T.slug', ':typologie' . $key);
-                $qb->setParameter('typologie' . $key, $typologie);
-            }
-            $qb->andWhere($qb->expr()->or(...$ors));
-        }
-    }
-
-    private function filterByRestauration(?QueryBuilder $qb): void
-    {
-        if (!$qb) {
-            return;
-        }
-
-        if (null !== $this->restauration) {
-            $qb->andWhere('U.restauration = :restauration')
-                ->setParameter('restauration', $this->restauration)
-            ;
-        }
-    }
-
-    private function filterByGreenSpace(?QueryBuilder $qb): void
-    {
-        if (!$qb) {
-            return;
-        }
-        if (null !== $this->greenSpace) {
-            $qb->andWhere('U.green_space = :greenSpace')
-                ->setParameter('greenSpace', $this->greenSpace)
-            ;
-        }
-    }
-
-    private function filterByDateRange(?QueryBuilder $qb): void
-    {
-        if (!$qb) {
-            return;
-        }
-
-        if (null !== $this->from || null !== $this->to) {
-            $dateFormat = 'Y-m-d H:i:s';
-            if (null !== $this->from && null !== $this->to) {
-                $qb->andWhere('R.created_at BETWEEN :from AND :to')
-                    ->setParameter('from', $this->from->format($dateFormat))
-                    ->setParameter('to', $this->to->format($dateFormat))
-                ;
-            } elseif (null !== $this->from && null === $this->to) {
-                /* @phpstan-ignore-next-line */
-                $this->qb->andWhere('R.created_at >= :from')
-                    ->setParameter('from', $this->from->format($dateFormat))
-                ;
-            } elseif (null === $this->from && null !== $this->to) {
-                /* @phpstan-ignore-next-line */
-                $this->qb->andWhere('R.created_at <= :to')
-                    ->setParameter('to', $this->to->format($dateFormat))
-                ;
-            }
-        }
     }
 }

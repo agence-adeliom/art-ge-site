@@ -8,7 +8,6 @@ use App\Entity\Territoire;
 
 class TerritoireFilterDTO
 {
-
     private function __construct(
         private Territoire $territoire,
         /** @var array<string> */
@@ -19,8 +18,7 @@ class TerritoireFilterDTO
         private ?bool $greenSpace = null,
         private ?\DateTimeImmutable $from = null,
         private ?\DateTimeImmutable $to = null,
-    ) {
-    }
+    ) {}
 
     public static function from(array $datas = []): self
     {
@@ -33,7 +31,6 @@ class TerritoireFilterDTO
 
         return new TerritoireFilterDTO($datas['territoire'], $datas['thematiques'] ?? [], $datas['typologies'] ?? [], $datas['restauration'], $datas['greenSpace'], $datas['from'], $datas['to']);
     }
-
 
     public function getTerritoire(): Territoire
     {

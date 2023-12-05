@@ -6,11 +6,9 @@ namespace App\Repository;
 
 use App\Dto\TerritoireFilterDTO;
 use App\Entity\Reponse;
-use App\Entity\Territoire;
 use App\Enum\DepartementEnum;
 use App\Enum\TerritoireAreaEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -192,20 +190,19 @@ class ReponseRepository extends ServiceEntityRepository
         ;
     }
 
-
     public function getNumberOfReponsesGlobal(TerritoireFilterDTO $territoireFilterDTO): int
     {
         $qb = $this->createQueryBuilder('r')
-            ->select('COUNT(r.id)');
+            ->select('COUNT(r.id)')
+        ;
 
         $qb = $this->filterByAreaZipCodes($qb, $territoireFilterDTO);
 
         return (int) $qb
             ->getQuery()
             ->getSingleScalarResult()
-            ;
+        ;
     }
-
 
     public function getNumberOfReponsesRegionGlobal(): int
     {
@@ -213,7 +210,7 @@ class ReponseRepository extends ServiceEntityRepository
             ->select('COUNT(r.id)')
             ->getQuery()
             ->getSingleScalarResult()
-            ;
+        ;
     }
 
     public function getRepondantsGlobal(TerritoireFilterDTO $territoireFilterDTO): array
@@ -275,25 +272,27 @@ class ReponseRepository extends ServiceEntityRepository
     public function getPercentageGlobal(TerritoireFilterDTO $territoireFilterDTO): int
     {
         $qb = $this->createQueryBuilder('r')
-            ->select('ROUND(SUM(r.points) / SUM(r.total) * 100) as percentage');
+            ->select('ROUND(SUM(r.points) / SUM(r.total) * 100) as percentage')
+        ;
 
         $qb = $this->filterByAreaZipCodes($qb, $territoireFilterDTO);
 
         return (int) $qb
             ->getQuery()
             ->getSingleScalarResult()
-            ;
+        ;
     }
 
     public function getPercentageRegionGlobal(): int
     {
         $qb = $this->createQueryBuilder('r')
-            ->select('ROUND(SUM(r.points) / SUM(r.total) * 100) as percentage');
+            ->select('ROUND(SUM(r.points) / SUM(r.total) * 100) as percentage')
+        ;
 
         return (int) $qb
             ->getQuery()
             ->getSingleScalarResult()
-            ;
+        ;
     }
 
     private function addFiltersToQueryBuilder(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
@@ -308,9 +307,7 @@ class ReponseRepository extends ServiceEntityRepository
 
         $qb = $this->filterByGreenSpace($qb, $territoireFilterDTO);
 
-        $qb = $this->filterByDateRange($qb, $territoireFilterDTO);
-
-        return $qb;
+        return $this->filterByDateRange($qb, $territoireFilterDTO);
     }
 
     private function filterByAreaZipCodes(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
@@ -332,8 +329,8 @@ class ReponseRepository extends ServiceEntityRepository
             if ([] !== $ors) {
                 if (isset($qb->getDQLPart('join')['r'])) {
                     $addJoin = true;
-                    foreach ($qb->getDQLPart('join')['r'] ?? [] as $joins){
-                        if ($joins->getJoin() === 'r.repondant') {
+                    foreach ($qb->getDQLPart('join')['r'] ?? [] as $joins) {
+                        if ('r.repondant' === $joins->getJoin()) {
                             $addJoin = false;
                         }
                     }
