@@ -43,13 +43,17 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Dto\TerritoireFilterDTO;
 use App\Entity\Territoire;
 use App\Entity\Thematique;
 use App\Entity\Typologie;
 use App\Enum\DepartementEnum;
 use App\Enum\PilierEnum;
 use App\Enum\TerritoireAreaEnum;
+use App\Event\TerritoireDashboardGlobalEvent;
 use App\Exception\TerritoireNotFound;
+use App\Repository\ReponseRepository;
+use App\Repository\ScoreRepository;
 use App\Repository\TerritoireRepository;
 use App\Repository\ThematiqueRepository;
 use App\Repository\TypologieRepository;
@@ -57,9 +61,9 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Uid\Uuid;
 
 class TerritoireController extends AbstractController
 {
@@ -86,6 +90,7 @@ class TerritoireController extends AbstractController
         private readonly TypologieRepository $typologieRepository,
         private readonly ThematiqueRepository $thematiqueRepository,
         private readonly EntityManagerInterface $entityManager,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
     /**
@@ -97,6 +102,7 @@ class TerritoireController extends AbstractController
     #[Template('territoire.html.twig')]
     public function __invoke(
         string $identifier,
+        #[MapQueryParameter] ?array $thematiques,
         #[MapQueryParameter] ?array $typologies,
         #[MapQueryParameter] ?bool $restauration,
         #[MapQueryParameter(name: 'green_space')] ?bool $greenSpace,
@@ -115,6 +121,16 @@ class TerritoireController extends AbstractController
         $this->from = \DateTimeImmutable::createFromFormat('!Y-m-d', (string) $from) ?: null;
         $this->to = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $to . ' 23:59:59') ?: null;
 
+        $territoireFilterDTO = TerritoireFilterDTO::from([
+            'territoire' => $this->territoire,
+            'typologies' => $typologies,
+            'thematiques' => $thematiques,
+            'restauration' => $restauration,
+            'greenSpace' => $greenSpace,
+            'from' => $from,
+            'to' => $to,
+        ]);
+
         if (null === $this->typologies || [] === $this->typologies) {
             $this->typologies = array_map(static fn (Typologie $typologie): string => $typologie->getSlug(), $this->typologieRepository->findAll());
         }
@@ -123,15 +139,10 @@ class TerritoireController extends AbstractController
             $this->thematiques = array_map(static fn (Thematique $thematique): string => $thematique->getSlug(), $this->thematiqueRepository->getAllExceptLabel());
         }
 
-        $numberOfReponsesGlobal = $this->getNumberOfReponsesGlobal(); // 29 BasRhin
-        $numberOfReponsesRegionGlobal = $this->getNumberOfReponsesRegionGlobal(); // 300 région
+        $event = new TerritoireDashboardGlobalEvent($territoireFilterDTO);
+        $this->eventDispatcher->dispatch($event);
+        $globals = $event->getGlobals();
 
-        $percentageGlobal = $this->getPercentageGlobal(); // 58%
-        $percentageRegionGlobal = $this->getPercentageRegionGlobal(); // 56%
-
-        $repondantsGlobal = $this->getRepondantsGlobal();
-        $repondantsByTypologieGlobal = $this->getRepondantsByTypologieGlobal();
-        $repondantsGlobal = array_map(static fn (array $repondant): array => [...$repondant, ...['uuid' => Uuid::fromBinary($repondant['uuid'])->toBase32()]], $repondantsGlobal);
 
         $percentagesByThematiques = $this->getPercentagesByThematiques();
         $percentagesByThematiquesAndTypologies = $this->getPercentagesByThematiquesAndTypologies();
@@ -147,24 +158,21 @@ class TerritoireController extends AbstractController
         return [
             'territoire' => $this->territoire,
             'children' => $children,
-            'reponses' => [
-                'repondantsGlobal' => $repondantsGlobal,
-                'repondantsByTypologieGlobal' => $repondantsByTypologieGlobal,
-                'numberOfReponsesGlobal' => $numberOfReponsesGlobal,
-                'numberOfReponsesRegionGlobal' => $numberOfReponsesRegionGlobal,
-            ],
+            'globals' => $globals,
             'scores' => [
-                'percentageGlobal' => $percentageGlobal,
-                'percentageRegionGlobal' => $percentageRegionGlobal,
                 'percentagesByPiliersGlobal' => $percentagesByPiliersGlobal,
                 'percentagesByThematiques' => $percentagesByThematiques,
                 'percentagesByTypology' => $percentagesByTypology,
                 'percentagesByThematiquesAndTypologies' => $percentagesByThematiquesAndTypologies,
             ],
             'query' => [
-                'typologies' => $typologies,
-                'restauration' => $restauration,
-                'greenSpace' => $greenSpace,
+                'territoire' => $territoireFilterDTO->getTerritoire(),
+                'typologies' => $territoireFilterDTO->getTypologies(),
+                'thematiques' => $territoireFilterDTO->getThematiques(),
+                'restauration' => $territoireFilterDTO->getRestauration(),
+                'greenSpace' => $territoireFilterDTO->getGreenSpace(),
+                'from' => $territoireFilterDTO->getFrom(),
+                'to' => $territoireFilterDTO->getTo()
             ],
         ];
     }
@@ -172,112 +180,10 @@ class TerritoireController extends AbstractController
     /**
      * GLOBAL.
      */
-    private function getNumberOfReponsesGlobal(): int
-    {
-        $this->qb = $this->entityManager->getConnection()->createQueryBuilder();
-        $this->qb->addSelect('COUNT(R.id)')
-            ->from('reponse', 'R')
-            ->innerJoin('R', 'repondant', 'U', 'U.id = R.repondant_id')
-            ->innerJoin('U', 'typologie', 'T', 'T.id = U.typologie_id')
-        ;
-
-        $this->addFiltersToQueryBuilder();
-
-        return (int) $this->qb?->executeQuery()->fetchOne();
-    }
-
-    private function getNumberOfReponsesRegionGlobal(): int
-    {
-        $this->qb = $this->entityManager->getConnection()->createQueryBuilder();
-        $this->qb->addSelect('COUNT(R.id)')
-            ->from('reponse', 'R')
-            ->innerJoin('R', 'repondant', 'U', 'U.id = R.repondant_id')
-            ->innerJoin('U', 'typologie', 'T', 'T.id = U.typologie_id')
-        ;
-
-        return (int) $this->qb->executeQuery()->fetchOne();
-    }
-
-    private function getPercentageGlobal(): float
-    {
-        $this->qb = $this->entityManager->getConnection()->createQueryBuilder();
-        $percentageGlobalQuery = $this->qb->select('ROUND(SUM(R.points) / SUM(R.total) * 100) as percentage')
-            ->from('reponse', 'R')
-            ->innerJoin('R', 'repondant', 'U', 'U.id = R.repondant_id')
-        ;
-
-        $this->filterByAreaZipCodes($this->qb);
-
-        return (int) $percentageGlobalQuery->executeQuery()->fetchOne();
-    }
-
-    private function getPercentageRegionGlobal(): float
-    {
-        $this->qb = $this->entityManager->getConnection()->createQueryBuilder();
-        $percentageGlobalQuery = $this->qb->select('ROUND(SUM(R.points) / SUM(R.total) * 100) as percentage')
-            ->from('reponse', 'R')
-            ->innerJoin('R', 'repondant', 'U', 'U.id = R.repondant_id')
-        ;
-
-        return (int) $percentageGlobalQuery->executeQuery()->fetchOne();
-    }
-
-    private function getRepondantsGlobal(): mixed
-    {
-        $this->qb = $this->entityManager->getConnection()->createQueryBuilder();
-        $this->qb
-            ->select('T.name as typologie, R.uuid, U.company, MAX(R.points) as points, R.total')
-            ->from('reponse', 'R')
-            ->innerJoin('R', 'repondant', 'U', 'U.id = R.repondant_id')
-            ->innerJoin('U', 'typologie', 'T', 'T.id = U.typologie_id')
-            ->groupBy('U.id')
-        ;
-
-        $this->addFiltersToQueryBuilder();
-
-        /* @phpstan-ignore-next-line */
-        return $this->qb->executeQuery()->fetchAllAssociative();
-    }
 
     /**
      * @return array<mixed>
      */
-    private function getRepondantsByTypologieGlobal(): array
-    {
-        $repondantsByTypologieGlobal = [];
-
-        $zipCriteria = '';
-        $zipParams = [];
-        if ($this->territoire && TerritoireAreaEnum::REGION !== $this->territoire->getArea()) {
-            if (TerritoireAreaEnum::DEPARTEMENT === $this->territoire->getArea()) {
-                $department = DepartementEnum::tryFrom($this->territoire->getSlug());
-                if ($department) {
-                    $zipCriteria = 'AND U.zip LIKE :zip';
-                    $zipParams = ['zip' => DepartementEnum::getCode($department) . '%'];
-                }
-            } else {
-                $zips = implode(',', $this->territoire->getZips());
-                $zipCriteria = 'AND U.zip IN (:zip)';
-                $zipParams = ['zip' => $zips];
-            }
-        }
-
-        foreach ($this->typologies ?? [] as $typology) {
-            $repondantsByTypologieGlobal[$typology] = $this->entityManager->getConnection()->executeQuery('
-            SELECT COUNT(id) FROM (
-                SELECT U.id FROM reponse R 
-                    INNER JOIN repondant U ON U.id = R.repondant_id 
-                    INNER JOIN typologie T ON T.id = U.typologie_id 
-                WHERE 
-                    T.slug = :slug 
-                    ' . $zipCriteria . '
-                GROUP BY U.id
-            ) as temp;
-            ', ['slug' => $typology, ...$zipParams])->fetchOne();
-        }
-
-        return $repondantsByTypologieGlobal;
-    }
 
     /**
      * DEPENDENT ON FILTERS.

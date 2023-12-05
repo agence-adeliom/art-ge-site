@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Dto\TerritoireFilterDTO;
 use App\Entity\Reponse;
+use App\Entity\Territoire;
+use App\Enum\DepartementEnum;
+use App\Enum\TerritoireAreaEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -185,5 +190,239 @@ class ReponseRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult()
         ;
+    }
+
+
+    public function getNumberOfReponsesGlobal(TerritoireFilterDTO $territoireFilterDTO): int
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('COUNT(r.id)');
+
+        $qb = $this->filterByAreaZipCodes($qb, $territoireFilterDTO);
+
+        return (int) $qb
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
+
+    public function getNumberOfReponsesRegionGlobal(): int
+    {
+        return (int) $this->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
+    public function getRepondantsGlobal(TerritoireFilterDTO $territoireFilterDTO): array
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('t.name as typologie, r.uuid, u.company, MAX(r.points) as points, r.total')
+            ->innerJoin('r.repondant', 'u')
+            ->innerJoin('u.typologie', 't')
+            ->groupBy('u.id')
+        ;
+
+        $qb = $this->addFiltersToQueryBuilder($qb, $territoireFilterDTO);
+
+        /* @phpstan-ignore-next-line */
+        return $qb
+            ->getQuery()
+            ->getArrayResult()
+        ;
+    }
+
+    public function getRepondantsByTypologieGlobal(TerritoireFilterDTO $territoireFilterDTO): array
+    {
+        $repondantsByTypologieGlobal = [];
+
+        $zipCriteria = '';
+        $zipParams = [];
+        $territoire = $territoireFilterDTO->getTerritoire();
+        if (TerritoireAreaEnum::REGION !== $territoire->getArea()) {
+            if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
+                $department = DepartementEnum::tryFrom($territoire->getSlug());
+                if ($department) {
+                    $zipCriteria = 'AND U.zip LIKE :zip';
+                    $zipParams = ['zip' => DepartementEnum::getCode($department) . '%'];
+                }
+            } else {
+                $zips = implode(',', $territoire->getZips());
+                $zipCriteria = 'AND U.zip IN (:zip)';
+                $zipParams = ['zip' => $zips];
+            }
+        }
+
+        foreach ($territoireFilterDTO->getTypologies() ?? [] as $typology) {
+            $repondantsByTypologieGlobal[$typology] = $this->getEntityManager()->getConnection()->executeQuery('
+            SELECT COUNT(id) FROM (
+                SELECT U.id FROM reponse R 
+                    INNER JOIN repondant U ON U.id = R.repondant_id 
+                    INNER JOIN typologie T ON T.id = U.typologie_id 
+                WHERE 
+                    T.slug = :slug 
+                    ' . $zipCriteria . '
+                GROUP BY U.id
+            ) as temp;
+            ', ['slug' => $typology, ...$zipParams])->fetchOne();
+        }
+
+        return $repondantsByTypologieGlobal;
+    }
+
+    public function getPercentageGlobal(TerritoireFilterDTO $territoireFilterDTO): int
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('ROUND(SUM(r.points) / SUM(r.total) * 100) as percentage');
+
+        $qb = $this->filterByAreaZipCodes($qb, $territoireFilterDTO);
+
+        return (int) $qb
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
+    public function getPercentageRegionGlobal(): int
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('ROUND(SUM(r.points) / SUM(r.total) * 100) as percentage');
+
+        return (int) $qb
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
+    private function addFiltersToQueryBuilder(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
+    {
+        $qb = $this->filterByAreaZipCodes($qb, $territoireFilterDTO);
+
+        $qb = $this->filterByThematique($qb, $territoireFilterDTO);
+
+        $qb = $this->filterByTypology($qb, $territoireFilterDTO);
+
+        $qb = $this->filterByRestauration($qb, $territoireFilterDTO);
+
+        $qb = $this->filterByGreenSpace($qb, $territoireFilterDTO);
+
+        $qb = $this->filterByDateRange($qb, $territoireFilterDTO);
+
+        return $qb;
+    }
+
+    private function filterByAreaZipCodes(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
+    {
+        $territoire = $territoireFilterDTO->getTerritoire();
+        if (TerritoireAreaEnum::REGION !== $territoire->getArea()) {
+            $ors = [];
+            if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
+                $department = DepartementEnum::tryFrom($territoire->getSlug());
+                if ($department) {
+                    $ors[] = $qb->expr()->like('u.zip', ':zip');
+                    $qb->setParameter('zip', DepartementEnum::getCode($department) . '%');
+                }
+            } else {
+                $zips = implode(',', $territoire->getZips());
+                $ors[] = $qb->expr()->in('u.zip', ':zip');
+                $qb->setParameter('zip', $zips);
+            }
+            if ([] !== $ors) {
+                if (isset($qb->getDQLPart('join')['r'])) {
+                    $addJoin = true;
+                    foreach ($qb->getDQLPart('join')['r'] ?? [] as $joins){
+                        if ($joins->getJoin() === 'r.repondant') {
+                            $addJoin = false;
+                        }
+                    }
+
+                    if ($addJoin) {
+                        $qb->innerJoin('r.repondant', 'u');
+                    }
+                } else {
+                    $qb->innerJoin('r.repondant', 'u');
+                }
+
+                $qb->andWhere($qb->expr()->andX(...$ors));
+            }
+        }
+
+        return $qb;
+    }
+
+    private function filterByThematique(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
+    {
+        if (!empty($territoireFilterDTO->getThematiques())) {
+            $qb->innerJoin('s.thematique', 'th');
+            $ors = [];
+            foreach ($this->thematiques as $key => $thematique) {
+                $ors[] = $qb->expr()->eq('th.slug', ':thematique' . $key);
+                $qb->setParameter('thematique' . $key, $thematique);
+            }
+            $qb->andWhere($qb->expr()->orX(...$ors));
+        }
+
+        return $qb;
+    }
+
+    private function filterByTypology(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
+    {
+        if (!empty($territoireFilterDTO->getTypologies())) {
+            $ors = [];
+            foreach ($territoireFilterDTO->getTypologies() as $key => $typologie) {
+                $ors[] = $qb->expr()->eq('t.slug', ':typologie' . $key);
+                $qb->setParameter('typologie' . $key, $typologie);
+            }
+            $qb->andWhere($qb->expr()->orX(...$ors));
+        }
+
+        return $qb;
+    }
+
+    private function filterByRestauration(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
+    {
+        if (null !== $territoireFilterDTO->getRestauration()) {
+            $qb->andWhere('u.restauration = :restauration')
+                ->setParameter('restauration', $territoireFilterDTO->getRestauration())
+            ;
+        }
+
+        return $qb;
+    }
+
+    private function filterByGreenSpace(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
+    {
+        if (null !== $territoireFilterDTO->getGreenSpace()) {
+            $qb->andWhere('u.green_space = :greenSpace')
+                ->setParameter('greenSpace', $territoireFilterDTO->getGreenSpace())
+            ;
+        }
+
+        return $qb;
+    }
+
+    private function filterByDateRange(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
+    {
+        if ($territoireFilterDTO->hasDateRange()) {
+            $dateFormat = 'Y-m-d H:i:s';
+            if (null !== $territoireFilterDTO->getFrom() && null !== $territoireFilterDTO->getTo()) {
+                $qb->andWhere('r.created_at BETWEEN :from AND :to')
+                    ->setParameter('from', $territoireFilterDTO->getFrom()->format($dateFormat))
+                    ->setParameter('to', $territoireFilterDTO->getTo()->format($dateFormat))
+                ;
+            } elseif (null !== $territoireFilterDTO->getFrom() && null === $territoireFilterDTO->getTo()) {
+                $qb->andWhere('r.created_at >= :from')
+                    ->setParameter('from', $territoireFilterDTO->getFrom()->format($dateFormat))
+                ;
+            } elseif (null === $territoireFilterDTO->getFrom() && null !== $territoireFilterDTO->getTo()) {
+                $qb->andWhere('r.created_at <= :to')
+                    ->setParameter('to', $this->to->format($dateFormat))
+                ;
+            }
+        }
+
+        return $qb;
     }
 }
