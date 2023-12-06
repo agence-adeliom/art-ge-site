@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { Heading } from '@components/Typography/Heading'
 import { Text } from '@components/Typography/Text'
 import { Button } from '@components/Action/Button'
-import YesNoCard from '@components/Forms/YesNoCard';
+import { YesNoCard } from '@components/Fields/YesNoCard';
 
 const StepThree = ({isRestaurant, setIsRestaurant, setIsGreenSpace, isGreenSpace, nextStep} : {
     isRestaurant: string,

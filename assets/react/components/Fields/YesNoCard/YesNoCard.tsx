@@ -1,10 +1,10 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 
-const YesNoCard = ({className, id, handleChoice, choice} : {
-    className: string,
-    id: string,
-    handleChoice: Function,
-    choice: string
+export const YesNoCard: FunctionComponent<{ className: string, id: string, handleChoice: Function, choice: string }> = ({
+    className, 
+    id, 
+    handleChoice, 
+    choice
 }) => {
 
     const handleClick = (event : any) => {
@@ -16,8 +16,9 @@ const YesNoCard = ({className, id, handleChoice, choice} : {
         }
         
     }
+
     return (
-        <div className="grid gap-6 grid-cols-2">
+        <div className="gap-6 grid-cols-2 grid ">
             <label htmlFor={`${id}-yes`} className={`${choice === 'true' && 'is-active'} ${className} `} onClick={event => handleClick(event)}>
                 
                     <input type="radio" value="yes" id={`${id}-yes`} name={id} className={`radio`} />
@@ -35,5 +36,3 @@ const YesNoCard = ({className, id, handleChoice, choice} : {
         
     )
 }
-
-export default YesNoCard

@@ -18,6 +18,8 @@
     "paths": {
       "@components/*": ["react/components/*"],
       "@screens/*": ["react/screens/*"],
+      "@hooks/*": ["react/hooks/*"],
+      "@react/*": ["react/*"],
       "@images/*": ["images/*"],
       "@icones/*": ["icones/*"],
     },
