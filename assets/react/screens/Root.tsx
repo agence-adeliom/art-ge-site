@@ -1,18 +1,15 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, RouterProvider } from 'react-router-dom';
 import Home from '@screens/Home';
 import Informations from '@screens/Informations';
+import { useRoutes } from 'react-router-dom';
+import { routes } from '../config/routes';
 
 function App() {
+  //const element = useRoutes(routes);
   return (
     <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/informations" element={<Informations />} />
-          <Route path="*" element={<Home />} />
-        </Routes>
-      </Router>
+       <RouterProvider router={routes} />
     </>
   );
 }

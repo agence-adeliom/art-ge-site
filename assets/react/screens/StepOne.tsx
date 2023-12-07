@@ -18,7 +18,9 @@ interface DataFields {
   email: string;
 }
 
-const StepOne = () => {
+const StepOne = ({nextStep} : {
+  nextStep: Function
+}) => {
   const { textRequired, phoneRequired, emailRequired, consentRequired } =
     useValidation();
 
@@ -111,6 +113,7 @@ const StepOne = () => {
           icon="fa-minus"
           iconSide="left"
           disabled={!isValid}
+          onClick={(event) => {event.preventDefault(); nextStep()} }
           type="submit"
         >
           Suivant
