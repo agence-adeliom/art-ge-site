@@ -1,6 +1,6 @@
 import React from "react";
 
-const ChoiceCard = ({className, icon, children, selectFunction, type, etablissement} : {
+export const ChoiceCard = ({className, icon, children, selectFunction, type, etablissement} : {
     className: string,
     selectFunction: Function,
     type: string,
@@ -27,5 +27,3 @@ const ChoiceCard = ({className, icon, children, selectFunction, type, etablissem
         </div>
     )
 }
-
-export default ChoiceCard

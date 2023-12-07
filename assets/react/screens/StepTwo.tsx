@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { Heading } from '@components/Typography/Heading'
 import { Text } from '@components/Typography/Text'
 import { Button } from '@components/Action/Button'
-import ChoiceCard from '@components/Forms/ChoiceCard';
+import { ChoiceCard } from '@components/Fields/ChoiceCard';
 import Hotel from '@icones/hotel.svg';
 import Bed from '@icones/bed.svg';
 import Map from '@icones/map-location-dot.svg';

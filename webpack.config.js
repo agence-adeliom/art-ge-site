@@ -25,6 +25,8 @@ Encore
         '@screens': path.resolve(__dirname, 'assets/react/screens/'),
         '@images': path.resolve(__dirname, 'assets/images/'),
         '@icones': path.resolve(__dirname, 'assets/icones/'),
+        '@hooks': path.resolve(__dirname, 'assets/react/hooks/'),
+        '@react': path.resolve(__dirname, 'assets/react/'),
       })
 
     /*
