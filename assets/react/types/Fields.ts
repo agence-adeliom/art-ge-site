@@ -9,6 +9,7 @@ export interface BaseFieldProps {
   id?: any;
   value?: any;
   containerClass?: string;
+  handleChange?: Function
 }
 
 export enum Fields {

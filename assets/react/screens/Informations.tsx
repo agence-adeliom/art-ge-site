@@ -58,37 +58,20 @@ const Informations = () => {
     setUserData({ ...userData, [event.target.id]: event.target.value });
   };
   // Set Input value in the establishmentState
-  const handleChangeEstablishment = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setEstablishmentData({
-      ...establishmentData,
-      [event.target.id]: event.target.value,
-    });
-    zipCodeAutocomplete(event);
-  };
+//   const handleChangeEstablishment = (
+//     event: React.ChangeEvent<HTMLInputElement>,
+//   ) => {
+//     setEstablishmentData({
+//       ...establishmentData,
+//       [event.target.id]: event.target.value,
+//     });
+//     zipCodeAutocomplete(event);
+//   };
 
-  const [zipResult, setZipResult] = useState([]);
-
-  const [openDropdown, setOpenDropdown] = useState(false);
+  
 
   // Function d'autocompletion du zip
-  const zipCodeAutocomplete = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let inputId = event.target.id;
-    let autoCompleteAPI = 'https://art-grand-est.ddev.site/api/insee/';
-    if (inputId === 'zipCode') {
-      setOpenDropdown(true);
-      let resultValue = event.target.value;
-      let apiResult = autoCompleteAPI + resultValue;
-      fetch(apiResult)
-        .then(async (response: Response) => {
-          setZipResult(await response.json());
-        })
-        .catch(() => {
-          console.log('error');
-        });
-    }
-  };
+  
 
   const acceptLegal = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLegalChecked(event.target.checked);
@@ -101,7 +84,6 @@ const Informations = () => {
   // First step validation
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
     try {
       nextStep();
     } catch (error: any) {
@@ -165,8 +147,11 @@ const Informations = () => {
         <div className="col-span-full lg:col-span-7 flex items-center md:py-10 overflow-auto relative">
           <div className="h-full w-full pl-1 flex">
             <div className="bg-white w-full">
-              <StepAnim isVisible={step === 1 ? true : false}>
-                <StepOne></StepOne>
+              <StepAnim isVisible={step === 3 ? true : false}>
+                <StepOne
+                    nextStep={nextStep}
+                ></StepOne>
+                
               </StepAnim>
               <StepAnim isVisible={step === 2 ? true : false}>
                 <StepTwo
@@ -175,7 +160,7 @@ const Informations = () => {
                   nextStep={nextStep}
                 ></StepTwo>
               </StepAnim>
-              <StepAnim isVisible={step === 3 ? true : false}>
+              <StepAnim isVisible={step === 1 ? true : false}>
                 <StepThree
                   isRestaurant={isRestaurant}
                   setIsRestaurant={setIsRestaurant}
@@ -186,17 +171,20 @@ const Informations = () => {
               </StepAnim>
               <StepAnim isVisible={step === 4 ? true : false}>
                 <StepFour
-                  establishmentName={establishmentName}
-                  handleChange={handleChangeEstablishment}
-                  address={address}
-                  zipCode={zipCode}
-                  city={city}
-                  nextStep={nextStep}
-                  zipResult={zipResult}
-                  setEstablishmentData={setEstablishmentData}
-                  establishmentData={establishmentData}
-                  openDropdown={openDropdown}
-                  setOpenDropdown={setOpenDropdown}
+                //   establishmentName={establishmentName}
+                //   handleChange={handleChangeEstablishment}
+                //   address={address}
+                //   zipCode={zipCode}
+                //   city={city}
+                //   nextStep={nextStep}
+                //   zipResult={zipResult}
+                //   setEstablishmentData={setEstablishmentData}
+                //   establishmentData={establishmentData}
+                //   openDropdown={openDropdown}
+                //   setOpenDropdown={setOpenDropdown}
+                nextStep={nextStep}
+                establishmentData={establishmentData} 
+                setEstablishmentData={setEstablishmentData}
                 />
               </StepAnim>
 

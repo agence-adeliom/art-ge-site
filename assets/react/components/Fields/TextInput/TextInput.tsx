@@ -5,6 +5,7 @@ import { useController } from 'react-hook-form';
 import { cx } from 'class-variance-authority';
 import { Error } from '@components/Fields/Error';
 
+const inputClass: string = 'border-0 border-b border-neutral-500 block w-full mt-4 pb-2 ring-0 outline-none focus:ring-0 focus:border-secondary-200 trans-default';
 export const TextInput: FunctionComponent<TextInputProps> = ({
   label,
   name,
@@ -17,8 +18,6 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   containerClass,
 }) => {
   const { field, fieldState } = useController({ name, control, defaultValue });
-  const inputClass: string =
-    'border-0 border-b border-neutral-500 block w-full mt-4 pb-2 ring-0 outline-none focus:ring-0 focus:border-secondary-200 trans-default';
 
   return (
     <div className={containerClass}>
@@ -29,11 +28,15 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
       )}
 
       <input
+        
         className={inputClass}
         placeholder={placeholder}
         type={type}
+        id={name}
         aria-invalid={fieldState.error ? 'true' : 'false'}
+        //onChange={(event) => handleChange(event)}
         {...field}
+        
       ></input>
       {fieldState.error && <Error message={fieldState.error.message!} />}
     </div>
