@@ -93,13 +93,11 @@ const StepOne = ({nextStep} : {
           containerClass="flex flex-row-reverse items-start gap-4 mt-8"
           children={
             <Text weight={400} color="neutral-800">
-              <label htmlFor="legal">
                 J’accepte que mes données soient transmises à l’ART GE et à ses
                 partenaires. Pour en savoir plus, consultez la{' '}
                 <a href="#" className="classic-link">
                   politique de confidentialité
                 </a>
-              </label>
             </Text>
           }
           id="legal"
