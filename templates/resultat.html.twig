@@ -4,50 +4,138 @@
 
 {% block body %}
 
-    {{ dump(reponse) }}
+    <div class="container flex justify-between items-center py-8">
+        <a href="/"><img src="{{ asset('build/images/logo.svg') }}" alt="Logo ART GE"></a>
+        <a href="/nous-contacter" class="bg-primary-600 text-white flex gap-4 items-center px-4 py-2" aria-label="Nous contacter"><i class="fa-solid fa-minus" aria-hidden="true"></i>Nous contacter</a>
+    </div>
 
-    Soumis le {{ reponse.submittedAt | date("d/m/Y à H:i")  }}
+    <div class="bg-tertiary-400">
+        <div class="bg-primary-600 pt-20 pb-[120px]">
+            <div class="container">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2">
+                        <p class="font-title text-white text-4xl md:text-5xl lg:text-6xl mb-4">Félicitations !</p>
+                        <p class="font-title text-white text-3xl md:text-4xl lg:text-5xl mb-4">Vos engagements font la différence.</p>
+                        <p class="text-white mb-8">Découvrez votre avancement thématique par thématique et accédez à des ressources pour faire évoluer les pratiques de votre établissement.</p>
 
-    <div>Département : {{ reponse.repondant.department.slug }}</div>
-    <div>Typologie : {{ reponse.repondant.typologie.slug }}</div>
-    <div>Restauration : {{ reponse.repondant.restauration ? 'Oui' : 'Non' }}</div>
-    <div>espace vert : {{ reponse.repondant.greenSpace ? 'Oui' : 'Non' }}</div>
+                        <div>
+                            <p class="text-white mb-2">Pour partager et conserver vos résultats :</p>
+                            <button class="bg-white text-primary-600 flex gap-4 items-center px-4 py-2" aria-label="Copier le lien" onclick="navigator.clipboard.writeText(window.location.href); alert('lien copié');"><i class="fa-solid fa-link" aria-hidden="true"></i>Copier le lien</button>
+                        </div>
+                    </div>
 
-    <hr class="my-4">
-
-    <h1 class="font-bold">Score Total</h1>
-    {{ display_percentage(reponse) }}
-
-    <hr class="my-4">
-
-    <h2 class="font-bold mt-4">Scores par thématique</h2>
-    {% for score in reponse.scores %}
-        <div class="p-4">
-            <img src="{{ asset('build/icones/' ~ score.thematique.slug ~ '.jpg') }}" alt="" width="48" height="48">
-            <h3 class="font-bold mt-2">{{ score.thematique.name }}</h3>
-            {{ display_percentage(score.points, score.total) }}
-
-            <details>
-                <summary>Réponses choisies</summary>
-                {% if score.chosenChoices %}
-                    <ul class="list-disc list-inside">
-                    {% for chosen in score.chosenChoices %}
-                        <li>{{ chosen.libelle }}</li>
-                    {% endfor %}
-                    </ul>
-                {% endif %}
-            </details>
-
-            <details>
-                <summary>Réponses <strong>non</strong> choisies</summary>
-                {% if score.notChosenChoices %}
-                    <ul class="list-disc list-inside">
-                    {% for notChosen in score.notChosenChoices %}
-                        <li>{{ notChosen.libelle }}</li>
-                    {% endfor %}
-                    </ul>
-                {% endif %}
-            </details>
+                    <div class="bg-white p-10 self-start">
+                        <p class="font-title text-3xl mb-2">Votre score</p>
+                        <p class="font-title text-6xl mb-4">{{ display_percentage(reponse) }}</p>
+                        <div class="bg-primary-200 h-[8px] rounded mb-4">
+                            <div class="bg-primary-800 h-[8px] rounded" style="width: {{ display_percentage(reponse) }};"></div></div>
+                        <p class="text-[14px]">Date de soumission : {{ reponse.submittedAt | date("d.m.Y")  }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
-    {% endfor %}
+
+        <div class="container">
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 -mt-[80px]">
+                {% for score in reponse.scores %}
+                    <a href="#" data-detail-link="{{ score.thematique.slug }}" class="card bg-white min-h-[375px] flex flex-col transition-transform hover:-translate-y-2">
+                        <img src="{{ asset('build/images/informations-image-2.jpeg') }}" alt="">
+                        <div class="p-6 flex flex-col h-full">
+                            <h3 class="font-title font-bold mb-4 text-3xl">{{ score.thematique.name }}</h3>
+                            <div class="mt-auto">
+                                <div class="flex items-center gap-10 mb-6">
+                                    <div class="bg-primary-200 h-[8px] rounded w-full"><div class="bg-primary-800 h-[8px] rounded" style="width: {{ display_percentage(score.points, score.total) }};"></div></div>
+                                    <p>{{ display_percentage(score.points, score.total) }}</p>
+                                </div>
+                                <button class="flex gap-2 items-center text-primary-600">Voir en détail<i class="fa-solid fa-angle-right" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+            <div class="py-20">
+                <div class="bg-primary-600 p-12 flex items-center gap-6 bg-no-repeat bg-[115%] bg-[length:288px]" style="background-image: url('{{ asset('build/icones/leafs.svg') }}')">
+                    <div class="w-full">
+                        <p class="font-title text-white text-4xl mb-2">Et si vous alliez plus loin ? </p>
+                        <p class="text-white text-lg font-text font-normal">Progressez en matière d'éco-responsabilité grâce à notre accompagnement personnalisé.</p>
+                    </div>
+                    <a href="/nous-contacter" class="bg-white text-primary-600 flex gap-4 items-center px-4 py-2" aria-label="Nous contacter"><i class="fa-solid fa-link" aria-hidden="true"></i>Nous&nbsp;contacter</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="text-white bg-neutral-700 py-10 lg:py-6">
+        <div class="container lg:flex justify-between">
+            <p class="text-center transition-colors dark:text-white text-sm font-normal text-white mb-2 lg:mb-0 lg:flex lg:items-center">2023 ©ARTGE - Tous droits réservés</p>
+            <nav>
+                <ul class="text-center lg:flex items-center max-md:justify-center gap-6 text-sm font-normal">
+                    <li class="mb-2 lg:mb-0 "><a href="/mentions-legales">Mentions légales</a></li>
+                    <li class="mb-2 lg:mb-0 "><a href="/gestion-des-cookies">Gestion des cookies</a></li>
+                    <li class="mb-2 lg:mb-0 "><a href="/politique-de-confidentialite">Politique de confidentialité</a></li>
+                </ul>
+            </nav>
+            <a href="https://adeliom.com/" class="flex justify-center items-center gap-2 mr-6" target="_blank" rel="noopener"><p class="text transition-colors dark:text-white text-sm font-normal text-white">Conception</p><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.9991 5.998C11.9991 2.69331 9.30576 0 5.99707 0V6.002H11.9951L11.9991 5.998Z" fill="#6E6E6E"></path><path d="M3.001 6.002C4.6584 6.002 6.002 4.6584 6.002 3.001C6.002 1.34359 4.6584 0 3.001 0C1.34359 0 0 1.34359 0 3.001C0 4.6584 1.34359 6.002 3.001 6.002Z" fill="#CFCFCF"></path><path d="M12.0002 5.99817H3.00122C1.35087 6.00616 0.012207 7.34482 0.012207 8.99917C0.012207 10.6535 1.35486 12.0002 3.01321 12.0002H12.0002V5.99817Z" fill="#6F6F6F"></path><path d="M5.99707 5.99789C5.99707 9.30658 8.68638 11.9959 11.9951 11.9959V5.9939H5.99707V5.99789Z" fill="#373737"></path></svg><p class="text transition-colors dark:text-white text-sm font-normal text-white">Agence Adeliom</p></a>
+        </div>
+    </div>
+
+    <div data-detail-overlay class="fixed flex w-full top-0 right-0 bottom-0 hidden">{# remove "hidden" for testing #}
+        <div data-detail-overlay-bg class="bg-neutral-950 opacity-45 absolute inset-0 transition-opacity"></div>
+        <div data-detail-panels class="bg-white sm:w-1/2 lg:w-[33%] p-10 ml-auto overflow-auto relative translate-x-full transition-transform"> {# remove "translate-x-full" for testing #}
+            <button class="absolute top-2 right-2 p-2" aria-label="Fermer la popup"><i class="fa-solid fa-xmark"></i></button>
+            {% for score in reponse.scores %}
+                <div data-detail-panel="{{ score.thematique.slug }}" class="hidden">{# remove "hidden" for testing #}
+                    <h3 class="font-title font-bold mb-4 text-3xl">{{ score.thematique.name }}</h3>
+                    <div class="flex items-center gap-10 mb-6">
+                        <div class="bg-primary-200 h-[8px] rounded w-full"><div class="bg-primary-800 h-[8px] rounded" style="width: {{ display_percentage(score.points, score.total) }};"></div></div>
+                        <p>{{ display_percentage(score.points, score.total) }}</p>
+                    </div>
+                    {% if score.chosenChoices %}
+                        <div class="mb-4">
+                            <div class="border-b border-solid border-neutral-300 pb-4 mb-4 flex items-center gap-4 cursor-pointer"><p class="flex items-center gap-2 w-full">Ce que je fais aujourd’hui <span class="bg-neutral-600 rounded-full text-white inline-flex justify-center items-center font-text text-sm px-2 py-1 leading-none">{{ score.chosenChoices | length }}</span></p><i class="fa-solid fa-angle-right" aria-hidden="true"></i></div>
+                            <div class="">
+                                <ul class="list-disc list-inside marker:text-neutral-600">
+                                    {% for chosen in score.chosenChoices %}
+                                        <li>{{ chosen.libelle }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if score.notChosenChoices %}
+                        <div class="mb-4">
+                            <div class="border-b border-solid border-neutral-300 pb-4 mb-4 flex items-center gap-4 text-secondary-800"><p class="flex items-center gap-2 w-full">Ce que je peux faire demain <span class="bg-secondary-800 rounded-full text-white inline-flex justify-center items-center font-text text-sm px-2 py-1 leading-none">{{ score.notChosenChoices | length }}</span></p><i class="fa-solid fa-angle-right" aria-hidden="true"></i></div>
+                            <div class="hidden">
+                                <ul class="list-disc list-inside marker:text-secondary-800">
+                                    {% for chosen in score.notChosenChoices %}
+                                        <li>{{ chosen.libelle }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        Array.from(document.querySelectorAll('.card')).forEach(card => {
+            card.addEventListener('click', (e) => {
+                document.querySelector('[data-detail-overlay]').classList.toggle('hidden');
+                document.querySelector('[data-detail-panels]').classList.toggle('translate-x-full');
+                document.querySelector(`[data-detail-panel="${card.dataset.detailLink}"]`).classList.toggle('hidden');
+                e.preventDefault();
+            })
+        })
+        document.querySelector('.fa-xmark').addEventListener('click', (e) => {
+            document.querySelector('[data-detail-overlay]').classList.toggle('hidden');
+            document.querySelector('[data-detail-panels]').classList.toggle('translate-x-full');
+            document.querySelector(`[data-detail-panel="${card.dataset.detailLink}"]`).classList.toggle('hidden');
+            e.preventDefault();
+        })
+    </script>
+
 {% endblock %}
