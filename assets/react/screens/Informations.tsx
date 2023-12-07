@@ -134,7 +134,6 @@ const Informations = () => {
        
        try {
         await userSchema.validate( userData );
-        console.log('true');
         nextStep();
       } catch (error: any) {
         console.log('false' + error)
@@ -154,10 +153,12 @@ const Informations = () => {
         let formAPI = 'api/form?green_space='
         let greenSpaceChoice = isGreenSpace === 'true' ? true : isGreenSpace === 'false' ? false : null
         let formAPIresults = formAPI + greenSpaceChoice
+               
         if (greenSpaceChoice !== null) {
             fetch(formAPIresults)
             .then(async (response: Response) => {
                 setQuestions(await response.json())
+                window.localStorage.setItem('allQuestions', JSON.stringify(await response.json()));
             })
             .catch(() => {
                 console.log('error')
@@ -165,6 +166,12 @@ const Informations = () => {
         }
         
      }
+
+     console.log(isGreenSpace)
+
+    //  useEffect(() => {
+    //     window.localStorage.setItem('allQuestions', JSON.stringify(questions));
+    //     }, [questions]);
 
 
      const redirectToForm = useNavigate()
@@ -181,7 +188,7 @@ const Informations = () => {
     const inputClass : string = 'border-0 border-b border-neutral-500 block w-full mt-4 pb-2 focus:ring-0 focus:border-secondary-200 trans-default'
     return (
         <div className="">
-            <Header step={step}></Header>
+            <Header step={step} title={'Vos engagements pour un tourisme durable et responsable'}></Header>
             <div className="container max-lg:pb-6 grid grid-cols-12 gap-6 md:h-[calc(100vh-108px)]">
                 <div className="col-span-full lg:col-span-7 flex items-center md:py-10 overflow-auto relative">
                     <form className="h-full w-full pl-1 flex">

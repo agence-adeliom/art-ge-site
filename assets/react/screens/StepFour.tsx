@@ -45,7 +45,7 @@ const StepFour = ( {handleChange, address, establishmentName, city, zipCode, nex
                         id="zipCode"
                         input={{type: 'text', className:"block", value: zipCode, handleChange: handleChange, placeHolder: "Ex : 67000"}}
                     ></Input>
-                    <div className={`${zipResult.length === 0 || openDropdown === false ? 'hidden' : 'block'} bg-white w-full z-50 h-[200px] overflow-auto mt-6  absolute shadow-[0_0_8px_2px_rgba(0,0,0,.05)]`}>
+                    <div className={`${zipResult.length === 0 || openDropdown === false ? 'hidden' : 'block'} bg-white w-full z-50 max-h-[200px] overflow-auto mt-6  absolute shadow-[0_0_8px_2px_rgba(0,0,0,.05)]`}>
                         { zipResult !== null &&
                             zipResult.map((item : any, index: number) => (
                                 <div 

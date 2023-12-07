@@ -8,7 +8,6 @@ const YesNoCard = ({className, id, handleChoice, choice} : {
 }) => {
 
     const handleClick = (event : any) => {
-        console.log(event.target.value)
         if (event.target.value === 'yes') {
             handleChoice('true')
         } else {

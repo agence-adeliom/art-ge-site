@@ -6,23 +6,29 @@ import { Link } from "react-router-dom";
 
 const Header = ({step, ...props} : {
     step: number, 
-    title ? : string | null
+    title ? : string | null,
+    totalStep ? : number | null,
 }) => {
-
-    const totalSteps = 5;
+    const totalSteps = props.totalStep ? props.totalStep : 5;
     let actualStep = ((step) / totalSteps) * 100;
     if (actualStep > 100) {
         actualStep = 100;
     }
+
+    let hasTitle = props.title !== null ? true : false;
     return (
         <>
             <div className="container flex justify-between items-center py-8">
                 <Link to="/">
                     <img src={Logo} alt="Logo ART GE"/>
                 </Link>
-                <Text color="neutral-500" className="hidden md:block" weight={400}>
-                    { props.title === null ? props.title : ' Vos engagements pour un tourisme durable et responsable'}
-                </Text>
+                { hasTitle ?
+                    <Text color="neutral-500" className="hidden md:block" weight={400}>
+                        { props.title }
+                    </Text>
+                    : false
+                }
+                
                 <Button variant="textOnly" icon={ 'fa-x' } weight={600}>Quitter</Button>
             </div>
             <div className="w-full h-1 bg-neutral-300 relative">
