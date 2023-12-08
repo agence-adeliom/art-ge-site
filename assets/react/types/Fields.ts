@@ -10,6 +10,7 @@ export interface BaseFieldProps {
   value?: any;
   containerClass?: string;
   handleChange?: Function
+  autoCompleteChoice?: boolean
 }
 
 export enum Fields {

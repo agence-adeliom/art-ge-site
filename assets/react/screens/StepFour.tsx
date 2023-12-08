@@ -109,6 +109,7 @@ const StepFour = ({ nextStep, establishmentData, setEstablishmentData}:
               placeholder={'Ex : 67000'}
               handleChange={zipCodeAutocomplete}
               control={control}
+              autoCompleteChoice={false}
             ></TextInput>
             <div
               className={`${
@@ -149,7 +150,7 @@ const StepFour = ({ nextStep, establishmentData, setEstablishmentData}:
           ></TextInput>
         
         
-          {/* <TextInput
+          {/*
         
         
             <TextInput
@@ -191,27 +192,13 @@ const StepFour = ({ nextStep, establishmentData, setEstablishmentData}:
             </div> */}
           </div>
 
-          {/* <TextInput
-            containerClass="w-full md:w-1/2"
-            label={{ className: 'block', name: 'Ville' }}
-            id="city"
-            input={{
-              type: 'text',
-              className: 'block',
-              value: city,
-              handleChange: handleChange,
-              placeHolder: 'Ex : Strasbourg',
-            }}
-          ></TextInput> */}
-        {/* </div> */}
-
         <Button
           size="lg"
           className="mt-8"
           icon="fa-minus"
           iconSide="left"
           disabled={!isValid}
-          //onClick={(event) => {event.preventDefault(); nextStep()} }
+          onClick={(event) => {event.preventDefault(); nextStep()} }
           type="submit"
         >
           Suivant

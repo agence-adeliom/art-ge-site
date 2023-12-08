@@ -6,13 +6,36 @@ import { YesNoCard } from '@components/Fields/YesNoCard';
 
 const cardClassName = "col-span-1 w-full p-4 cursor-pointer flex gap-4 flex items-center border border-neutral-200 group trans-default lg:hover:bg-tertiary-200 is-active:border-primary-600 is-active:bg-primary-50 peer"
 
-const StepThree = ({isRestaurant, setIsRestaurant, setIsGreenSpace, isGreenSpace, nextStep} : {
+const StepThree = ({isRestaurant, setIsRestaurant, setIsGreenSpace, isGreenSpace, nextStep, setIsLoading} : {
     isRestaurant: string,
     setIsRestaurant: Function,
     setIsGreenSpace: Function,
     isGreenSpace: string,
-    nextStep: Function
+    nextStep: Function,
+    setIsLoading: Function
 }) => {
+
+    const getQuestions = () => {
+        let formAPI = 'api/form?green_space=';
+        let greenSpaceChoice =
+          isGreenSpace === 'true' ? true : isGreenSpace === 'false' ? false : null;
+        let formAPIresults = formAPI + greenSpaceChoice;
+    
+        if (greenSpaceChoice !== null) {
+          fetch(formAPIresults)
+            .then(async (response: Response) => {
+              window.localStorage.setItem(
+                'allQuestions',
+                JSON.stringify(await response.json()),
+              );
+            setIsLoading(false)
+
+            })
+            .catch(() => {
+              console.log('error');
+            });
+        }
+      };
 
 
     const arrayQuestions = [
@@ -52,7 +75,7 @@ const StepThree = ({isRestaurant, setIsRestaurant, setIsGreenSpace, isGreenSpace
                 disabled={isGreenSpace === '' || isRestaurant === '' ? true : false} 
                 icon="fa-minus"
                 iconSide="left"
-                onClick={event => {event.preventDefault(); nextStep() }}
+                onClick={event => {event.preventDefault(); nextStep(); getQuestions() }}
                 >
                     Suivant
             </Button>
