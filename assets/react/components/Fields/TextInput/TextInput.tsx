@@ -16,6 +16,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   required = false,
   disabled = false,
   containerClass,
+  autoCompleteChoice,
 }) => {
   const { field, fieldState } = useController({ name, control, defaultValue });
 
@@ -33,6 +34,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
         placeholder={placeholder}
         type={type}
         id={name}
+        autoComplete={autoCompleteChoice === false ? 'off' : 'on' }
         aria-invalid={fieldState.error ? 'true' : 'false'}
         //onChange={(event) => handleChange(event)}
         {...field}

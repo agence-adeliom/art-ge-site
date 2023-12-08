@@ -1,18 +1,21 @@
 import React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
-export const StepAnim = ({ isVisible, children } : {
+
+
+export const ConfirmationAnim = ({ isVisible, children } : {
     isVisible: boolean,
     children: React.ReactNode
 }
+
 ) => (
     <AnimatePresence >
       {isVisible && ( 
-        <motion.div 
+        <motion.div   
           className="md:py-10"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -20, opacity: 0, display: 'none' }}
+          initial={{  opacity: 0 }}
+          animate={{  opacity: 1 }}
+          exit={{ opacity: 0, display: 'none' }} 
         >
             {children}
         </motion.div>

@@ -12,7 +12,7 @@ import { Button } from '@components/Action/Button/Button';
 import Footer from '@components/Navigation/Footer';
 import Aside from '@components/Content/Aside';
 
-function Home() {
+const Home = () => {
 
     const navigateToFirstStep = (event: Event | undefined) => {
         event?.preventDefault();
