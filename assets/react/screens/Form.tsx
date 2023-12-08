@@ -4,7 +4,10 @@ import { Heading } from '@components/Typography/Heading';
 import formImage1 from '@images/form-image-1.jpeg';
 import { Button } from '@components/Action/Button';
 import { Text } from '@components/Typography/Text';
-import { TextInput } from '../components/Fields/TextInput/TextInput';
+import Confirmation from '@screens/Confirmation';
+import { ConfirmationAnim } from '@components/Animation/Confirmation';
+
+const inputContainerClass = 'group trans-default lg:hover:bg-tertiary-200 is-active:border-primary-600 is-active:bg-primary-50 py-4 px-3';
 
 const Form = ({ questions }: { questions: object[] }) => {
   const value = window.localStorage.getItem('allQuestions');
@@ -12,16 +15,6 @@ const Form = ({ questions }: { questions: object[] }) => {
   const valueParse = JSON.parse(value!);
 
   const [allQuestions, setAllQuestions] = useState(valueParse.questions);
-
-  //setAllQuestions(valueParse['questions']);
-
-  // useEffect(() => {
-  // const value = window.localStorage.getItem('allQuestions');
-
-  // const valueParse = JSON.parse(value!);
-
-  // setAllQuestions(valueParse['questions']);
-  // }, []);
 
   const [sticky, setSticky] = useState(false);
 
@@ -41,75 +34,96 @@ const Form = ({ questions }: { questions: object[] }) => {
   const [actualQuestion, setActualQuestion] = useState();
   const [actualOptions, setActualOptions] = useState();
 
-  useEffect(() => {
-    if (allQuestions.length != 0) {
-      setActualQuestion(allQuestions[questionStep]);
-      setActualOptions(allQuestions[questionStep].choices);
-    }
-  }, [allQuestions, questionStep]);
-
-  if (allQuestions.lenght) {
+  if (allQuestions.length) {
     useEffect(() => {
       if (allQuestions.length !== 0) {
         setActualQuestion(allQuestions[questionStep]);
         setActualOptions(allQuestions[questionStep]['choices']);
       }
-    }, [questionStep]);
+    }, [allQuestions, questionStep]);
   }
 
+  const [allAnswerArray, setAllAnswerArray] = useState([{}]);
+
+  // Init Results answer with value = false
   let results: any = [];
-  results = actualOptions
-    ? Object.values(actualOptions).map((option: any, index = 0) => {
-        return {
-          id: option['id'],
-          value: false,
-          index: index,
-        };
-      })
-    : false;
+  if (actualQuestion) {
+    results = actualOptions
+      ? Object.values(actualOptions).map((option: any, index = 0) => {
+          return {
+            id: option['id'],
+            value: false,
+            index: index,
+          };
+        })
+      : false;
+  }
 
+
+  const [finish, setIsFinish] = useState(false);
+  const nextStep = () => {
+    if (questionStep < allQuestions.length - 1) {
+      setQuestionStep(questionStep + 1)
+    } else setIsFinish(true)
+  }
+
+  const isActiveClass = 'is-active';
+  //Reset class active à remanier
+   const resetClass = () => {
+    let inputContains = document.querySelectorAll(`.labelContainer`)
+    Object.values(inputContains!).map((option: any, index = 0) => {
+     if (option.classList.contains(isActiveClass)) {
+      option.querySelector('input').checked = false
+      option.classList.remove(isActiveClass);
+     }
+    })
+    }
+  
+  // Affect Answer state with Results => value = false
   const [answer, setAnswer] = useState({});
+  if (results) {
+    useEffect(() => {
+      setAnswer(results);
+    }, [actualOptions]);
+  }
 
-  useEffect(() => {
-    setAnswer(results);
-  }, [actualOptions]);
-
-  const inputContainerClass =
-    'group trans-default lg:hover:bg-tertiary-200 is-active:border-primary-600 is-active:bg-primary-50';
-
+  // Add class active + set answer value true
   const handleChange = (e: any) => {
     let id = e.target.id;
     const answerArray = Object.values(answer);
     if (e.target.checked) {
-      answerArray.find((test: any) => {
-        test['id'] == id
+      answerArray.find((answerItem: any) => {
+        answerItem['id'] == id
           ? setAnswer({
               ...answer,
-              [JSON.parse(test['index'])]: {
+              [JSON.parse(answerItem['index'])]: {
                 id: JSON.parse(id),
                 value: true,
-                index: test['index'],
+                index: answerItem['index'],
               },
             })
           : null;
       });
-      e.target.parentNode.classList.add('is-active');
+      e.target.parentNode.classList.add(isActiveClass);
     } else {
-      answerArray.find((test: any) => {
-        test['id'] == id
+      answerArray.find((answerItem: any) => {
+        answerItem['id'] == id
           ? setAnswer({
               ...answer,
-              [JSON.parse(test['index'])]: {
+              [JSON.parse(answerItem['index'])]: {
                 id: JSON.parse(id),
                 value: false,
-                index: test['index'],
+                index: answerItem['index'],
               },
             })
           : null;
       });
-      e.target.parentNode.classList.remove('is-active');
+      e.target.parentNode.classList.remove(isActiveClass);
     }
   };
+
+console.log(allAnswerArray)
+
 
   return (
     <>
@@ -181,22 +195,14 @@ const Form = ({ questions }: { questions: object[] }) => {
                   ? (Object.values(actualOptions) as any).map(
                       (option: any, key: number) => {
                         return (
+                        
                           <div key={key}>
-                            {/*  <TextInput
-                              containerClass={`${inputContainerClass} w-full cursor-pointer justify-end flex-row-reverse flex border-b border-gray-400 gap-2`}
-                              label={{
-                                className: 'block py-6 w-full',
-                                name: option.libelle,
-                              }}
-                              id={option.id}
-                              input={{
-                                type: 'checkbox',
-                                className: 'formCheckbox ml-3 my-6',
-                                value: option.id,
-                                handleChange: handleChange,
-                                placeHolder: '',
-                              }}
-                            ></TextInput> */}
+                            <label className={`${inputContainerClass} labelContainer w-full cursor-pointer justify-end flex-row-reverse flex border-b border-gray-400 gap-2`}>
+                                <Text weight={400} color="neutral-800">
+                                    { option.libelle }
+                                </Text>
+                              <input type="checkbox" id={option.id} name={option.id} onChange={e => {handleChange(e);} } className={`formCheckbox  ml-3 my-6'`}></input>
+                            </label>
                           </div>
                         );
                       },
@@ -208,8 +214,10 @@ const Form = ({ questions }: { questions: object[] }) => {
                   iconSide="left"
                   onClick={event => {
                     event.preventDefault(),
-                      setQuestionStep(questionStep + 1),
+                      nextStep(),
                       console.log('answer', answer);
+                      setAllAnswerArray([...allAnswerArray, answer]);
+                      resetClass();
                   }}
                   weight={600}
                 >
@@ -226,6 +234,15 @@ const Form = ({ questions }: { questions: object[] }) => {
             className={`trans-default absolute object-cover w-full h-full`}
           ></img>
         </div>
+
+        
+        <ConfirmationAnim isVisible={finish}>
+          <Confirmation
+            link=""
+            title="Merci pour ces informations."
+            subTitle="Parlons à présent de vos actions..."
+          ></Confirmation>
+        </ConfirmationAnim>
       </div>
     </>
   );
