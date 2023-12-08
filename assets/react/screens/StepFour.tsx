@@ -1,4 +1,4 @@
-import React, { InputHTMLAttributes, useState } from 'react';
+import React, { InputHTMLAttributes, useEffect, useState } from 'react';
 import { Heading } from '@components/Typography/Heading';
 import { Text } from '@components/Typography/Text';
 import { Button } from '@components/Action/Button';
@@ -11,7 +11,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useValidation } from '@hooks/useValidation';
 import { Fields } from '@react/types/Fields';
 
-
 interface DataFields {
   establishment: string;
   address: string;
@@ -19,36 +18,27 @@ interface DataFields {
   city: string;
 }
 
-const StepFour = ({ nextStep, establishmentData, setEstablishmentData}: 
-  {
-    nextStep: Function;
-    establishmentData: any,
-    setEstablishmentData: any
-  }) => {
+interface LocationProps {
+  zip: string;
+  name: string;
+}
 
+const autoCompleteAPI = 'https://art-grand-est.ddev.site/api/insee/';
 
+const StepFour = ({
+  nextStep,
+  establishmentData,
+  setEstablishmentData,
+}: {
+  nextStep: Function;
+  establishmentData: any;
+  setEstablishmentData: any;
+}) => {
   // Function d'autocompletion du zip
-
-  const [zipResult, setZipResult] = useState([]);
-
+  const [zipCode, setZipCode] = useState<string>('');
+  const [debouncedZipCode, setDebouncedZipCode] = useState<string>('');
+  const [zipResult, setZipResult] = useState<LocationProps[]>([]);
   const [openDropdown, setOpenDropdown] = useState(false);
-
-  const zipCodeAutocomplete = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let inputId = event.target.id;
-    let autoCompleteAPI = 'https://art-grand-est.ddev.site/api/insee/';
-    if (inputId === 'zip') {
-      setOpenDropdown(true);
-      let resultValue = event.target.value;
-      let apiResult = autoCompleteAPI + resultValue;
-      fetch(apiResult)
-        .then(async (response: Response) => {
-          setZipResult(await response.json());
-        })
-        .catch(() => {
-          console.log('error');
-        });
-    }
-  };
 
   const { textRequired, zipCodeRequired } = useValidation();
 
@@ -62,27 +52,64 @@ const StepFour = ({ nextStep, establishmentData, setEstablishmentData}:
   const {
     handleSubmit,
     control,
+    setValue,
     formState: { isValid },
   } = useForm<DataFields>({
     mode: 'onBlur',
     resolver: yupResolver(schema),
   });
 
+  const selectLocation = (location: LocationProps) => {
+    console.log(location);
+    setValue('zip', location.zip, {
+      shouldValidate: true,
+    });
+    setValue('city', location.name, {
+      shouldValidate: true,
+    });
+    setOpenDropdown(false);
+    setZipResult([]);
+  };
+
   const onSubmit: SubmitHandler<DataFields> = data => {
     console.log('data', data);
   };
 
+  // Mettre à jour le debouncedZipCode après un délai
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebouncedZipCode(zipCode);
+    }, 500); // Délai de 500 ms
+
+    return () => clearTimeout(timerId);
+  }, [zipCode]);
+
+  useEffect(() => {
+    const fetchLocations = async (zip: string) => {
+      try {
+        setOpenDropdown(true);
+        const response = await fetch(`${autoCompleteAPI}${zip}`);
+        const jsonData = await response.json();
+        setZipResult(jsonData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (debouncedZipCode) {
+      fetchLocations(debouncedZipCode);
+    }
+  }, [debouncedZipCode]);
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}> 
-        <Heading variant="display-4">L’adresse de votre établissement...</Heading>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Heading variant="display-4">
+          L’adresse de votre établissement...
+        </Heading>
         <Text className="mt-6" color="neutral-500" weight={400} size="sm">
           Ces coordonnées nous permettent de vous situer dans le Grand Est.
         </Text>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-8">
-        
-        
           <TextInput
             containerClass="col-span-1"
             label={'Établissement'}
@@ -101,44 +128,31 @@ const StepFour = ({ nextStep, establishmentData, setEstablishmentData}:
             control={control}
           ></TextInput>
           <div className="relative col-span-1">
-
             <TextInput
               label={'Code postal'}
               name={'zip'}
               type={Fields.TEXT}
               placeholder={'Ex : 67000'}
-              handleChange={zipCodeAutocomplete}
+              onChange={e => setZipCode(e.target.value)}
+              onBlur={() => setOpenDropdown(false)}
+              onFocus={e => setZipCode(e.target.value)}
               control={control}
               autoCompleteChoice={false}
             ></TextInput>
-            <div
-              className={`${
-                zipResult.length === 0 || openDropdown === false
-                  ? 'hidden'
-                  : 'block'
-              } bg-white w-full z-50 max-h-[200px] overflow-auto mt-6 absolute shadow-[0_0_8px_2px_rgba(0,0,0,.10)]`}
-            >
-              {zipResult !== null &&
-                zipResult.map((item: any, index: number) => (
+            {zipResult.length > 0 && openDropdown && (
+              <div className="bg-white w-full z-50 max-h-[200px] overflow-auto mt-6 absolute shadow-[0_0_8px_2px_rgba(0,0,0,.10)]">
+                {zipResult.map((item: LocationProps, index: number) => (
                   <div
-                    className="result-zip"
+                    className="cursor-pointer last:rounded-b p-4 border-b last:border-none border-neutral-400 flex flex-row gap-1 items-center relative hover:bg-primary-600 hover:text-white trans-default"
                     key={index}
-                    onClick={() => {
-                      // let zip : HTMLInputElement = document.querySelector('#zip');
-                      // let city : HTMLInputElement = document.querySelector('#city');
-                      // zip.value = item.zip;
-                      // city.value = item.name;
-                      setOpenDropdown(false);
-                    }}
+                    onClick={() => selectLocation(item)}
                   >
                     {item.zip} {item.name}
                   </div>
                 ))}
-            </div>
+              </div>
+            )}
           </div>
-          
-
-
 
           <TextInput
             containerClass="col-span-1"
@@ -148,49 +162,7 @@ const StepFour = ({ nextStep, establishmentData, setEstablishmentData}:
             placeholder={'Ex : Strasbourg'}
             control={control}
           ></TextInput>
-        
-        
-          {/*
-        
-        
-            <TextInput
-              containerClass="w-full"
-              label={{ className: 'block', name: 'Code postal' }}
-              id="zipCode"
-              input={{
-                type: 'text',
-                className: 'block',
-                value: zipCode,
-                handleChange: handleChange,
-                placeHolder: 'Ex : 67000',
-              }}
-            ></TextInput> */}
-            {/* <div
-              className={`${
-                zipResult.length === 0 || openDropdown === false
-                  ? 'hidden'
-                  : 'block'
-              } bg-white w-full z-50 h-[200px] overflow-auto mt-6  absolute shadow-[0_0_8px_2px_rgba(0,0,0,.05)]`}
-            >
-              {zipResult !== null &&
-                zipResult.map((item: any, index: number) => (
-                  <div
-                    className="result-zip"
-                    key={index}
-                    onClick={() => {
-                      setEstablishmentData({
-                        ...establishmentData,
-                        zipCode: item.zip,
-                        city: item.name,
-                      });
-                      setOpenDropdown(false);
-                    }}
-                  >
-                    {item.zip} {item.name}
-                  </div>
-                ))}
-            </div> */}
-          </div>
+        </div>
 
         <Button
           size="lg"
@@ -198,7 +170,10 @@ const StepFour = ({ nextStep, establishmentData, setEstablishmentData}:
           icon="fa-minus"
           iconSide="left"
           disabled={!isValid}
-          onClick={(event) => {event.preventDefault(); nextStep()} }
+          onClick={event => {
+            event.preventDefault();
+            nextStep();
+          }}
           type="submit"
         >
           Suivant

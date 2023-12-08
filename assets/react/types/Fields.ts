@@ -9,8 +9,8 @@ export interface BaseFieldProps {
   id?: any;
   value?: any;
   containerClass?: string;
-  handleChange?: Function
-  autoCompleteChoice?: boolean
+  autoCompleteChoice?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export enum Fields {
