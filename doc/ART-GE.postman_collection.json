@@ -197,12 +197,6 @@
 											"type": "text"
 										},
 										{
-											"key": "reponse[repondant][department]",
-											"value": "8",
-											"description": "1 = Ardennes, 2 = Aube, 3 = Marne, 4 = Haute-Marne, 5 = Meurthe-et-Moselle, 6 = Meuse, 7 = Moselle, 8 = Bas-Rhin, 9 = Haut-Rhin, 10 = Vosges",
-											"type": "text"
-										},
-										{
 											"key": "reponse[repondant][typologie]",
 											"value": "1",
 											"description": "1 = hotel, 2 = location, 3 = chambre, 4 = camping, 5 = insolite, 6 = visite, 7 = activite, 8 = restaurant",

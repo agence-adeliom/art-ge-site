@@ -7,15 +7,21 @@ namespace App\Form\Form;
 use App\Entity\Department;
 use App\Entity\Repondant;
 use App\Entity\Typologie;
+use App\Repository\DepartmentRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RepondantType extends AbstractType
 {
+    public function __construct(
+        private readonly DepartmentRepository $departmentRepository,
+    ) {}
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -36,6 +42,15 @@ class RepondantType extends AbstractType
             ->add('typologie', EntityType::class, [
                 'class' => Typologie::class,
             ])
+            ->addEventListener(FormEvents::POST_SUBMIT, function ($event) {
+                /** @var Repondant $repondant */
+                $repondant = $event->getData();
+                $code = substr((string) $repondant->getZip(), 0, 2);
+                $department = $this->departmentRepository->getByCode($code);
+                if ($department) {
+                    $repondant->setDepartment($department);
+                }
+            })
         ;
     }
 
