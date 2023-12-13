@@ -7,6 +7,12 @@ import { Text } from '@components/Typography/Text';
 import Confirmation from '@screens/Confirmation';
 import { ConfirmationAnim } from '@components/Animation/Confirmation';
 
+
+import useReponseData from '@hooks/useReponseData/useReponseData';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { Fields } from '@react/types/Fields';
+
+
 const inputContainerClass = 'group trans-default lg:hover:bg-tertiary-200 is-active:border-primary-600 is-active:bg-primary-50 py-4 px-3';
 
 const Form = ({ questions }: { questions: object[] }) => {
@@ -45,20 +51,6 @@ const Form = ({ questions }: { questions: object[] }) => {
 
   const [allAnswerArray, setAllAnswerArray] = useState([{}]);
 
-  // Init Results answer with value = false
-  let results: any = [];
-  if (actualQuestion) {
-    results = actualOptions
-      ? Object.values(actualOptions).map((option: any, index = 0) => {
-          return {
-            id: option['id'],
-            value: false,
-            index: index,
-          };
-        })
-      : false;
-  }
-
 
   const [finish, setIsFinish] = useState(false);
   const nextStep = () => {
@@ -67,61 +59,36 @@ const Form = ({ questions }: { questions: object[] }) => {
     } else setIsFinish(true)
   }
 
-  const isActiveClass = 'is-active';
-  //Reset class active à remanier
-   const resetClass = () => {
-    let inputContains = document.querySelectorAll(`.labelContainer`)
-    Object.values(inputContains!).map((option: any, index = 0) => {
-     if (option.classList.contains(isActiveClass)) {
-      option.querySelector('input').checked = false
-      option.classList.remove(isActiveClass);
-     }
-    })
-    }
-  
-  // Affect Answer state with Results => value = false
-  const [answer, setAnswer] = useState({});
-  if (results) {
-    useEffect(() => {
-      setAnswer(results);
-    }, [actualOptions]);
-  }
+const isActiveClass = 'is-active';
 
-  // Add class active + set answer value true
-  const handleChange = (e: any) => {
-    let id = e.target.id;
-    const answerArray = Object.values(answer);
-    if (e.target.checked) {
-      answerArray.find((answerItem: any) => {
-        answerItem['id'] == id
-          ? setAnswer({
-              ...answer,
-              [JSON.parse(answerItem['index'])]: {
-                id: JSON.parse(id),
-                value: true,
-                index: answerItem['index'],
-              },
-            })
-          : null;
-      });
-      e.target.parentNode.classList.add(isActiveClass);
-    } else {
-      answerArray.find((answerItem: any) => {
-        answerItem['id'] == id
-          ? setAnswer({
-              ...answer,
-              [JSON.parse(answerItem['index'])]: {
-                id: JSON.parse(id),
-                value: false,
-                index: answerItem['index'],
-              },
-            })
-          : null;
-      });
-      e.target.parentNode.classList.remove(isActiveClass);
-    }
+const [arrayAnswer, setarrayAnswer] : Array<any> = useState([]);
+let answerArray : Array<any> = [];
+  const onSubmit = (event : any) => {
+    event.preventDefault()
+    const form = event.target;
+    const inputs = form.querySelectorAll('input[type=checkbox]')
+    Object.values(inputs).map((input: any, index : number) => {
+      if (input.checked) {
+        answerArray.push(input['id'])
+        console.log(input.checked)
+        input.parentNode.classList.remove(isActiveClass);
+        input.checked = false
+      }
+    })
+    setarrayAnswer([...arrayAnswer, answerArray])
+    nextStep()
+
   };
 
+  const handleActiveClass = (event : any) => {
+    if (event.target.checked) {
+      event.target.parentNode.classList.add(isActiveClass);
+    } else {
+      event.target.parentNode.classList.remove(isActiveClass);
+    }
+  }
+
+  console.log(arrayAnswer)
 
 
 
@@ -162,7 +129,7 @@ const Form = ({ questions }: { questions: object[] }) => {
           className="col-span-full lg:col-span-8 flex items-center md:py-10 overflow-auto"
           id="formContainer"
         >
-          <form className="h-full w-full pl-1 flex">
+          <form onSubmit={onSubmit} className="h-full w-full pl-1 flex">
             <div>
               <Button
                 variant="textOnly"
@@ -196,7 +163,14 @@ const Form = ({ questions }: { questions: object[] }) => {
                                 <Text weight={400} color="neutral-800">
                                     { option.libelle }
                                 </Text>
-                              <input type="checkbox" id={option.id} name={option.id} onChange={e => {handleChange(e);} } className={`formCheckbox  ml-3 my-6'`}></input>
+                              <input 
+                                type="checkbox" 
+                                onClick={event => handleActiveClass(event)}
+                                id={option.id} 
+                                name={option.id} 
+                                // onChange={e => {handleChange(e);} } 
+                                className={`formCheckbox rounded md:ml-3 w-[22px] h-[22px] my-6'`}>
+                              </input>
                             </label>
                           </div>
                         );
@@ -207,13 +181,13 @@ const Form = ({ questions }: { questions: object[] }) => {
                   icon="fa-minus"
                   className="my-10"
                   iconSide="left"
-                  onClick={event => {
-                    event.preventDefault(),
-                      nextStep(),
-                      console.log('answer', answer);
-                      setAllAnswerArray([...allAnswerArray, answer]);
-                      resetClass();
-                  }}
+                  // onClick={event => {
+                  //   event.preventDefault()
+                  //     //nextStep()
+                  //     // console.log('answer', answer);
+                  //     // setAllAnswerArray([...allAnswerArray, answer]);
+                  //     // resetClass();
+                  // }}
                   weight={600}
                 >
                   Suivant
