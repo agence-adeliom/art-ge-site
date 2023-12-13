@@ -18,6 +18,11 @@ export const useValidation = () => {
   return {
     textOptional: yup.string().notRequired(),
     textRequired: yup.string().required(ValidationString.REQUIRED),
+    booleanNumberRequired: yup
+      .number()
+      .required(ValidationString.REQUIRED)
+      .min(0)
+      .max(1),
     zipCodeRequired: yup
       .string()
       .required(ValidationString.REQUIRED)

@@ -1,29 +1,33 @@
-import React from "react";
+import React, { FunctionComponent } from 'react';
+import { ChoiceCardsProps } from '@components/Fields/ChoiceCard';
+import { cx } from 'class-variance-authority';
 
-export const ChoiceCard = ({className, icon, children, selectFunction, type, etablissement} : {
-    className: string,
-    selectFunction: Function,
-    type: string,
-    etablissement: string,
-    icon: {
-        iconSrc: string,
-        alt: string,
-        iconClass: string
-    },
-    children: React.ReactNode
+const cardClass =
+  'p-4 cursor-pointer flex gap-4 flex items-center border border-neutral-200 group trans-default lg:hover:bg-tertiary-200 is-active:border-primary-600 is-active:bg-primary-50';
+
+export const ChoiceCard: FunctionComponent<ChoiceCardsProps> = ({
+  className,
+  icon,
+  children,
+  isActive,
+  onClick,
+  ...props
 }) => {
-    const {iconSrc, alt, iconClass} = icon
-    return (
-        <div 
-            className={`${className} ${etablissement === type && 'is-active'} `}
-            data-type={type}
-            onClick={ event => selectFunction(event)}>
-            <div className={`${iconClass && iconClass} iconClass pointer-events-none`}>
-                <img src={iconSrc} alt={alt}></img>
-            </div>
-            <div className="pointer-events-none">
-                {children}
-            </div>
-        </div>
-    )
-}
+  const { iconSrc, alt } = icon;
+  return (
+    <div
+      className={cx(cardClass, isActive && 'is-active')}
+      onClick={onClick}
+      {...props}
+    >
+      <div
+        className={
+          'bg-secondary-50 group-hover:bg-tertiary-400 trans-default is-active:bg-primary-200 iconClass pointer-events-none'
+        }
+      >
+        <img src={iconSrc} alt={alt}></img>
+      </div>
+      <div className="pointer-events-none">{children}</div>
+    </div>
+  );
+};
