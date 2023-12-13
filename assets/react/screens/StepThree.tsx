@@ -10,15 +10,16 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepAnim } from '@components/Animation/Step';
+import useProgression from '@hooks/useProgression/useProgression';
 
-const arrayQuestions = [
+const arrayQuestions: { text: string; id: 'restauration' | 'greenSpace' }[] = [
   {
     text: `Disposez-vous d'un espace vert, d'un espace extérieur de plus de 100m2 ?`,
-    id: 'restauration',
+    id: 'greenSpace',
   },
   {
     text: `Proposez-vous une offre de restauration (panier, pique-nique, restaurant…) ?`,
-    id: 'greenSpace',
+    id: 'restauration',
   },
 ];
 
@@ -27,8 +28,9 @@ interface DataFields {
   greenSpace: number;
 }
 
-const StepThree = ({ nextStep }: { nextStep: Function }) => {
-  const { feedRepondant } = useReponseData();
+const StepThree = () => {
+  const { reponse, feedRepondant } = useReponseData();
+  const { nextStep, prevStep } = useProgression();
 
   const { booleanNumberRequired } = useValidation();
 
@@ -40,6 +42,8 @@ const StepThree = ({ nextStep }: { nextStep: Function }) => {
   const {
     handleSubmit,
     control,
+    setValue,
+    trigger,
     formState: { isValid },
   } = useForm<DataFields>({
     resolver: yupResolver(schema),
@@ -64,11 +68,30 @@ const StepThree = ({ nextStep }: { nextStep: Function }) => {
     }
   };
 
+  useEffect(() => {
+    arrayQuestions.forEach(item => {
+      typeof reponse?.repondant?.[item.id] === 'number' &&
+        setValue(item.id, reponse?.repondant?.[item.id] as number);
+    });
+    trigger();
+  }, [arrayQuestions]);
+
   return (
     <>
       <StepAnim>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Heading variant="display-4">Vous êtes...</Heading>
+          <Button
+            variant="textOnly"
+            icon={'fa-chevron-left'}
+            iconSide="left"
+            weight={600}
+            onClick={prevStep}
+          >
+            Retour
+          </Button>
+          <Heading variant="display-4" className="mt-6">
+            Vous êtes...
+          </Heading>
           <Text className="mt-6" color="neutral-500" weight={400} size="sm">
             Indiquez l’activité de votre établissement touristique.
           </Text>

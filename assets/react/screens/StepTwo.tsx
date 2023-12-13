@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { Heading } from '@components/Typography/Heading';
 import { Text } from '@components/Typography/Text';
 import { Button } from '@components/Action/Button';
@@ -13,6 +13,7 @@ import Trees from '@icones/trees.svg';
 import useData from '@hooks/useReponseData/useReponseData';
 import useReponseData from '@hooks/useReponseData/useReponseData';
 import { StepAnim } from '@components/Animation/Step';
+import useProgression from '@hooks/useProgression/useProgression';
 
 const establishmentData: {
   value: number;
@@ -70,10 +71,12 @@ const establishmentData: {
   },
 ];
 
-const StepTwo = ({ nextStep }: { nextStep: () => void }) => {
-  const [etablissement, setEtablissement] = useState<number | undefined>();
-  const { feedRepondant } = useReponseData();
-
+const StepTwo: FunctionComponent = () => {
+  const { reponse, feedRepondant } = useReponseData();
+  const { nextStep, prevStep } = useProgression();
+  const [etablissement, setEtablissement] = useState<number | undefined>(
+    reponse?.repondant?.typologie,
+  );
   const onSubmit = () => {
     feedRepondant({
       typologie: etablissement,
@@ -84,7 +87,18 @@ const StepTwo = ({ nextStep }: { nextStep: () => void }) => {
   return (
     <>
       <StepAnim>
-        <Heading variant="display-4">Vous êtes...</Heading>
+        <Button
+          variant="textOnly"
+          icon={'fa-chevron-left'}
+          iconSide="left"
+          weight={600}
+          onClick={prevStep}
+        >
+          Retour
+        </Button>
+        <Heading variant="display-4" className="mt-6">
+          Vous êtes...
+        </Heading>
         <Text className="mt-6" color="neutral-500" weight={400} size="sm">
           Indiquez l’activité de votre établissement touristique.
         </Text>

@@ -11,26 +11,27 @@ export const YesNoCard: FunctionComponent<YesNoCardProps> = ({
   control,
   defaultValue = '',
 }) => {
-  const { field, fieldState } = useController({ name, control, defaultValue });
-  const handleClick = (value: boolean) => {
-    setEnabled(value);
-    setInteracted(true);
-  };
+  const { field } = useController({ name, control, defaultValue });
 
   const [enabled, setEnabled] = useState<boolean>();
   const [interacted, setInteracted] = useState<boolean>();
+
+  useEffect(() => {
+    field.value !== '' && setEnabled(field.value === '1' || field.value === 1);
+    setInteracted(field.value !== '');
+  }, [field.value]);
 
   return (
     <div className="gap-6 grid-cols-2 grid ">
       <label
         htmlFor={`${name}-yes`}
         className={cx(cardClassName, enabled && interacted && 'is-active')}
-        onClick={() => handleClick(true)}
       >
         <input
           type="radio"
           id={`${name}-yes`}
           className={`radio`}
+          defaultChecked={enabled && interacted}
           {...field}
           value={1}
         />
@@ -40,12 +41,12 @@ export const YesNoCard: FunctionComponent<YesNoCardProps> = ({
       <label
         htmlFor={`${name}-no`}
         className={cx(cardClassName, !enabled && interacted && 'is-active')}
-        onClick={() => handleClick(false)}
       >
         <input
           type="radio"
           id={`${name}-no`}
           className={`radio`}
+          defaultChecked={!enabled && interacted}
           {...field}
           value={0}
         />

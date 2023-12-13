@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { ObjectSchema } from 'yup';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -12,6 +12,7 @@ import { Checkbox } from '@components/Fields/Checkbox';
 import { Fields } from '@react/types/Fields';
 import useReponseData from '@hooks/useReponseData/useReponseData';
 import { StepAnim } from '@components/Animation/Step';
+import useProgression from '@hooks/useProgression/useProgression';
 
 interface DataFields {
   firstname: string;
@@ -20,11 +21,12 @@ interface DataFields {
   email: string;
 }
 
-const StepOne = ({ nextStep }: { nextStep: Function }) => {
+const StepOne: FunctionComponent = () => {
   const { textRequired, phoneRequired, emailRequired, consentRequired } =
     useValidation();
 
-  const { feedRepondant } = useReponseData();
+  const { reponse, feedRepondant } = useReponseData();
+  const { nextStep } = useProgression();
 
   const schema: ObjectSchema<DataFields> = yup.object().shape({
     firstname: textRequired,
@@ -64,6 +66,7 @@ const StepOne = ({ nextStep }: { nextStep: Function }) => {
               type={Fields.TEXT}
               placeholder={'Ex : Julie'}
               control={control}
+              defaultValue={reponse?.repondant?.firstname}
             ></TextInput>
             <TextInput
               containerClass="w-full md:w-1/2"
@@ -72,6 +75,7 @@ const StepOne = ({ nextStep }: { nextStep: Function }) => {
               type={Fields.TEXT}
               placeholder={'Ex : Dupont'}
               control={control}
+              defaultValue={reponse?.repondant?.lastname}
             ></TextInput>
           </div>
           <div className="flex flex-wrap md:flex-nowrap gap-6 w-full mt-8">
@@ -82,6 +86,7 @@ const StepOne = ({ nextStep }: { nextStep: Function }) => {
               type={Fields.PHONE}
               placeholder={'Ex : 0612345678'}
               control={control}
+              defaultValue={reponse?.repondant?.phone}
             ></TextInput>
             <TextInput
               containerClass="w-full md:w-1/2"
@@ -90,6 +95,7 @@ const StepOne = ({ nextStep }: { nextStep: Function }) => {
               type={Fields.EMAIL}
               placeholder={'Ex : julie.dupont@mail.com'}
               control={control}
+              defaultValue={reponse?.repondant?.email}
             ></TextInput>
           </div>
 
@@ -107,6 +113,7 @@ const StepOne = ({ nextStep }: { nextStep: Function }) => {
             id="legal"
             name="legal"
             control={control}
+            defaultValue={reponse?.repondant?.legal}
           ></Checkbox>
 
           <Button

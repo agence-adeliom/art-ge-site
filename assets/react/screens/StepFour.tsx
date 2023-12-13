@@ -12,6 +12,8 @@ import { useValidation } from '@hooks/useValidation';
 import { Fields } from '@react/types/Fields';
 import useReponseData from '@hooks/useReponseData/useReponseData';
 import { StepAnim } from '@components/Animation/Step';
+import useProgression from '@hooks/useProgression/useProgression';
+import { serialize } from 'object-to-formdata';
 
 interface DataFields {
   company: string;
@@ -28,8 +30,10 @@ interface LocationProps {
 //@TODO mise en place de l'url de prod
 const autoCompleteAPI = 'https://art-grand-est.ddev.site/api/insee/';
 
-const StepFour = ({ nextStep }: { nextStep: () => void }) => {
+const StepFour = () => {
   const { reponse, feedRepondant } = useReponseData();
+  const { nextStep, prevStep } = useProgression();
+
   // Function d'autocompletion du zip
   const [zipCode, setZipCode] = useState<string>('');
   const [debouncedZipCode, setDebouncedZipCode] = useState<string>('');
@@ -94,18 +98,30 @@ const StepFour = ({ nextStep }: { nextStep: () => void }) => {
 
   const onSubmit: SubmitHandler<DataFields> = data => {
     feedRepondant(data);
-    console.log('data', data);
+    nextStep();
   };
 
   useEffect(() => {
     console.log('reponse', reponse);
+    const formData = serialize(reponse, { indices: true });
+
+    console.log('formData', formData.get('repondant[firstname]'));
   }, [reponse]);
 
   return (
     <>
       <StepAnim>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Heading variant="display-4">
+          <Button
+            variant="textOnly"
+            icon={'fa-chevron-left'}
+            iconSide="left"
+            weight={600}
+            onClick={prevStep}
+          >
+            Retour
+          </Button>
+          <Heading variant="display-4" className="mt-6">
             L’adresse de votre établissement...
           </Heading>
           <Text className="mt-6" color="neutral-500" weight={400} size="sm">
@@ -119,6 +135,7 @@ const StepFour = ({ nextStep }: { nextStep: () => void }) => {
               type={Fields.TEXT}
               placeholder={'Nom de l’établissement'}
               control={control}
+              defaultValue={reponse?.repondant?.company}
             ></TextInput>
 
             <TextInput
@@ -128,6 +145,7 @@ const StepFour = ({ nextStep }: { nextStep: () => void }) => {
               type={Fields.TEXT}
               placeholder={`Ex : 8 rue de l'école`}
               control={control}
+              defaultValue={reponse?.repondant?.address}
             ></TextInput>
             <div className="relative col-span-1">
               <TextInput
@@ -140,6 +158,7 @@ const StepFour = ({ nextStep }: { nextStep: () => void }) => {
                 onFocus={e => setZipCode(e.target.value)}
                 control={control}
                 autoCompleteChoice={false}
+                defaultValue={reponse?.repondant?.zip}
               ></TextInput>
               {zipResult.length > 0 && openDropdown && (
                 <div className="bg-white w-full z-50 max-h-[200px] overflow-auto mt-6 absolute shadow-[0_0_8px_2px_rgba(0,0,0,.10)]">
@@ -165,6 +184,7 @@ const StepFour = ({ nextStep }: { nextStep: () => void }) => {
               type={Fields.TEXT}
               placeholder={'Ex : Strasbourg'}
               control={control}
+              defaultValue={reponse?.repondant?.city}
             ></TextInput>
           </div>
 

@@ -11,16 +11,10 @@ import { QuestionsContext, UserContext } from '@components/Context/Context';
 import AsideForm from '@components/Content/AsideForm';
 import { AnimatePresence } from 'framer-motion';
 import { RoutePaths } from '@react/config/routes';
+import useProgression from '@hooks/useProgression/useProgression';
 
 const Informations: FunctionComponent = () => {
-  // Current step + setStep
-  const [step, setStep] = useState(1);
-
-  const nextStep = () => {
-    setStep(step + 1);
-  };
-
-  const [isLoading, setIsLoading] = useState(true);
+  const { step } = useProgression();
 
   return (
     <AnimatePresence>
@@ -33,10 +27,10 @@ const Informations: FunctionComponent = () => {
           <div className="col-span-full lg:col-span-7 flex items-center overflow-auto relative">
             <div className="h-full w-full pl-1 flex">
               <div className="bg-white w-full">
-                {step === 1 && <StepOne nextStep={nextStep}></StepOne>}
-                {step === 2 && <StepTwo nextStep={nextStep}></StepTwo>}
-                {step === 3 && <StepThree nextStep={nextStep}></StepThree>}
-                {step === 4 && <StepFour nextStep={nextStep}></StepFour>}
+                {step === 1 && <StepOne></StepOne>}
+                {step === 2 && <StepTwo></StepTwo>}
+                {step === 3 && <StepThree></StepThree>}
+                {step === 4 && <StepFour></StepFour>}
               </div>
             </div>
           </div>
@@ -44,9 +38,7 @@ const Informations: FunctionComponent = () => {
           <AsideForm step={step}></AsideForm>
         </div>
 
-        <ConfirmationAnim
-          isVisible={step === 5 && isLoading === false ? true : false}
-        >
+        <ConfirmationAnim isVisible={step === 5}>
           <Confirmation
             link={RoutePaths.FORM}
             title="Merci pour ces informations."
