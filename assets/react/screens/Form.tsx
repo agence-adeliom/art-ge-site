@@ -122,7 +122,7 @@ const Form = ({ questions }: { questions: object[] }) => {
     }
   };
 
-console.log(allAnswerArray)
+
 
 
   return (
@@ -132,7 +132,7 @@ console.log(allAnswerArray)
           <Header
             step={questionStep}
             totalStep={15}
-            title={'Biodiversité et conservation de la Nature sur site'}
+            title={ actualQuestion ? actualQuestion!['thematique']['name'] : null}
           ></Header>
         </div>
 
@@ -168,18 +168,13 @@ console.log(allAnswerArray)
                 variant="textOnly"
                 icon={'fa-chevron-left'}
                 iconSide="left"
+                className="!w-fit"
                 weight={600}
               >
                 Retour
               </Button>
               {actualQuestion != null ? (
-                <div
-                  className={`${
-                    sticky
-                      ? `max-h-0 h-0 opacity-0`
-                      : `min-h-auto h-fit opacity-100`
-                  } tansition-all duration-500 overflow-hidden`}
-                >
+                <div>
                   <Heading variant="display-5" className="my-4">
                     {actualQuestion['libelle']}
                   </Heading>

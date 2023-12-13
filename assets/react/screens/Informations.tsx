@@ -45,7 +45,7 @@ const Informations: FunctionComponent = () => {
         </div>
 
         <ConfirmationAnim
-          isVisible={step === 2 && isLoading === false ? true : false}
+          isVisible={step === 5 && isLoading === false ? true : false}
         >
           <Confirmation
             link={RoutePaths.FORM}

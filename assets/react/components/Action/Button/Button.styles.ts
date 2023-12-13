@@ -3,7 +3,7 @@ import { weight } from '@components/Typography/Typography.styles';
 
 export const buttonStyles = cva(
   [
-    'relative w-full md:w-fit flex items-center w-fit h-fit gap-4 transition-colors text-center',
+    'max-md:justify-center relative w-full md:w-fit flex items-center w-fit h-fit gap-4 transition-colors text-center',
   ],
   {
     variants: {

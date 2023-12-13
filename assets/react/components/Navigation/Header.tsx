@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Logo from '@images/logo/logo.svg';
 import { Text } from '@components/Typography/Text';
 import { Button } from '@components/Action/Button';
 import { Link } from "react-router-dom";
-
+import QuitFormModal from '@components/Modal/QuitFormModal';
 const Header = ({step, ...props} : {
     step: number, 
     title ? : string | null,
@@ -16,9 +16,14 @@ const Header = ({step, ...props} : {
     }
 
     let hasTitle = props.title !== null ? true : false;
+
+    const [openQuitPopin, setOpenQuitPopin] = useState(false);
+    const closeModal = () => {
+        setOpenQuitPopin(false)
+    } 
     return (
         <>
-            <div className="container flex justify-between items-center py-8">
+            <div className="container relative flex justify-between items-center py-8">
                 <Link to="/">
                     <img src={Logo} alt="Logo ART GE"/>
                 </Link>
@@ -29,7 +34,16 @@ const Header = ({step, ...props} : {
                     : false
                 }
                 
-                <Button variant="textOnly" icon={ 'fa-x' } weight={600}>Quitter</Button>
+                <Button variant="textOnly" 
+                    onClick={() =>setOpenQuitPopin(true)}
+                    icon={ 'fa-x' } weight={600} className='max-md:justify-end !w-fit'>
+                    Quitter
+                </Button>
+
+                {openQuitPopin && <QuitFormModal closeModal={closeModal}></QuitFormModal>}
+                
+
+
             </div>
             <div className="w-full h-1 bg-neutral-300 relative">
                 <div className="h-full absolute left-0 top-0 bg-primary-600 rounded-top-right rounded-r-sm trans-default" style={{ 'width': `${actualStep}%` }}></div>
