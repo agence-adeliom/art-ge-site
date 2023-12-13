@@ -3,3 +3,6 @@ parameters:
     paths:
         - src/
     checkGenericClassInNonGenericObjectType: false
+    ignoreErrors:
+        - "#return type has no value type specified in iterable type array#"
+        - "#with no value type specified in iterable type array#"

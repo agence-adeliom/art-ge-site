@@ -224,7 +224,6 @@ class ReponseRepository extends ServiceEntityRepository
 
         $qb = $this->addFiltersToQueryBuilder($qb, $territoireFilterDTO);
 
-        /* @phpstan-ignore-next-line */
         return $qb
             ->getQuery()
             ->getArrayResult()
@@ -354,7 +353,7 @@ class ReponseRepository extends ServiceEntityRepository
         if (!empty($territoireFilterDTO->getThematiques())) {
             $qb->innerJoin('s.thematique', 'th');
             $ors = [];
-            foreach ($this->thematiques as $key => $thematique) {
+            foreach ($territoireFilterDTO->getThematiques() as $key => $thematique) {
                 $ors[] = $qb->expr()->eq('th.slug', ':thematique' . $key);
                 $qb->setParameter('thematique' . $key, $thematique);
             }
@@ -415,7 +414,7 @@ class ReponseRepository extends ServiceEntityRepository
                 ;
             } elseif (null === $territoireFilterDTO->getFrom() && null !== $territoireFilterDTO->getTo()) {
                 $qb->andWhere('r.created_at <= :to')
-                    ->setParameter('to', $this->to->format($dateFormat))
+                    ->setParameter('to', $territoireFilterDTO->getTo()->format($dateFormat))
                 ;
             }
         }

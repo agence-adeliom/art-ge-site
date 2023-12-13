@@ -149,7 +149,7 @@ class ScoreRepository extends ServiceEntityRepository
     {
         $percentagesByPiliers = [];
 
-        foreach (PilierEnum::cases() as $key => $pilier) {
+        foreach (PilierEnum::cases() as $pilier) {
             $thematiques = PilierEnum::getThematiquesSlugsByPilier($pilier);
 
             $sql = 'SELECT ROUND(AVG(temp.percentage)) FROM (';
@@ -228,7 +228,7 @@ class ScoreRepository extends ServiceEntityRepository
         if (!empty($territoireFilterDTO->getThematiques())) {
             $qb->innerJoin('s.thematique', 'th');
             $ors = [];
-            foreach ($this->thematiques as $key => $thematique) {
+            foreach ($territoireFilterDTO->getThematiques() as $key => $thematique) {
                 $ors[] = $qb->expr()->eq('th.slug', ':thematique' . $key);
                 $qb->setParameter('thematique' . $key, $thematique);
             }
@@ -289,7 +289,7 @@ class ScoreRepository extends ServiceEntityRepository
                 ;
             } elseif (null === $territoireFilterDTO->getFrom() && null !== $territoireFilterDTO->getTo()) {
                 $qb->andWhere('r.created_at <= :to')
-                    ->setParameter('to', $this->to->format($dateFormat))
+                    ->setParameter('to', $territoireFilterDTO->getTo()->format($dateFormat))
                 ;
             }
         }

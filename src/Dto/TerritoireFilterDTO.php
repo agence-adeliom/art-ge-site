@@ -9,15 +9,15 @@ use App\Entity\Territoire;
 class TerritoireFilterDTO
 {
     private function __construct(
-        private Territoire $territoire,
+        private readonly Territoire $territoire,
         /** @var array<string> */
-        private array $thematiques = [],
+        private readonly array $thematiques = [],
         /** @var array<string> */
-        private array $typologies = [],
-        private ?bool $restauration = null,
-        private ?bool $greenSpace = null,
-        private ?\DateTimeImmutable $from = null,
-        private ?\DateTimeImmutable $to = null,
+        private readonly array $typologies = [],
+        private readonly ?bool $restauration = null,
+        private readonly ?bool $greenSpace = null,
+        private readonly ?\DateTimeImmutable $from = null,
+        private readonly ?\DateTimeImmutable $to = null,
     ) {}
 
     public static function from(array $datas = []): self
@@ -69,6 +69,9 @@ class TerritoireFilterDTO
 
     public function hasDateRange(): bool
     {
-        return null !== $this->getFrom() || null !== $this->getFrom();
+        if (null !== $this->getFrom()) {
+            return true;
+        }
+        return null !== $this->getTo();
     }
 }

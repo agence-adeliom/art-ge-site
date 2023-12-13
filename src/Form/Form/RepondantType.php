@@ -42,7 +42,7 @@ class RepondantType extends AbstractType
             ->add('typologie', EntityType::class, [
                 'class' => Typologie::class,
             ])
-            ->addEventListener(FormEvents::POST_SUBMIT, function ($event) {
+            ->addEventListener(FormEvents::POST_SUBMIT, function ($event): void {
                 /** @var Repondant $repondant */
                 $repondant = $event->getData();
                 $code = substr((string) $repondant->getZip(), 0, 2);
