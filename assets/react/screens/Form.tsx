@@ -119,7 +119,7 @@ const [arrayAnswer, setarrayAnswer] : Array<any> = useState([]);
 
     setarrayAnswer({...arrayAnswer, 
       [JSON.parse(actualQuestion!['id'])] : {
-        'answer' : answerArray
+        'answers' : answerArray
       }
         
     })

@@ -34,8 +34,12 @@ class RepondantType extends AbstractType
             ->add('city', TextType::class)
             ->add('zip', TextType::class)
             ->add('country', TextType::class)
-            ->add('restauration', CheckboxType::class)
-            ->add('greenSpace', CheckboxType::class)
+            ->add('restauration', CheckboxType::class, [
+                'false_values' => [0, '0', 'off', 'false', false, 'no'],
+            ])
+            ->add('greenSpace', CheckboxType::class, [
+                'false_values' => [0, '0', 'off', 'false', false, 'no'],
+            ])
             ->add('department', EntityType::class, [
                 'class' => Department::class,
             ])
