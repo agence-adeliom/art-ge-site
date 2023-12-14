@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactEventHandler, useEffect, useState } from 'react';
 import Header from '@components/Navigation/Header';
 import { Heading } from '@components/Typography/Heading';
 import formImage1 from '@images/form-image-1.jpeg';
@@ -6,11 +6,12 @@ import { Button } from '@components/Action/Button';
 import { Text } from '@components/Typography/Text';
 import Confirmation from '@screens/Confirmation';
 import { ConfirmationAnim } from '@components/Animation/Confirmation';
-
-
 import useReponseData from '@hooks/useReponseData/useReponseData';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { serialize } from 'object-to-formdata';
+
+import { SubmitHandler, set, useForm } from 'react-hook-form';
 import { Fields } from '@react/types/Fields';
+import { Checkbox } from '@components/Fields/Checkbox';
 
 
 const inputContainerClass = 'group trans-default lg:hover:bg-tertiary-200 is-active:border-primary-600 is-active:bg-primary-50 py-4 px-3';
@@ -23,6 +24,8 @@ const Form = ({ questions }: { questions: object[] }) => {
   const [allQuestions, setAllQuestions] = useState(valueParse.questions);
 
   const [sticky, setSticky] = useState(false);
+
+  const [disabled, setDisabled] = useState(true);
 
   const handleScroll = (form: any) => {
     if (form.scrollTop > 0) {
@@ -49,36 +52,86 @@ const Form = ({ questions }: { questions: object[] }) => {
     }, [allQuestions, questionStep]);
   }
 
-  const [allAnswerArray, setAllAnswerArray] = useState([{}]);
-
 
   const [finish, setIsFinish] = useState(false);
+
+  const previewStep = (event : any) => {
+    event.preventDefault();
+    if (questionStep > 0) {
+      setQuestionStep(questionStep - 1)
+    }
+  }
+
   const nextStep = () => {
     if (questionStep < allQuestions.length - 1) {
       setQuestionStep(questionStep + 1)
-    } else setIsFinish(true)
+    } else {
+      setIsFinish(true)
+      const formData = serialize({reponse : reponse}, { indices: true });
+      fetch(`/api/submit`, {
+        body: formData,
+        method: 'POST',
+      })
+      .then(
+        (response : any) => {
+          console.log(response.json())
+        }
+      )
+
+    }
   }
 
 const isActiveClass = 'is-active';
 
+const { feedRawForm, reponse } = useReponseData();
+const { feedRepondant } = useReponseData();
+
+const repondant = {
+  firstname: 'test',
+  lastname: 'test',
+  email: 'test',
+  phone: 'test',
+  company: 'test',
+  address: 'test',
+  zip: 'test',
+  city: 'test',
+  country: 'test',
+}
+
+let answerArray  : any = {};
 const [arrayAnswer, setarrayAnswer] : Array<any> = useState([]);
-let answerArray : Array<any> = [];
+
   const onSubmit = (event : any) => {
     event.preventDefault()
     const form = event.target;
     const inputs = form.querySelectorAll('input[type=checkbox]')
     Object.values(inputs).map((input: any, index : number) => {
       if (input.checked) {
-        answerArray.push(input['id'])
-        console.log(input.checked)
+        setDisabled(true)
         input.parentNode.classList.remove(isActiveClass);
         input.checked = false
+        
+        answerArray[input['id']] = 'on'  
       }
+      
     })
-    setarrayAnswer([...arrayAnswer, answerArray])
-    nextStep()
+    
 
+    setarrayAnswer({...arrayAnswer, 
+      [JSON.parse(actualQuestion!['id'])] : {
+        'answer' : answerArray
+      }
+        
+    })
+    feedRawForm(arrayAnswer)
+    nextStep()
   };
+
+  useEffect(() => {
+    feedRepondant(repondant) 
+  }, [])
+
+ 
 
   const handleActiveClass = (event : any) => {
     if (event.target.checked) {
@@ -88,9 +141,18 @@ let answerArray : Array<any> = [];
     }
   }
 
-  console.log(arrayAnswer)
+  const handleDisbaled = (event : any) => {
+    let inputs : any = []
+    let form = document.querySelector('form');
+    inputs = form?.querySelectorAll(`input[type=checkbox]:checked`);
+    if (Object.values(inputs!).length > 0) {
+      setDisabled(false)
+    } else {
+      setDisabled(true)
+    }
+  }
 
-
+  console.log(reponse)
 
   return (
     <>
@@ -137,6 +199,7 @@ let answerArray : Array<any> = [];
                 iconSide="left"
                 className="!w-fit"
                 weight={600}
+                onClick={(event) => previewStep(event)}
               >
                 Retour
               </Button>
@@ -165,10 +228,10 @@ let answerArray : Array<any> = [];
                                 </Text>
                               <input 
                                 type="checkbox" 
-                                onClick={event => handleActiveClass(event)}
+                                onClick={event => {handleActiveClass(event); handleDisbaled(event)}}
                                 id={option.id} 
                                 name={option.id} 
-                                // onChange={e => {handleChange(e);} } 
+                                 
                                 className={`formCheckbox rounded md:ml-3 w-[22px] h-[22px] my-6'`}>
                               </input>
                             </label>
@@ -181,13 +244,7 @@ let answerArray : Array<any> = [];
                   icon="fa-minus"
                   className="my-10"
                   iconSide="left"
-                  // onClick={event => {
-                  //   event.preventDefault()
-                  //     //nextStep()
-                  //     // console.log('answer', answer);
-                  //     // setAllAnswerArray([...allAnswerArray, answer]);
-                  //     // resetClass();
-                  // }}
+                  disabled={disabled}
                   weight={600}
                 >
                   Suivant
@@ -205,13 +262,13 @@ let answerArray : Array<any> = [];
         </div>
 
         
-        <ConfirmationAnim isVisible={finish}>
+        {/* <ConfirmationAnim isVisible={finish}>
           <Confirmation
             link=""
             title="Merci pour ces informations."
             subTitle="Parlons à présent de vos actions..."
           ></Confirmation>
-        </ConfirmationAnim>
+        </ConfirmationAnim> */}
       </div>
     </>
   );
