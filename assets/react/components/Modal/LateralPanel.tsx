@@ -1,4 +1,4 @@
-import React, { ReactComponentElement, useState } from "react";
+import React, { ReactComponentElement, useState, useId } from "react";
 import { LateralPanelAnim } from '@components/Animation/LateralPanel';
 import { motion, AnimatePresence } from "framer-motion"
 import { Icon } from '@components/Typography/Icon';
@@ -13,12 +13,14 @@ const LateralPanel = ({closeDropdown, title, progressBar, ...props}: {
     progressBar: ReactComponentElement<any, any>,
     percentage: number
 }) => {
+    const id = useId()
 
     const [open, setOpen] = useState<number>(-1);
     const handleClick = (e: any, index: number) => {
         e.preventDefault();
         setOpen(index === open ? -1 : index);
     };
+    console.log(open)
     const data = [
         {
             id: 1,
@@ -58,12 +60,15 @@ const LateralPanel = ({closeDropdown, title, progressBar, ...props}: {
                     </div>
                     {data.map((item, index) => {
                         return (
-                        <Accordion 
-                            question={item.question}
-                            answer={answer}
-                            handleClick={(event) => handleClick(event, index)}
-                            isOpen={open === index}
-                        ></Accordion>
+                            
+                            <Accordion 
+                                key={index}
+                                question={item.question}
+                                answer={answer}
+                                handleClick={(event) => handleClick(event, index)}
+                                isOpen={open === index}
+                            ></Accordion>
+                        
                         );
                     })}
 
@@ -92,7 +97,7 @@ const LateralPanel = ({closeDropdown, title, progressBar, ...props}: {
             </LateralPanelAnim>
 
             <motion.div   
-            key="backdrop" 
+            key={`backdrop-${id}`}
             className="fixed w-screen h-screen top-0 left-0 bg-black bg-opacity-50 z-[50]"
             initial={{  opacity: 0 }}
             onClick={() =>closeDropdown()}

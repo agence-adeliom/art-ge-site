@@ -61,8 +61,8 @@ export const buttonStyles = cva(
         variant: 'primary',
         disabled: false,
         className: [
-          'bg-primary-600 text-white',
-          'lg:hover:bg-primary-800',
+          'bg-primary-600 text-white dark:bg-white dark:text-primary-600',
+          'lg:hover:bg-primary-800 dark:lg:hover:text-white',
         ],
       },
       

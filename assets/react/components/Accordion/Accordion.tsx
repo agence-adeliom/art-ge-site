@@ -44,7 +44,7 @@ export const Accordion: FunctionComponent<AccordionProps> = ({
       >
         <ul className="list-disc  mt-4 list-inside marker:text-secondary-800 flex flex-col gap-2">
           {Object.values(answer!).map((item, index) => (
-            <li key={index}>{item}</li>
+            <li key={index}>{item} </li>
           ))}
         </ul>
           

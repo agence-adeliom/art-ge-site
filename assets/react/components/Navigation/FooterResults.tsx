@@ -7,8 +7,7 @@ const FooterResult = () => {
          <>
             {/* Footer */}
             <div className=" text-white bg-neutral-800 h-fit py-10 lg:py-6 self-end relative">
-            <div className="w-screen lg:w-full absolute h-full lg:-left-1/2 bg-neutral-800 top-0 z-0"></div>
-            <div className="flex-col md:flex-row flex items-center gap-6 justify-between mt-6 relative z-2 container">
+            <div className="flex-col md:flex-row flex items-center gap-6 justify-between relative z-2 container">
                 <Text color="white" weight={400} size="sm">2023 ©ARTGE - Tous droits réservés</Text>
                 <div className="relative z-2">
                     <nav>
