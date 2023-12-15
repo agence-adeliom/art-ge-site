@@ -1,4 +1,4 @@
-import React, { ReactComponentElement, useState, useId } from "react";
+import React, { ReactComponentElement, useState } from "react";
 import { LateralPanelAnim } from '@components/Animation/LateralPanel';
 import { motion, AnimatePresence } from "framer-motion"
 import { Icon } from '@components/Typography/Icon';
@@ -13,14 +13,12 @@ const LateralPanel = ({closeDropdown, title, progressBar, ...props}: {
     progressBar: ReactComponentElement<any, any>,
     percentage: number
 }) => {
-    const id = useId()
 
     const [open, setOpen] = useState<number>(-1);
     const handleClick = (e: any, index: number) => {
         e.preventDefault();
         setOpen(index === open ? -1 : index);
     };
-    console.log(open)
     const data = [
         {
             id: 1,
@@ -53,7 +51,7 @@ const LateralPanel = ({closeDropdown, title, progressBar, ...props}: {
                     <Icon icon="fa-xmark" size="lg"></Icon>
                 </div>
                 <div className="bg-white h-full w-full p-10 min-h-screen">
-                    <Heading variant={'display-4'}>{title}</Heading> 
+                    <Heading variant={'display-4'} className="mr-10">{title}</Heading> 
                     <div className="flex items-center gap-10 mt-6">
                         {progressBar}
                         <Text className="flex-shrink-0" size={'lg'}>{props.percentage} %</Text>
@@ -97,7 +95,7 @@ const LateralPanel = ({closeDropdown, title, progressBar, ...props}: {
             </LateralPanelAnim>
 
             <motion.div   
-            key={`backdrop-${id}`}
+            key={`backdrop`}
             className="fixed w-screen h-screen top-0 left-0 bg-black bg-opacity-50 z-[50]"
             initial={{  opacity: 0 }}
             onClick={() =>closeDropdown()}

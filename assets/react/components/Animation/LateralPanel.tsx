@@ -1,4 +1,4 @@
-import React, { useId } from "react"
+import React from "react"
 import { motion } from "framer-motion"
 
 export const LateralPanelAnim = ({ isVisible, children } : {
@@ -12,7 +12,7 @@ export const LateralPanelAnim = ({ isVisible, children } : {
       {isVisible && ( 
         <>
             <motion.div 
-            key={`lateralPanel-${useId()}`} 
+            key={`lateralPanel`} 
             className="w-screen md:w-[560px] h-screen overflow-auto fixed top-0 z-[100] right-0"
             initial={{  x: 500 }}
             animate={{  x: 0 }}
