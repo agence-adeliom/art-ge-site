@@ -70,7 +70,7 @@ export const buttonStyles = cva(
         variant: 'secondary',
         disabled: false,
         className: [
-          'border border-primary-600 text-primary-600',
+          'border bg-white border-primary-600 text-primary-600',
           'lg:hover:border-primary-800 lg:hover:text-primary-800',
         ],
       },
@@ -78,7 +78,7 @@ export const buttonStyles = cva(
         variant: 'tertiary',
         disabled: false,
         className: [
-          'background-tertiary-600 text-white',
+          'bg-tertiary-600 text-white',
           'lg:hover:background-tertiary-800',
         ],
       },

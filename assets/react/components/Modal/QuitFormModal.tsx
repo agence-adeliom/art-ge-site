@@ -20,7 +20,7 @@ const QuitFormModal = ( { closeModal }: {
                         onClick={() => closeModal()}>
                         <Icon 
                             size="xl" 
-                            className="text-neutral-600" 
+                            className="text-neutral-600 cursor-pointer" 
                             icon="fa-xmark"
                             >
                         </Icon>

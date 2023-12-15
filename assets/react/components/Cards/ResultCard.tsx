@@ -1,0 +1,66 @@
+import React, { useId, useState} from "react";
+import { Heading } from "@components/Typography/Heading";
+import ProgressBar from "@components/ProgressBar/ProgressBar";
+import { Text } from "@components/Typography/Text";
+import { Button } from "@components/Action/Button";
+import LateralPanel from "@components/Modal/LateralPanel"
+import { LateralPanelAnim } from "@components/Animation/LateralPanel";
+
+const ResultCard = ({title, percentage, ...props} : {
+    title: string,
+    percentage: number,
+    src?: string
+}) => {
+
+    const id = useId();
+    console.log(id)
+
+    const handleDropdown = (event : any) => {
+        event.stopPropagation()
+        setOpen(true)
+    }
+    const closeDropdown = () => {
+        setOpen(false)
+    }
+
+    const srcImg = props.src ? props.src : 'https://images.unsplash.com/photo-1542202229-7d93c33f5d07?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+    const [open, setOpen] = useState(false)
+    return (
+        <div className="col-span-1" id={id}>
+            <div className="bg-white h-full flex items-stretch cursor-pointer" onClick={ event => handleDropdown(event)}>
+                <div className="h-full flex flex-col w-full">
+                    <div className="h-[152px] flex-shrink-0">
+                        <img  
+                        className="w-full h-full object-cover"
+                        src={srcImg} alt=""/>
+                    </div>
+                    <div className="p-6 flex flex-col h-full flex-shrink-1">
+                        <Heading variant={'display-5'}>{title}</Heading>
+                        <div className="flex-col mt-auto pt-6">
+                            <div className="flex items-center gap-10">
+                                <ProgressBar percentage={percentage}></ProgressBar>
+                                <Text className="flex-shrink-0" size={'lg'}>{percentage} %</Text>
+                            </div>
+                            <Button variant={'textOnly'} className="pl-0 mt-8 !w-fit" icon="fa-chevron-right">Voir en détail</Button>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                
+            </div>
+            {open && (
+                <LateralPanel 
+                title={title} 
+                closeDropdown={closeDropdown}
+                progressBar={<ProgressBar percentage={percentage}></ProgressBar>}
+                percentage={percentage}
+                />
+            )}
+            
+        </div>
+        
+    )
+}
+
+export default ResultCard

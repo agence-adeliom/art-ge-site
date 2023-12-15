@@ -83,7 +83,7 @@
     <div data-detail-overlay class="fixed flex w-full top-0 right-0 bottom-0 hidden">{# remove "hidden" for testing #}
         <div data-detail-overlay-bg class="bg-neutral-950 opacity-45 absolute inset-0 transition-opacity"></div>
         <div data-detail-panels class="bg-white sm:w-1/2 lg:w-[33%] p-10 ml-auto overflow-auto relative translate-x-full transition-transform"> {# remove "translate-x-full" for testing #}
-            <button class="absolute top-2 right-2 p-2" aria-label="Fermer la popup"><i class="fa-solid fa-xmark"></i></button>
+         <button class="absolute top-2 right-2 p-2" aria-label="Fermer la popup"><i class="fa-solid fa-xmark"></i></button>
             {% for score in reponse.scores %}
                 <div data-detail-panel="{{ score.thematique.slug }}" class="hidden">{# remove "hidden" for testing #}
                     <h3 class="font-title font-bold mb-4 text-3xl">{{ score.thematique.name }}</h3>
