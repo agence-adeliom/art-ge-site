@@ -78,7 +78,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                 ]
             ]));
 
-//            for ($j = 0; $j < 3; $j++) {
+            //            for ($j = 0; $j < 3; $j++) {
             $reponse = new Reponse();
             $reponse->setUuid(Ulid::fromString($this->faker->uuid()));
             $reponse->setRepondant($repondant);
@@ -108,7 +108,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                 $manager->persist($score);
             }
             $manager->persist($reponse);
-//            }
+            //            }
         }
         $manager->flush();
     }

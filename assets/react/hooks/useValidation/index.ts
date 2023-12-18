@@ -3,7 +3,7 @@ import * as yup from 'yup';
 export enum ValidationString {
   REQUIRED = 'Ce champ est obligatoire.',
   EMAIL = 'Veuillez entrer une adresse email valide.',
-  ZIPCODE = 'Veuillez entrer un code postal valide.',
+  ZIPCODE = 'Veuillez entrer un code postal de la région Grand Est valide.',
   PHONE = 'Veuillez entrer un numéro de téléphone valide.',
   CONSENT = 'Veuillez accepter les conditions',
 }
@@ -26,7 +26,10 @@ export const useValidation = () => {
     zipCodeRequired: yup
       .string()
       .required(ValidationString.REQUIRED)
-      .matches(/^[0-9]+$/, ValidationString.ZIPCODE)
+      .matches(
+        /^(08|10|51|52|54|55|57|67|68|88)[0-9]+$/,
+        ValidationString.ZIPCODE,
+      )
       .min(5, ValidationString.ZIPCODE)
       .max(5, ValidationString.ZIPCODE),
     emailRequired: yup

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { ObjectSchema } from 'yup';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -10,23 +10,24 @@ import { useValidation } from '@hooks/useValidation';
 import { TextInput } from '@components/Fields/TextInput';
 import { Checkbox } from '@components/Fields/Checkbox';
 import { Fields } from '@react/types/Fields';
-import useReponseData from '@hooks/useReponseData/useReponseData';
+import { useWizard } from '@hooks/useWizard';
 import { StepAnim } from '@components/Animation/Step';
-import useProgression from '@hooks/useProgression/useProgression';
 
 interface DataFields {
   firstname: string;
   lastname: string;
   phone: string;
   email: string;
+  legal: boolean;
 }
 
 const StepOne: FunctionComponent = () => {
   const { textRequired, phoneRequired, emailRequired, consentRequired } =
     useValidation();
 
-  const { reponse, feedRepondant } = useReponseData();
-  const { nextStep } = useProgression();
+  const { wizard, feedRepondantAndGoToNextStep } = useWizard();
+
+  const repondant = wizard?.reponse?.repondant;
 
   const schema: ObjectSchema<DataFields> = yup.object().shape({
     firstname: textRequired,
@@ -46,8 +47,8 @@ const StepOne: FunctionComponent = () => {
   });
 
   const onSubmit: SubmitHandler<DataFields> = data => {
-    feedRepondant(data);
-    nextStep();
+    const { legal, ...formattedData } = data;
+    feedRepondantAndGoToNextStep(formattedData);
   };
 
   return (
@@ -66,7 +67,7 @@ const StepOne: FunctionComponent = () => {
               type={Fields.TEXT}
               placeholder={'Ex : Julie'}
               control={control}
-              defaultValue={reponse?.repondant?.firstname}
+              defaultValue={repondant?.firstname}
             ></TextInput>
             <TextInput
               containerClass="w-full md:w-1/2"
@@ -75,7 +76,7 @@ const StepOne: FunctionComponent = () => {
               type={Fields.TEXT}
               placeholder={'Ex : Dupont'}
               control={control}
-              defaultValue={reponse?.repondant?.lastname}
+              defaultValue={repondant?.lastname}
             ></TextInput>
           </div>
           <div className="flex flex-wrap md:flex-nowrap gap-6 w-full mt-8">
@@ -86,7 +87,7 @@ const StepOne: FunctionComponent = () => {
               type={Fields.PHONE}
               placeholder={'Ex : 0612345678'}
               control={control}
-              defaultValue={reponse?.repondant?.phone}
+              defaultValue={repondant?.phone}
             ></TextInput>
             <TextInput
               containerClass="w-full md:w-1/2"
@@ -95,7 +96,7 @@ const StepOne: FunctionComponent = () => {
               type={Fields.EMAIL}
               placeholder={'Ex : julie.dupont@mail.com'}
               control={control}
-              defaultValue={reponse?.repondant?.email}
+              defaultValue={repondant?.email}
             ></TextInput>
           </div>
 
@@ -113,7 +114,7 @@ const StepOne: FunctionComponent = () => {
             id="legal"
             name="legal"
             control={control}
-            defaultValue={reponse?.repondant?.legal}
+            defaultValue={repondant?.legal}
           ></Checkbox>
 
           <Button

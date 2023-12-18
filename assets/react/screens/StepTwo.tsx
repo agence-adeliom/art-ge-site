@@ -10,10 +10,8 @@ import Tent from '@icones/tent.svg';
 import Tipie from '@icones/tipie.svg';
 import Ustensil from '@icones/utensils.svg';
 import Trees from '@icones/trees.svg';
-import useData from '@hooks/useReponseData/useReponseData';
-import useReponseData from '@hooks/useReponseData/useReponseData';
+import { useWizard } from '@hooks/useWizard';
 import { StepAnim } from '@components/Animation/Step';
-import useProgression from '@hooks/useProgression/useProgression';
 
 const establishmentData: {
   value: number;
@@ -72,16 +70,14 @@ const establishmentData: {
 ];
 
 const StepTwo: FunctionComponent = () => {
-  const { reponse, feedRepondant } = useReponseData();
-  const { nextStep, prevStep } = useProgression();
+  const { wizard, feedRepondantAndGoToNextStep, prevStep } = useWizard();
   const [etablissement, setEtablissement] = useState<number | undefined>(
-    reponse?.repondant?.typologie,
+    wizard?.reponse?.repondant?.typologie,
   );
   const onSubmit = () => {
-    feedRepondant({
+    feedRepondantAndGoToNextStep({
       typologie: etablissement,
     });
-    nextStep();
   };
 
   return (
@@ -92,7 +88,7 @@ const StepTwo: FunctionComponent = () => {
           icon={'fa-chevron-left'}
           iconSide="left"
           weight={600}
-          onClick={prevStep}
+          onClick={() => prevStep()}
         >
           Retour
         </Button>

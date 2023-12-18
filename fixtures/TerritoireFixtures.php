@@ -64,7 +64,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
 
             /** IMPORT DES TERRITOIRES */
             $cityCodes = [];
-            foreach ($ecpiDatas as $e){
+            foreach ($ecpiDatas as $e) {
                 $inseeCommune = $e['INSEE_commune'];
                 $sirenEPCI = $e['sirenEPCI'];
                 if (!array_key_exists($sirenEPCI, $cityCodes)) {
@@ -77,12 +77,12 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
             }
 
             $departementsCodes = [];
-            foreach ($cityCodes as $k => $v){
-                $departementsCodes[$k] = array_unique(array_map(fn($v): string => substr((string) $v, 0, 2), $v));
+            foreach ($cityCodes as $k => $v) {
+                $departementsCodes[$k] = array_unique(array_map(fn ($v): string => substr((string) $v, 0, 2), $v));
             }
 
             $ecpisImported = [];
-            foreach ($ecpiDatas as $e){
+            foreach ($ecpiDatas as $e) {
                 $nameEPCI = $e['Nom_EPCI'];
                 $sirenEPCI = $e['sirenEPCI'];
                 if (in_array($sirenEPCI, $ecpisImported)) {

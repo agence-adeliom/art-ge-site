@@ -1,16 +1,16 @@
 import React, { FunctionComponent, createContext } from 'react';
 import { BrowserRouter as Router, RouterProvider } from 'react-router-dom';
 import { routes } from '../config/routes';
-import { ReponseDataProvider } from '@hooks/useReponseData';
+import { WizardProvider } from '@hooks/useWizard';
 import { UserProgressionProvider } from '@hooks/useProgression';
 
 const Root: FunctionComponent = () => {
   return (
     <>
       <UserProgressionProvider>
-        <ReponseDataProvider>
+        <WizardProvider>
           <RouterProvider router={routes} />
-        </ReponseDataProvider>
+        </WizardProvider>
       </UserProgressionProvider>
     </>
   );

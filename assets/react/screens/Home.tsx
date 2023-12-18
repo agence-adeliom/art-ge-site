@@ -6,27 +6,26 @@ import { Text } from '@components/Typography/Text';
 import { Button } from '@components/Action/Button/Button';
 import Footer from '@components/Navigation/Footer';
 import Aside from '@components/Content/Aside';
-import useReponseData, {
-  useWizard,
-} from '@hooks/useReponseData/useReponseData';
+import { useWizard } from '@hooks/useWizard';
 import { useNavigate } from 'react-router-dom';
 import { RoutePaths } from '@react/config/routes';
 
 const Home = () => {
-  const { getStoredReponse } = useWizard();
+  const { getStoredWizard, clearWizard, setStep } = useWizard();
   const navigate = useNavigate();
   const handleNavigation = () => {
-    const savedState = getStoredReponse();
-    if (savedState) {
+    const savedState = getStoredWizard();
+    if (savedState?.reponse) {
       const shouldPreFill = window.confirm(
         'On dirait que vous avez déjà commencé à remplir le formulaire. Souhaitez-vous reprendre là où vous en étiez ?',
       );
-      console.log(savedState);
-      console.log(shouldPreFill);
+
       if (!shouldPreFill) {
-        // clearWizard();
+        clearWizard();
+        navigate(RoutePaths.INFO);
       } else {
-        //navigate(savedState.lastStep.path);
+        setStep(savedState.step.index);
+        navigate(savedState.step.path);
       }
     } else {
       navigate(RoutePaths.INFO);

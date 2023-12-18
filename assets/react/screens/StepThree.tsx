@@ -3,14 +3,13 @@ import { Heading } from '@components/Typography/Heading';
 import { Text } from '@components/Typography/Text';
 import { Button } from '@components/Action/Button';
 import { YesNoCard } from '@components/Fields/YesNoCard';
-import useReponseData from '@hooks/useReponseData/useReponseData';
+import { useWizard } from '@hooks/useWizard';
 import { useValidation } from '@hooks/useValidation';
 import { ObjectSchema } from 'yup';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepAnim } from '@components/Animation/Step';
-import useProgression from '@hooks/useProgression/useProgression';
 
 const arrayQuestions: { text: string; id: 'restauration' | 'greenSpace' }[] = [
   {
@@ -29,8 +28,7 @@ interface DataFields {
 }
 
 const StepThree = () => {
-  const { reponse, feedRepondant } = useReponseData();
-  const { nextStep, prevStep } = useProgression();
+  const { wizard, feedRepondantAndGoToNextStep, prevStep } = useWizard();
 
   const { booleanNumberRequired } = useValidation();
 
@@ -50,9 +48,8 @@ const StepThree = () => {
   });
 
   const onSubmit: SubmitHandler<DataFields> = data => {
-    feedRepondant(data);
+    feedRepondantAndGoToNextStep(data);
     getQuestions(data.greenSpace === 1);
-    nextStep();
   };
 
   const getQuestions = async (isGreenSpace: boolean) => {
@@ -70,8 +67,8 @@ const StepThree = () => {
 
   useEffect(() => {
     arrayQuestions.forEach(item => {
-      typeof reponse?.repondant?.[item.id] === 'number' &&
-        setValue(item.id, reponse?.repondant?.[item.id] as number);
+      typeof wizard?.reponse?.repondant?.[item.id] === 'number' &&
+        setValue(item.id, wizard?.reponse?.repondant?.[item.id] as number);
     });
     trigger();
   }, [arrayQuestions]);
@@ -85,7 +82,7 @@ const StepThree = () => {
             icon={'fa-chevron-left'}
             iconSide="left"
             weight={600}
-            onClick={prevStep}
+            onClick={() => prevStep()}
           >
             Retour
           </Button>
