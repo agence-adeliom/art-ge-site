@@ -49,6 +49,7 @@ class RepondantType extends AbstractType
             ->addEventListener(FormEvents::POST_SUBMIT, function ($event): void {
                 /** @var Repondant $repondant */
                 $repondant = $event->getData();
+                $repondant->setCountry('France');
                 $code = substr((string) $repondant->getZip(), 0, 2);
                 $department = $this->departmentRepository->getByCode($code);
                 if ($department) {
