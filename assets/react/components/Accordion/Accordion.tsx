@@ -2,10 +2,11 @@ import React, { FunctionComponent, MutableRefObject, useRef, useEffect } from 'r
 import { AccordionProps } from '@components/Accordion/Accordion.types';
 import { Icon } from '@components/Typography/Icon';
 import { Text } from '@components/Typography/Text';
+import {Choice} from "@screens/Resultats";
 
 export const Accordion: FunctionComponent<AccordionProps> = ({
   question,
-  answer,
+  choices,
   isOpen,
   handleClick,
 }) => {
@@ -25,7 +26,7 @@ export const Accordion: FunctionComponent<AccordionProps> = ({
           color={`${isOpen ? 'secondary-800' : 'neutral-700'}`}
           className="max-w-[90%] lg:group-hover:text-secondary-800 flex items-center gap-2 group"
         >
-          {question} <span className={`${isOpen ? 'bg-secondary-800' : 'bg-neutral-700'} lg:group-hover:bg-secondary-800 rounded-full text-white font-light px-2 py-1 text-xs trans-default`}>{answer?.length}</span>
+          {question} <span className={`${isOpen ? 'bg-secondary-800' : 'bg-neutral-700'} lg:group-hover:bg-secondary-800 rounded-full text-white font-light px-2 py-1 text-xs trans-default`}>{choices.length}</span>
         </Text>
         <Icon
           icon="fa-chevron-down"
@@ -43,11 +44,9 @@ export const Accordion: FunctionComponent<AccordionProps> = ({
         }`}
       >
         <ul className="list-disc  mt-4 list-inside marker:text-secondary-800 flex flex-col gap-2">
-          {Object.values(answer!).map((item, index) => (
-            <li key={index}>{item} </li>
-          ))}
+          {choices.map((choice: Choice) => <li key={choice.slug} dangerouslySetInnerHTML={{ __html: choice.name }}></li>)}
         </ul>
-          
+
       </div>
     </div>
   );

@@ -22,4 +22,5 @@ export interface HeadingProps
     Omit<ComponentProps<'div'>, 'color'>,
     VariantProps<typeof headingStyles> {
   as?: HeadingTag;
+  raw?: boolean;
 }

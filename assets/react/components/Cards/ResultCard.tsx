@@ -5,11 +5,14 @@ import { Text } from "@components/Typography/Text";
 import { Button } from "@components/Action/Button";
 import LateralPanel from "@components/Modal/LateralPanel"
 import { LateralPanelAnim } from "@components/Animation/LateralPanel";
+import {Choice} from "@screens/Resultats";
 
-const ResultCard = ({title, percentage, ...props} : {
+const ResultCard = ({title, percentage, chosenChoices, notChosenChoices, ...props} : {
     title: string,
     percentage: number,
-    src?: string
+    src?: string,
+    chosenChoices: Choice[],
+    notChosenChoices: Choice[],
 }) => {
 
     const handleDropdown = (event : any) => {
@@ -27,12 +30,12 @@ const ResultCard = ({title, percentage, ...props} : {
             <div className="bg-white h-full flex items-stretch cursor-pointer" onClick={ event => handleDropdown(event)}>
                 <div className="h-full flex flex-col w-full">
                     <div className="h-[152px] flex-shrink-0">
-                        <img  
+                        <img
                         className="w-full h-full object-cover"
                         src={srcImg} alt=""/>
                     </div>
                     <div className="p-6 flex flex-col h-full flex-shrink-1">
-                        <Heading variant={'display-5'}>{title}</Heading>
+                        <Heading variant={'display-5'} raw={true}>{title}</Heading>
                         <div className="flex-col mt-auto pt-6">
                             <div className="flex items-center gap-10">
                                 <ProgressBar percentage={percentage}></ProgressBar>
@@ -40,23 +43,25 @@ const ResultCard = ({title, percentage, ...props} : {
                             </div>
                             <Button variant={'textOnly'} className="pl-0 mt-8 !w-fit" icon="fa-chevron-right">Voir en détail</Button>
                         </div>
-                        
+
                     </div>
 
                 </div>
-                
+
             </div>
             {open && (
-                <LateralPanel 
-                title={title} 
+                <LateralPanel
+                title={title}
                 closeDropdown={closeDropdown}
                 progressBar={<ProgressBar percentage={percentage}></ProgressBar>}
                 percentage={percentage}
+                chosenChoices={chosenChoices}
+                notChosenChoices={notChosenChoices}
                 />
             )}
-            
+
         </div>
-        
+
     )
 }
 

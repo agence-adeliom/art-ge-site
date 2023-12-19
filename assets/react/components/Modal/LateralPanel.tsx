@@ -5,13 +5,15 @@ import { Icon } from '@components/Typography/Icon';
 import { Heading } from '@components/Typography/Heading';
 import { Text } from '@components/Typography/Text';
 import { Accordion } from '@components/Accordion/Accordion';
+import {Choice} from "@screens/Resultats";
 
-
-const LateralPanel = ({closeDropdown, title, progressBar, ...props}: {
-    closeDropdown: Function, 
+const LateralPanel = ({closeDropdown, title, progressBar, chosenChoices, notChosenChoices, ...props}: {
+    closeDropdown: Function,
     title: string,
     progressBar: ReactComponentElement<any, any>,
-    percentage: number
+    percentage: number,
+    chosenChoices: Choice[],
+    notChosenChoices: Choice[],
 }) => {
 
     const [open, setOpen] = useState<number>(-1);
@@ -19,30 +21,7 @@ const LateralPanel = ({closeDropdown, title, progressBar, ...props}: {
         e.preventDefault();
         setOpen(index === open ? -1 : index);
     };
-    const data = [
-        {
-            id: 1,
-            question: "Ce que je fais aujourd’hui",
-            attributes: {
-                name: "Censure"
-            }
-            
-        },
-        {
-            id: 2,
-            question: "Ce que je peux faire demain",
-            attributes: {
-                name: "Censure"
-            }
-        },
-    ]
-    
 
-    const answer = [
-        ["Ne jamais utiliser d'insecticides"],
-        ["Limiter drastiquement l'éclairage nocturne (les lumières extérieures sont éteintes au plus tard 2h après le coucher du soleil, sans passage)"],
-        ["Disposer d'une mare ou d'un plan d'eau végétalisé sur au moins 1% du terrain"]
-    ]
     return (
         <>
             <LateralPanelAnim isVisible>
@@ -51,24 +30,25 @@ const LateralPanel = ({closeDropdown, title, progressBar, ...props}: {
                     <Icon icon="fa-xmark" size="lg"></Icon>
                 </div>
                 <div className="bg-white h-full w-full p-10 min-h-screen">
-                    <Heading variant={'display-4'} className="mr-10">{title}</Heading> 
+                    <Heading variant={'display-4'} className="mr-10" raw={true}>{title}</Heading>
                     <div className="flex items-center gap-10 mt-6">
                         {progressBar}
                         <Text className="flex-shrink-0" size={'lg'}>{props.percentage} %</Text>
                     </div>
-                    {data.map((item, index) => {
-                        return (
-                            
-                            <Accordion 
-                                key={index}
-                                question={item.question}
-                                answer={answer}
-                                handleClick={(event) => handleClick(event, index)}
-                                isOpen={open === index}
-                            ></Accordion>
-                        
-                        );
-                    })}
+                    <Accordion
+                        key={1}
+                        question={"Ce que je fais aujourd’hui"}
+                        choices={chosenChoices}
+                        handleClick={(event) => handleClick(event, 1)}
+                        isOpen={open === 1}
+                    ></Accordion>
+                    <Accordion
+                        key={2}
+                        question={"Ce que je peux faire demain"}
+                        choices={notChosenChoices}
+                        handleClick={(event) => handleClick(event, 2)}
+                        isOpen={open === 2}
+                    ></Accordion>
 
                     <div className="bg-neutral-100 p-4 mt-4">
                         <Text weight={600}>Pour aller plus loin...</Text>
@@ -90,11 +70,11 @@ const LateralPanel = ({closeDropdown, title, progressBar, ...props}: {
                 </div>
 
                 </div>
-                
-                
+
+
             </LateralPanelAnim>
 
-            <motion.div   
+            <motion.div
             key={`backdrop`}
             className="fixed w-screen h-screen top-0 left-0 bg-black bg-opacity-50 z-[50]"
             initial={{  opacity: 0 }}
@@ -107,8 +87,8 @@ const LateralPanel = ({closeDropdown, title, progressBar, ...props}: {
             >
             </motion.div>
         </>
-        
-       
+
+
     )
 }
 

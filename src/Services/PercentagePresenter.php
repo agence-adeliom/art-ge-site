@@ -2,28 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Twig;
+namespace App\Services;
 
 use App\Entity\Reponse;
-use App\Services\PercentagePresenter;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
 
-class UtilsExtension extends AbstractExtension
+class PercentagePresenter
 {
-    public function __construct(
-        private PercentagePresenter $percentagePresenter,
-    ) {
-    }
-
-    public function getFunctions(): array
-    {
-        return [
-            new TwigFunction('display_percentage', $this->percentagePresenter->displayPercentageWithSign(...)),
-        ];
-    }
-
-    public function displayPercentage(float | int | Reponse $amount, float | int $total = 100): string
+    public function displayPercentage(float | int | Reponse $amount, float | int $total = 100): int
     {
         if ($amount instanceof Reponse) {
             $percentage = $this->getReponsePercentage($amount);
@@ -31,7 +16,12 @@ class UtilsExtension extends AbstractExtension
             $percentage = $this->getPercentage($amount, $total);
         }
 
-        return $percentage . '%';
+        return $percentage;
+    }
+
+    public function displayPercentageWithSign(float | int | Reponse $amount, float | int $total = 100): string
+    {
+        return $this->displayPercentage($amount, $total) . '%';
     }
 
     private function getPercentage(float | int $amount, float | int $total): int

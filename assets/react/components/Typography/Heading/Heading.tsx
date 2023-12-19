@@ -11,8 +11,17 @@ export const Heading: FunctionComponent<HeadingProps> = ({
   center,
   color,
   className,
+  raw,
   ...props
 }) => {
+    const options = {};
+    if (raw === true) {
+        // @ts-ignore
+        options.dangerouslySetInnerHTML = {__html: children};
+    } else {
+        // @ts-ignore
+        options.children = children;
+    }
   return (
     <HeadingTag
       className={cx(
@@ -24,9 +33,9 @@ export const Heading: FunctionComponent<HeadingProps> = ({
         }),
         className,
       )}
+      {...options}
       {...props}
     >
-      {children}
     </HeadingTag>
   );
 };
