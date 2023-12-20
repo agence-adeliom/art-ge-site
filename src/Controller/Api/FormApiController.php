@@ -39,7 +39,7 @@ class FormApiController extends AbstractController
         $questions = $this->questionRepository->findAll();
         $thematiques = $this->thematiqueRepository->findAll();
 
-        if (true === $greenSpace) {
+        if (false === $greenSpace) {
             $questions = array_map($this->questionChoiceExcluder->excludeChoices(...), $questions);
         }
 
