@@ -29,6 +29,7 @@ class ReponseFormSubmission
         $reponse->setTotal($scoreGeneration->getTotal());
         foreach ($scoreGeneration->getScores() as $score) {
             $this->entityManager->persist($score);
+            $reponse->addScore($score);
         }
         $this->entityManager->persist($reponse);
         $this->entityManager->flush();

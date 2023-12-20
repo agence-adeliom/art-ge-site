@@ -6,6 +6,7 @@ namespace App\Controller\Api;
 
 use App\Form\Form\ReponseType;
 use App\Services\ReponseFormSubmission;
+use App\Services\ResultatApiPresenter;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,6 +21,7 @@ class ReponseSubmitApiController extends AbstractController
     public function __construct(
         private readonly ReponseFormSubmission $reponseFormSubmission,
         private readonly RouterInterface $router,
+        private readonly ResultatApiPresenter $resultatApiPresenter,
     ) {}
 
     #[OA\Tag(name: 'Formulaire')]
@@ -36,6 +38,7 @@ class ReponseSubmitApiController extends AbstractController
             return $this->json([
                 'uuid' => $reponse->getUuid(),
                 'link' => $this->router->generate('app_resultat_single', ['uuid' => $reponse->getUuid()], UrlGeneratorInterface::ABSOLUTE_URL),
+                'resultats' => $this->resultatApiPresenter->present($reponse),
             ], Response::HTTP_OK);
         }
 
