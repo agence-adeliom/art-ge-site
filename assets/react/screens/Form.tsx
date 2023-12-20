@@ -12,6 +12,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { RoutePaths } from '@react/config/routes';
 import { cx } from 'class-variance-authority';
+import Resultats from "@screens/Resultats";
 
 const inputContainerClass =
   'group trans-default lg:hover:bg-tertiary-200 is-active:border-primary-600 is-active:bg-primary-50 py-4 px-3';
@@ -122,10 +123,14 @@ const Form = () => {
         body: formData,
         method: 'POST',
       });
-      const results = await response.json();
+      const results = await response.json() as {
+        link: string;
+        uuid: string;
+        resultats: Resultats;
+      };
 
       await setTimeout(() => {
-        navigate(`${RoutePaths.RESULT_ARCHIVE}/${results.uuid}`);
+        navigate(`${RoutePaths.RESULT_ARCHIVE}/${results.uuid}`, {state: results.resultats});
         clearWizard();
       }, 2000);
     } catch (error) {

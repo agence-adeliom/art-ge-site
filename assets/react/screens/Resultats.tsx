@@ -8,6 +8,7 @@ import ResultCard from '@components/Cards/ResultCard';
 import { AnimatePresence } from 'framer-motion';
 import FooterResult from '@components/Navigation/FooterResults';
 import Cta from '@components/Content/Cta';
+import {useLocation} from 'react-router-dom';
 
 export interface Choice {
   name: string;
@@ -37,6 +38,13 @@ declare global {
 }
 
 const Resultats = () => {
+  const location = useLocation();
+  let resultats;
+  if (location.state !== null){
+    resultats = location.state as Resultats;
+  } else {
+    resultats = window.resultats;
+  }
   return (
     <AnimatePresence>
       <>
@@ -80,13 +88,13 @@ const Resultats = () => {
             <div className="col-span-full md:col-span-4 bg-white p-10 h-fit">
               <Heading variant="display-5">Votre score</Heading>
               <Text className="font-title mb-4" size={'4xl'}>
-                <span className="text-6xl">{80}</span> %
+                <span className="text-6xl">{resultats.reponsePercentage}</span> %
               </Text>
               <ProgressBar
-                percentage={window.resultats.reponsePercentage}
+                percentage={resultats.reponsePercentage}
               ></ProgressBar>
               <Text className="mt-4" color="neutral-700" size={'sm'}>
-                {`Date de soumission : ${window.resultats.submitDate}`}
+                {`Date de soumission : ${resultats.submitDate}`}
               </Text>
             </div>
           </div>
@@ -95,7 +103,7 @@ const Resultats = () => {
         <div className="bg-primary-50 relative">
           <div className="absolute top-0 left-0 w-full h-20 bg-primary-600"></div>
           <div className="container relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {window.resultats.scores.map((score: Score) => (
+            {resultats.scores.map((score: Score) => (
               <ResultCard
                 key={score.slug}
                 percentage={score.percentage}
