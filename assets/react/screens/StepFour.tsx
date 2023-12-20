@@ -126,6 +126,7 @@ const StepFour = () => {
               type={Fields.TEXT}
               placeholder={'Nom de l’établissement'}
               control={control}
+              autoCompleteChoice={false}
               defaultValue={repondant?.company}
             ></TextInput>
 
@@ -136,6 +137,7 @@ const StepFour = () => {
               type={Fields.TEXT}
               placeholder={`Ex : 8 rue de l'école`}
               control={control}
+              autoCompleteChoice={false}
               defaultValue={repondant?.address}
             ></TextInput>
             <div className="relative col-span-1">
@@ -175,6 +177,7 @@ const StepFour = () => {
               type={Fields.TEXT}
               placeholder={'Ex : Strasbourg'}
               control={control}
+              autoCompleteChoice={false}
               defaultValue={repondant?.city}
             ></TextInput>
           </div>

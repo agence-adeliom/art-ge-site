@@ -5,18 +5,10 @@ import leafs from '@icones/leafs.svg';
 const Confirmation = ({
   title,
   subTitle,
-  handleSubmit,
 }: {
   title: string;
   subTitle: string;
-  handleSubmit: () => void;
 }) => {
-  useEffect(() => {
-    setTimeout(() => {
-      handleSubmit && handleSubmit();
-    }, 2000);
-  });
-
   return (
     <div className="fixed bg-primary-600 z-[100] flex items-center justify-center top-0 left-0 w-screen h-screen">
       <div className="text-center">

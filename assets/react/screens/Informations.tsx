@@ -19,9 +19,15 @@ const Informations: FunctionComponent = () => {
   const { resetStep } = useWizard();
 
   const handleSubmit = () => {
-    resetStep();
-    navigate(RoutePaths.FORM);
+    setTimeout(() => {
+      resetStep();
+      navigate(RoutePaths.FORM);
+    }, 2000);
   };
+
+  useEffect(() => {
+    step === 5 && handleSubmit();
+  });
 
   return (
     <div className="">
@@ -50,7 +56,6 @@ const Informations: FunctionComponent = () => {
         <Confirmation
           title="Merci pour ces informations."
           subTitle="Parlons à présent de vos actions..."
-          handleSubmit={handleSubmit}
         ></Confirmation>
       </ConfirmationAnim>
     </div>

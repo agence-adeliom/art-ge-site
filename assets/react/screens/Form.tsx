@@ -41,12 +41,19 @@ interface questionProps {
 
 const Form = () => {
   const navigate = useNavigate();
-  const { feedRawFormAndGoToNextStep, wizard, step, setStep, clearWizard } =
-    useWizard();
+  const {
+    feedRawFormAndGoToNextStep,
+    getStoredWizard,
+    wizard,
+    step,
+    setStep,
+    clearWizard,
+  } = useWizard();
 
   const [allQuestions, setAllQuestions] = useState<questionProps[]>([]);
   const [sticky, setSticky] = useState<boolean>(false);
-  const [shouldSubmit, setShouldSubmit] = useState<boolean>(false);
+  const [showConfirm, setShowConfirm] = useState<boolean>(false);
+  const [formCompleted, setFormCompleted] = useState<boolean>(false);
   const [itemsSelected, setItemsSelected] = useState<string[]>([]);
   const [actualQuestion, setActualQuestion] = useState<questionProps>();
 
@@ -84,8 +91,10 @@ const Form = () => {
   };
 
   const onSubmit: SubmitHandler<any> = data => {
-    setShouldSubmit(step === allQuestions.length - 1);
-    console.log('step', step, allQuestions.length);
+    const isLastStep = step === allQuestions.length - 1;
+
+    isLastStep && setFormCompleted(true);
+
     //Conversion de l'array d'ID en un objet avec les ID en clé et la valeur "on"
     const answerObject = data[actualQuestion!.id.toString()].reduce(
       (acc: string[], key: number) => {
@@ -105,7 +114,7 @@ const Form = () => {
   };
 
   //Requête à l'API une fois la dernière étape remplie
-  const handleConfirmation = async () => {
+  const getResults = async () => {
     const formData = serialize({ reponse: wizard?.reponse }, { indices: true });
 
     try {
@@ -114,8 +123,11 @@ const Form = () => {
         method: 'POST',
       });
       const results = await response.json();
-      await navigate(`${RoutePaths.RESULT_ARCHIVE}/${results.uuid}`);
-      clearWizard();
+
+      await setTimeout(() => {
+        navigate(`${RoutePaths.RESULT_ARCHIVE}/${results.uuid}`);
+        clearWizard();
+      }, 2000);
     } catch (error) {
       alert(
         'Une erreur est survenue avec vos réponses. Merci de nous contacter si le problème persiste.',
@@ -148,6 +160,12 @@ const Form = () => {
     //Mise à jour du state des options sélectionnées à chaque modification du formulaire
     actualQuestion && setItemsSelected(watch(`${actualQuestion!.id}`));
   }, [watch()]);
+
+  useEffect(() => {
+    //Si le formulaire est completé, on envoie les données
+    formCompleted && setShowConfirm(true);
+    formCompleted && getResults();
+  }, [formCompleted]);
 
   useEffect(() => {
     //Récupération des questions dans le local storage
@@ -302,11 +320,10 @@ const Form = () => {
           ></img>
         </div>
 
-        <ConfirmationAnim isVisible={shouldSubmit}>
+        <ConfirmationAnim isVisible={showConfirm}>
           <Confirmation
             title="Merci pour vos réponses."
             subTitle="Nous calculons vos résultats..."
-            handleSubmit={handleConfirmation}
           ></Confirmation>
         </ConfirmationAnim>
       </div>
