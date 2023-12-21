@@ -16,6 +16,7 @@ add('shared_dirs', [
     'public/upload'
 ]);
 add('writable_dirs', [
+    'public/build',
     'public/medias',
     'var/upload',
     'var/pdf',
@@ -48,8 +49,18 @@ task('upload:csv', static function (): void {
     upload('var/datas/', '{{release_or_current_path}}/var/datas/');
 });
 
-after('deploy:update_code', 'deploy:vendors');
+task('set-permissions', function () {
+    cd('{{release_path}}');
+    run("chown -R {{http_user}}:{{http_group}} {{release_path}}/public/build/");
+    run("chown -R {{http_user}}:{{http_group}} {{release_path}}/public/bundles/");
+    run("chmod -R 775 {{release_path}}/public/build/");
+    run("chmod -R 775 {{release_path}}/public/bundles/");
+    run("chmod -R g+w {{release_path}}/var/cache");
+    run("chmod -R g+w {{release_path}}/var/log");
+});
+
 before('deploy:vendors', 'dotenv:set-env');
 before('deploy:cache:clear', 'database:migrate');
 before('deploy:symlink', 'npm:build');
 after('deploy:failed', 'deploy:unlock');
+after('npm:build', 'set-permissions');
