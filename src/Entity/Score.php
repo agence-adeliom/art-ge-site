@@ -98,17 +98,25 @@ class Score
         $rawForm = $this->getReponse()->getRawForm();
         $thematique = $this->getThematique();
 
+        $choices = $thematique->getQuestion()->getChoices()->toArray();
+        $this->allChoices['notChosenChoices'] = $choices;
+
         if (isset($rawForm[$thematique->getId()]['answers'])) {
-            $choices = $thematique->getQuestion()->getChoices();
             $answers = array_keys(array_filter($rawForm[$thematique->getId()]['answers'], fn (string $answer): bool => 'on' === $answer));
-            $choices->map(function (Choice $choice) use ($answers): void {
+
+            foreach ($choices as $choice) {
                 if (in_array($choice->getId(), $answers)) {
                     $this->allChoices['chosenChoices'][] = $choice;
-                } else {
-                    $this->allChoices['notChosenChoices'][] = $choice;
+                    foreach ($this->allChoices['notChosenChoices'] as $index => $notChosenChoice) {
+                        if ($notChosenChoice->getId() === $choice->getId()) {
+                            unset($this->allChoices['notChosenChoices'][$index]);
+                        }
+                    }
                 }
-            });
+            }
         }
+
+        $this->allChoices['notChosenChoices'] = array_values($this->allChoices['notChosenChoices']);
 
         return $this->allChoices;
     }

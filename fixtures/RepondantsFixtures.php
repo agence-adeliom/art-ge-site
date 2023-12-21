@@ -14,6 +14,7 @@ use App\Repository\CityRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\ThematiqueRepository;
 use App\Repository\TypologieRepository;
+use App\Services\QuestionChoiceExcluder;
 use App\Services\ReponseScoreGeneration;
 use DataFixtures\Provider\RepondantProvider;
 use App\Entity\Repondant;
@@ -37,7 +38,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
         private readonly ChoiceTypologieRepository $choiceTypologieRepository,
         private readonly ChoiceRepository $choiceRepository,
         private readonly ReponseScoreGeneration $reponseScoreGeneration,
-        private readonly CityRepository $cityRepository,
+        private readonly QuestionChoiceExcluder $questionChoiceExcluder,
     ) {
         $this->faker = Factory::create('fr_FR');
         $this->faker->seed('artge');
@@ -46,24 +47,59 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
-        $zips = $this->cityRepository->getAllZipCodes();
         $thematiques = $this->thematiqueRepository->findAll();
 
-        for ($i = 0; $i < 10; $i++) {
-            $repondant = new Repondant();
-            $typologie = $this->faker->typologie();
+        $repondantDatas = [
+            ['NATALIE', 'RECEPTION', '0389426476', 'reception@camping-mulhouse.com', "CAMPING DE L'ILL OTC", '1 rue Pierre de Coubertin', '68100', 'MULHOUSE', 'camping', false, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+                [
+                    0,0,0,1,0,0,0,0,0,0,0,0,0,
+                    0,1,0,0,1,0,0,0,0,0,0,0,0,0,
+                    1,0,1,0,0,0,0,1,0,0,
+                    0,0,0,0,0,0,0,1,
+                    0,0,0,1,0,0,0,0,0,0,0,1,0,0,
+                    0,1,0,0,0,0,
+                    0,0,0,1,0,0,1,0,
+                    0,0,0,0,0,0,0,0,1,
+                    1,1,0,0,
+                    0,0,0,1,0,0,0,0,
+                    0,0,0,1,0,
+                    0,1,0,0,0,
+                    0,1,0,0,0,
+                    0,0,0,0,0,1,
+                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0
+                ]
+            ],
+//            ['Julien', 'LUTZ', '03750616237', 'H0627-GM@accor.com', "CLR hotels Hotels Ibis", '34 ALLEE NATHAN KATZ, RUE DES CEVENNES', '68100', 'SAUSHEIM MULHOUSE', 'hotel', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+//            ],
+//            ['Farid', 'Sellemet', '0389562362', 'reception@aubergejeunesse-mulhouse.com', "Auberge de Jeunesse", "37 rue de l'Illberg", '68200', 'MULHOUSE', 'hotel', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+//            ],
+//            ['SYLVAIN', 'VERNEREY', '0688745404', 'vernerey@citedutrain.com', "CITE DU TRAIN/PATRIMOINE SNCF", '2 RUE ALFRED DE GLEHN', '68200', 'MULHOUSE', 'visite', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+//            ],
+//            ['Marie', 'Basenach', '0634315287', 'marie.basenach@mulhouse-alsace.fr', "Parc zoologique et botanique de Mulhouse", '111 avenue de la 1ère Division Blindée', '68100', 'MULHOUSE', 'visite', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+//            ],
+//            ['Guillaume', 'GASSER', '0664981214', 'g.gasser@museedelauto.org', "Musee national automobile", '192, avenue de colmar', '68100', 'MULHOUSE', 'visite', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+//            ],
+//            ['gaetan', 'loeb', '0777737468', 'loeb.gaetan@gmail.com', "BEST WESTERN PLUS Hôtel **** Au Cheval Blanc", '27 rue principale', '68390', 'MULHOUSE', 'hotel', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+//            ],
+//            ['MARIE', 'GUTZWILLER', '0675666838', 'info@hotelbristol.com', "HOTEL BRISTOL", '18 AVENUE DE COLMAR', '68390', 'MULHOUSE', 'hotel', true, false, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+//            ],
+        ];
 
-            $repondant->setEmail($this->faker->email());
-            $repondant->setFirstname($this->faker->firstName());
-            $repondant->setLastname($this->faker->lastName());
-            $repondant->setPhone($this->faker->phoneNumber());
-            $repondant->setCompany($this->faker->company());
-            $repondant->setAddress($this->faker->address());
-            $repondant->setCity($this->faker->city());
-            $repondant->setZip($this->faker->randomElement($zips));
+        foreach ($repondantDatas as $repondantData) {
+            $repondant = new Repondant();
+            $typologie = $repondantData[8];
+
+            $repondant->setFirstname($repondantData[0]);
+            $repondant->setLastname($repondantData[1]);
+            $repondant->setPhone($repondantData[2]);
+            $repondant->setEmail($repondantData[3]);
+            $repondant->setCompany($repondantData[4]);
+            $repondant->setAddress($repondantData[5]);
+            $repondant->setZip($repondantData[6]);
+            $repondant->setCity($repondantData[7]);
             $repondant->setCountry('France');
-            $repondant->setRestauration($typologie === 'restaurant' ? true : $this->faker->boolean());
-            $repondant->setGreenSpace($this->faker->boolean());
+            $repondant->setRestauration($repondantData[9]);
+            $repondant->setGreenSpace($repondantData[10]);
             $repondant->setDepartment($this->departmentRepository->findOneBy(['slug' => $repondant->getZip() === '68000' ? 'haut-rhin' : 'bas-rhin']));
             $repondant->setTypologie($this->typologieRepository->findOneBy(['slug' => $typologie]));
             $manager->persist($repondant);
@@ -78,21 +114,27 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                 ]
             ]));
 
-            //            for ($j = 0; $j < 3; $j++) {
             $reponse = new Reponse();
             $reponse->setUuid(Ulid::fromString($this->faker->uuid()));
             $reponse->setRepondant($repondant);
-            $date = $this->faker->dateTimeBetween('2023-01-01 00:00:00', '2023-11-01 00:00:00', 'Europe/Paris');
-            $reponse->setCreatedAt(\DateTimeImmutable::createFromMutable($date));
-            $reponse->setSubmittedAt(\DateTimeImmutable::createFromMutable($date->add(new \DateInterval('PT1H'))));
-            $reponse->setCompleted($this->faker->boolean(95));
+            $reponse->setCreatedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $repondantData[11]));
+            $reponse->setSubmittedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $repondantData[12]));
+            $reponse->setCompleted(true);
 
+            $choices = $repondantData[13];
             $rawForm = [];
+            $choiceId = 1;
             foreach ($thematiques as $thematique) {
                 $question = $thematique->getQuestion();
-                $choices = $this->faker->randomElements($question->getChoices(), null);
-                foreach ($choices as $choice) {
-                    $rawForm[$question->getId()]['answers'][$choice->getId()] = 'on';
+                if (!$repondant->isGreenSpace()) {
+                    $question = $this->questionChoiceExcluder->excludeChoices($question);
+                }
+                $questionChoices = array_splice($choices, 0, $question->getChoices()->count());
+                foreach ($questionChoices as $choice) {
+                    if ($choice === 1) {
+                        $rawForm[$question->getId()]['answers'][$choiceId] = 'on';
+                    }
+                    $choiceId++;
                 }
             }
             $reponse->setRawForm($rawForm);
@@ -105,6 +147,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
             $reponse->setPoints($scoreGeneration->getPoints());
             $reponse->setTotal($scoreGeneration->getTotal());
             foreach ($scoreGeneration->getScores() as $score) {
+                $reponse->addScore($score);
                 $manager->persist($score);
             }
             $manager->persist($reponse);
