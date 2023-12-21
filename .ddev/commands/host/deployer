@@ -1,0 +1,5 @@
+#!/bin/bash
+ 
+cd $DDEV_APPROOT
+ 
+ddev php vendor/bin/dep $*
