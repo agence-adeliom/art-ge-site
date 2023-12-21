@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Controller\Api\InseeApiController;
 use App\Repository\CityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -31,6 +33,14 @@ class City
     #[ORM\Column(length: 5)]
     #[Groups([InseeApiController::INSEE_API_GROUP])]
     private string $insee;
+
+    #[ORM\ManyToMany(targetEntity: Epci::class, mappedBy: 'cities')]
+    private Collection $epcis;
+
+    public function __construct()
+    {
+        $this->epcis = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -81,6 +91,33 @@ class City
     public function setInsee(string $insee): static
     {
         $this->insee = $insee;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Epci>
+     */
+    public function getEpcis(): Collection
+    {
+        return $this->epcis;
+    }
+
+    public function addEpci(Epci $epci): static
+    {
+        if (!$this->epcis->contains($epci)) {
+            $this->epcis->add($epci);
+            $epci->addCity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEpci(Epci $epci): static
+    {
+        if ($this->epcis->removeElement($epci)) {
+            $epci->removeCity($this);
+        }
 
         return $this;
     }

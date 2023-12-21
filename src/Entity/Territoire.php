@@ -49,16 +49,25 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private TerritoireAreaEnum $area = TerritoireAreaEnum::OT;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
-    private ?self $parent = null;
-
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     private Collection $children;
+
+    #[ORM\ManyToMany(targetEntity: Epci::class, inversedBy: 'territoires')]
+    private Collection $epcis;
+
+    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'territoiresChildren')]
+    private Collection $parents;
+
+    #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'parents')]
+    private Collection $territoiresChildren;
 
     public function __construct()
     {
         $this->uuid = new Ulid();
         $this->children = new ArrayCollection();
+        $this->epcis = new ArrayCollection();
+        $this->parents = new ArrayCollection();
+        $this->territoiresChildren = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,6 +121,15 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
     public function setZips(array $zips): static
     {
         $this->zips = $zips;
+
+        return $this;
+    }
+
+    public function addZip(string $zip): static
+    {
+        if (array_search($zip, $this->zips, true) === false) {
+            $this->zips[] = $zip;
+        }
 
         return $this;
     }
@@ -188,18 +206,6 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->getSlug();
     }
 
-    public function getParent(): ?self
-    {
-        return $this->parent;
-    }
-
-    public function setParent(?self $parent): static
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, self>
      */
@@ -225,6 +231,81 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
             if ($territoire->getParent() === $this) {
                 $territoire->setParent(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Epci>
+     */
+    public function getEpcis(): Collection
+    {
+        return $this->epcis;
+    }
+
+    public function addEpci(Epci $epci): static
+    {
+        if (!$this->epcis->contains($epci)) {
+            $this->epcis->add($epci);
+        }
+
+        return $this;
+    }
+
+    public function removeEpci(Epci $epci): static
+    {
+        $this->epcis->removeElement($epci);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getParents(): Collection
+    {
+        return $this->parents;
+    }
+
+    public function addParent(self $parent): static
+    {
+        if (!$this->parents->contains($parent)) {
+            $this->parents->add($parent);
+        }
+
+        return $this;
+    }
+
+    public function removeParent(self $parent): static
+    {
+        $this->parents->removeElement($parent);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getTerritoiresChildren(): Collection
+    {
+        return $this->territoiresChildren;
+    }
+
+    public function addTerritoiresChild(self $territoiresChild): static
+    {
+        if (!$this->territoiresChildren->contains($territoiresChild)) {
+            $this->territoiresChildren->add($territoiresChild);
+            $territoiresChild->addParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTerritoiresChild(self $territoiresChild): static
+    {
+        if ($this->territoiresChildren->removeElement($territoiresChild)) {
+            $territoiresChild->removeParent($this);
         }
 
         return $this;

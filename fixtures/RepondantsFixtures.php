@@ -49,7 +49,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
         $zips = $this->cityRepository->getAllZipCodes();
         $thematiques = $this->thematiqueRepository->findAll();
 
-        for ($i = 0; $i < 300; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $repondant = new Repondant();
             $typologie = $this->faker->typologie();
 
