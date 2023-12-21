@@ -16,6 +16,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
@@ -28,13 +29,16 @@ class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterf
         private readonly ChoiceRepository $choiceRepository,
         private readonly TypologieRepository $typologieRepository,
         private readonly ChoiceTypologieRepository $choiceTypologieRepository,
+        private readonly ParameterBagInterface $parameterBag,
     )
     {
     }
 
     public function load(ObjectManager $manager): void
     {
-        $ponderationsFile = file_get_contents('/var/www/html/var/ponderations.csv');
+        /** @var string $datasDirectory */
+        $datasDirectory = $this->parameterBag->get('datas_directory');
+        $ponderationsFile = file_get_contents($datasDirectory . '/ponderations.csv');
         if ($ponderationsFile) {
             $csvEncoder = new CsvEncoder();
             $ponderationsDatas = $csvEncoder->decode($ponderationsFile, 'csv');

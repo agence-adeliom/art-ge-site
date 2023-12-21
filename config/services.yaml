@@ -6,6 +6,7 @@
 parameters:
     mailer_sender_mail: '%env(MAILER_SENDER_MAIL)%'
     mailer_sender_name: '%env(MAILER_SENDER_NAME)%'
+    datas_directory: '%kernel.project_dir%/var/datas'
     pdf_directory: '%kernel.project_dir%/var/pdf'
     upload_directory: '/var/upload/files'
 

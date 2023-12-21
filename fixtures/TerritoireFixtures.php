@@ -15,6 +15,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\String\Slugger\AsciiSlugger;
@@ -25,13 +26,16 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
 
     public function __construct(
         private readonly CityRepository $cityRepository,
+        private readonly ParameterBagInterface $parameterBag,
     ) {
     }
 
     public function load(ObjectManager $manager): void
     {
         $slugger = new AsciiSlugger();
-        $ecpiFile = file_get_contents('/var/www/html/var/datas/OT_EPCI_dec2023.csv');
+        /** @var string $datasDirectory */
+        $datasDirectory = $this->parameterBag->get('datas_directory');
+        $ecpiFile = file_get_contents($datasDirectory . '/OT_EPCI_dec2023.csv');
         if ($ecpiFile) {
             $csvEncoder = new CsvEncoder(['csv_delimiter' => ',']);
             /** @var array{INSEE_commune: string, NOM_COMMUNES: string, Nom_EPCI: string} $ecpiDatas */
