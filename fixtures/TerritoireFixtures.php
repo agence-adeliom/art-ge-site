@@ -70,7 +70,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
             /** STOCKAGES DES INSEE PAR SIREN D'EPCI */
             $cityCodes = [];
             foreach ($ecpiDatas as $e) {
-                $inseeCommune = str_pad($e['INSEE_commune'], 5, '0', STR_PAD_LEFT);
+                $inseeCommune = str_pad((string) $e['INSEE_commune'], 5, '0', STR_PAD_LEFT);
                 $sirenEPCI = $e['sirenEPCI'];
                 if (!array_key_exists($sirenEPCI, $cityCodes)) {
                     $cityCodes[$sirenEPCI] = [];
@@ -84,7 +84,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
             /** STOCKAGES DES CODE DEPARTEMENT PAR SIREN D'EPCI */
             $departementsCodes = [];
             foreach ($cityCodes as $sirenEPCI => $cities) {
-                $departementsCodes[$sirenEPCI] = array_values(array_unique(array_map(fn (City $city): string => substr((string) $city->getInsee(), 0, 2), $cities)));
+                $departementsCodes[$sirenEPCI] = array_values(array_unique(array_map(fn (City $city): string => substr($city->getInsee(), 0, 2), $cities)));
             }
 
             /** IMPORT DES EPCIS ET TERRITOIRES */

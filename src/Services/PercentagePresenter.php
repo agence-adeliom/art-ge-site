@@ -11,12 +11,10 @@ class PercentagePresenter
     public function displayPercentage(float | int | Reponse $amount, float | int $total = 100): int
     {
         if ($amount instanceof Reponse) {
-            $percentage = $this->getReponsePercentage($amount);
-        } else {
-            $percentage = $this->getPercentage($amount, $total);
+            return $this->getReponsePercentage($amount);
         }
 
-        return $percentage;
+        return $this->getPercentage($amount, $total);
     }
 
     public function displayPercentageWithSign(float | int | Reponse $amount, float | int $total = 100): string

@@ -73,7 +73,7 @@ class TerritoireController extends AbstractController
 
         $children = [];
         if (in_array($territoire->getArea(), [TerritoireAreaEnum::DEPARTEMENT, TerritoireAreaEnum::REGION])) {
-            $children = $territoire->getChildren();
+            $children = $territoire->getTerritoiresChildren();
         }
 
         return [

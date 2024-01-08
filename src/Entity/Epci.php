@@ -130,6 +130,6 @@ class Epci
 
     public function getZips(): Collection
     {
-        return $this->cities->map(fn(City $city): string => $city->getZip());
+        return $this->cities->map(fn (City $city): string => $city->getZip());
     }
 }

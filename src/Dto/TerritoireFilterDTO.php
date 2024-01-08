@@ -72,6 +72,7 @@ class TerritoireFilterDTO
         if (null !== $this->getFrom()) {
             return true;
         }
+
         return null !== $this->getTo();
     }
 }

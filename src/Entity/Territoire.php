@@ -49,9 +49,6 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private TerritoireAreaEnum $area = TerritoireAreaEnum::OT;
 
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
-    private Collection $children;
-
     #[ORM\ManyToMany(targetEntity: Epci::class, inversedBy: 'territoires')]
     private Collection $epcis;
 
@@ -64,7 +61,6 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->uuid = new Ulid();
-        $this->children = new ArrayCollection();
         $this->epcis = new ArrayCollection();
         $this->parents = new ArrayCollection();
         $this->territoiresChildren = new ArrayCollection();
@@ -127,7 +123,7 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function addZip(string $zip): static
     {
-        if (array_search($zip, $this->zips, true) === false) {
+        if (false === array_search($zip, $this->zips, true)) {
             $this->zips[] = $zip;
         }
 
@@ -204,36 +200,6 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->getSlug();
-    }
-
-    /**
-     * @return Collection<int, self>
-     */
-    public function getChildren(): Collection
-    {
-        return $this->children;
-    }
-
-    public function addChild(self $territoire): static
-    {
-        if (!$this->children->contains($territoire)) {
-            $this->children->add($territoire);
-            $territoire->setParent($this);
-        }
-
-        return $this;
-    }
-
-    public function removeChild(self $territoire): static
-    {
-        if ($this->children->removeElement($territoire)) {
-            // set the owning side to null (unless already changed)
-            if ($territoire->getParent() === $this) {
-                $territoire->setParent(null);
-            }
-        }
-
-        return $this;
     }
 
     /**
