@@ -49,8 +49,11 @@ class ReponseCrudController extends AbstractCrudController
     {
         $actions = parent::configureActions($actions);
         $actions->add(Crud::PAGE_INDEX, Action::new('reponse.view', 'Dashboard', 'fas fa-eye')->linkToCrudAction('view')->setHtmlAttributes(['target' => '_blank']));
+        $actions->add(Crud::PAGE_DETAIL, Action::new('reponse.view', 'Dashboard', 'fas fa-eye')->linkToCrudAction('view')->setHtmlAttributes(['target' => '_blank']));
         $actions->remove(Crud::PAGE_INDEX, Action::NEW);
+        $actions->remove(Crud::PAGE_INDEX, Action::EDIT);
         $actions->add(Crud::PAGE_INDEX, Action::DETAIL);
+        $actions->remove(Crud::PAGE_DETAIL, Action::EDIT);
         $actions->setPermission(Action::DELETE, 'ROLE_SUPER_ADMIN');
         $actions->setPermission(Action::EDIT, 'ROLE_SUPER_ADMIN');
 
