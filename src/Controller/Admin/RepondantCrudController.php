@@ -9,6 +9,7 @@ use App\Form\Admin\ReponseAdminType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -66,5 +67,15 @@ class RepondantCrudController extends AbstractCrudController
             ->setTemplatePath('admin/crud/reponse_admin.html.twig')
             ->hideOnIndex()
         ;
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        $filters
+            ->add('city')
+            ->add('department')
+        ;
+
+        return $filters;
     }
 }
