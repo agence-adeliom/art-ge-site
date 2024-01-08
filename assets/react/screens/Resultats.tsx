@@ -45,6 +45,19 @@ const Resultats = () => {
   } else {
     resultats = window.resultats;
   }
+  let heading = 'Félicitations !';
+  let subHeading = 'Vos engagements font la différence.';
+  let text = 'Découvrez votre avancement thématique par thématique et accédez à des ressources pour faire évoluer les pratiques de votre établissement.';
+  if (resultats.reponsePercentage >= 0 && resultats.reponsePercentage <= 32) {
+      heading = 'Merci !';
+      subHeading = 'Ce résultat montre votre intérêt et votre motivation';
+      text = 'Regardez vos résultats dans le détail, thématique par thématique ainsi que toutes les pistes d’amélioration qui s’offrent à vous.';
+  } else if (resultats.reponsePercentage > 32 && resultats.reponsePercentage <= 60) {
+      heading = 'Merci !';
+      subHeading = 'Ce résultat montre une belle implication.';
+      text = 'Regardez vos résultats dans le détail, thématique par thématique, identifiez les pistes d’amélioration et découvrez les actions à mener pour progresser davantage.';
+  }
+
   return (
     <AnimatePresence>
       <>
@@ -61,17 +74,9 @@ const Resultats = () => {
         <div className="bg-primary-600">
           <div className="container grid grid-cols-12 gap-6 items-center pt-20 pb-8">
             <div className="flex flex-col gap-4 col-span-full md:col-span-8 dark">
-              <Heading variant="display-2" color="white">
-                Félicitations !
-              </Heading>
-              <Heading variant="display-3" color="white">
-                Vos engagements font la différence.
-              </Heading>
-              <Text size="lg" color="white" className="mt-4">
-                Découvrez votre avancement thématique par thématique et accédez
-                à des ressources pour faire évoluer les pratiques de votre
-                établissement.
-              </Text>
+              <Heading variant="display-2" color="white">{heading}</Heading>
+              <Heading variant="display-3" color="white">{subHeading}</Heading>
+              <Text size="lg" color="white" className="mt-4">{text}</Text>
               <Button
                 iconSide="left"
                 size={'lg'}
