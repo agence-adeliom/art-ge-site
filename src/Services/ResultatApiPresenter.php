@@ -17,12 +17,12 @@ class ResultatApiPresenter
     /** @return array<mixed> */
     public function present(Reponse $reponse): array
     {
-        $choiceMapper = fn(Choice $choice): array => [
+        $choiceMapper = fn (Choice $choice): array => [
             'name' => htmlentities($choice->getLibelle()),
             'slug' => $choice->getSlug(),
         ];
 
-        $scores = array_map(fn(Score $score): array => [
+        $scores = array_map(fn (Score $score): array => [
             'name' => htmlentities($score->getThematique()->getName()),
             'slug' => $score->getThematique()->getSlug(),
             'points' => $score->getPoints(),

@@ -61,12 +61,14 @@ class ChoiceTypologieRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param array<int> $onlyChoices
+     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\NoResultException
      */
-    public function getPonderationByQuestionAndTypologie(int $questionId, RepondantTypologie $rt): int
+    public function getPonderationByQuestionAndTypologie(int $questionId, RepondantTypologie $rt, array $onlyChoices = []): int
     {
-        return (int) $this->createQueryBuilder('crt')
+        $qb = $this->createQueryBuilder('crt')
             ->select('SUM(crt.ponderation) as total')
             ->innerJoin('crt.choice', 'c')
             ->innerJoin('c.question', 'q')
@@ -76,6 +78,16 @@ class ChoiceTypologieRepository extends ServiceEntityRepository
             ->setParameter(':questionId', $questionId)
             ->setParameter(':typologie', $rt->getTypologie())
             ->setParameter(':restauration', $rt->getRestauration())
+        ;
+
+        if ([] !== $onlyChoices) {
+            $qb
+                ->andWhere('c.id IN (:onlyChoices)')
+                ->setParameter(':onlyChoices', $onlyChoices)
+            ;
+        }
+
+        return (int) $qb
             ->getQuery()
             ->getSingleScalarResult()
         ;

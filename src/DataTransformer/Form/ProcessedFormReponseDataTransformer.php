@@ -43,6 +43,7 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
             $reponse = $request->all('reponse');
 
             $restauration = isset($reponse['repondant']['restauration']) && '1' === $reponse['repondant']['restauration'];
+            $greenSpace = isset($reponse['repondant']['greenSpace']) && '1' === $reponse['repondant']['greenSpace'];
             if (isset($reponse['repondant']['typologie'])) {
                 /** @var int $typologie */
                 $typologie = (int) $reponse['repondant']['typologie'];
@@ -52,7 +53,7 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
                     $values[$key] = array_keys($question['answers']);
                 }
 
-                $points = $this->getPointsByThematique($values, $typologie, $restauration);
+                $points = $this->getPointsByThematique($values, $typologie, $restauration, $greenSpace);
                 $total = array_reduce($points, fn (int $carry, int $item): int => $carry + $item, 0);
 
                 return ['answers' => $value, 'pointsByQuestions' => $points, 'points' => $total];
@@ -67,7 +68,7 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
      *
      * @return array<mixed>
      */
-    private function getPointsByThematique(array $value, int $typologie, bool $restauration): array
+    private function getPointsByThematique(array $value, int $typologie, bool $restauration, bool $greenSpace): array
     {
         $points = [];
         $labelQuestionId = $this->thematiqueRepository->findOneBy(['slug' => 'labels'])?->getQuestion()?->getId();
@@ -80,7 +81,7 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
             foreach ($choicesIds as $choiceId) {
                 $point = 0;
                 if (Choice::NOTHING_DONE !== $this->choiceRepository->getSlugById((int) $choiceId)) {
-                    $point = $this->choiceTypologieRepository->getPonderation((int) $choiceId, RepondantTypologie::from($typologie, $restauration));
+                    $point = $this->choiceTypologieRepository->getPonderation((int) $choiceId, RepondantTypologie::from($typologie, $restauration, $greenSpace));
                 }
                 /* @phpstan-ignore-next-line */
                 $points[$questionId][] = $point;

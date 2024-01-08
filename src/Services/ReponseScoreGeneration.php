@@ -16,6 +16,7 @@ class ReponseScoreGeneration
     public function __construct(
         private readonly ThematiqueRepository $thematiqueRepository,
         private readonly ChoiceTypologieRepository $choiceTypologieRepository,
+        private readonly QuestionChoiceExcluder $questionChoiceExcluder,
     ) {}
 
     public function generateScore(Reponse $reponse): ScoreGeneration
@@ -28,9 +29,14 @@ class ReponseScoreGeneration
 
         $scores = [];
         foreach ($processedForm['pointsByQuestions'] as $questionId => $thematiquePoints) {
+            /** @var \App\Entity\Question $question */
+            $question = $this->thematiqueRepository->findOneBy(['id' => $questionId])?->getQuestion();
+            if (false === $repondantTypologieVO->getGreenSpace()) {
+                $questionChoices = $this->questionChoiceExcluder->onlyChoices($question);
+            }
             $thematique = $this->thematiqueRepository->getOneByQuestionId($questionId);
             if ($thematique) {
-                $thematiqueTotal = $this->choiceTypologieRepository->getPonderationByQuestionAndTypologie($questionId, $repondantTypologieVO);
+                $thematiqueTotal = $this->choiceTypologieRepository->getPonderationByQuestionAndTypologie($questionId, $repondantTypologieVO, $questionChoices ?? []);
                 if ($thematiqueTotal) {
                     $score = new Score();
                     $score->setTotal($thematiqueTotal);
@@ -41,6 +47,7 @@ class ReponseScoreGeneration
                 }
             }
         }
+        dump($scores);
 
         return ScoreGeneration::from($points, $total, $scores);
     }
