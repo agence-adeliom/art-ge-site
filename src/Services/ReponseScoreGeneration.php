@@ -12,7 +12,6 @@ use App\Services\ChoiceIgnorer\GreenSpaceChoiceIgnorer;
 use App\Services\ChoiceIgnorer\RestaurationChoiceIgnorer;
 use App\ValueObject\RepondantTypologie;
 use App\ValueObject\ScoreGeneration;
-use function App\Services\sumArrayOfIntegers;
 
 class ReponseScoreGeneration
 {
@@ -59,8 +58,8 @@ class ReponseScoreGeneration
             }
         }
 
-        $point = sumArrayOfIntegers($points);
-        $total = sumArrayOfIntegers($totals);
+        $point = array_reduce($points, fn (int $carry, int $item): int => $carry + $item, 0);
+        $total = array_reduce($totals, fn (int $carry, int $item): int => $carry + $item, 0);
 
         return ScoreGeneration::from($point, $total, $scores);
     }

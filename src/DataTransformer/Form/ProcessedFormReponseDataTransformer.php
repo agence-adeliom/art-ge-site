@@ -11,7 +11,6 @@ use App\Repository\ThematiqueRepository;
 use App\ValueObject\RepondantTypologie;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use function App\Services\sumArrayOfIntegers;
 
 class ProcessedFormReponseDataTransformer implements DataTransformerInterface
 {
@@ -55,7 +54,7 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
                 }
 
                 $points = $this->getPointsByThematique($values, $typologie, $restauration, $greenSpace);
-                $total = sumArrayOfIntegers($points);
+                $total = array_reduce($points, fn (int $carry, int $item): int => $carry + $item, 0);
 
                 return ['answers' => $value, 'pointsByQuestions' => $points, 'points' => $total];
             }
@@ -88,7 +87,7 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
                 $points[$questionId][] = $point;
             }
             /* @phpstan-ignore-next-line */
-            $points[$questionId] = sumArrayOfIntegers($points[$questionId]);
+            $points[$questionId] = array_reduce($points[$questionId], fn (int $carry, int $item): int => $carry + $item, 0);
         }
 
         return $points;
