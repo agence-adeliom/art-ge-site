@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { RoutePaths } from '@react/config/routes';
 import { cx } from 'class-variance-authority';
 import Resultats from "@screens/Resultats";
+import AsideForm from '@components/Content/AsideForm';
 
 const inputContainerClass =
   'group trans-default lg:hover:bg-tertiary-200 is-active:border-primary-600 is-active:bg-primary-50 py-4 px-3';
@@ -317,13 +318,9 @@ const Form = () => {
               })}
           </form>
         </div>
-        <div className="bg-neutral-600 max-lg:h-32 mobileLeftBleed lg:left-0 max-lg:order-first lg:col-start-9 lg:col-span-4 containerBleed relative">
-          <img
-            src={formImage1}
-            alt="image de paysage"
-            className={`trans-default absolute object-cover w-full h-full`}
-          ></img>
-        </div>
+        <AsideForm
+        thematique={actualQuestion ? actualQuestion!.thematique.id : 46}
+        ></AsideForm>
 
         <ConfirmationAnim isVisible={showConfirm}>
           <Confirmation

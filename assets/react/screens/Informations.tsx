@@ -6,7 +6,7 @@ import StepThree from '@screens/StepThree';
 import StepFour from '@screens/StepFour';
 import Confirmation from '@screens/Confirmation';
 import { ConfirmationAnim } from '@components/Animation/Confirmation';
-import AsideForm from '@components/Content/AsideForm';
+import AsideInfo from '@components/Content/AsideInfo';
 import { AnimatePresence } from 'framer-motion';
 import { RoutePaths } from '@react/config/routes';
 import { useWizard } from '@hooks/useWizard';
@@ -49,7 +49,7 @@ const Informations: FunctionComponent = () => {
           </div>
         </div>
 
-        <AsideForm step={step}></AsideForm>
+        <AsideInfo step={step}></AsideInfo>
       </div>
 
       <ConfirmationAnim isVisible={step === 5}>
