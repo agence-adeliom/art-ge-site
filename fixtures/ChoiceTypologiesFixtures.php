@@ -38,48 +38,39 @@ class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterf
     {
         /** @var string $datasDirectory */
         $datasDirectory = $this->parameterBag->get('datas_directory');
-        $ponderationsFile = file_get_contents($datasDirectory . '/ponderations.csv');
+        $ponderationsFile = file_get_contents($datasDirectory . '/ponderations2.csv');
         if ($ponderationsFile) {
             $csvEncoder = new CsvEncoder();
             $ponderationsDatas = $csvEncoder->decode($ponderationsFile, 'csv');
-            $datas = array_map(fn(array $row): array => [self::COLUMN_REPONSE => $row[self::COLUMN_REPONSE], ...array_slice($row,  7, 15)], $ponderationsDatas);
+            $datas = array_map(fn(array $row): array => [self::COLUMN_REPONSE => $row[self::COLUMN_REPONSE], ...array_slice($row,  2)], $ponderationsDatas);
         }
 
-        foreach ($datas as $key => $data){
-            if ($key == 0) {
-                continue;
-            }
+        foreach ($datas as $data){
             if (array_filter($data) === []) {
                 continue;
             }
-            if ($data[self::COLUMN_REPONSE] === 'TOTAL POINT') {
-                break;
-            }
 
-            foreach ($data as $typo => $ponderation) {
-                if ($typo === self::COLUMN_REPONSE) {
+            foreach ($data as $columnName => $ponderation) {
+                if ($columnName === self::COLUMN_REPONSE || $ponderation === 'N/A') {
                     continue;
                 }
 
-                $typologie = match ($typo) {
-                    'A', 'B' => TypologieEnum::HOTEL,
-                    'C', 'D' => TypologieEnum::LOCATION,
-                    'E', 'F' => TypologieEnum::CHAMBRE,
-                    'G', 'H' => TypologieEnum::CAMPING,
-                    'I', 'J' => TypologieEnum::INSOLITE,
-                    'K', 'L' => TypologieEnum::VISITE,
-                    'M', 'N' => TypologieEnum::ACTIVITE,
-                    'O' => TypologieEnum::RESTAURANT,
+                $typologie = match ($columnName) {
+                    'hotel', 'hotel avec restaurant' => TypologieEnum::HOTEL,
+                    'location', 'location avec restaurant' => TypologieEnum::LOCATION,
+                    'chambre', 'chambre avec restaurant' => TypologieEnum::CHAMBRE,
+                    'camping', 'camping avec restaurant' => TypologieEnum::CAMPING,
+                    'insolite', 'insolite avec restaurant' => TypologieEnum::INSOLITE,
+                    'lieu de visite', 'lieu de visite avec restaurant' => TypologieEnum::VISITE,
+                    'loisir', 'loisir avec restaurant' => TypologieEnum::ACTIVITE,
+                    'restaurant' => TypologieEnum::RESTAURANT,
                     default => null,
                 };
 
-                $restauration = match ($typo) {
-                    'B', 'D', 'F', 'H', 'I', 'L', 'N', 'O' => true,
-                    default => false,
-                };
+                $restauration = str_contains($columnName, 'restaurant');
 
                 if (!$typologie) {
-                    throw new \Exception('typologie ne correspond pas : ' . $typo);
+                    throw new \Exception('typologie ne correspond pas : ' . $columnName);
                 }
 
                 $reponse = (new AsciiSlugger())->slug(strtolower((string) $data[self::COLUMN_REPONSE]))->toString();

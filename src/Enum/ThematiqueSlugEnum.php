@@ -7,6 +7,7 @@ namespace App\Enum;
 enum ThematiqueSlugEnum: string
 {
     case BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE = 'biodiversite-et-conservation-de-la-nature-sur-site';
+    case GESTION_DES_DECHETS = 'gestion-des-dechets';
     case GESTION_DE_L_EAU_ET_DE_L_EROSION = 'gestion-de-l-eau-et-de-l-erosion';
     case ECO_CONSTRUCTION = 'eco-construction';
     case GESTION_DE_L_ENERGIE = 'gestion-de-l-energie';
