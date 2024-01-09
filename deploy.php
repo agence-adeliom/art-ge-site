@@ -37,6 +37,7 @@ task('dotenv:set-env', function (): void {
 
     run('touch {{release_path}}/.env.local');
     run('echo "APP_ENV={{app_env}}" >> {{release_path}}/.env.local');
+    run('echo "MAILER_DSN=smtp://"{{brevo_user}}":{{brevo_pass}}@smtp-relay.brevo.com:587" >> {{release_path}}/.env.local');
 });
 
 task('npm:build', static function (): void {
