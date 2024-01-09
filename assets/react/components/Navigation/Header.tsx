@@ -40,9 +40,9 @@ const Header = ({step, ...props} : {
     return (
         <>
             <div className="container relative flex justify-between items-center py-8">
-                <Link to="/">
+                <a href="https://www.art-grandest.fr/" target='_blank' >
                     <img src={Logo} alt="Logo ART GE"/>
-                </Link>
+                </a>
                 { hasTitle ?
                     <Text color="neutral-500" className="hidden md:block" weight={400}>
                         { props.title }
