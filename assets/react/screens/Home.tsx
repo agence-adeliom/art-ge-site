@@ -75,16 +75,6 @@ const Home = () => {
                 </ul>
               </div>
 
-              <Button
-                size="lg"
-                className="mt-8"
-                icon="fa-minus"
-                iconSide="left"
-                onClick={handleNavigation}
-              >
-                Commencer
-              </Button>
-
               <div className="mt-8">
                 <Text weight={600}>Des questions ?</Text>
                 <Text>
@@ -94,6 +84,16 @@ const Home = () => {
                   </a>
                 </Text>
               </div>
+
+              <Button
+                  size="lg"
+                  className="mt-8"
+                  icon="fa-minus"
+                  iconSide="left"
+                  onClick={handleNavigation}
+              >
+                Commencer
+              </Button>
             </div>
 
             <Aside></Aside>

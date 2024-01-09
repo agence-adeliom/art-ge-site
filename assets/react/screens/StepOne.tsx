@@ -55,7 +55,7 @@ const StepOne: FunctionComponent = () => {
     <>
       <StepAnim>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Heading variant="display-4">Pour commencer</Heading>
+          <Heading variant="display-4">Débutons ensemble</Heading>
           <Text className="mt-6" color="neutral-500" weight={400} size="sm">
             Renseignez ces informations afin que nous puissions vous identifier.
           </Text>

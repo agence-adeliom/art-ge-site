@@ -18,7 +18,7 @@ class QuestionsFixtures extends Fixture
         $slugger = new AsciiSlugger();
 
         $questions = [
-            "Biodiversité et conservation de la Nature sur site" => [
+            "Biodiversité et conservation de la nature sur site" => [
                 "Quelles pratiques avez-vous mis en place dans votre structure pour limiter l'impact sur la biodiversité et conserver la nature ?",
                 "J'ai aménagé un jardin avec différentes herbes aromatiques sur au moins 1% du terrain",
                 "J'ai au moins un hôtel à insectes, nichoir à oiseaux ou chauve-souris, abris à hérissons avec occupation constatée, pour chaque 500 m² de terrain",

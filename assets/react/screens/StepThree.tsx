@@ -87,7 +87,7 @@ const StepThree = () => {
             Retour
           </Button>
           <Heading variant="display-4" className="mt-6">
-            Vous êtes...
+            Vous proposez...
           </Heading>
           <Text className="mt-6" color="neutral-500" weight={400} size="sm">
             Indiquez l’activité de votre établissement touristique.
