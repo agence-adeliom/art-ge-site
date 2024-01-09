@@ -6,15 +6,12 @@ namespace DataFixtures;
 
 use App\DataTransformer\Form\ProcessedFormReponseDataTransformer;
 use App\Entity\Reponse;
-use App\Entity\Thematique;
-use App\Message\ReponseConfirmationMessage;
+use App\Enum\ThematiqueSlugEnum;
 use App\Repository\ChoiceRepository;
 use App\Repository\ChoiceTypologieRepository;
-use App\Repository\CityRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\ThematiqueRepository;
 use App\Repository\TypologieRepository;
-use App\Services\GreenSpaceChoiceExcluder;
 use App\Services\ReponseScoreGeneration;
 use DataFixtures\Provider\RepondantProvider;
 use App\Entity\Repondant;
@@ -38,7 +35,6 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
         private readonly ChoiceTypologieRepository $choiceTypologieRepository,
         private readonly ChoiceRepository $choiceRepository,
         private readonly ReponseScoreGeneration $reponseScoreGeneration,
-        private readonly GreenSpaceChoiceExcluder $greenSpaceChoiceExcluder,
     ) {
         $this->faker = Factory::create('fr_FR');
         $this->faker->seed('artge');
@@ -52,21 +48,56 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
         $repondantDatas = [
             ['NATALIE', 'RECEPTION', '0389426476', 'reception@camping-mulhouse.com', "CAMPING DE L'ILL OTC", '1 rue Pierre de Coubertin', '68100', 'MULHOUSE', 'camping', false, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
                 [
-                    0,0,0,1,0,0,0,0,0,0,0,0,0,
-                    0,1,0,0,1,0,0,0,0,0,0,0,0,0,
-                    1,0,1,0,0,0,0,1,0,0,
-                    0,0,0,0,0,0,0,1,
-                    0,0,0,1,0,0,0,0,0,0,0,1,0,0,
-                    0,1,0,0,0,0,
-                    0,0,0,1,0,0,1,0,
-                    0,0,0,0,0,0,0,0,1,
-                    1,1,0,0,
-                    0,0,0,1,0,0,0,0,
-                    0,0,0,1,0,
-                    0,1,0,0,0,
-                    0,1,0,0,0,
-                    0,0,0,0,0,1,
-                    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0
+                    ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value => [
+                        'je-n-utilise-jamais-de-produits-de-traitements-fongiques-chimiques',
+                    ],
+                    ThematiqueSlugEnum::GESTION_DES_DECHETS->value => [
+                        'j-ai-supprime-les-plastiques-a-usage-unique-et-tous-mes-emballages-plastiques-sont-en-grands-formats-superieur-a-5l',
+                        'les-visiteurs-les-clients-peuvent-trier-leurs-dechets-et-j-ai-des-filieres-de-valorisation-en-place-pour-les-emballages',
+                    ],
+                    ThematiqueSlugEnum::GESTION_DE_L_EAU_ET_DE_L_EROSION->value => [
+                        'j-evite-l-artificialisation-des-parkings-je-privilegie-le-revetement-poreux-les-espaces-bitumes-sont-limites-aux-voies-de-circulation-de-lourds-vehicules-et-pour-les-places-pmr',
+                        'je-recycle-l-eau-de-certains-usages-rincage-eau-de-cuisson-carafes-d-eau-pour-l-arrosage-exterieur',
+                        'j-arrose-les-vegetaux-en-pleine-terre-uniquement-lors-de-leur-premiere-annee-et-je-n-arrose-pas-le-gazon',
+                    ],
+                    ThematiqueSlugEnum::ECO_CONSTRUCTION->value => [
+                        'je-n-ai-rien-entrepris-en-ce-sens',
+                    ],
+                    ThematiqueSlugEnum::GESTION_DE_L_ENERGIE->value => [
+                        'je-n-ai-pas-de-climatisation',
+                    ],
+                    ThematiqueSlugEnum::ENTRETIEN_ET_PROPRETE->value => [
+                        'j-ai-des-consignes-claires-sur-l-utilisation-des-produits-d-entretien-ex-quantite-de-produit-par-rapport-a-la-durete-de-l-eau',
+                    ],
+                    ThematiqueSlugEnum::TRANSPORT_ET_MOBILITE->value => [
+                        'je-communique-des-informations-claires-sur-les-transports-collectifs-le-covoiturage-les-transports-publics-pour-encourager-a-venir-sans-voiture',
+                        'je-communique-des-instructions-claires-pour-realiser-des-activites-autour-de-mon-site-sans-voiture',
+                    ],
+                    ThematiqueSlugEnum::ACCES_AUX_PERSONNES_EN_SITUATION_DE_HANDICAP->value => [
+                        'je-n-ai-rien-entrepris-en-ce-sens',
+                    ],
+                    ThematiqueSlugEnum::INCLUSIVITE_SOCIALE->value => [
+                        'je-propose-des-offres-accessibles-a-tout-public-avec-une-tarification-ou-des-prestations-adaptees',
+                        'j-accepte-les-cheques-vacances-ancv',
+                    ],
+                    ThematiqueSlugEnum::SENSIBILISATION_DES_ACTEURS->value => [
+                        'je-mets-en-avant-les-produits-locaux-de-saison-issus-de-l-agriculture-bio-ainsi-que-la-gastronomie-regionale',
+                    ],
+                    ThematiqueSlugEnum::BIEN_ETRE_DE_L_EQUIPE->value => [
+                        'je-n-ai-rien-entrepris-en-ce-sens',
+                    ],
+                    ThematiqueSlugEnum::DEVELOPPEMENT_ECONOMIQUE_LOCAL->value => [
+                        'au-moins-80-de-mes-fournisseurs-alimentaires-sont-locaux-dans-un-rayon-de-moins-de-150-km',
+                    ],
+                    ThematiqueSlugEnum::COOPERATION_LOCALE_ET_LIENS_AVEC_LES_HABITANTS->value => [
+                        'je-suis-partenaire-au-moins-une-fois-par-an-a-un-evenement-en-lien-avec-les-habitants-ou-associations-de-la-commune',
+                    ],
+                    ThematiqueSlugEnum::CULTURE_ET_PATRIMOINE->value => [
+                        'je-n-ai-rien-entrepris-en-ce-sens',
+                    ],
+                    ThematiqueSlugEnum::LABELS->value => [
+                        'accueil-velo',
+                    ],
                 ]
             ],
 //            ['Julien', 'LUTZ', '03750616237', 'H0627-GM@accor.com', "CLR hotels Hotels Ibis", '34 ALLEE NATHAN KATZ, RUE DES CEVENNES', '68100', 'SAUSHEIM MULHOUSE', 'hotel', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
@@ -121,20 +152,14 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
             $reponse->setSubmittedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $repondantData[12]));
             $reponse->setCompleted(true);
 
-            $choices = $repondantData[13];
             $rawForm = [];
-            $choiceId = 1;
-            foreach ($thematiques as $thematique) {
+            foreach ($repondantData[13] as $thematiqueSlug => $repondantChoicesSlugs) {
+                $thematique = $this->thematiqueRepository->findOneBy(['slug' => $thematiqueSlug]);
                 $question = $thematique->getQuestion();
-                if (!$repondant->isGreenSpace()) {
-                    $question = $this->greenSpaceChoiceExcluder->excludeChoices($question);
-                }
-                $questionChoices = array_splice($choices, 0, $question->getChoices()->count());
-                foreach ($questionChoices as $choice) {
-                    if ($choice === 1) {
-                        $rawForm[$question->getId()]['answers'][$choiceId] = 'on';
-                    }
-                    $choiceId++;
+
+                foreach ($repondantChoicesSlugs as $repondantChoicesSlug){
+                    $choice = $this->choiceRepository->findOneBy(['question' => $question->getId(),'slug' => $repondantChoicesSlug]);
+                    $rawForm[$question->getId()]['answers'][$choice->getId()] = 'on';
                 }
             }
             $reponse->setRawForm($rawForm);

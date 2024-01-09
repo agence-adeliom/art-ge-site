@@ -49,15 +49,12 @@ const StepThree = () => {
 
   const onSubmit: SubmitHandler<DataFields> = data => {
     feedRepondantAndGoToNextStep(data);
-    getQuestions(data.greenSpace === 1);
+    getQuestions(data.restauration === 1, data.greenSpace === 1);
   };
 
-  const getQuestions = async (isGreenSpace: boolean) => {
-    let formAPI = 'api/form?green_space=';
-    let formAPIresults = formAPI + isGreenSpace;
-
+  const getQuestions = async (isRestauration: boolean, isGreenSpace: boolean) => {
     try {
-      const response = await fetch(formAPIresults);
+      const response = await fetch(`api/form?restauration=${isRestauration}&green_space=${isGreenSpace}`);
       const results = await response.json();
       window.localStorage.setItem('allQuestions', JSON.stringify(results));
     } catch (error) {

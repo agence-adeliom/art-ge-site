@@ -17,7 +17,9 @@ class ReponseScoreGeneration
         private readonly ThematiqueRepository $thematiqueRepository,
         private readonly ChoiceTypologieRepository $choiceTypologieRepository,
         private readonly GreenSpaceChoiceExcluder $greenSpaceChoiceExcluder,
-    ) {}
+        private readonly RestaurationChoiceIgnorer $restaurationChoiceIgnorer,
+    ) {
+    }
 
     public function generateScore(Reponse $reponse): ScoreGeneration
     {
@@ -33,6 +35,9 @@ class ReponseScoreGeneration
             $question = $this->thematiqueRepository->findOneBy(['id' => $questionId])?->getQuestion();
             if (false === $repondantTypologieVO->getGreenSpace()) {
                 $questionChoices = $this->greenSpaceChoiceExcluder->onlyChoices($question);
+            }
+            if (false === $repondantTypologieVO->getRestauration()) {
+                $questionChoices = $this->restaurationChoiceIgnorer->onlyNotIgnored($question);
             }
             $thematique = $this->thematiqueRepository->getOneByQuestionId($questionId);
             if ($thematique) {

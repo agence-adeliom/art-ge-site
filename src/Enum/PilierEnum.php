@@ -16,6 +16,7 @@ enum PilierEnum: string
         return match ($pilier) {
             self::ENVIRONNEMENT => [
                 ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE,
+                ThematiqueSlugEnum::GESTION_DES_DECHETS,
                 ThematiqueSlugEnum::GESTION_DE_L_EAU_ET_DE_L_EROSION,
                 ThematiqueSlugEnum::ECO_CONSTRUCTION,
                 ThematiqueSlugEnum::GESTION_DE_L_ENERGIE,

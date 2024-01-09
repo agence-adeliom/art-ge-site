@@ -19,7 +19,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseUrl}}/api/form?green_space=<boolean>",
+									"raw": "{{baseUrl}}/api/form?restauration=<boolean>&green_space=<boolean>",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -29,9 +29,12 @@
 									],
 									"query": [
 										{
+											"key": "restauration",
+											"value": "<boolean>"
+										},
+										{
 											"key": "green_space",
-											"value": "<boolean>",
-											"description": "Est-ce que le répondant à une offre d'espace vert ou non ?"
+											"value": "<boolean>"
 										}
 									]
 								}
@@ -43,7 +46,7 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "{{baseUrl}}/api/form?green_space=<boolean>",
+											"raw": "{{baseUrl}}/api/form?restauration=<boolean>&green_space=<boolean>",
 											"host": [
 												"{{baseUrl}}"
 											],
@@ -52,6 +55,11 @@
 												"form"
 											],
 											"query": [
+												{
+													"key": "restauration",
+													"value": "<boolean>",
+													"description": "Est-ce que le répondant propose une offre de restauration ou non ?"
+												},
 												{
 													"key": "green_space",
 													"value": "<boolean>",
@@ -178,7 +186,7 @@
 										},
 										{
 											"key": "reponse[repondant][zip]",
-											"value": "67000",
+											"value": "68000",
 											"type": "text"
 										},
 										{
