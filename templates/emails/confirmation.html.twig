@@ -1,9 +1,14 @@
-<p>Vous avez un score de {{ display_percentage(reponse) }}</p>
+<p>Bonjour,</p>
+<p>Un grand merci d’avoir pris le temps de répondre à l’éco-boussole. Vous connaissez désormais votre niveau d’engagement.</p>
 
-<p>Vous pouvez retrouver votre résultat en cliquant sur le lien ci-dessous.</p>
+<p>Vous retrouverez vos résultats en cliquant sur le lien ci-dessous :</p>
 {% set url = url('app_resultat_single', { uuid: reponse.uuid }) %}
 <a href="{{ url }}">{{ url }}</a>
 
-<p>Ou télécharger le récapitulatif en PDF en cliquant sur le lien ci-dessous.</p>
-{% set url = url('app_resultat_pdf', { uuid: reponse.uuid, extension: '.pdf' }) %}
-<a href="{{ url }}">{{ url }}</a>
+<p>Pensez à conserver ce mail ou le lien afin de pouvoir revenir sur votre page de résultats, et accéder aux actions à mettre en place pour améliorer vos pratiques.</p>
+<p>Envie de progresser et de vous engager davantage ? On peut vous accompagner. <br/>Rendez-vous sur notre page dédiée au Parcours Prestataires Durable en suivant ce lien :</p>
+
+<a href="https://www.art-grandest.fr/services-et-accompagnement/tourisme-durable">Parcours Prestataires Durable</a>
+
+<p>Nous vous souhaitons une excellente journée, ainsi qu'à toute votre équipe.</p>
+<p>Cordialement. <br />L’équipe ART GE</p>
