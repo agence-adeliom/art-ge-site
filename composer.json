@@ -60,7 +60,10 @@
         "psr-4": {
             "App\\": "src/",
             "DataFixtures\\": "fixtures"
-        }
+        },
+        "files": [
+            "src/Services/sum.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

@@ -12,6 +12,7 @@ use App\Services\ChoiceIgnorer\GreenSpaceChoiceIgnorer;
 use App\Services\ChoiceIgnorer\RestaurationChoiceIgnorer;
 use App\ValueObject\RepondantTypologie;
 use App\ValueObject\ScoreGeneration;
+use function App\Services\sumArrayOfIntegers;
 
 class ReponseScoreGeneration
 {
@@ -28,8 +29,8 @@ class ReponseScoreGeneration
         /** @var array{answers: array<int, array<int>>, pointsByQuestions: array<int, int>, points: int} $processedForm */
         $processedForm = $reponse->getProcessedForm();
         $repondantTypologieVO = RepondantTypologie::fromRepondant($reponse->getRepondant());
-        $points = $processedForm['points'];
-        $total = $this->choiceTypologieRepository->getTotalBasedOnTypologie($repondantTypologieVO);
+        $points = [];
+        $totals = [];
 
         $scores = [];
         foreach ($processedForm['pointsByQuestions'] as $questionId => $thematiquePoints) {
@@ -46,15 +47,21 @@ class ReponseScoreGeneration
                 $thematiqueTotal = $this->choiceTypologieRepository->getPonderationByQuestionAndTypologie($questionId, $repondantTypologieVO, $questionChoices ?? []);
                 if ($thematiqueTotal) {
                     $score = new Score();
-                    $score->setTotal($thematiqueTotal);
                     $score->setPoints($thematiquePoints);
+                    $score->setTotal($thematiqueTotal);
                     $score->setReponse($reponse);
                     $score->setThematique($thematique);
                     $scores[] = $score;
+
+                    $points[] = $thematiquePoints;
+                    $totals[] = $thematiqueTotal;
                 }
             }
         }
 
-        return ScoreGeneration::from($points, $total, $scores);
+        $point = sumArrayOfIntegers($points);
+        $total = sumArrayOfIntegers($totals);
+
+        return ScoreGeneration::from($point, $total, $scores);
     }
 }

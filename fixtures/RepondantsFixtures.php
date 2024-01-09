@@ -110,13 +110,149 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
 //            ],
 //            ['Guillaume', 'GASSER', '0664981214', 'g.gasser@museedelauto.org', "Musee national automobile", '192, avenue de colmar', '68100', 'MULHOUSE', 'visite', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
 //            ],
-//            ['gaetan', 'loeb', '0777737468', 'loeb.gaetan@gmail.com', "BEST WESTERN PLUS Hôtel **** Au Cheval Blanc", '27 rue principale', '68390', 'MULHOUSE', 'hotel', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
-//            ],
-//            ['MARIE', 'GUTZWILLER', '0675666838', 'info@hotelbristol.com', "HOTEL BRISTOL", '18 AVENUE DE COLMAR', '68390', 'MULHOUSE', 'hotel', true, false, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
-//            ],
+            ['gaetan', 'loeb', '0777737468', 'loeb.gaetan@gmail.com', "BEST WESTERN PLUS Hôtel **** Au Cheval Blanc", '27 rue principale', '68390', 'MULHOUSE', 'hotel', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+                [
+                    ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value => [
+                        "j-ai-amenage-un-jardin-avec-differentes-herbes-aromatiques-sur-au-moins-1-du-terrain",
+                        "j-ai-au-moins-un-hotel-a-insectes-nichoir-a-oiseaux-ou-chauve-souris-abris-a-herissons-avec-occupation-constatee-pour-chaque-500-m2-de-terrain",
+                        "je-limite-drastiquement-l-eclairage-nocturne-les-lumieres-exterieures-sont-eteintes-au-plus-tard-2h-apres-le-coucher-du-soleil-sans-passage",
+                    ],
+                    ThematiqueSlugEnum::GESTION_DES_DECHETS->value => [
+                        "les-visiteurs-les-clients-peuvent-trier-leurs-dechets-et-j-ai-des-filieres-de-valorisation-en-place-pour-les-emballages",
+                        "j-ai-mis-en-place-la-collecte-et-la-valorisation-des-biodechets-meme-si-je-ne-suis-pas-concerne-par-la-reglementation",
+                        "je-donne-mes-equipements-en-fin-de-vie-et-en-bon-etat-de-fonctionnement-a-des-associations",
+                        "j-ai-forme-mes-equipes-ou-me-suis-forme-e-si-je-travaille-seul-e-a-la-reduction-des-dechets",
+                        "j-ai-forme-mes-equipes-ou-me-suis-forme-e-si-je-travaille-seul-e-a-la-reduction-du-gaspillage-alimentaire",
+                        "je-n-imprime-plus-de-flyers-de-guides-ou-de-publications-papier",
+                    ],
+                    ThematiqueSlugEnum::GESTION_DE_L_EAU_ET_DE_L_EROSION->value => [
+                        "j-evite-l-artificialisation-des-parkings-je-privilegie-le-revetement-poreux-les-espaces-bitumes-sont-limites-aux-voies-de-circulation-de-lourds-vehicules-et-pour-les-places-pmr",
+                        "tous-les-points-d-eau-sont-dotes-de-reducteurs-de-debits-wc-double-debits-mousseurs-detecteurs-sous-robinets",
+                        "je-limite-les-pertes-d-eau-lors-de-l-arrosage-des-espaces-verts-horaire-goutte-a-goutte-paillage-oyas",
+                        "j-arrose-les-vegetaux-en-pleine-terre-uniquement-lors-de-leur-premiere-annee-et-je-n-arrose-pas-le-gazon",
+                    ],
+                    ThematiqueSlugEnum::ECO_CONSTRUCTION->value => [
+                        "je-n-ai-que-du-double-ou-du-triple-vitrage",
+                        "meubles-et-decoration-sont-majoritairement-en-bois-non-agglomere-non-exotique-a-base-de-vegetal-en-metal-ou-a-partir-d-objets-recycles-ou-de-seconde-vie",
+                    ],
+                    ThematiqueSlugEnum::GESTION_DE_L_ENERGIE->value => [
+                        "j-ai-un-plan-de-gestion-des-temperatures-du-batiment-en-fonction-des-horaires-des-jours-des-pieces-et-des-usages",
+                        "j-affiche-des-consignes-sur-les-reductions-d-energie-pour-moi-meme-ainsi-que-les-salaries",
+                    ],
+                    ThematiqueSlugEnum::ENTRETIEN_ET_PROPRETE->value => [
+                        "j-ai-des-consignes-claires-sur-l-utilisation-des-produits-d-entretien-ex-quantite-de-produit-par-rapport-a-la-durete-de-l-eau",
+                        "j-utilise-des-pompes-de-dosage-pour-diluer-les-produits-concentres-ou-des-doseurs",
+                        "pour-ma-piscine-j-ai-une-technique-de-traitement-limitant-le-chlore-voire-j-ai-cree-une-zone-de-baignade-naturelle-traitement-par-les-plantes-ce-qui-permet-de-limiter-l-usage-de-produits-chimiques-et-favorise-la-biodiversite",
+                    ],
+                    ThematiqueSlugEnum::TRANSPORT_ET_MOBILITE->value => [
+                        "j-ai-au-moins-2-des-places-de-stationnement-equipees-de-recharges-pour-voitures-electriques",
+                    ],
+                    ThematiqueSlugEnum::ACCES_AUX_PERSONNES_EN_SITUATION_DE_HANDICAP->value => [
+                        "j-ai-forme-l-ensemble-de-mon-equipe-ainsi-que-moi-meme-a-l-accueil-des-personnes-en-situation-de-handicap",
+                        "j-ai-a-disposition-des-fauteuils-ou-des-cannes-sieges",
+                    ],
+                    ThematiqueSlugEnum::INCLUSIVITE_SOCIALE->value => [
+                        "j-accepte-les-cheques-vacances-ancv",
+                    ],
+                    ThematiqueSlugEnum::SENSIBILISATION_DES_ACTEURS->value => [
+                        "chaque-annee-l-ensemble-de-l-entreprise-est-sensibilise-sur-le-sujet-du-tourisme-durable-webinaire-formation-fresque-conference-projection",
+                        "j-ai-fait-un-bilan-carbone-un-bilan-environnemental-ou-obtenu-un-label-responsable-depuis-moins-de-3-ans",
+                        "j-ai-produit-une-charte-ou-un-engagement-de-developpement-durable-a-l-attention-de-mes-fournisseurs-partenaires",
+                        "je-mets-en-avant-les-produits-locaux-de-saison-issus-de-l-agriculture-bio-ainsi-que-la-gastronomie-regionale",
+                        "je-propose-des-plats-vegetariens-et-ou-vegans-que-je-mets-en-avant",
+                        "je-mets-en-place-des-mesures-incitatives-pour-l-adoption-de-comportements-vertueux-a-l-attention-de-mes-clients-affichettes-pictos-infographie",
+                    ],
+                    ThematiqueSlugEnum::BIEN_ETRE_DE_L_EQUIPE->value => [
+                        "j-ai-mis-en-place-un-management-facilitant-la-remontee-d-information-au-dela-du-cadre-legal-entretiens-reguliers-entretiens-croises-boite-a-idee",
+                    ],
+                    ThematiqueSlugEnum::DEVELOPPEMENT_ECONOMIQUE_LOCAL->value => [
+                        "au-moins-80-de-mes-fournisseurs-alimentaires-sont-locaux-dans-un-rayon-de-moins-de-150-km",
+                    ],
+                    ThematiqueSlugEnum::COOPERATION_LOCALE_ET_LIENS_AVEC_LES_HABITANTS->value => [
+                        "je-participe-au-moins-deux-fois-par-an-a-des-reunions-de-travail-avec-mon-ot-le-cdt-le-crt-ou-les-collectivites-locales",
+                        "je-suis-partenaire-au-moins-une-fois-par-an-a-un-evenement-en-lien-avec-les-habitants-ou-associations-de-la-commune",
+                        "l-un-de-nos-salaries-dirigeant-est-elu-ou-benevole-au-sein-d-une-instance-publique-ou-professionnelle-et-du-temps-lui-est-mis-a-disposition-pour-s-impliquer",
+                        "la-structure-soutient-une-association-locale-par-du-don-financier-du-temps-offert-du-pret-de-materiel-ou-toute-forme-d-aide-significative",
+                    ],
+                    ThematiqueSlugEnum::CULTURE_ET_PATRIMOINE->value => [
+                        "notre-etablissement-restaure-ou-developpe-le-patrimoine-architectural-en-respectant-les-techniques-et-savoir-faire-traditionnels-locaux",
+                        "je-propose-un-plat-traditionnel-local-dans-mon-menu-et-je-le-mets-en-avant-dans-mon-offre-boutique",
+                        "j-emploie-je-mets-en-avant-des-artistes-locaux",
+                    ],
+                    ThematiqueSlugEnum::LABELS->value => [
+                        'clef-verte',
+                        'accueil-velo',
+                        'maitre-restaurateur',
+                    ],
+                ]
+            ],
+            ['MARIE', 'GUTZWILLER', '0675666838', 'info@hotelbristol.com', "HOTEL BRISTOL", '18 AVENUE DE COLMAR', '68390', 'MULHOUSE', 'hotel', true, false, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+                [
+                    ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value => [
+                        "je-limite-drastiquement-l-eclairage-nocturne-les-lumieres-exterieures-sont-eteintes-au-plus-tard-2h-apres-le-coucher-du-soleil-sans-passage",
+                        "j-ai-des-partenariats-avec-des-organismes-locaux-ou-nationaux-pour-la-valorisation-de-la-connaissance-sur-les-especes-locales-et-leur-observation",
+                    ],
+                    ThematiqueSlugEnum::GESTION_DES_DECHETS->value => [
+                        "j-ai-recours-a-un-systeme-de-consigne-pour-au-moins-la-moitie-de-mes-boissons",
+                        "je-donne-mes-equipements-en-fin-de-vie-et-en-bon-etat-de-fonctionnement-a-des-associations",
+                    ],
+                    ThematiqueSlugEnum::GESTION_DE_L_EAU_ET_DE_L_EROSION->value => [
+                        "tous-les-points-d-eau-sont-dotes-de-reducteurs-de-debits-wc-double-debits-mousseurs-detecteurs-sous-robinets",
+                    ],
+                    ThematiqueSlugEnum::ECO_CONSTRUCTION->value => [
+                        "maximum-25-de-la-surface-du-batiment-est-age-de-moins-de-30-ans-je-favorise-l-ancien-et-la-renovation",
+                        "je-n-ai-que-du-double-ou-du-triple-vitrage",
+                        "tous-mes-murs-toits-sols-sont-isolees-en-plus-des-elements-porteurs",
+                        "meubles-et-decoratio   n-sont-majoritairement-en-bois-non-agglomere-non-exotique-a-base-de-vegetal-en-metal-ou-a-partir-d-objets-recycles-ou-de-seconde-vie",
+                    ],
+                    ThematiqueSlugEnum::GESTION_DE_L_ENERGIE->value => [
+                        'je-n-ai-rien-entrepris-en-ce-sens',
+                    ],
+                    ThematiqueSlugEnum::ENTRETIEN_ET_PROPRETE->value => [
+                        "j-ai-des-consignes-claires-sur-l-utilisation-des-produits-d-entretien-ex-quantite-de-produit-par-rapport-a-la-durete-de-l-eau",
+                        "j-utilise-des-pompes-de-dosage-pour-diluer-les-produits-concentres-ou-des-doseurs",
+                    ],
+                    ThematiqueSlugEnum::TRANSPORT_ET_MOBILITE->value => [
+                        "j-ai-au-moins-2-des-places-de-stationnement-equipees-de-recharges-pour-voitures-electriques",
+                        "j-ai-une-offre-dediee-aux-voyageurs-a-pied-en-train-ou-a-velo",
+                    ],
+                    ThematiqueSlugEnum::ACCES_AUX_PERSONNES_EN_SITUATION_DE_HANDICAP->value => [
+                        'je-n-ai-rien-entrepris-en-ce-sens',
+                    ],
+                    ThematiqueSlugEnum::INCLUSIVITE_SOCIALE->value => [
+                        "j-accepte-les-cheques-vacances-ancv",
+                    ],
+                    ThematiqueSlugEnum::SENSIBILISATION_DES_ACTEURS->value => [
+                        "chaque-annee-l-ensemble-de-l-entreprise-est-sensibilise-sur-le-sujet-du-tourisme-durable-webinaire-formation-fresque-conference-projection",
+                        "j-ai-fait-un-bilan-carbone-un-bilan-environnemental-ou-obtenu-un-label-responsable-depuis-moins-de-3-ans",
+                        "je-mets-en-avant-les-produits-locaux-de-saison-issus-de-l-agriculture-bio-ainsi-que-la-gastronomie-regionale",
+                        "je-propose-des-plats-vegetariens-et-ou-vegans-que-je-mets-en-avant",
+                    ],
+                    ThematiqueSlugEnum::BIEN_ETRE_DE_L_EQUIPE->value => [
+                        'je-n-ai-rien-entrepris-en-ce-sens',
+                    ],
+                    ThematiqueSlugEnum::DEVELOPPEMENT_ECONOMIQUE_LOCAL->value => [
+                        'je-n-ai-rien-entrepris-en-ce-sens',
+                    ],
+                    ThematiqueSlugEnum::COOPERATION_LOCALE_ET_LIENS_AVEC_LES_HABITANTS->value => [
+                        "je-participe-au-moins-deux-fois-par-an-a-des-reunions-de-travail-avec-mon-ot-le-cdt-le-crt-ou-les-collectivites-locales",
+                        "je-suis-partenaire-au-moins-une-fois-par-an-a-un-evenement-en-lien-avec-les-habitants-ou-associations-de-la-commune",
+                        "l-un-de-nos-salaries-dirigeant-est-elu-ou-benevole-au-sein-d-une-instance-publique-ou-professionnelle-et-du-temps-lui-est-mis-a-disposition-pour-s-impliquer",
+                    ],
+                    ThematiqueSlugEnum::CULTURE_ET_PATRIMOINE->value => [
+                        "je-propose-un-plat-traditionnel-local-dans-mon-menu-et-je-le-mets-en-avant-dans-mon-offre-boutique",
+                    ],
+                    ThematiqueSlugEnum::LABELS->value => [
+                        'je-n-ai-rien-entrepris-en-ce-sens',
+                    ],
+                ]
+            ],
         ];
 
-        foreach ($repondantDatas as $repondantData) {
+        foreach ($repondantDatas as $key => $repondantData) {
+//            if ($key!==2) {
+//                continue;
+//            }
             $repondant = new Repondant();
             $typologie = $repondantData[8];
 
@@ -158,8 +294,12 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                 $question = $thematique->getQuestion();
 
                 foreach ($repondantChoicesSlugs as $repondantChoicesSlug){
-                    $choice = $this->choiceRepository->findOneBy(['question' => $question->getId(),'slug' => $repondantChoicesSlug]);
-                    $rawForm[$question->getId()]['answers'][$choice->getId()] = 'on';
+                    $choice = $this->choiceRepository->findOneBy(['question' => $question->getId(),'slug' => str_replace(' ', '', $repondantChoicesSlug)]);
+                    if ($choice){
+                        $rawForm[$question->getId()]['answers'][$choice->getId()] = 'on';
+                    } else {
+                        dump('choice not founst for slug : ' . $repondantChoicesSlug);
+                    }
                 }
             }
             $reponse->setRawForm($rawForm);

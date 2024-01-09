@@ -58,7 +58,7 @@ class RepondantCrudController extends AbstractCrudController
         yield TextField::new('department', 'Département');
         yield TextField::new('country', 'Pays')->hideOnIndex();
         yield TextField::new('phone', 'Téléphone')->hideOnIndex();
-        yield TextField::new('company', 'Entreprise')->hideOnIndex();
+        yield TextField::new('company', 'Entreprise');
         yield TextField::new('typologie');
         yield BooleanField::new('restauration')->renderAsSwitch(false);
         yield BooleanField::new('greenSpace', 'Espace vert')->renderAsSwitch(false);
