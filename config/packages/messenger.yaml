@@ -16,12 +16,7 @@ framework:
                     delay: 60 # 1mn
                     # delay : 1mn, 2mn, 4mn, 8mn
                     multiplier: 2
-            generate-pdf:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
-                options:
-                    queue_name: generate-pdf
 
         routing:
             Symfony\Component\Mailer\Messenger\SendEmailMessage: sync
-            App\Message\GenerateReponsePDF: generate-pdf
             App\Message\ReponseConfirmationMessage: reponse-confirmation

@@ -17,7 +17,7 @@ class ResultatController extends AbstractController
     ) {}
 
     /** @return array<mixed> */
-    #[Route('/resultat/{uuid}', name: 'app_resultat_single', requirements: ['uuid' => '.*(?<!pdf)$'])]
+    #[Route('/resultat/{uuid}', name: 'app_resultat_single')]
     #[Template('home.html.twig')]
     public function __invoke(Reponse $reponse): array
     {
