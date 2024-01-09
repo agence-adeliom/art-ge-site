@@ -8,6 +8,8 @@ use App\Entity\Reponse;
 use App\Entity\Score;
 use App\Repository\ChoiceTypologieRepository;
 use App\Repository\ThematiqueRepository;
+use App\Services\ChoiceIgnorer\GreenSpaceChoiceIgnorer;
+use App\Services\ChoiceIgnorer\RestaurationChoiceIgnorer;
 use App\ValueObject\RepondantTypologie;
 use App\ValueObject\ScoreGeneration;
 
@@ -34,7 +36,7 @@ class ReponseScoreGeneration
             /** @var \App\Entity\Question $question */
             $question = $this->thematiqueRepository->findOneBy(['id' => $questionId])?->getQuestion();
             if (false === $repondantTypologieVO->getGreenSpace()) {
-                $questionChoices = $this->greenSpaceChoiceIgnorer->onlyChoices($question);
+                $questionChoices = $this->greenSpaceChoiceIgnorer->onlyNotIgnored($question);
             }
             if (false === $repondantTypologieVO->getRestauration()) {
                 $questionChoices = $this->restaurationChoiceIgnorer->onlyNotIgnored($question);

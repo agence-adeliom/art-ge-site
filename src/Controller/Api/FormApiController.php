@@ -6,8 +6,8 @@ namespace App\Controller\Api;
 
 use App\Repository\QuestionRepository;
 use App\Repository\ThematiqueRepository;
-use App\Services\GreenSpaceChoiceIgnorer;
-use App\Services\RestaurationChoiceIgnorer;
+use App\Services\ChoiceIgnorer\GreenSpaceChoiceIgnorer;
+use App\Services\ChoiceIgnorer\RestaurationChoiceIgnorer;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,7 +51,7 @@ class FormApiController extends AbstractController
         $thematiques = $this->thematiqueRepository->findAll();
 
         if (false === $greenSpace) {
-            $questions = array_map($this->greenSpaceChoiceIgnorer->excludeChoices(...), $questions);
+            $questions = array_map($this->greenSpaceChoiceIgnorer->ignoreChoices(...), $questions);
         }
 
         if (false === $restauration) {

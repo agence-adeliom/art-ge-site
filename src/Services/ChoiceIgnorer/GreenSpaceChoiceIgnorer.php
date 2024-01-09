@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\Services;
+namespace App\Services\ChoiceIgnorer;
 
-use App\Entity\Choice;
-use App\Entity\Question;
 use App\Enum\ThematiqueSlugEnum;
 
 class GreenSpaceChoiceIgnorer extends AbstractChoiceIgnorer
