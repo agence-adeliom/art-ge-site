@@ -16,7 +16,7 @@ class ReponseScoreGeneration
     public function __construct(
         private readonly ThematiqueRepository $thematiqueRepository,
         private readonly ChoiceTypologieRepository $choiceTypologieRepository,
-        private readonly GreenSpaceChoiceExcluder $greenSpaceChoiceExcluder,
+        private readonly GreenSpaceChoiceIgnorer $greenSpaceChoiceIgnorer,
         private readonly RestaurationChoiceIgnorer $restaurationChoiceIgnorer,
     ) {
     }
@@ -34,7 +34,7 @@ class ReponseScoreGeneration
             /** @var \App\Entity\Question $question */
             $question = $this->thematiqueRepository->findOneBy(['id' => $questionId])?->getQuestion();
             if (false === $repondantTypologieVO->getGreenSpace()) {
-                $questionChoices = $this->greenSpaceChoiceExcluder->onlyChoices($question);
+                $questionChoices = $this->greenSpaceChoiceIgnorer->onlyChoices($question);
             }
             if (false === $repondantTypologieVO->getRestauration()) {
                 $questionChoices = $this->restaurationChoiceIgnorer->onlyNotIgnored($question);

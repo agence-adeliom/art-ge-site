@@ -8,7 +8,7 @@ use App\Entity\Choice;
 use App\Entity\Question;
 use App\Enum\ThematiqueSlugEnum;
 
-class GreenSpaceChoiceExcluder
+class GreenSpaceChoiceIgnorer
 {
     /** @var array<string, array<string>> */
     private array $slugsToKeep = [

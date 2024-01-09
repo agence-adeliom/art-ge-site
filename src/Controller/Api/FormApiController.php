@@ -6,7 +6,7 @@ namespace App\Controller\Api;
 
 use App\Repository\QuestionRepository;
 use App\Repository\ThematiqueRepository;
-use App\Services\GreenSpaceChoiceExcluder;
+use App\Services\GreenSpaceChoiceIgnorer;
 use App\Services\RestaurationChoiceIgnorer;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +23,7 @@ class FormApiController extends AbstractController
     public function __construct(
         private readonly ThematiqueRepository $thematiqueRepository,
         private readonly QuestionRepository $questionRepository,
-        private readonly GreenSpaceChoiceExcluder $greenSpaceChoiceExcluder,
+        private readonly GreenSpaceChoiceIgnorer $greenSpaceChoiceIgnorer,
         private readonly RestaurationChoiceIgnorer $restaurationChoiceIgnorer,
     ) {
     }
@@ -51,7 +51,7 @@ class FormApiController extends AbstractController
         $thematiques = $this->thematiqueRepository->findAll();
 
         if (false === $greenSpace) {
-            $questions = array_map($this->greenSpaceChoiceExcluder->excludeChoices(...), $questions);
+            $questions = array_map($this->greenSpaceChoiceIgnorer->excludeChoices(...), $questions);
         }
 
         if (false === $restauration) {
