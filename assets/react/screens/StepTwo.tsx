@@ -7,6 +7,7 @@ import Hotel from '@icones/hotel.svg';
 import Bed from '@icones/bed.svg';
 import Map from '@icones/map-location-dot.svg';
 import Tent from '@icones/tent.svg';
+import Location from '@icones/location.svg';
 import Tipie from '@icones/tipie.svg';
 import Ustensil from '@icones/utensils.svg';
 import Trees from '@icones/trees.svg';
@@ -27,7 +28,7 @@ const establishmentData: {
   },
   {
     value: 2,
-    iconSrc: Tent,
+    iconSrc: Location,
     alt: 'Location de vacances',
     title: 'Une location de vacances (gîte et meublé…)',
   },
@@ -46,8 +47,8 @@ const establishmentData: {
   {
     value: 5,
     iconSrc: Tipie,
-    alt: 'Hébergement insolite',
-    title: 'Hébergement insolite(bulles, cabanes, tiny house…)',
+    alt: 'Un hébergement insolite',
+    title: 'Un hébergement insolite (bulles, cabanes, tiny house…)',
   },
   {
     value: 6,
@@ -58,8 +59,8 @@ const establishmentData: {
   {
     value: 7,
     iconSrc: Trees,
-    alt: 'Activité de loisir',
-    title: 'Activité de loisir',
+    alt: 'Une activité de loisir',
+    title: 'Une activité de loisir',
   },
   {
     value: 8,
