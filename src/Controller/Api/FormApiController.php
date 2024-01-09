@@ -6,7 +6,7 @@ namespace App\Controller\Api;
 
 use App\Repository\QuestionRepository;
 use App\Repository\ThematiqueRepository;
-use App\Services\QuestionChoiceExcluder;
+use App\Services\GreenSpaceChoiceExcluder;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,7 +22,7 @@ class FormApiController extends AbstractController
     public function __construct(
         private readonly ThematiqueRepository $thematiqueRepository,
         private readonly QuestionRepository $questionRepository,
-        private readonly QuestionChoiceExcluder $questionChoiceExcluder,
+        private readonly GreenSpaceChoiceExcluder $greenSpaceChoiceExcluder,
     ) {}
 
     #[OA\Tag(name: 'Formulaire')]
@@ -40,7 +40,7 @@ class FormApiController extends AbstractController
         $thematiques = $this->thematiqueRepository->findAll();
 
         if (false === $greenSpace) {
-            $questions = array_map($this->questionChoiceExcluder->excludeChoices(...), $questions);
+            $questions = array_map($this->greenSpaceChoiceExcluder->excludeChoices(...), $questions);
         }
 
         return $this->json([

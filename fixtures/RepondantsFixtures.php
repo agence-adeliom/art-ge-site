@@ -14,7 +14,7 @@ use App\Repository\CityRepository;
 use App\Repository\DepartmentRepository;
 use App\Repository\ThematiqueRepository;
 use App\Repository\TypologieRepository;
-use App\Services\QuestionChoiceExcluder;
+use App\Services\GreenSpaceChoiceExcluder;
 use App\Services\ReponseScoreGeneration;
 use DataFixtures\Provider\RepondantProvider;
 use App\Entity\Repondant;
@@ -38,7 +38,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
         private readonly ChoiceTypologieRepository $choiceTypologieRepository,
         private readonly ChoiceRepository $choiceRepository,
         private readonly ReponseScoreGeneration $reponseScoreGeneration,
-        private readonly QuestionChoiceExcluder $questionChoiceExcluder,
+        private readonly GreenSpaceChoiceExcluder $greenSpaceChoiceExcluder,
     ) {
         $this->faker = Factory::create('fr_FR');
         $this->faker->seed('artge');
@@ -127,7 +127,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
             foreach ($thematiques as $thematique) {
                 $question = $thematique->getQuestion();
                 if (!$repondant->isGreenSpace()) {
-                    $question = $this->questionChoiceExcluder->excludeChoices($question);
+                    $question = $this->greenSpaceChoiceExcluder->excludeChoices($question);
                 }
                 $questionChoices = array_splice($choices, 0, $question->getChoices()->count());
                 foreach ($questionChoices as $choice) {
