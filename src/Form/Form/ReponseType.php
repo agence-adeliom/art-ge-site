@@ -25,6 +25,7 @@ class ReponseType extends AbstractType
             ->add('repondant', RepondantType::class)
             ->add('rawForm', RawFormReponseType::class)
             ->add('processedForm', ProcessedFormReponseType::class)
+            ->add('contact_by_bird', HoneypotType::class)
             ->add('submit', SubmitType::class)
             ->addEventListener(FormEvents::PRE_SUBMIT, function (PreSubmitEvent $event): void {
                 $data = $event->getData();
