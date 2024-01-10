@@ -35,7 +35,7 @@ export const YesNoCard: FunctionComponent<YesNoCardProps> = ({
           {...field}
           value={1}
         />
-        <span>Oui</span>
+        <span className="text-sm">Oui</span>
       </label>
 
       <label
@@ -50,7 +50,7 @@ export const YesNoCard: FunctionComponent<YesNoCardProps> = ({
           {...field}
           value={0}
         />
-        <span>Non</span>
+        <span className="text-sm">Non</span>
       </label>
     </div>
   );

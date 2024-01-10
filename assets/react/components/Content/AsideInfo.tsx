@@ -1,5 +1,5 @@
 import React from 'react'
-import InfoImage1 from '@images/informations-image.jpeg';
+import InfoImage1 from '@images/informations-image-1.jpg';
 import InfoImage2 from '@images/informations-image-2.jpeg';
 import InfoImage3 from '@images/background-green-space.jpeg';
 import InfoImage4 from '@images/background-address.jpeg';

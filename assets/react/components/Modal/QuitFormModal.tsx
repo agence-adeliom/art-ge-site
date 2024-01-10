@@ -9,8 +9,10 @@ import { Link } from "react-router-dom";
 const QuitFormModal = ( { closeModal }: { 
     closeModal: Function, 
 }) => {
-
+    const backdrop = "fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 z-[100]"
     return (
+        <>
+        <div className={backdrop} onClick={() => (closeModal(), console.log('close modal'))}></div>
         <QuitForm isVisible>
             <div className="flex flex-col gap-5">
                 <div className="flex gap-3 items-baseline">
@@ -36,6 +38,8 @@ const QuitFormModal = ( { closeModal }: {
                 </div>
             </div>
         </QuitForm>
+        </>
+        
     )
 }
 export default QuitFormModal

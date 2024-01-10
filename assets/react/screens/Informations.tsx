@@ -35,7 +35,7 @@ const Informations: FunctionComponent = () => {
         step={step}
         title={'Vos engagements pour un tourisme durable et responsable'}
       ></Header>
-      <div className="container max-lg:pb-6 grid grid-cols-12 gap-6 md:h-[calc(100vh-108px)]">
+      <div className="container max-lg:pb-6 grid grid-cols-12 gap-6 md:h-[calc(100vh-93px)]">
         <div className="col-span-full lg:col-span-7 flex items-center overflow-auto relative">
           <div className="h-full w-full pl-1 flex">
             <div className="bg-white w-full">

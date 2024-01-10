@@ -99,7 +99,7 @@ const StepTwo: FunctionComponent = () => {
         <Text className="mt-6" color="neutral-500" weight={400} size="sm">
           Indiquez l’activité de votre établissement touristique.
         </Text>
-        <div className="grid gap-6 grid-cols-2 mt-8">
+        <div className="grid gap-4 grid-cols-2 mt-8">
           {establishmentData.map((item, index) => {
             return (
               <ChoiceCard
@@ -111,7 +111,7 @@ const StepTwo: FunctionComponent = () => {
                 }}
                 onClick={() => setEtablissement(item.value)}
               >
-                <Text color="neutral-700" weight={400}>
+                <Text color="neutral-700" weight={400} size="sm">
                   {item.title}
                 </Text>
               </ChoiceCard>

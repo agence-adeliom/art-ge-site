@@ -111,6 +111,11 @@ const Form = () => {
         answers: answerObject,
       },
     };
+    form.current!.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
 
     feedRawFormAndGoToNextStep(answerSlected);
   };
@@ -219,7 +224,7 @@ const Form = () => {
           >
             <div className="container">
               {actualQuestion && (
-                <div className="w-8/12">
+                <div className="w-10/12">
                   <Heading variant="display-5" className="my-4">
                     {actualQuestion.libelle}
                   </Heading>

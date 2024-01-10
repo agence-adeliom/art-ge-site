@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Logo from '@images/logo/logo.svg';
+import Logo from '@images/logo-home.png';
 import lightBulbOn from '@icones/lightbulb-on.svg';
 import { Heading } from '@components/Typography/Heading';
 import { Text } from '@components/Typography/Text';
@@ -40,7 +40,7 @@ const Home = () => {
             <div className="col-span-full max-lg:mb-10 lg:col-span-7 mt-20">
               <img className="w-[282px] h-[93px]" src={Logo} alt=""></img>
               <div className="flex flex-col gap-4">
-                <Heading variant="display-2" className="mt-12">
+                <Heading variant="display-3" className="mt-12">
                   Bienvenue sur notre calculateur tourisme durable
                 </Heading>
                 <Text color="neutral-700">
@@ -87,7 +87,7 @@ const Home = () => {
 
               <Button
                   size="lg"
-                  className="mt-8"
+                  className="mt-8 mb-12"
                   icon="fa-minus"
                   iconSide="left"
                   onClick={handleNavigation}

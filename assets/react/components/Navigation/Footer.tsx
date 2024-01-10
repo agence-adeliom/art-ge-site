@@ -18,7 +18,7 @@ const Footer = () => {
                 </nav>
             </div>
             <div className="flex-col md:flex-row flex items-center gap-6 justify-between mt-6 relative z-2">
-                <Text color="white" weight={400} size="sm">2023 ©ARTGE - Tous droits réservés</Text>
+                <Text color="white" weight={400} size="sm">2024 ©ARTGE - Tous droits réservés</Text>
                 <div>
                     <a href="https://adeliom.com/" className="flex items-center gap-2 mr-6" target="_blank">
                         <Text weight={400} size="sm" color="white">Conception</Text>

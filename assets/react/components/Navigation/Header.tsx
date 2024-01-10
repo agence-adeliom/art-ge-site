@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import Logo from '@images/logo/logo.svg';
+import Logo from '@images/logo/logo.png';
 import { Text } from '@components/Typography/Text';
 import { Button } from '@components/Action/Button';
 import { Link } from "react-router-dom";
@@ -39,9 +39,9 @@ const Header = ({step, ...props} : {
     const actionBtn = button?.quitAction 
     return (
         <>
-            <div className="container relative flex justify-between items-center py-8">
+            <div className="container flex justify-between items-center py-4">
                 <a href="https://www.art-grandest.fr/" target='_blank' >
-                    <img src={Logo} alt="Logo ART GE"/>
+                    <img src={Logo} alt="Logo ART GE" className=""/>
                 </a>
                 { hasTitle ?
                     <Text color="neutral-500" className="hidden md:block" weight={400}>
