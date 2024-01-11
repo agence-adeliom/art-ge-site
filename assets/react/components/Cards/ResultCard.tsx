@@ -27,28 +27,31 @@ const ResultCard = ({title, percentage, chosenChoices, notChosenChoices, ...prop
     const [open, setOpen] = useState(false)
     return (
         <div className="col-span-1">
-            <div className="bg-white h-full flex items-stretch cursor-pointer" onClick={ event => handleDropdown(event)}>
-                <div className="h-full flex flex-col w-full">
-                    <div className="h-[152px] flex-shrink-0">
-                        <img
-                        className="w-full h-full object-cover"
-                        src={srcImg} alt=""/>
-                    </div>
-                    <div className="p-6 flex flex-col h-full flex-shrink-1">
-                        <Heading variant={'display-5'} raw={true}>{title}</Heading>
-                        <div className="flex-col mt-auto pt-6">
-                            <div className="flex items-center gap-10">
-                                <ProgressBar percentage={percentage}></ProgressBar>
-                                <Text className="flex-shrink-0" size={'lg'}>{percentage} %</Text>
+            <div className="lg:group h-full">
+                <div className="bg-white h-full flex items-stretch cursor-pointer trans-default group-hover:-translate-y-2" onClick={ event => handleDropdown(event)}>
+                    <div className="h-full flex flex-col w-full">
+                        <div className="h-[152px] flex-shrink-0">
+                            <img
+                            className="w-full h-full object-cover"
+                            src={srcImg} alt=""/>
+                        </div>
+                        <div className="p-6 flex flex-col h-full flex-shrink-1">
+                            <Heading variant={'display-5'} className="group-hover:text-primary-600 trans-default" raw={true}>{title}</Heading>
+                            <div className="flex-col mt-auto pt-2 lg:pt-6">
+                                <div className="flex items-center gap-10">
+                                    <ProgressBar percentage={percentage}></ProgressBar>
+                                    <Text className="flex-shrink-0" size={'lg'}>{percentage} %</Text>
+                                </div>
+                                <Button variant={'textOnly'} className="!p-0 mt-4 lg:mt-8 !w-fit" icon="fa-chevron-right">Voir en détail</Button>
                             </div>
-                            <Button variant={'textOnly'} className="pl-0 mt-8 !w-fit" icon="fa-chevron-right">Voir en détail</Button>
+
                         </div>
 
                     </div>
 
                 </div>
-
             </div>
+            
             {open && (
                 <LateralPanel
                 title={title}

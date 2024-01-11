@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '@components/Navigation/Header';
 import { Heading } from '@components/Typography/Heading';
 import { Text } from '@components/Typography/Text';
@@ -58,6 +58,7 @@ const Resultats = () => {
       text = 'Regardez vos résultats dans le détail, thématique par thématique, identifiez les pistes d’amélioration et découvrez les actions à mener pour progresser davantage.';
   }
 
+  const [copyUrl, setCopyToUrl] = useState(false)
   return (
     <AnimatePresence>
       <>
@@ -72,7 +73,7 @@ const Resultats = () => {
           }}
         />
         <div className="bg-primary-600">
-          <div className="container grid grid-cols-12 gap-6 items-center pt-20 pb-8">
+          <div className="container grid grid-cols-12 gap-6 items-center pt-10 lg:pt-20 pb-8">
             <div className="flex flex-col gap-4 col-span-full md:col-span-8 dark">
               <Heading variant="display-2" color="white">{heading}</Heading>
               <Heading variant="display-3" color="white">{subHeading}</Heading>
@@ -84,14 +85,19 @@ const Resultats = () => {
                 variant="primary"
                 className="dark"
                 icon="fa-link"
-                onClick={() =>
-                  navigator.clipboard.writeText(window.location.href)
+                onClick={() => (
+                  navigator.clipboard.writeText(window.location.href),
+                  setCopyToUrl(true)
+                )
+                  
+
                 }
               >
-                Copier le lien
+                <span className={`${copyUrl ? 'opacity-0 absolute' : 'opacity-100'} trans-default w-[97px]`}>Copier le lien</span>
+                <span className={`${copyUrl ? 'opacity-100' : 'opacity-0 absolute'} trans-default w-[97px]`}>Lien copié</span>
               </Button>
             </div>
-            <div className="col-span-full md:col-span-4 bg-white p-10 h-fit">
+            <div className="col-span-full md:col-span-4 bg-white p-6 lg:p-10 h-fit">
               <Heading variant="display-5">Votre score</Heading>
               <Text className="font-title mb-4" size={'4xl'}>
                 <span className="text-6xl">{resultats.reponsePercentage}</span> %
@@ -120,7 +126,7 @@ const Resultats = () => {
             ))}
           </div>
         </div>
-        <div className="bg-primary-50 py-20">
+        <div className="bg-primary-50 py-10 lg:py-20">
           <div className="container">
             <Cta></Cta>
           </div>

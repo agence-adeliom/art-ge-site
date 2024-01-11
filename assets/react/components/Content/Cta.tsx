@@ -6,7 +6,7 @@ import Leaf from "@icones/leafs.svg"
 
 const Cta = () => {
     return (
-        <div className="bg-primary-600 p-12 relative overflow-hidden">
+        <div className="bg-primary-600 px-2 py-6 lg:p-12 relative overflow-hidden">
             <img src={Leaf} className="absolute -bottom-14 -right-20 w-72 aspect-square" alt="icone de feuille"></img>
             <div className="flex flex-col md:flex-row gap-6 md:items-center container">
                 <div className="flex flex-col gap-2">

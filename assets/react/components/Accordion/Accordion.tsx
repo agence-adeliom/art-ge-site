@@ -21,7 +21,7 @@ export const Accordion: FunctionComponent<AccordionProps> = ({
         className="group flex items-start justify-between"
       >
         <Text
-          size="xl"
+          size="base"
           weight={500}
           color={`${isOpen ? 'secondary-800' : 'neutral-700'}`}
           className="max-w-[90%] lg:group-hover:text-secondary-800 flex items-center gap-2 group"
@@ -44,7 +44,7 @@ export const Accordion: FunctionComponent<AccordionProps> = ({
         }`}
       >
         <ul className="list-disc  mt-4 list-inside marker:text-secondary-800 flex flex-col gap-2">
-          {choices.map((choice: Choice) => <li key={choice.slug} dangerouslySetInnerHTML={{ __html: choice.name }}></li>)}
+          {choices.map((choice: Choice) => <li className="text-sm" key={choice.slug} dangerouslySetInnerHTML={{ __html: choice.name }}></li>)}
         </ul>
 
       </div>

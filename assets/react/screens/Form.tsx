@@ -220,7 +220,7 @@ const Form = () => {
           } -top-20 w-full absolute  left-0 tansition-all duration-500 bg-white`}
         >
           <div
-            className={` w-full bg-white absolute top-0 left-0 min-h-[108px] flex items-center`}
+            className={` w-full bg-white absolute top-0 left-0 min-h-[93px] flex items-center`}
           >
             <div className="container">
               {actualQuestion && (
@@ -235,7 +235,7 @@ const Form = () => {
         </div>
       </div>
 
-      <div className="container max-lg:pb-6 grid grid-cols-12 gap-6 md:h-[calc(100vh-108px)] relative">
+      <div className="container max-lg:pb-6 grid grid-cols-12 gap-6 md:h-[calc(100vh-93px)] relative">
         <div
           className="col-span-full lg:col-span-8 flex items-center md:py-10 overflow-auto"
           ref={form}

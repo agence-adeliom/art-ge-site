@@ -12,9 +12,9 @@ const FooterResult = () => {
                 <div className="relative z-2">
                     <nav>
                         <ul className="flex items-center max-lg:justify-center gap-6 text-sm font-normal flex-wrap">
-                            <li><a href="">Mentions légales</a></li>
-                            <li><a href="">Gestion des cookies</a></li>
-                            <li><a href="">Politique de confidentialité</a></li>
+                            <li><a href="" className="trans-default hover:text-neutral-400">Mentions légales</a></li>
+                            <li><a href="" className="trans-default hover:text-neutral-400">Gestion des cookies</a></li>
+                            <li><a href="" className="trans-default hover:text-neutral-400">Politique de confidentialité</a></li>
                         </ul>
                     </nav>
                 </div>
