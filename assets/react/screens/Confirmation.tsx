@@ -11,7 +11,7 @@ const Confirmation = ({
 }) => {
   return (
     <div className="fixed bg-primary-600 z-[100] flex items-center justify-center top-0 left-0 w-screen h-screen">
-      <div className="text-center">
+      <div className="text-center px-4">
         <Heading variant="display-2" color="white">
           {title}
         </Heading>

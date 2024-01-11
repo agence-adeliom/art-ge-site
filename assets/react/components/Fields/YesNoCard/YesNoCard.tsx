@@ -22,7 +22,7 @@ export const YesNoCard: FunctionComponent<YesNoCardProps> = ({
   }, [field.value]);
 
   return (
-    <div className="gap-6 grid-cols-2 grid ">
+    <div className="gap-4 lg:gap-6 grid-cols-2 grid ">
       <label
         htmlFor={`${name}-yes`}
         className={cx(cardClassName, enabled && interacted && 'is-active')}

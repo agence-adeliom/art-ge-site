@@ -107,12 +107,13 @@ const StepFour = () => {
             variant="textOnly"
             icon={'fa-chevron-left'}
             iconSide="left"
+            className="!w-fit"
             weight={600}
             onClick={() => prevStep()}
           >
             Retour
           </Button>
-          <Heading variant="display-4" className="mt-6">
+          <Heading variant="display-4" className="mt-2 lg:mt-6">
             L’adresse de votre établissement...
           </Heading>
           <Text className="mt-6" color="neutral-500" weight={400} size="sm">

@@ -88,18 +88,19 @@ const StepTwo: FunctionComponent = () => {
           variant="textOnly"
           icon={'fa-chevron-left'}
           iconSide="left"
+          className="!w-fit"
           weight={600}
           onClick={() => prevStep()}
         >
           Retour
         </Button>
-        <Heading variant="display-4" className="mt-6">
+        <Heading variant="display-4" className="mt-2 lg:mt-6">
           Vous proposez...
         </Heading>
         <Text className="mt-6" color="neutral-500" weight={400} size="sm">
           Indiquez l’activité de votre établissement touristique.
         </Text>
-        <div className="grid gap-4 grid-cols-2 mt-8">
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 mt-8">
           {establishmentData.map((item, index) => {
             return (
               <ChoiceCard

@@ -15,6 +15,7 @@ import { cx } from 'class-variance-authority';
 import Resultats from "@screens/Resultats";
 import AsideForm from '@components/Content/AsideForm';
 
+
 const inputContainerClass =
   'group trans-default lg:hover:bg-tertiary-200 is-active:border-primary-600 is-active:bg-primary-50 py-4 px-3';
 

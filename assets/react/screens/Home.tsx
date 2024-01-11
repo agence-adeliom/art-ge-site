@@ -37,10 +37,10 @@ const Home = () => {
       <div className="h-screen overflow-auto">
         <div className="container">
           <div className="h-screen w-full grid grid-cols-12 auto-rows-min">
-            <div className="col-span-full max-lg:mb-10 lg:col-span-7 mt-20">
-              <img className="w-[282px] h-[93px]" src={Logo} alt=""></img>
+            <div className="col-span-full max-lg:mb-10 lg:col-span-7 mt-10 lg:mt-20">
+              <img className="w-[195px] h-[64px] lg::w-[282px] lg:h-[93px]" src={Logo} alt=""></img>
               <div className="flex flex-col gap-4">
-                <Heading variant="display-3" className="mt-12">
+                <Heading variant="display-3" className="mt-6 lg:mt-12">
                   Bienvenue sur notre calculateur tourisme durable
                 </Heading>
                 <Text color="neutral-700">
@@ -51,7 +51,7 @@ const Home = () => {
                 </Text>
               </div>
 
-              <div className="border p-4 border-secondary-600 mt-10">
+              <div className="border p-4 border-secondary-600 mt-8 lg:mt-10">
                 <div className="flex items-center gap-2 mb-2">
                   <img src={lightBulbOn} alt="icon ampoule" />
                   <Text weight={600}>Avant de vous lancer</Text>
@@ -87,7 +87,7 @@ const Home = () => {
 
               <Button
                   size="lg"
-                  className="mt-8 mb-12"
+                  className="mt-8 mb-2 lg:mb-12"
                   icon="fa-minus"
                   iconSide="left"
                   onClick={handleNavigation}
