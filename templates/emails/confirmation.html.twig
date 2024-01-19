@@ -2,7 +2,7 @@
 <p>Un grand merci d’avoir pris le temps de répondre à l’éco-boussole. Vous connaissez désormais votre niveau d’engagement.</p>
 
 <p>Vous retrouverez vos résultats en cliquant sur le lien ci-dessous :</p>
-{% set url = url('app_resultat_single', { uuid: reponse.uuid }) %}
+{% set url = 'https://ecoboussole.art-grandest.fr' ~ path('app_resultat_single', { uuid: reponse.uuid }) %}
 <a href="{{ url }}">{{ url }}</a>
 
 <p>Pensez à conserver ce mail ou le lien afin de pouvoir revenir sur votre page de résultats, et accéder aux actions à mettre en place pour améliorer vos pratiques.</p>
