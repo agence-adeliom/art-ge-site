@@ -15,6 +15,7 @@ class ReponseAdminType extends AbstractType
     {
         $builder
             ->add('uuid')
+            ->add('submittedAt')
             ->add('points')
             ->add('total')
             ->add('completed')
