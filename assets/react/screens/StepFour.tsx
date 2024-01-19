@@ -25,8 +25,7 @@ interface LocationProps {
   name: string;
 }
 
-//@TODO mise en place de l'url de prod
-const autoCompleteAPI = 'https://art-grand-est.ddev.site/api/insee/';
+const autoCompleteAPI = '/api/insee/';
 
 const StepFour = () => {
   const { wizard, feedRepondantAndGoToNextStep, prevStep } = useWizard();
@@ -74,7 +73,7 @@ const StepFour = () => {
   useEffect(() => {
     const timerId = setTimeout(() => {
       setDebouncedZipCode(zipCode);
-    }, 500); // Délai de 500 ms
+    }, 200); // Délai de 200 ms
 
     return () => clearTimeout(timerId);
   }, [zipCode]);
@@ -147,7 +146,7 @@ const StepFour = () => {
                 name={'zip'}
                 type={Fields.TEXT}
                 placeholder={'Ex : 67000'}
-                onChange={e => setZipCode(e.target.value)}
+                onChange={e => {setZipCode(e.target.value); if (e.target.value === '') setOpenDropdown(false)}}
                 onBlur={() => setOpenDropdown(false)}
                 onFocus={e => setZipCode(e.target.value)}
                 control={control}
