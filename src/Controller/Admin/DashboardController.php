@@ -12,6 +12,7 @@ use App\Entity\Reponse;
 use App\Entity\Territoire;
 use App\Entity\Thematique;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
@@ -31,6 +32,17 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
         return $this->redirect($this->adminUrlGenerator->setController(ReponseCrudController::class)->generateUrl());
+    }
+
+    public function configureAssets(): Assets
+    {
+        $assets = Assets::new();
+
+        if ('staging' == $_ENV['APP_ENV'] && !isset($_ENV['DDEV_TLD'])) {
+            $assets->addHtmlContentToBody('<script>window.markerConfig = {project: \'659512dfaf650a0597c940c1\', source: \'snippet\'}; !function(e,r,a){if(!e.__Marker){e.__Marker={};var t=[],n={__cs:t};["show","hide","isVisible","capture","cancelCapture","unload","reload","isExtensionInstalled","setReporter","setCustomData","on","off"].forEach(function(e){n[e]=function(){var r=Array.prototype.slice.call(arguments);r.unshift(e),t.push(r)}}),e.Marker=n;var s=r.createElement("script");s.async=1,s.src="https://edge.marker.io/latest/shim.js";var i=r.getElementsByTagName("script")[0];i.parentNode.insertBefore(s,i)}}(window,document);</script>');
+        }
+
+        return $assets;
     }
 
     public function configureDashboard(): Dashboard
