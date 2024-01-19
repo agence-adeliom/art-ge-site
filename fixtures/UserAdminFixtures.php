@@ -29,7 +29,7 @@ class UserAdminFixtures extends Fixture
         $manager->persist($user);
 
         $user = new User();
-        $user->setEmail($_ENV['ARTGE_USER'] ?? 'contact@art-grandest.fr');
+        $user->setEmail($_ENV['ARTGE_USER'] ?? 'contact@ecoboussole.art-grandest.fr');
         $user->setRoles(['ROLE_ADMIN']);
         $user->setFirstname('Contact');
         $user->setLastname('ART-GE');
