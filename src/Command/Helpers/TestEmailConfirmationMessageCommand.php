@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command\Helpers;
 
-use App\Message\GenerateReponsePDF;
+use App\Message\ReponseConfirmationMessage;
 use App\Repository\ReponseRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -28,7 +28,7 @@ class TestEmailConfirmationMessageCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /* @phpstan-ignore-next-line */
-        $this->messageBus->dispatch(new GenerateReponsePDF($this->reponseRepository->find(2)));
+        $this->messageBus->dispatch(new ReponseConfirmationMessage($this->reponseRepository->find(9)->getId()));
 
         return Command::SUCCESS;
     }

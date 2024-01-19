@@ -24,10 +24,10 @@ ddev console doctrine:fixtures:load -n
 
 # Déployer 
 
-Pour déployer le site
-```
-ddev deployer deploy
-```
+## Déchiffrement des secrets
+
+Pour déployer le site, il faut d'abord déchiffrer le fichier `.secrets/.inventory.yaml`,
+car il contient les informations pour pouvoir déployer le code sur le serveur.
 
 Le dossier .secrets doit contenir :
 
@@ -55,6 +55,12 @@ chmod +x ./.secrets/decrypt.sh # si première fois
 ⚠️ Attention ne pas commiter le fichier `inventory.yaml` non chiffré
 ⚠️ Attention ne pas commiter le fichier `age-key.txt` tout court
 ⚠️ Attention ne pas commiter le fichier `id_ed25519` tout court
+
+## Déploiement du code
+
+```
+ddev deployer deploy
+```
 
 # API
 
