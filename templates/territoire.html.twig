@@ -54,44 +54,62 @@
         {{ display_percentage(percentage.value) }}
     {% endfor %}
 
-    <div>
+    <div class="grid grid-cols-3">
         {% if territoire.area.value == 'region' %}
-            <h2 class="font-bold mt-4">Liste des département du {{ territoire.name }}</h2>
             {% if children is not empty %}
-                <ul class="grid">
-                    {% for child in children %}
-                        <li>
-                            <div><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a></div>
-                        </li>
-                    {% endfor %}
-                </ul>
+                <div>
+                    <h2 class="font-bold mt-4">Liste des département du {{ territoire.name }}</h2>
+                    <ul class="grid">
+                        {% for child in children %}
+                            <li>
+                                <div><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a></div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            {% if subChildren is not empty %}
+                <div>
+                    <h2 class="font-bold mt-4">Liste des OT du {{ territoire.name }}</h2>
+                    <ul class="grid">
+                        {% for subChild in subChildren %}
+                            <li>
+                                <div><a href="{{ url('app_territoire_single', { identifier: subChild.slug }) }}">{{ subChild.name }}</a></div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             {% endif %}
         {% endif %}
 
         {% if territoire.area.value == 'departement' %}
-            <h2 class="font-bold mt-4">Liste des OT du {{ territoire.name }}</h2>
-            {% if children is not empty %}
-                <ul class="grid">
-                    {% for child in children %}
-                        <li>
-                            <div><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a></div>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+            <div>
+                <h2 class="font-bold mt-4">Liste des OT du {{ territoire.name }}</h2>
+                {% if children is not empty %}
+                    <ul class="grid">
+                        {% for child in children %}
+                            <li>
+                                <div><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a></div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
         {% endif %}
 
-        <h2 class="font-bold mt-4">Liste des répondants</h2>
         {% if globals.repondantsGlobal is not empty %}
-            <ul class="grid">
-            {% for repondant in globals.repondantsGlobal %}
-                <li>
-                    <div>{{ repondant.typologie }}</div>
-                    <div><a href="{{ url('app_resultat_single', { uuid: repondant.uuid }) }}">{{ repondant.company }}</a></div>
-                    <div>{{ display_percentage(repondant.points, repondant.total) }}</div>
-                </li>
-            {% endfor %}
-            </ul>
+            <div>
+                <h2 class="font-bold mt-4">Liste des répondants</h2>
+                <ul class="grid">
+                {% for repondant in globals.repondantsGlobal %}
+                    <li>
+                        <div>{{ repondant.typologie }}</div>
+                        <div><a href="{{ url('app_resultat_single', { uuid: repondant.uuid }) }}">{{ repondant.company }}</a></div>
+                        <div>{{ display_percentage(repondant.points, repondant.total) }}</div>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
         {% endif %}
     </div>
 {% endblock %}

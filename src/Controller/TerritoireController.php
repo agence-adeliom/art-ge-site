@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Dto\TerritoireFilterDTO;
+use App\Entity\Territoire;
 use App\Enum\TerritoireAreaEnum;
 use App\Event\TerritoireDashboardGlobalEvent;
 use App\Event\TerritoireDashboardScoresEvent;
 use App\Exception\TerritoireNotFound;
 use App\Repository\TerritoireRepository;
+use App\Repository\TypologieRepository;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -20,6 +22,7 @@ class TerritoireController extends AbstractController
 {
     public function __construct(
         private readonly TerritoireRepository $territoireRepository,
+        private readonly TypologieRepository $typologieRepository,
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
@@ -44,7 +47,7 @@ class TerritoireController extends AbstractController
 
         $territoireFilterDTO = TerritoireFilterDTO::from([
             'territoire' => $territoire,
-            'typologies' => $typologies,
+            'typologies' => $typologies ?? $this->typologieRepository->getSlugs(),
             'from' => $from,
             'to' => $to,
         ]);
@@ -57,14 +60,18 @@ class TerritoireController extends AbstractController
         $this->eventDispatcher->dispatch($event);
         $scores = $event->getScores();
 
-        $children = [];
-        if (in_array($territoire->getArea(), [TerritoireAreaEnum::DEPARTEMENT, TerritoireAreaEnum::REGION])) {
-            $children = $territoire->getTerritoiresChildren();
+        $subChildren = [];
+        $children = $territoire->getTerritoiresChildren()->toArray();
+        if ($territoire->getArea() === TerritoireAreaEnum::REGION) {
+            foreach (array_map(fn (Territoire $child) => $child->getTerritoiresChildren()->toArray(), $children) as $subChild) {
+                $subChildren = array_merge($subChildren, $subChild);
+            }
         }
 
         return [
             'territoire' => $territoire,
             'children' => $children,
+            'subChildren' => $subChildren,
             'globals' => $globals,
             'scores' => $scores,
             'query' => [

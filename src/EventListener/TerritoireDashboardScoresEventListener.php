@@ -6,12 +6,16 @@ namespace App\EventListener;
 
 use App\Event\TerritoireDashboardScoresEvent;
 use App\Repository\ScoreRepository;
+use App\Repository\ThematiqueRepository;
+use App\Repository\TypologieRepository;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 #[AsEventListener(event: TerritoireDashboardScoresEvent::class)]
 class TerritoireDashboardScoresEventListener
 {
     public function __construct(
+        private readonly ThematiqueRepository $thematiqueRepository,
+        private readonly TypologieRepository $typologieRepository,
         private readonly ScoreRepository $scoreRepository,
     ) {
     }
@@ -21,30 +25,13 @@ class TerritoireDashboardScoresEventListener
         $territoireFilterDTO = $event->getTerritoireFilterDTO();
 
         $percentagesByThematiques = $this->scoreRepository->getPercentagesByThematiques($territoireFilterDTO);
-        $percentagesByThematiquesAndTypologies = $this->getPercentagesByThematiquesAndTypologies();
         $percentagesByTypologiesAndThematiques = $this->scoreRepository->getPercentagesByTypologiesAndThematiques($territoireFilterDTO); // internal use only
         $percentagesByTypology = $this->getPercentagesByTypology($percentagesByTypologiesAndThematiques);
 
         $event->setScores([
             'percentagesByThematiques' => $percentagesByThematiques,
             'percentagesByTypology' => $percentagesByTypology,
-            'percentagesByThematiquesAndTypologies' => $percentagesByThematiquesAndTypologies,
         ]);
-    }
-
-    /**
-     * @return array<mixed>
-     */
-    private function getPercentagesByThematiquesAndTypologies(): array
-    {
-        $thematiquesAndTypologies = [];
-        foreach ($this->thematiques ?? [] as $key => $thematique) {
-            foreach ($this->typologies ?? [] as $typology) {
-                $thematiquesAndTypologies[$key][$typology] = [];
-            }
-        }
-
-        return $thematiquesAndTypologies;
     }
 
     /**
@@ -57,6 +44,9 @@ class TerritoireDashboardScoresEventListener
         $percentagesByTypology = [];
 
         foreach ($percentagesByTypologiseAndThematiques as $typology => $scores) {
+            if (empty($scores)) {
+                continue;
+            }
             $typologyPercentages = array_column($scores, 'value'); // la liste des pourcentages par thematique pour la typologie
             $percentagesByTypology[$typology] = round(array_sum($typologyPercentages) / count($typologyPercentages));
         }
