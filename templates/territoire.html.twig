@@ -8,15 +8,15 @@
 
     {{ dump() }}
 
-    <div class="flex">
+    <div>
         <div>
-            <div class="bg-primary-50">
+            <div>
                 <p>Score de votre territoire</p>
                 <p>{{ display_percentage(globals.percentageGlobal) }} (pour {{ globals.numberOfReponsesGlobal }} répondants)</p>
                 <p>Score de la région</p>
                 <p>{{ display_percentage(globals.percentageRegionGlobal) }} (pour {{ globals.numberOfReponsesRegionGlobal }} répondants)</p>
             </div>
-            <div class="bg-primary-250">
+            <div>
                 <p>Détail par piliers du développement durable</p>
                 <ul>
                     {% for pilier, percentageByPilier in globals.percentagesByPiliersGlobal %}
@@ -25,9 +25,9 @@
                 </ul>
             </div>
         </div>
-        <div class="bg-primary-200">
+        <div>
             <p>Nombres de répondants</p>
-            <div>{{ globals.numberOfReponsesGlobal }} répondants dont : </div>
+            <div>{{ globals.numberOfReponsesGlobal }} répondants </div>
             <ul>
                 {% for typologie, repondantsByTypologieGlobal in globals.repondantsByTypologieGlobal %}
                     <li>{{ typologie }} : {{ repondantsByTypologieGlobal }}</li>
@@ -35,8 +35,8 @@
             </ul>
         </div>
     </div>
-    <div class="flex">
-        <div class="bg-primary-50">
+    <div>
+        <div>
             <p>Score total par établissement</p>
             {% for typologie, percentageByTypology in scores.percentagesByTypology %}
                 <li>{{ typologie }} : {{ display_percentage(percentageByTypology) }}</li>
@@ -46,20 +46,15 @@
 
     <hr>
 
-    <div>Thematiques : {{ query.thematiques is empty ? 'Toutes' : query.thematiques | join(', ') }}</div>
-    <div>Typologies : {{ query.typologies is empty ? 'Toutes' : query.typologies | join(', ') }}</div>
-    <div>Restauration : {{ query.restauration is not defined ? 'N/A' : (query.restauration ? 'Oui' : 'Non') }}</div>
-    <div>Espace vert : {{ query.greenSpace is not defined ? 'N/A' : (query.greenSpace ? 'Oui' : 'Non') }}</div>
-
     <h1 class="font-bold">Pourcentage Total</h1>
     {{ display_percentage(globals.percentageGlobal) }}
-    <h2 class="font-bold mt-4">Scores par thématique</h2>
+    <h2 class="font-bold mt-4 grid grid-cols-2">Scores par thématique</h2>
     {% for percentage in scores.percentagesByThematiques %}
         <h3 class="font-bold mt-2">{{ percentage.name }}</h3>
         {{ display_percentage(percentage.value) }}
     {% endfor %}
 
-    <div class="border bg-secondary-950">
+    <div>
         {% if territoire.area.value == 'region' %}
             <h2 class="font-bold mt-4">Liste des département du {{ territoire.name }}</h2>
             {% if children is not empty %}

@@ -169,13 +169,7 @@ class ScoreRepository extends ServiceEntityRepository
     {
         $qb = $this->filterByAreaZipCodes($qb, $territoireFilterDTO);
 
-        $qb = $this->filterByThematique($qb, $territoireFilterDTO);
-
         $qb = $this->filterByTypology($qb, $territoireFilterDTO);
-
-        $qb = $this->filterByRestauration($qb, $territoireFilterDTO);
-
-        $qb = $this->filterByGreenSpace($qb, $territoireFilterDTO);
 
         return $this->filterByDateRange($qb, $territoireFilterDTO);
     }
@@ -223,21 +217,6 @@ class ScoreRepository extends ServiceEntityRepository
         return $qb;
     }
 
-    private function filterByThematique(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
-    {
-        if (!empty($territoireFilterDTO->getThematiques())) {
-            $qb->innerJoin('s.thematique', 'th');
-            $ors = [];
-            foreach ($territoireFilterDTO->getThematiques() as $key => $thematique) {
-                $ors[] = $qb->expr()->eq('th.slug', ':thematique' . $key);
-                $qb->setParameter('thematique' . $key, $thematique);
-            }
-            $qb->andWhere($qb->expr()->orX(...$ors));
-        }
-
-        return $qb;
-    }
-
     private function filterByTypology(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
     {
         if (!empty($territoireFilterDTO->getTypologies())) {
@@ -247,28 +226,6 @@ class ScoreRepository extends ServiceEntityRepository
                 $qb->setParameter('typologie' . $key, $typologie);
             }
             $qb->andWhere($qb->expr()->orX(...$ors));
-        }
-
-        return $qb;
-    }
-
-    private function filterByRestauration(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
-    {
-        if (null !== $territoireFilterDTO->getRestauration()) {
-            $qb->andWhere('u.restauration = :restauration')
-                ->setParameter('restauration', $territoireFilterDTO->getRestauration())
-            ;
-        }
-
-        return $qb;
-    }
-
-    private function filterByGreenSpace(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
-    {
-        if (null !== $territoireFilterDTO->getGreenSpace()) {
-            $qb->andWhere('u.green_space = :greenSpace')
-                ->setParameter('greenSpace', $territoireFilterDTO->getGreenSpace())
-            ;
         }
 
         return $qb;

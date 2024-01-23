@@ -33,7 +33,7 @@ class ReponseFormSubmission
         }
         $this->entityManager->persist($reponse);
         $this->entityManager->flush();
-        $this->messageBus->dispatch(new ReponseConfirmationMessage($reponse->getId()));
+        $this->messageBus->dispatch(new ReponseConfirmationMessage((int) $reponse->getId()));
 
         return $reponse;
     }

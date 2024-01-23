@@ -247,6 +247,6 @@ class Repondant implements \Stringable
 
     public function __toString()
     {
-        return $this->getCompany();
+        return $this->getCompany() ?? 'N/A';
     }
 }

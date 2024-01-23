@@ -11,14 +11,11 @@ class TerritoireFilterDTO
     private function __construct(
         private readonly Territoire $territoire,
         /** @var array<string> */
-        private readonly array $thematiques = [],
-        /** @var array<string> */
         private readonly array $typologies = [],
-        private readonly ?bool $restauration = null,
-        private readonly ?bool $greenSpace = null,
         private readonly ?\DateTimeImmutable $from = null,
         private readonly ?\DateTimeImmutable $to = null,
-    ) {}
+    ) {
+    }
 
     public static function from(array $datas = []): self
     {
@@ -29,7 +26,7 @@ class TerritoireFilterDTO
         $datas['from'] = \DateTimeImmutable::createFromFormat('!Y-m-d', (string) $datas['from']) ?: null;
         $datas['to'] = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $datas['to'] . ' 23:59:59') ?: null;
 
-        return new TerritoireFilterDTO($datas['territoire'], $datas['thematiques'] ?? [], $datas['typologies'] ?? [], $datas['restauration'], $datas['greenSpace'], $datas['from'], $datas['to']);
+        return new TerritoireFilterDTO($datas['territoire'], $datas['typologies'] ?? [], $datas['from'], $datas['to']);
     }
 
     public function getTerritoire(): Territoire
@@ -37,24 +34,9 @@ class TerritoireFilterDTO
         return $this->territoire;
     }
 
-    public function getThematiques(): ?array
-    {
-        return $this->thematiques;
-    }
-
     public function getTypologies(): ?array
     {
         return $this->typologies;
-    }
-
-    public function getRestauration(): ?bool
-    {
-        return $this->restauration;
-    }
-
-    public function getGreenSpace(): ?bool
-    {
-        return $this->greenSpace;
     }
 
     public function getFrom(): ?\DateTimeImmutable
