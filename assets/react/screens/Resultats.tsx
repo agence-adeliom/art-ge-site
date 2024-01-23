@@ -69,7 +69,7 @@ const Resultats = () => {
             type: 'primary',
             icon: 'fa-minus',
             iconSide: 'left',
-            link: '/#',
+            link: 'https://www.art-grandest.fr/services-et-accompagnement/tourisme-durable',
           }}
         />
         <div className="bg-primary-600">
