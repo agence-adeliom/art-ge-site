@@ -1,14 +1,3 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Écoboussole Grand Est{% endblock %}
-
-{% block javascripts %}
-    <script defer data-domain="ecoboussole.art-grandest.fr" src=https://plausible.io/js/script.js></script>
-    {% if (page | default(false)) is same as 'resultat' %}
-        <script>window.resultats = JSON.parse('{{ resultats|json_encode|raw }}')</script>
-    {% endif %}
-    {{ parent() }}
-{% endblock %}
-{% block body %}
-   <div id="root"></div>
-{% endblock %}
+{% block title %}ÉcoBoussole : autodiagnostic de votre engagement durable!{% endblock %}

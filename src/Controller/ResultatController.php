@@ -18,7 +18,7 @@ class ResultatController extends AbstractController
 
     /** @return array<mixed> */
     #[Route('/resultat/{uuid}', name: 'app_resultat_single')]
-    #[Template('home.html.twig')]
+    #[Template('resultat.html.twig')]
     public function __invoke(Reponse $reponse): array
     {
         return [

@@ -21,6 +21,8 @@ const Informations: FunctionComponent = () => {
   const handleSubmit = () => {
     setTimeout(() => {
       resetStep();
+      document.head.querySelector('title')!.textContent = 'ÉcoBoussole : découvrez le questionnaire';
+      document.head.querySelector('meta[name="description"]')!.textContent = 'En répondant à un questionnaire simple et rapide, évaluez votre niveau d’engagement du tourisme durable grâce à l’autodiagnostic ÉcoBoussole.';
       navigate(RoutePaths.FORM);
     }, 2000);
   };
