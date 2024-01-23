@@ -62,7 +62,7 @@
                     <ul class="grid">
                         {% for child in children %}
                             <li>
-                                <div class="grid grid-cols-2"><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a><p>{{ child.numberOfReponses }}</p></div>
+                                <div class="grid grid-cols-2"><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a><p style="{{ child.numberOfReponses > 0 ? 'background: green; color: white;' : '' }}">{{ child.numberOfReponses }}</p></div>
                             </li>
                         {% endfor %}
                     </ul>
@@ -74,7 +74,7 @@
                     <ul class="grid">
                         {% for subChild in subChildren %}
                             <li>
-                                <div class="grid grid-cols-2"><a href="{{ url('app_territoire_single', { identifier: subChild.slug }) }}">{{ subChild.name }}</a><p>{{ subChild.numberOfReponses }}</p></div>
+                                <div class="grid grid-cols-2"><a href="{{ url('app_territoire_single', { identifier: subChild.slug }) }}">{{ subChild.name }}</a><p style="{{ subChild.numberOfReponses > 0 ? 'background: green; color: white;' : '' }}">{{ subChild.numberOfReponses }}</p></div>
                             </li>
                         {% endfor %}
                     </ul>
@@ -89,7 +89,7 @@
                     <ul>
                         {% for child in children %}
                             <li>
-                                <div class="grid grid-cols-2"><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a><p>{{ child.numberOfReponses }}</p></div>
+                                <div class="grid grid-cols-2"><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a><p style="{{ child.numberOfReponses > 0 ? 'background: green; color: white;' : '' }}">{{ child.numberOfReponses }}</p></div>
                             </li>
                         {% endfor %}
                     </ul>

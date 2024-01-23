@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EventListener;
 
 use App\Dto\TerritoireFilterDTO;
+use App\Entity\Territoire;
 use App\Event\TerritoireDashboardGlobalEvent;
 use App\Repository\ReponseRepository;
 use App\Repository\ScoreRepository;
@@ -27,11 +28,7 @@ class TerritoireDashboardGlobalEventListener
         $percentagesByPiliersGlobal = $this->scoreRepository->getPercentagesByPiliersGlobal($percentagesByTypologiesAndThematiques);
 
         $numberOfReponsesByTerritoire = [];
-        $territoireChildren = $territoireFilterDTO->getTerritoire()->getTerritoiresChildren();
-        foreach ($territoireChildren as $territoireChild) {
-            /** @var \App\Entity\Territoire $territoireChild */
-            $territoireChild->setNumberOfReponses($this->reponseRepository->getNumberOfReponsesGlobal(TerritoireFilterDTO::from(['territoire' => $territoireChild])));
-        }
+        $this->setNumberOfReponseForTerritoireChildren($territoireFilterDTO->getTerritoire());
 
         $event->setGlobals([
             'repondantsGlobal' => $this->reponseRepository->getRepondantsGlobal($territoireFilterDTO),
@@ -43,5 +40,17 @@ class TerritoireDashboardGlobalEventListener
             'percentageRegionGlobal' => $this->reponseRepository->getPercentageRegionGlobal(), // 56%
             'percentagesByPiliersGlobal' => $percentagesByPiliersGlobal,
         ]);
+    }
+
+    private function setNumberOfReponseForTerritoireChildren(Territoire $territoire): void
+    {
+        $territoireChildren = $territoire->getTerritoiresChildren();
+        foreach ($territoireChildren as $territoireChild) {
+            /** @var \App\Entity\Territoire $territoireChild */
+            $territoireChild->setNumberOfReponses($this->reponseRepository->getNumberOfReponsesGlobal(TerritoireFilterDTO::from(['territoire' => $territoireChild])));
+            if ($territoireChild->getTerritoiresChildren()->count() > 0) {
+                $this->setNumberOfReponseForTerritoireChildren($territoireChild);
+            }
+        }
     }
 }

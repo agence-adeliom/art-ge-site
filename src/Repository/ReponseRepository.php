@@ -200,6 +200,7 @@ class ReponseRepository extends ServiceEntityRepository
 
         return (int) $qb
             ->getQuery()
+            ->enableResultCache(86400, 'getNumberOfReponsesGlobal' . $territoireFilterDTO->getTerritoire()->getId())
             ->getSingleScalarResult()
         ;
     }
