@@ -23,8 +23,8 @@ class TerritoireFilterDTO
             throw new \Error('Territoire do not exist');
         }
 
-        $datas['from'] = \DateTimeImmutable::createFromFormat('!Y-m-d', (string) $datas['from']) ?: null;
-        $datas['to'] = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $datas['to'] . ' 23:59:59') ?: null;
+        $datas['from'] = \DateTimeImmutable::createFromFormat('!Y-m-d', (string) ($datas['from'] ?? '')) ?: null;
+        $datas['to'] = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s',  ($datas['from'] ?? '') . ' 23:59:59') ?: null;
 
         return new TerritoireFilterDTO($datas['territoire'], $datas['typologies'] ?? [], $datas['from'], $datas['to']);
     }

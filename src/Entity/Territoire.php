@@ -58,6 +58,8 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'parents')]
     private Collection $territoiresChildren;
 
+    private ?int $numberOfReponses;
+
     public function __construct()
     {
         $this->uuid = new Ulid();
@@ -277,5 +279,15 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function getNumberOfReponses(): ?int
+    {
+        return $this->numberOfReponses;
+    }
+
+    public function setNumberOfReponses(?int $numberOfReponses): void
+    {
+        $this->numberOfReponses = $numberOfReponses;
     }
 }

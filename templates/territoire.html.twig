@@ -62,7 +62,7 @@
                     <ul class="grid">
                         {% for child in children %}
                             <li>
-                                <div><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a></div>
+                                <div class="grid grid-cols-2"><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a><p>{{ child.numberOfReponses }}</p></div>
                             </li>
                         {% endfor %}
                     </ul>
@@ -74,7 +74,7 @@
                     <ul class="grid">
                         {% for subChild in subChildren %}
                             <li>
-                                <div><a href="{{ url('app_territoire_single', { identifier: subChild.slug }) }}">{{ subChild.name }}</a></div>
+                                <div class="grid grid-cols-2"><a href="{{ url('app_territoire_single', { identifier: subChild.slug }) }}">{{ subChild.name }}</a><p>{{ subChild.numberOfReponses }}</p></div>
                             </li>
                         {% endfor %}
                     </ul>
@@ -86,10 +86,10 @@
             <div>
                 <h2 class="font-bold mt-4">Liste des OT du {{ territoire.name }}</h2>
                 {% if children is not empty %}
-                    <ul class="grid">
+                    <ul>
                         {% for child in children %}
                             <li>
-                                <div><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a></div>
+                                <div class="grid grid-cols-2"><a href="{{ url('app_territoire_single', { identifier: child.slug }) }}">{{ child.name }}</a><p>{{ child.numberOfReponses }}</p></div>
                             </li>
                         {% endfor %}
                     </ul>

@@ -245,9 +245,8 @@ class ReponseRepository extends ServiceEntityRepository
                     $zipParams = ['zip' => DepartementEnum::getCode($department) . '%'];
                 }
             } else {
-                $zips = implode(',', $territoire->getZips());
                 $zipCriteria = 'AND U.zip IN (:zip)';
-                $zipParams = ['zip' => $zips];
+                $zipParams = ['zip' => $territoire->getZips()];
             }
         }
 
@@ -315,9 +314,8 @@ class ReponseRepository extends ServiceEntityRepository
                     $qb->setParameter('zip', DepartementEnum::getCode($department) . '%');
                 }
             } else {
-                $zips = implode(',', $territoire->getZips());
                 $ors[] = $qb->expr()->in('u.zip', ':zip');
-                $qb->setParameter('zip', $zips);
+                $qb->setParameter('zip', $territoire->getZips());
             }
             if ([] !== $ors) {
                 if (isset($qb->getDQLPart('join')['r'])) {
