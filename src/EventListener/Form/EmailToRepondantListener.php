@@ -12,7 +12,8 @@ class EmailToRepondantListener
 {
     public function __construct(
         private readonly RepondantRepository $repondantRepository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(PostSubmitEvent $event): void
     {

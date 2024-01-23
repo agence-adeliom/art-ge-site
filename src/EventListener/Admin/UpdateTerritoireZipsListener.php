@@ -20,7 +20,8 @@ class UpdateTerritoireZipsListener
 {
     public function __construct(
         private readonly RequestStack $requestStack,
-    ) {}
+    ) {
+    }
 
     public function setFileDataInRequestAttribute(BeforeCrudActionEvent $event): void
     {

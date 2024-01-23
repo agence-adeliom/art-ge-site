@@ -12,7 +12,8 @@ class ResultatApiPresenter
 {
     public function __construct(
         private readonly PercentagePresenter $percentagePresenter,
-    ) {}
+    ) {
+    }
 
     /** @return array<mixed> */
     public function present(Reponse $reponse): array

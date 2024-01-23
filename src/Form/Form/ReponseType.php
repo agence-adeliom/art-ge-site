@@ -17,7 +17,8 @@ class ReponseType extends AbstractType
 {
     public function __construct(
         private readonly EmailToRepondantListener $emailToRepondantListener,
-    ) {}
+    ) {
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

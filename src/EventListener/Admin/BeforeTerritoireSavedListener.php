@@ -16,7 +16,8 @@ class BeforeTerritoireSavedListener
 {
     public function __construct(
         private readonly UserPasswordHasherInterface $userPasswordHasher,
-    ) {}
+    ) {
+    }
 
     public function __invoke(BeforeEntityPersistedEvent | BeforeEntityUpdatedEvent $event): void
     {

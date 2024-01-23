@@ -12,7 +12,8 @@ class UtilsExtension extends AbstractExtension
 {
     public function __construct(
         private readonly PercentagePresenter $percentagePresenter,
-    ) {}
+    ) {
+    }
 
     public function getFunctions(): array
     {

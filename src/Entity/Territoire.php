@@ -195,7 +195,9 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
         return ['TERRITOIRE_ACCESS'];
     }
 
-    public function eraseCredentials(): void {}
+    public function eraseCredentials(): void
+    {
+    }
 
     public function getUserIdentifier(): string
     {

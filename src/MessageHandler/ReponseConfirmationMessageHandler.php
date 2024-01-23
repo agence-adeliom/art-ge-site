@@ -17,7 +17,8 @@ class ReponseConfirmationMessageHandler
         private readonly LoggerInterface $logger,
         private readonly ReponseRepository $reponseRepository,
         private readonly ReponseConfirmationMessageService $reponseConfirmationMessageService,
-    ) {}
+    ) {
+    }
 
     public function __invoke(ReponseConfirmationMessage $message): void
     {

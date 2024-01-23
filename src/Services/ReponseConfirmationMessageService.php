@@ -18,7 +18,8 @@ class ReponseConfirmationMessageService
         private readonly MailerInterface $mailer,
         private readonly Environment $twig,
         private readonly ParameterBagInterface $parameterBag,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface

@@ -15,7 +15,8 @@ class TerritoireDashboardGlobalEventListener
     public function __construct(
         private readonly ReponseRepository $reponseRepository,
         private readonly ScoreRepository $scoreRepository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(TerritoireDashboardGlobalEvent $event): void
     {

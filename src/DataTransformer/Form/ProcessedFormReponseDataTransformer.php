@@ -19,7 +19,8 @@ class ProcessedFormReponseDataTransformer implements DataTransformerInterface
         private readonly ChoiceTypologieRepository $choiceTypologieRepository,
         private readonly ChoiceRepository $choiceRepository,
         private readonly ThematiqueRepository $thematiqueRepository,
-    ) {}
+    ) {
+    }
 
     public function transform(mixed $value): mixed
     {

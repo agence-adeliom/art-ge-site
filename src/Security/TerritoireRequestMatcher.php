@@ -12,7 +12,8 @@ class TerritoireRequestMatcher implements RequestMatcherInterface
 {
     public function __construct(
         private readonly TerritoireRepository $territoireRepository,
-    ) {}
+    ) {
+    }
 
     public function matches(Request $request): bool
     {

@@ -16,7 +16,8 @@ class ReponseFormSubmission
         private readonly EntityManagerInterface $entityManager,
         private readonly ReponseScoreGeneration $reponseScoreGeneration,
         private readonly MessageBusInterface $messageBus,
-    ) {}
+    ) {
+    }
 
     public function updateAndSaveReponse(Reponse $reponse): Reponse
     {

@@ -20,7 +20,8 @@ class RepondantType extends AbstractType
 {
     public function __construct(
         private readonly DepartmentRepository $departmentRepository,
-    ) {}
+    ) {
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

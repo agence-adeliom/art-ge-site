@@ -13,7 +13,8 @@ class TerritoireDashboardScoresEventListener
 {
     public function __construct(
         private readonly ScoreRepository $scoreRepository,
-    ) {}
+    ) {
+    }
 
     public function __invoke(TerritoireDashboardScoresEvent $event): void
     {

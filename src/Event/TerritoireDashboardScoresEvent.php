@@ -16,7 +16,8 @@ class TerritoireDashboardScoresEvent extends Event
 
     public function __construct(
         private readonly TerritoireFilterDTO $territoireFilterDTO,
-    ) {}
+    ) {
+    }
 
     public function getTerritoireFilterDTO(): TerritoireFilterDTO
     {

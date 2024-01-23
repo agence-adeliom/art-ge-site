@@ -4,4 +4,6 @@ declare(strict_types=1);
 
 namespace App\Exception;
 
-class TerritoireNotFound extends \Exception {}
+class TerritoireNotFound extends \Exception
+{
+}
