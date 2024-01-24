@@ -14,7 +14,8 @@ class ResultatController extends AbstractController
 {
     public function __construct(
         private readonly ResultatApiPresenter $resultatApiPresenter,
-    ) {}
+    ) {
+    }
 
     /** @return array<mixed> */
     #[Route('/resultat/{uuid}', name: 'app_resultat_single')]

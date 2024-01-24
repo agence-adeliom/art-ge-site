@@ -6,16 +6,12 @@ namespace App\EventListener;
 
 use App\Event\TerritoireDashboardScoresEvent;
 use App\Repository\ScoreRepository;
-use App\Repository\ThematiqueRepository;
-use App\Repository\TypologieRepository;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 #[AsEventListener(event: TerritoireDashboardScoresEvent::class)]
 class TerritoireDashboardScoresEventListener
 {
     public function __construct(
-        private readonly ThematiqueRepository $thematiqueRepository,
-        private readonly TypologieRepository $typologieRepository,
         private readonly ScoreRepository $scoreRepository,
     ) {
     }

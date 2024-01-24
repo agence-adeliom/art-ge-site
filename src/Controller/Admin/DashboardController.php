@@ -26,7 +26,8 @@ class DashboardController extends AbstractDashboardController
 {
     public function __construct(
         private readonly AdminUrlGenerator $adminUrlGenerator,
-    ) {}
+    ) {
+    }
 
     #[Route('/admin', name: 'admin')]
     public function index(): Response

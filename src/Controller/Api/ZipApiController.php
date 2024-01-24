@@ -14,7 +14,8 @@ class ZipApiController extends AbstractController
 {
     public function __construct(
         private readonly CityRepository $cityRepository,
-    ) {}
+    ) {
+    }
 
     #[OA\Tag(name: 'Insee')]
     #[OA\Get(summary: 'Retourne tous les codes postaux pour l\'autocompletion')]

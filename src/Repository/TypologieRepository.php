@@ -24,7 +24,7 @@ class TypologieRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array{slug: string} Returns an array of RepondantTypologie slug
+     * @return array<mixed> Returns an array of RepondantTypologie slug
      */
     public function getSlugs(): array
     {
@@ -36,7 +36,7 @@ class TypologieRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array{slug: string, name: string} Returns an array of RepondantTypologie slug and name
+     * @return array<mixed> Returns an array of RepondantTypologie slug and name
      */
     public function getSlugsAndNames(): array
     {

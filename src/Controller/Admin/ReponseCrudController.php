@@ -27,7 +27,8 @@ class ReponseCrudController extends AbstractCrudController
 {
     public function __construct(
         private readonly RouterInterface $router,
-    ) {}
+    ) {
+    }
 
     public static function getEntityFqcn(): string
     {

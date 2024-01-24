@@ -88,9 +88,9 @@ class DashboardFilterController extends AbstractController
      *
      * @return array<mixed>
      */
-    private function getAllDatas(array $departmentsFilters = []): array
+    private function getAllDatas(array $departmentsFilters = null): array
     {
-        if ([] === $departmentsFilters) {
+        if (null === $departmentsFilters || [] === $departmentsFilters) {
             $ots = $this->allOts();
         } else {
             $ots = $this->territoireRepository->getOTsByDepartments($departmentsFilters, $this->columns);

@@ -27,7 +27,8 @@ class TerritoireCrudController extends AbstractCrudController
     public function __construct(
         private readonly ParameterBagInterface $parameterBag,
         private readonly RouterInterface $router,
-    ) {}
+    ) {
+    }
 
     public static function getEntityFqcn(): string
     {
@@ -82,7 +83,8 @@ class TerritoireCrudController extends AbstractCrudController
         yield FormField::addTab('Relation');
         yield AssociationField::new('linkedTerritoires', 'Quels territoires peuvent accéder à ce territoire ?')
             ->hideOnIndex()
-            ->setHelp('Cette information est seulement utilisée pour afficher ou non le territoire sur les dashboard des territoires sélectionnés.');
+            ->setHelp('Cette information est seulement utilisée pour afficher ou non le territoire sur les dashboard des territoires sélectionnés.')
+        ;
     }
 
     public function view(AdminContext $context): Response

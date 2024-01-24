@@ -24,7 +24,8 @@ class TerritoireFilterDTO
         }
 
         $datas['from'] = \DateTimeImmutable::createFromFormat('!Y-m-d', (string) ($datas['from'] ?? '')) ?: null;
-        $datas['to'] = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s',  ($datas['from'] ?? '') . ' 23:59:59') ?: null;
+        /* @phpstan-ignore-next-line */
+        $datas['to'] = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', ($datas['from'] ?? date('Y-m-d')) . ' 23:59:59') ?: null;
 
         return new TerritoireFilterDTO($datas['territoire'], $datas['typologies'] ?? [], $datas['from'], $datas['to']);
     }

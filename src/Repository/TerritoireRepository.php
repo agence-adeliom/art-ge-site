@@ -137,8 +137,10 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
         if ([] !== $columns) {
             foreach ($columns as $key => $column) {
                 if (0 === $key) {
+                    /* @phpstan-ignore-next-line */
                     $qb->select($alias . '.' . $column);
                 } else {
+                    /* @phpstan-ignore-next-line */
                     $qb->addSelect($alias . '.' . $column);
                 }
             }
