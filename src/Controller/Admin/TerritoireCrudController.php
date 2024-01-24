@@ -62,12 +62,13 @@ class TerritoireCrudController extends AbstractCrudController
         yield TextField::new('name', 'Nom');
         yield TextField::new('slug', 'Identifiant unique (slug)');
         yield BooleanField::new('useSlug', Crud::PAGE_INDEX === $pageName ? 'Utiliser le slug ?' : 'Utiliser le slug dans l\'URL du dashboard ?')->renderAsSwitch(Crud::PAGE_EDIT === $pageName);
+
         yield FormField::addTab('Autorisations');
         yield BooleanField::new('isPublic', 'Public')->renderAsSwitch(Crud::PAGE_EDIT === $pageName)->setHelp('Si public est coché, la page n\'est pas protégée par un mot de passe');
-        yield TextField::new('code', 'Code d\'accès au dashboard')->setHelp('Si public est décoché, c\'est ce code qu\'il faut rentrer pour accéder à la page');
-        yield FormField::addTab('Codes postaux');
-        yield CollectionField::new('zips', 'Édition manuelle des codes postaux');
+        yield TextField::new('code', Crud::PAGE_INDEX === $pageName ? 'Code' : 'Code d\'accès au dashboard')->setHelp('Si public est décoché, c\'est ce code qu\'il faut rentrer pour accéder à la page');
 
+        yield FormField::addTab('Codes postaux');
+        yield CollectionField::new('zips', Crud::PAGE_INDEX === $pageName ? 'Codes postaux' : 'Édition manuelle des codes postaux');
         /** @var string $uploadDirectory */
         $uploadDirectory = $this->parameterBag->get('upload_directory');
         yield ImageField::new('postalCodesFile', 'Ajout en groupe des codes postaux via un fichier CSV')
@@ -77,6 +78,11 @@ class TerritoireCrudController extends AbstractCrudController
             ->setFormTypeOption('mapped', false)
             ->setUploadedFileNamePattern('[year]/[month]/[day]/[slug]-[contenthash].[extension]')
         ;
+
+        yield FormField::addTab('Relation');
+        yield AssociationField::new('linkedTerritoires', 'Quels territoires peuvent accéder à ce territoire ?')
+            ->hideOnIndex()
+            ->setHelp('Cette information est seulement utilisée pour afficher ou non le territoire sur les dashboard des territoires sélectionnés.');
     }
 
     public function view(AdminContext $context): Response
