@@ -10,8 +10,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -55,19 +57,22 @@ class TerritoireCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        yield FormField::addTab('Informations');
         yield TextField::new('uuid', 'Identifiant')->hideOnForm();
-        yield TextField::new('name');
-        yield TextField::new('slug');
-        yield BooleanField::new('useSlug', Crud::PAGE_INDEX === $pageName ? 'Utiliser le slug ?' : 'Utiliser le slug comme identifiant de l\'URL du dashboard ?')->renderAsSwitch(Crud::PAGE_EDIT === $pageName);
-        yield BooleanField::new('isPublic', 'Public')->renderAsSwitch(Crud::PAGE_EDIT === $pageName)->setHelp('Si public est activé, la page n\'est pas protégé par un mot de passe');
-        yield TextField::new('code');
-        yield CollectionField::new('zips', 'Codes postaux');
+        yield TextField::new('name', 'Nom');
+        yield TextField::new('slug', 'Identifiant unique (slug)');
+        yield BooleanField::new('useSlug', Crud::PAGE_INDEX === $pageName ? 'Utiliser le slug ?' : 'Utiliser le slug dans l\'URL du dashboard ?')->renderAsSwitch(Crud::PAGE_EDIT === $pageName);
+        yield FormField::addTab('Autorisations');
+        yield BooleanField::new('isPublic', 'Public')->renderAsSwitch(Crud::PAGE_EDIT === $pageName)->setHelp('Si public est coché, la page n\'est pas protégée par un mot de passe');
+        yield TextField::new('code', 'Code d\'accès au dashboard')->setHelp('Si public est décoché, c\'est ce code qu\'il faut rentrer pour accéder à la page');
+        yield FormField::addTab('Codes postaux');
+        yield CollectionField::new('zips', 'Édition manuelle des codes postaux');
 
         /** @var string $uploadDirectory */
         $uploadDirectory = $this->parameterBag->get('upload_directory');
-        yield ImageField::new('postalCodesFile', 'Fichier CSV des codes postaux de la station')
+        yield ImageField::new('postalCodesFile', 'Ajout en groupe des codes postaux via un fichier CSV')
             ->hideOnIndex()
-            ->setHelp('Il faut que la première colonne du fichier soit une liste de code postaux / numéros de département. <br /> La première ligne n\'est pas prise en compte car c\'est l\'entête de la colonne')
+            ->setHelp('Il faut que la première colonne du fichier soit une liste de code postaux / numéros de département. <br /> La première ligne n\'est pas prise en compte car c\'est l\'entête de la colonne<br /><a download="zip_territoire_modele.csv" href="data:text/csv;charset=utf-8,cp%0A67000%0A67500%0Aetc...">Télécharger le modèle CSV <i class="fa fa-download"></i></a>')
             ->setUploadDir($uploadDirectory)
             ->setFormTypeOption('mapped', false)
             ->setUploadedFileNamePattern('[year]/[month]/[day]/[slug]-[contenthash].[extension]')
