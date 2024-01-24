@@ -24,7 +24,7 @@ class TypologieRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Typologie[] Returns an array of RepondantTypologie objects
+     * @return array{slug: string} Returns an array of RepondantTypologie slug
      */
     public function getSlugs(): array
     {
@@ -32,6 +32,18 @@ class TypologieRepository extends ServiceEntityRepository
             ->select('t.slug')
             ->getQuery()
             ->getSingleColumnResult()
+        ;
+    }
+
+    /**
+     * @return array{slug: string, name: string} Returns an array of RepondantTypologie slug and name
+     */
+    public function getSlugsAndNames(): array
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t.slug, t.name')
+            ->getQuery()
+            ->getArrayResult()
         ;
     }
 }

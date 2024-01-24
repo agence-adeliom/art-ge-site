@@ -11,3 +11,4 @@ nelmio_api_doc:
             - /api/form
             - /api/submit
             - /api/resultats
+            - /api/dashboard
