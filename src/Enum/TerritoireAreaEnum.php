@@ -10,7 +10,7 @@ enum TerritoireAreaEnum: string
 
     case DEPARTEMENT = 'departement';
 
-    case OT = 'territoire';
+    case OT = 'office';
 
     case TOURISME = 'tourisme';
 }

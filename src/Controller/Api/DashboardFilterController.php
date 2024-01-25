@@ -11,11 +11,15 @@ use App\Repository\TypologieRepository;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DashboardFilterController extends AbstractController
 {
+    /** @var string */
+    final public const DASHBOARD_API_FILTER_GROUP = 'dashboard:api:filter:read';
+
     /** @var string[] */
     private array $columns = ['slug', 'name'];
 
@@ -57,10 +61,10 @@ class DashboardFilterController extends AbstractController
         $territoire = $this->territoireRepository->getOneByUuidOrSlug($identifier);
 
         if (!$territoire) {
-            return new JsonResponse([
+            return $this->json([
                 'status' => 'error',
                 'data' => 'Territoire not found',
-            ], 200);
+            ], Response::HTTP_BAD_REQUEST);
         }
 
         if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
@@ -77,10 +81,10 @@ class DashboardFilterController extends AbstractController
             ], 200);
         }
 
-        return new JsonResponse([
+        return $this->json([
             'status' => 'success',
             'data' => $this->getAllDatas($departments),
-        ], 200);
+        ], Response::HTTP_OK, [], ['groups' => self::DASHBOARD_API_FILTER_GROUP]);
     }
 
     /**
