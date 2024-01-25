@@ -8,8 +8,10 @@
 /* @import "./tailwind/components/typography/index.pcss"; */
 
 body {
-    @apply text-neutral-700
+    @apply text-neutral-700;
 }
+
+@media print { * { -webkit-print-color-adjust: exact; printer-colors: exact !important; color-adjust: exact !important; } } 
 
 .containerBleed {
     @apply w-screen lg:w-[calc(100%+(50vw-512px)+1rem)] xl:w-[calc(100%+(50vw-640px)+1rem)] 2xl:w-[calc(100%+(50vw-768px)+1rem)]
@@ -50,3 +52,8 @@ body {
 .result-zip {
     @apply cursor-pointer last:rounded-b p-4 border-b last:border-none border-neutral-400 flex flex-row gap-1 items-center relative hover:bg-primary-600 hover:text-white trans-default
 }
+
+@font-face {
+    font-family: "Canela";
+    src: url("../font/Canela-Thin.otf");
+  }
