@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Dto\DashboardFilterDTO;
 use App\Dto\TerritoireFilterDTO;
 use App\Entity\Score;
-use App\Enum\DepartementEnum;
 use App\Enum\PilierEnum;
-use App\Enum\TerritoireAreaEnum;
+use App\Traits\RepositoryFilterTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -23,6 +23,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ScoreRepository extends ServiceEntityRepository
 {
+    use RepositoryFilterTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Score::class);
@@ -99,12 +101,12 @@ class ScoreRepository extends ServiceEntityRepository
         ;
     }
 
-    private function getPercentagesByThematiquesQuery(TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
+    private function getPercentagesByThematiquesQuery(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): QueryBuilder
     {
         $qb = $this->createQueryBuilder('s')
             ->select('ROUND(AVG(s.points)) as avg_points')
             ->addSelect('ROUND(AVG(s.total)) as avg_total')
-            ->addSelect('ROUND((SUM(s.points) / SUM(s.total)) * 100) as value')
+            ->addSelect('ROUND((SUM(s.points) / SUM(s.total)) * 100) as score')
             ->addSelect('th.name as name')
             ->addSelect('th.slug as slug')
             ->innerJoin('s.reponse', 'r')
@@ -114,23 +116,23 @@ class ScoreRepository extends ServiceEntityRepository
             ->groupBy('s.thematique')
         ;
 
-        return $this->addFiltersToQueryBuilder($qb, $territoireFilterDTO);
+        return $this->addFilters($qb, $filterDTO);
     }
 
-    public function getPercentagesByThematiques(TerritoireFilterDTO $territoireFilterDTO): array
+    public function getPercentagesByThematiques(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): array
     {
-        return $this->getPercentagesByThematiquesQuery($territoireFilterDTO)->getQuery()->getArrayResult();
+        return $this->getPercentagesByThematiquesQuery($filterDTO)->getQuery()->getArrayResult();
     }
 
     /**
      * @return array<mixed>
      */
-    public function getPercentagesByTypologiesAndThematiques(TerritoireFilterDTO $territoireFilterDTO): array
+    public function getPercentagesByTypologiesAndThematiques(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): array
     {
         $percentagesByTypologiseAndThematiques = [];
 
-        foreach ($territoireFilterDTO->getTypologies() ?? [] as $typology) {
-            $qb = $this->getPercentagesByThematiquesQuery($territoireFilterDTO);
+        foreach ($filterDTO->getTypologies() ?? [] as $typology) {
+            $qb = $this->getPercentagesByThematiquesQuery($filterDTO);
             $qb->andWhere('t.slug = :typology')
                 ->setParameter('typology', $typology)
             ;
@@ -141,115 +143,23 @@ class ScoreRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param array<mixed> $percentagesByTypologiseAndThematiques
-     *
-     * @return array<string, float>
+     * @return array<string, int>
      */
-    public function getPercentagesByPiliersGlobal(array $percentagesByTypologiseAndThematiques): array
+    public function getPercentagesByPiliersGlobal(): array
     {
+        // TODO Make dynamic given the filters
         $percentagesByPiliers = [];
 
         foreach (PilierEnum::cases() as $pilier) {
             $thematiques = PilierEnum::getThematiquesSlugsByPilier($pilier);
 
             $sql = 'SELECT ROUND(AVG(temp.percentage)) FROM (';
-            $sqlUnion = [];
-            foreach ($thematiques as $thematique) {
-                $sqlUnion[] = 'SELECT ROUND((SUM(S.points) / SUM(S.total)) * 100) as percentage FROM `score` S INNER JOIN thematique TH ON S.thematique_id = TH.id WHERE TH.slug = ?';
-            }
+            $sqlUnion = array_fill(0, count($thematiques), 'SELECT ROUND((SUM(S.points) / SUM(S.total)) * 100) as percentage FROM `score` S INNER JOIN thematique TH ON S.thematique_id = TH.id WHERE TH.slug = ?');
             $sql .= implode(' UNION ', $sqlUnion) . ') as temp';
 
-            $percentagesByPiliers[$pilier->value] = $this->getEntityManager()->getConnection()->executeQuery($sql, array_column($thematiques, 'value'))->fetchOne();
+            $percentagesByPiliers[$pilier->value] = (int) $this->getEntityManager()->getConnection()->executeQuery($sql, array_column($thematiques, 'value'))->fetchOne();
         }
 
         return $percentagesByPiliers;
-    }
-
-    private function addFiltersToQueryBuilder(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
-    {
-        $qb = $this->filterByAreaZipCodes($qb, $territoireFilterDTO);
-
-        $qb = $this->filterByTypology($qb, $territoireFilterDTO);
-
-        return $this->filterByDateRange($qb, $territoireFilterDTO);
-    }
-
-    private function filterByAreaZipCodes(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
-    {
-        $territoire = $territoireFilterDTO->getTerritoire();
-        if (TerritoireAreaEnum::REGION !== $territoire->getArea()) {
-            $ors = [];
-            if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
-                $department = DepartementEnum::tryFrom($territoire->getSlug());
-                if ($department) {
-                    $ors[] = $qb->expr()->like('u.zip', ':zip');
-                    $qb->setParameter('zip', DepartementEnum::getCode($department) . '%');
-                }
-            } else {
-                $ors[] = $qb->expr()->in('u.zip', ':zip');
-                $qb->setParameter('zip', $territoire->getZips());
-            }
-            if ([] !== $ors) {
-                $addJoin = true;
-                $joins = $qb->getDQLPart('join');
-                if ([] !== $joins) {
-                    foreach ($qb->getDQLPart('join') as $key => $joins) {
-                        if ('r' === $key || 's' === $key) {
-                            foreach ($joins as $join) {
-                                if ('r.repondant' === $join->getJoin()) {
-                                    $addJoin = false;
-                                }
-                            }
-                        }
-                    }
-                    if ($addJoin) {
-                        $qb->innerJoin('r.repondant', 'u');
-                    }
-                } else {
-                    $qb->innerJoin('r.repondant', 'u');
-                }
-
-                $qb->andWhere($qb->expr()->andX(...$ors));
-            }
-        }
-
-        return $qb;
-    }
-
-    private function filterByTypology(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
-    {
-        if (!empty($territoireFilterDTO->getTypologies())) {
-            $ors = [];
-            foreach ($territoireFilterDTO->getTypologies() as $key => $typologie) {
-                $ors[] = $qb->expr()->eq('t.slug', ':typologie' . $key);
-                $qb->setParameter('typologie' . $key, $typologie);
-            }
-            $qb->andWhere($qb->expr()->orX(...$ors));
-        }
-
-        return $qb;
-    }
-
-    private function filterByDateRange(QueryBuilder $qb, TerritoireFilterDTO $territoireFilterDTO): QueryBuilder
-    {
-        if ($territoireFilterDTO->hasDateRange()) {
-            $dateFormat = 'Y-m-d H:i:s';
-            if (null !== $territoireFilterDTO->getFrom() && null !== $territoireFilterDTO->getTo()) {
-                $qb->andWhere('r.created_at BETWEEN :from AND :to')
-                    ->setParameter('from', $territoireFilterDTO->getFrom()->format($dateFormat))
-                    ->setParameter('to', $territoireFilterDTO->getTo()->format($dateFormat))
-                ;
-            } elseif (null !== $territoireFilterDTO->getFrom() && null === $territoireFilterDTO->getTo()) {
-                $qb->andWhere('r.created_at >= :from')
-                    ->setParameter('from', $territoireFilterDTO->getFrom()->format($dateFormat))
-                ;
-            } elseif (null === $territoireFilterDTO->getFrom() && null !== $territoireFilterDTO->getTo()) {
-                $qb->andWhere('r.created_at <= :to')
-                    ->setParameter('to', $territoireFilterDTO->getTo()->format($dateFormat))
-                ;
-            }
-        }
-
-        return $qb;
     }
 }

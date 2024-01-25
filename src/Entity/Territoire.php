@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Controller\Api\DashboardDataController;
+use App\Controller\Api\DashboardFilterController;
+use App\Controller\Api\FormApiController;
 use App\Enum\TerritoireAreaEnum;
 use App\Repository\TerritoireRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,6 +14,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity(repositoryClass: TerritoireRepository::class)]
@@ -22,12 +26,15 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
     private ?int $id = null;
 
     #[ORM\Column(type: 'ulid')]
+    #[Groups([DashboardDataController::DASHBOARD_API_DATA_GROUP, DashboardFilterController::DASHBOARD_API_FILTER_GROUP])]
     private Ulid $uuid;
 
     #[ORM\Column(length: 255)]
+    #[Groups([DashboardDataController::DASHBOARD_API_DATA_GROUP, DashboardFilterController::DASHBOARD_API_FILTER_GROUP])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups([DashboardDataController::DASHBOARD_API_DATA_GROUP, DashboardFilterController::DASHBOARD_API_FILTER_GROUP])]
     private string $slug;
 
     /** @var array<mixed> $zips */
@@ -66,6 +73,9 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
     private Collection $tourismTerritoires;
 
     private ?int $numberOfReponses;
+
+    #[Groups([DashboardDataController::DASHBOARD_API_DATA_GROUP, DashboardFilterController::DASHBOARD_API_FILTER_GROUP])]
+    private ?int $score;
 
     public function __construct()
     {
@@ -349,6 +359,16 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
     public function setNumberOfReponses(?int $numberOfReponses): void
     {
         $this->numberOfReponses = $numberOfReponses;
+    }
+
+    public function getScore(): ?int
+    {
+        return $this->score;
+    }
+
+    public function setScore(?int $score): void
+    {
+        $this->score = $score;
     }
 
     public function __toString(): string

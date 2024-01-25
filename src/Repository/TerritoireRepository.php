@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Dto\DashboardFilterDTO;
+use App\Dto\TerritoireFilterDTO;
 use App\Entity\Territoire;
+use App\Enum\DepartementEnum;
+use App\Enum\PilierEnum;
 use App\Enum\TerritoireAreaEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -62,6 +66,21 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
             ->setParameter('slug', $slug)
             ->getQuery()
             ->getOneOrNullResult()
+            ;
+    }
+
+    /**
+     * @param array<string> $slug
+     *
+     * @return Territoire[]
+     */
+    public function getAllBySlugs(array $slugs): array
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.slug IN (:slugs)')
+            ->setParameter('slugs', $slugs)
+            ->getQuery()
+            ->getResult()
         ;
     }
 
@@ -127,6 +146,24 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
         $qb = $this->selectOnlyColumns($columns, $qb, 'tc');
 
         return [] !== $columns ? $qb->getQuery()->getArrayResult() : $qb->getQuery()->getResult();
+    }
+
+    public function getPercentagesByDepartment(Territoire $territoire): int
+    {
+        $department = DepartementEnum::from($territoire->getSlug());
+        $departmentCode = DepartementEnum::getCode($department);
+        $sql = "
+        SELECT ROUND(SUM(temp.percentage) / SUM(temp.total) * 100) as percentage 
+        FROM (
+            SELECT U.id as `user`, U.zip, ROUND(SUM(R.points) / SUM(R.total) * 100) as percentage, SUM(R.total) as total 
+            FROM reponse R 
+            INNER JOIN repondant U ON R.repondant_id = U.id 
+            GROUP BY U.id
+        ) as temp 
+        WHERE zip LIKE ?;
+        ";
+
+        return (int) $this->getEntityManager()->getConnection()->executeQuery($sql, [$departmentCode . '%'])->fetchOne();
     }
 
     /**
