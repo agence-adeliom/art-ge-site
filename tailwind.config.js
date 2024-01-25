@@ -18,8 +18,8 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        text : 'Inter',
-        title: 'Cormorant'
+        text : "'Inter'",
+        title: 'Canela'
       },
       colors: {
         primary : {

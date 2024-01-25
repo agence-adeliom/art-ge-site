@@ -5,7 +5,7 @@ import {
   color,
 } from '@components/Typography/Typography.styles';
 
-export const textStyles = cva('text transition-colors dark:text-white', {
+export const textStyles = cva('text transition-colors font-text dark:text-white', {
   variants: {
     size: {
       xs: 'text-xs',
