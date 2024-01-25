@@ -88,18 +88,18 @@ trait RepositoryFilterTrait
 
     private function addFilters(QueryBuilder $qb, DashboardFilterDTO | TerritoireFilterDTO $filterDTO): QueryBuilder
     {
-//        if ($filterDTO instanceof TerritoireFilterDTO) {
-//            $qb = $this->filterByAreaZipCodes($qb, $filterDTO->getTerritoire());
-//        }
-//
-//        if ($filterDTO instanceof DashboardFilterDTO) {
-//            $territoires = $filterDTO->getTerritoires();
-//            if ([] !== $territoires) {
-//                foreach ($territoires as $key => $territoire) {
-//                    $qb = $this->filterByAreaZipCodes($qb, $territoire, $key);
-//                }
-//            }
-//        }
+        if ($filterDTO instanceof TerritoireFilterDTO) {
+            $qb = $this->filterByAreaZipCodes($qb, $filterDTO->getTerritoire());
+        }
+
+        if ($filterDTO instanceof DashboardFilterDTO) {
+            $territoires = $filterDTO->getTerritoires();
+            if ([] !== $territoires) {
+                foreach ($territoires as $key => $territoire) {
+                    $qb = $this->filterByAreaZipCodes($qb, $territoire, $key);
+                }
+            }
+        }
 
         $qb = $this->addFiltersTypologyAndDateToQueryBuilder($qb, $filterDTO);
 

@@ -24,7 +24,7 @@ class DashboardDataGlobalEventListener
 
         $repondants = $this->reponseRepository->getRepondantsGlobal($dashboardFilterDTO);
         $event->setGlobals([
-            'repondantsList' => $repondants,
+            'repondants' => $repondants,
             'repondantsCount' => count($repondants), // 29 bas-rhin
             'score' => $this->reponseRepository->getPercentageGlobal($dashboardFilterDTO),
             'piliersTODO' => $this->scoreRepository->getPercentagesByPiliersGlobal(), // TODO Make dynamic given the filters

@@ -25,8 +25,8 @@ class DashboardFilterDTO implements FilterTypologyDTOInterface, FilterDateDTOInt
             $datas['territoire'],
             $datas['territoires'] ?? [],
         $datas['typologies'] ?? [],
-            $datas['from'],
-            $datas['to']
+            $datas['from'] ?? null,
+            $datas['to'] ?? null,
         );
     }
 

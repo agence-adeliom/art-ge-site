@@ -113,9 +113,9 @@ class DashboardDataController extends AbstractController
         return $this->json([
             'status' => 'success',
             'data' => [
-                'lists' => $lists,
                 'globals' => $globals,
                 'scores' => $scores,
+                'lists' => $lists,
             ],
         ], Response::HTTP_OK, [], ['groups' => self::DASHBOARD_API_DATA_GROUP]);
     }

@@ -26,7 +26,6 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
     private ?int $id = null;
 
     #[ORM\Column(type: 'ulid')]
-    #[Groups([DashboardDataController::DASHBOARD_API_DATA_GROUP, DashboardFilterController::DASHBOARD_API_FILTER_GROUP])]
     private Ulid $uuid;
 
     #[ORM\Column(length: 255)]
@@ -72,6 +71,7 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'linkedTerritoires')]
     private Collection $tourismTerritoires;
 
+    #[Groups([DashboardDataController::DASHBOARD_API_DATA_GROUP, DashboardFilterController::DASHBOARD_API_FILTER_GROUP])]
     private ?int $numberOfReponses;
 
     #[Groups([DashboardDataController::DASHBOARD_API_DATA_GROUP, DashboardFilterController::DASHBOARD_API_FILTER_GROUP])]
