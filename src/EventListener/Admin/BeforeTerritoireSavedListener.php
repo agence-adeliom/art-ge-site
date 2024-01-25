@@ -22,7 +22,7 @@ class BeforeTerritoireSavedListener
     public function __invoke(BeforeEntityPersistedEvent | BeforeEntityUpdatedEvent $event): void
     {
         $entity = $event->getEntityInstance();
-        if (!$entity instanceof Territoire && null === $entity->getCode()) {
+        if (!$entity instanceof Territoire || null === $entity->getCode()) {
             return;
         }
 

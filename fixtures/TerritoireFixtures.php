@@ -52,6 +52,17 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
             $region->setArea(TerritoireAreaEnum::REGION);
             $manager->persist($region);
 
+            /** IMPORT DE LA ROUTE DU VIN POUR TEST */
+            $routeDesVins = new Territoire();
+            $routeDesVins->setUuid(new Ulid());
+            $routeDesVins->setName('Route du Vin');
+            $routeDesVins->setSlug('route-du-vin');
+            $routeDesVins->setUseSlug(true);
+            $routeDesVins->setIsPublic(true);
+            $routeDesVins->setZips([67140, 67680]);
+            $routeDesVins->setArea(TerritoireAreaEnum::TOURISME);
+            $manager->persist($routeDesVins);
+
             $departements = [];
             foreach (DepartementEnum::cases() as $departementEnum) {
                 $departement = new Territoire();
@@ -65,6 +76,10 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                 $departement->setArea(TerritoireAreaEnum::DEPARTEMENT);
                 $departements[DepartementEnum::getCode($departementEnum)] = $departement;
                 $manager->persist($departement);
+                if ($departement->getSlug() === 'haut-rhin') {
+                    $routeDesVins->addLinkedTerritoire($departement);
+                    $departement->addTourismTerritoire($routeDesVins);
+                }
             }
 
             /** STOCKAGES DES INSEE PAR SIREN D'EPCI */

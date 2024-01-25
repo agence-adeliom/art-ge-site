@@ -23,7 +23,8 @@ class ResultatsApiController extends AbstractController
         private readonly ThematiqueRepository $thematiqueRepository,
         private readonly ReponseRepository $reponseRepository,
         private readonly ScoreRepository $scoreRepository,
-    ) {}
+    ) {
+    }
 
     #[OA\Tag(name: 'Resultats')]
     #[OA\Get(summary: 'Retourne tous les scores des réponses basés sur différents filtres')]

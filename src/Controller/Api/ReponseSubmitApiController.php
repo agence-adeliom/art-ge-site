@@ -22,7 +22,8 @@ class ReponseSubmitApiController extends AbstractController
         private readonly ReponseFormSubmission $reponseFormSubmission,
         private readonly RouterInterface $router,
         private readonly ResultatApiPresenter $resultatApiPresenter,
-    ) {}
+    ) {
+    }
 
     #[OA\Tag(name: 'Formulaire')]
     #[OA\Post(summary: 'Soumet un formulaire pour validation')]

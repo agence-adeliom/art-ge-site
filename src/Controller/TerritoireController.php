@@ -24,7 +24,8 @@ class TerritoireController extends AbstractController
         private readonly TerritoireRepository $territoireRepository,
         private readonly TypologieRepository $typologieRepository,
         private readonly EventDispatcherInterface $eventDispatcher,
-    ) {}
+    ) {
+    }
 
     /**
      * @param array<string>|null $typologies
@@ -62,7 +63,7 @@ class TerritoireController extends AbstractController
 
         $subChildren = [];
         $children = $territoire->getTerritoiresChildren()->toArray();
-        if ($territoire->getArea() === TerritoireAreaEnum::REGION) {
+        if (TerritoireAreaEnum::REGION === $territoire->getArea()) {
             foreach (array_map(fn (Territoire $child) => $child->getTerritoiresChildren()->toArray(), $children) as $subChild) {
                 $subChildren = array_merge($subChildren, $subChild);
             }

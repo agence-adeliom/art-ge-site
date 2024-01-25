@@ -46,7 +46,7 @@ class TerritoireDashboardGlobalEventListener
     {
         $territoireChildren = $territoire->getTerritoiresChildren();
         foreach ($territoireChildren as $territoireChild) {
-            /** @var \App\Entity\Territoire $territoireChild */
+            /* @var \App\Entity\Territoire $territoireChild */
             $territoireChild->setNumberOfReponses($this->reponseRepository->getNumberOfReponsesGlobal(TerritoireFilterDTO::from(['territoire' => $territoireChild])));
             if ($territoireChild->getTerritoiresChildren()->count() > 0) {
                 $this->setNumberOfReponseForTerritoireChildren($territoireChild);

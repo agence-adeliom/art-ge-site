@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Ulid;
 
 #[ORM\Entity(repositoryClass: TerritoireRepository::class)]
-class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
+class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -58,6 +58,13 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'parents')]
     private Collection $territoiresChildren;
 
+    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'tourismTerritoires')]
+    #[ORM\JoinTable(name: 'territoire_tourism')]
+    private Collection $linkedTerritoires;
+
+    #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'linkedTerritoires')]
+    private Collection $tourismTerritoires;
+
     private ?int $numberOfReponses;
 
     public function __construct()
@@ -66,6 +73,8 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
         $this->epcis = new ArrayCollection();
         $this->parents = new ArrayCollection();
         $this->territoiresChildren = new ArrayCollection();
+        $this->linkedTerritoires = new ArrayCollection();
+        $this->tourismTerritoires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -281,6 +290,57 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return Collection<int, self>
+     */
+    public function getLinkedTerritoires(): Collection
+    {
+        return $this->linkedTerritoires;
+    }
+
+    public function addLinkedTerritoire(self $allowedTerritoire): static
+    {
+        if (!$this->linkedTerritoires->contains($allowedTerritoire)) {
+            $this->linkedTerritoires->add($allowedTerritoire);
+        }
+
+        return $this;
+    }
+
+    public function removeLinkedTerritoire(self $allowedTerritoire): static
+    {
+        $this->linkedTerritoires->removeElement($allowedTerritoire);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getTourismTerritoires(): Collection
+    {
+        return $this->tourismTerritoires;
+    }
+
+    public function addTourismTerritoire(self $customTerritoire): static
+    {
+        if (!$this->tourismTerritoires->contains($customTerritoire)) {
+            $this->tourismTerritoires->add($customTerritoire);
+            $customTerritoire->addLinkedTerritoire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTourismTerritoire(self $customTerritoire): static
+    {
+        if ($this->tourismTerritoires->removeElement($customTerritoire)) {
+            $customTerritoire->removeLinkedTerritoire($this);
+        }
+
+        return $this;
+    }
+
     public function getNumberOfReponses(): ?int
     {
         return $this->numberOfReponses;
@@ -289,5 +349,10 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNumberOfReponses(?int $numberOfReponses): void
     {
         $this->numberOfReponses = $numberOfReponses;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->getName();
     }
 }

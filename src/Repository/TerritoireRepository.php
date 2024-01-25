@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Territoire;
+use App\Enum\TerritoireAreaEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -63,8 +65,92 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
         ;
     }
 
-    public function loadUserByIdentifier(string $slug): ?UserInterface
+    /**
+     * @param array<string>|array<empty> $columns
+     *
+     * @return Territoire|array<mixed>|null ($columns is not empty ? array<mixed> : Territoire | null)
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getAllByType(TerritoireAreaEnum $territoireAreaEnum, array $columns = []): null | array | Territoire
     {
-        return $this->getOneBySlug($slug);
+        $qb = $this->createQueryBuilder('t')
+            ->andWhere('t.area = :area')
+            ->setParameter('area', $territoireAreaEnum->value)
+        ;
+
+        $qb = $this->selectOnlyColumns($columns, $qb, 't');
+
+        return [] !== $columns ? $qb->getQuery()->getArrayResult() : $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @param array<string>|array<empty> $columns
+     *
+     * @return Territoire|array<mixed>|null ($columns is not empty ? array<mixed> : Territoire | null)
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTourismsByLinkedTerritoire(Territoire $linkedTerritoire, array $columns = []): null | array | Territoire
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->innerJoin('t.tourismTerritoires', 'tt')
+            ->andWhere('t.area = :area')
+            ->andWhere('tt.id = :linkedId')
+            ->setParameter('linkedId', $linkedTerritoire->getId())
+            ->setParameter('area', TerritoireAreaEnum::TOURISME->value)
+        ;
+
+        $qb = $this->selectOnlyColumns($columns, $qb, 'tt');
+
+        return [] !== $columns ? $qb->getQuery()->getArrayResult() : $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @param array<string>              $departments
+     * @param array<string>|array<empty> $columns
+     *
+     * @return Territoire[]|array<mixed> ($columns is not empty ? array<mixed> : Territoire[])
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getOTsByDepartments(array $departments, array $columns = []): array
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->innerJoin('t.territoiresChildren', 'tc')
+            ->andWhere('t.area = :area')
+            ->andWhere('t.slug IN (:departments)')
+            ->setParameter('departments', $departments)
+            ->setParameter('area', TerritoireAreaEnum::DEPARTEMENT->value)
+        ;
+
+        $qb = $this->selectOnlyColumns($columns, $qb, 'tc');
+
+        return [] !== $columns ? $qb->getQuery()->getArrayResult() : $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param array<string>|array<empty> $columns
+     */
+    private function selectOnlyColumns(array $columns, QueryBuilder $qb, string $alias): QueryBuilder
+    {
+        if ([] !== $columns) {
+            foreach ($columns as $key => $column) {
+                if (0 === $key) {
+                    /* @phpstan-ignore-next-line */
+                    $qb->select($alias . '.' . $column);
+                } else {
+                    /* @phpstan-ignore-next-line */
+                    $qb->addSelect($alias . '.' . $column);
+                }
+            }
+        }
+
+        return $qb;
+    }
+
+    public function loadUserByIdentifier(string $identifier): ?UserInterface
+    {
+        return $this->getOneBySlug($identifier);
     }
 }

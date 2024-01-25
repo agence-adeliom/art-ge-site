@@ -18,7 +18,8 @@ class InseeApiController extends AbstractController
 
     public function __construct(
         private readonly CityRepository $cityRepository,
-    ) {}
+    ) {
+    }
 
     #[OA\Tag(name: 'Insee')]
     #[OA\Get(summary: 'Retourne la liste de toutes les villes correspondant au code postal')]
