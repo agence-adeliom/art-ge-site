@@ -1,7 +1,7 @@
 import React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
-const modalClassName = "left-1/2 -translate-x-1/2 w-[90%] absolute right-0 bg-white p-6 z-[110]  top-1/2 -translate-y-1/2 md:w-[400px] rounded border-2 border-neutral-200 z-[10000]"
+const modalClassName = "left-1/2 -translate-x-1/2 w-[90%] fixed right-0 bg-white p-6 z-[110]  top-1/2 -translate-y-1/2 md:w-[400px] rounded border-2 border-neutral-200 z-[10000]"
 
 export const QuitForm = ({ isVisible, children } : {
     isVisible: boolean,
