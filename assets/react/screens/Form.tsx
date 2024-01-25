@@ -121,7 +121,6 @@ const Form = () => {
     feedRawFormAndGoToNextStep(answerSlected);
   };
 
-  console.log(actualQuestion)
 
   //Requête à l'API une fois la dernière étape remplie
   const getResults = async () => {
@@ -327,7 +326,7 @@ const Form = () => {
           </form>
         </div>
         <AsideForm
-        thematique={actualQuestion ? actualQuestion!.thematique.id : 1}
+        thematique={actualQuestion ? actualQuestion!.thematique.slug : 'biodiversite-et-conservation-de-la-nature-sur-site'}
         ></AsideForm>
 
         <ConfirmationAnim isVisible={showConfirm}>
