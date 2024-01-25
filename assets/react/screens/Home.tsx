@@ -38,7 +38,7 @@ const Home = () => {
         <div className="container">
           <div className="h-screen w-full grid grid-cols-12 auto-rows-min">
             <div className="col-span-full max-lg:mb-10 lg:col-span-7 mt-10 lg:mt-20">
-              <img className="w-[195px] h-[64px] lg::w-[282px] lg:h-[93px]" src={Logo} alt=""></img>
+              <img className="w-[195px] h-[64px] lg:w-[282px] lg:h-[93px]" src={Logo} alt=""></img>
               <div className="flex flex-col gap-4">
                 <Heading variant="display-3" className="mt-6 lg:mt-12">
                   Bienvenue sur notre calculateur tourisme durable

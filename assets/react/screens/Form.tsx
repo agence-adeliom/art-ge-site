@@ -121,6 +121,8 @@ const Form = () => {
     feedRawFormAndGoToNextStep(answerSlected);
   };
 
+  console.log(actualQuestion)
+
   //Requête à l'API une fois la dernière étape remplie
   const getResults = async () => {
     const formData = serialize({ reponse: wizard?.reponse }, { indices: true });
@@ -325,7 +327,7 @@ const Form = () => {
           </form>
         </div>
         <AsideForm
-        thematique={actualQuestion ? actualQuestion!.thematique.id : 46}
+        thematique={actualQuestion ? actualQuestion!.thematique.id : 1}
         ></AsideForm>
 
         <ConfirmationAnim isVisible={showConfirm}>
