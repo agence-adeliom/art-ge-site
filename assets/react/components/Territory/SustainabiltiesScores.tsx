@@ -3,7 +3,7 @@ import Filters from '@components/Filters/Filters';
 import { Heading } from '@components/Typography/Heading';
 import Header from '@components/Territory/Header'
 import ScoreTerritory from "@components/Territory/ScoreTerritory";
-import Pie from "@components/Filters/Pie";
+import Pie from "@components/Graph/Pie";
 import { Icon } from "@components/Typography/Icon";
 import {Text} from "@components/Typography/Text";
 
