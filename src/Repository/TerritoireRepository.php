@@ -148,22 +148,29 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
         return [] !== $columns ? $qb->getQuery()->getArrayResult() : $qb->getQuery()->getResult();
     }
 
-    public function getPercentagesByDepartment(Territoire $territoire): int
+    public function getPercentageByTerritoire(Territoire $territoire): int
     {
-        $department = DepartementEnum::from($territoire->getSlug());
-        $departmentCode = DepartementEnum::getCode($department);
-        $sql = "
-        SELECT ROUND(SUM(temp.percentage) / SUM(temp.total) * 100) as percentage 
-        FROM (
+        $sql = "SELECT ROUND(SUM(temp.percentage) / SUM(temp.total) * 100) as percentage FROM (
             SELECT U.id as `user`, U.zip, ROUND(SUM(R.points) / SUM(R.total) * 100) as percentage, SUM(R.total) as total 
             FROM reponse R 
             INNER JOIN repondant U ON R.repondant_id = U.id 
             GROUP BY U.id
         ) as temp 
-        WHERE zip LIKE ?;
         ";
 
-        return (int) $this->getEntityManager()->getConnection()->executeQuery($sql, [$departmentCode . '%'])->fetchOne();
+        if ($territoire->getArea() === TerritoireAreaEnum::DEPARTEMENT) {
+            $sql .= "WHERE zip LIKE ?;";
+            $department = DepartementEnum::tryFrom($territoire->getSlug());
+            $departmentCode = DepartementEnum::getCode($department);
+            $params = [$departmentCode . '%'];
+        } elseif ($territoire->getArea() === TerritoireAreaEnum::OT || $territoire->getArea() === TerritoireAreaEnum::TOURISME) {
+            $sql .= "WHERE zip IN (". implode(',', $territoire->getZips()) . ")";
+            $params = [];
+        } else {
+            $params = [];
+        }
+
+        return (int) $this->getEntityManager()->getConnection()->executeQuery($sql, $params)->fetchOne();
     }
 
     /**

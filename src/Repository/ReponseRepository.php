@@ -213,12 +213,13 @@ class ReponseRepository extends ServiceEntityRepository
 
         $qb = $this->addFilters($qb, $filterDTO);
 
-        return $filterDTO instanceof TerritoireFilterDTO ?
-            (int) $qb
-                ->getQuery()
-                ->enableResultCache(86400, 'getNumberOfReponsesGlobal' . $filterDTO->getTerritoire()->getId())
-                ->getSingleScalarResult()
-            :
+        return
+//            $filterDTO instanceof TerritoireFilterDTO ?
+//            (int) $qb
+//                ->getQuery()
+//                ->enableResultCache(86400, 'getNumberOfReponsesGlobal' . $filterDTO->getTerritoire()->getId())
+//                ->getSingleScalarResult()
+//            :
             (int) $qb
                 ->getQuery()
                 ->getSingleScalarResult();
