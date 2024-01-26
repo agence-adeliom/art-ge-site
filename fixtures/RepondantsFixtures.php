@@ -43,8 +43,6 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
-        $thematiques = $this->thematiqueRepository->findAll();
-
         $repondantDatas = [
             ['NATALIE', 'RECEPTION', '0389426476', 'reception@camping-mulhouse.com', "CAMPING DE L'ILL OTC", '1 rue Pierre de Coubertin', '68100', 'MULHOUSE', 'camping', false, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
                 [
@@ -596,6 +594,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                 foreach ($repondantChoicesSlugs as $repondantChoicesSlug){
                     $choice = $this->choiceRepository->findOneBy(['question' => $question->getId(),'slug' => str_replace(' ', '', $repondantChoicesSlug)]);
                     if ($choice){
+                        $reponse->addChoice($choice);
                         $rawForm[$question->getId()]['answers'][$choice->getId()] = 'on';
                     } else {
                         dump('choice not founst for slug : ' . $repondantChoicesSlug);
