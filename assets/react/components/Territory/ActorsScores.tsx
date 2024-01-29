@@ -63,7 +63,7 @@ const TouristsScores = () => {
                     icon={visit} 
                     type="Lieux de visite"
                 />
-               <div className="w-full h-1 border-b border-neutral-500 border-dashed absolute left-0 top-[216px]"></div>
+               <div className="print:hidden w-full h-1 border-b border-neutral-500 border-dashed absolute left-0 top-[216px]"></div>
             </div>
             <DurabilityCursor />
         </div>

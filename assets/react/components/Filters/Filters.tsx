@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import Logo from '@images/logo/logo.png';
 import { Text } from '@components/Typography/Text';
 import { Icon } from '@components/Typography/Icon';
@@ -7,12 +7,22 @@ import { Button } from '@components/Action/Button';
 
 
 
-const Filters = ({setTerritoryScore} : {
+const Filters = ({setTerritoryScore, filters} : {
     setTerritoryScore: Function,
+    filters: any
 }) => {
 
-    const [territories, setTerritories] = useState([''])
-    
+    const [departments, setdepartments] = useState()
+
+   useEffect(() => {
+    if(filters) {
+        setdepartments(filters.departments)
+    }
+   }, [filters])
+
+   if (departments) {
+    console.log(departments)
+   }
     return (
         <div>
             <a href="https://www.art-grandest.fr/" target='_blank' >
@@ -23,15 +33,16 @@ const Filters = ({setTerritoryScore} : {
                     Filtrer par :
                 </Text>
 
-                <Filter filterValue={territories} setFilterValue={setTerritories}></Filter>
-                
+                <Filter filterValue={departments} type={'Départements'} setFilterValue={setdepartments}></Filter>
             </div>
+
+            
             
             <Button 
                 variant="secondary" 
                 icon="fa-solid fa-minus" 
                 iconSide="left"
-                onClick={() => setTerritoryScore(territories)}
+               // onClick={() => setTerritoryScore(territories)}
                 >
                     Filtrer
             </Button>

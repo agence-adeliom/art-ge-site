@@ -6,7 +6,7 @@ import Topography from '@images/topography.svg';
 const Header = () => {
     return (
         <div className="w-full">
-            <div className="print:bg-white bg-primary-600 py-12 px-10 w-full relative overflow-hidden">
+            <div className="print:bg-white bg-primary-600 print:pb-0 py-12 px-10 w-full relative overflow-hidden">
                 <Heading variant="display-4" weight={400} className="print:text-black text-white" >
                     ÉcoBoussole
                 </Heading>

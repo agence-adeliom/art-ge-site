@@ -32,7 +32,7 @@ const Analysis = ({type, color, percentage, desc, barColor, icon} : {
         },
     ])
     return (
-        <div className="px-10 py-12 bg-gray-50 relative">
+        <div className="px-10 print:py-4 py-12 print:bg-white bg-gray-50 relative">
             <div className="absolute right-10 top-0">
             <Icon icon={icon} size={null} color={color} className="text-[144px] opacity-20"></Icon>
             </div>
@@ -51,7 +51,7 @@ const Analysis = ({type, color, percentage, desc, barColor, icon} : {
                         <p className="ml-3 mr-7 flex-shrink-0">Voir le détail <Icon icon="fa-solid fa-chevron-right"></Icon></p>
                     </div>
                 ))}
-                <div className="h-full absolute w-1 border-r border-dashed border-neutral-500 top-0 left-[568px]"></div>
+                <div className="print:hidden h-full absolute w-1 border-r border-dashed border-neutral-500 top-0 left-[568px]"></div>
             </div>
             <DurabilityCursor />
         </div>

@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import Filters from '@components/Filters/Filters';
 import { Heading } from '@components/Typography/Heading';
 import Header from '@components/Territory/Header'
@@ -7,17 +7,37 @@ import SustainabiltiesScores from "@components/Territory/SustainabiltiesScores";
 import ActorsScores from "@components/Territory/ActorsScores";
 import Analysis from "@components/Territory/Analysis";
 import FooterResult from "@components/Navigation/FooterResults";
+import Tabs from "@components/Territory/Tabs";
 
 const Territory = () => {
     const [territoryScore, setTerritoryScore] = useState(42)
     const [respondantsTotal, setRespondantsTotal] = useState(342)
     
     const [environnementScore, setEnvironnementScore] = useState(39)
+    const [filters, setFilters] = useState()
+
+    const apiFilter = (slug: string) => {
+        fetch(`https://art-grand-est.ddev.site/api/dashboard/${slug}/filters`)
+            .then(response => response.json())
+            .then(data => {
+                setFilters(data.data);
+        });
+    }
+
+    useEffect(() => {
+        apiFilter('grand-est');
+    }, [])
+
+    useEffect(() => {
+        console.log(filters)
+    }, [filters])
+
 
     return (
         <div className="flex">
-            <div className="print:hidden w-[320px] h-screen top-0 sticky py-16 px-10 shadow-[0_2px_4px_4px_rgba(113,113,122,0.12)] flex-shrink-0">
+            <div className="print:hidden z-10 w-[320px] h-screen top-0 sticky py-16 px-10 shadow-[0_2px_4px_4px_rgba(113,113,122,0.12)] flex-shrink-0">
                 <Filters
+                    filters={filters}
                     setTerritoryScore={setTerritoryScore}
                 ></Filters>
             </div>
@@ -35,7 +55,7 @@ const Territory = () => {
                     
                 />
 
-                <div className="bg-neutral-50 p-10 pt-12 pb-0">
+                <div className="print:bg-white bg-neutral-50 p-10 pt-12 pb-0">
                     <Heading variant={'display-4'}>Pour aller plus loin dans l’analyse</Heading>
                 </div>
                 <Analysis
@@ -67,6 +87,7 @@ const Territory = () => {
                     desc="Ci-dessous les résultats détaillés pour chaque thématique liée à l’environnement. 
                     Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."
                 ></Analysis>
+                <Tabs></Tabs>
                 <FooterResult></FooterResult>
             </div> 
         </div>
