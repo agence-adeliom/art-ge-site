@@ -113,14 +113,14 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
     public function getTourismsByLinkedTerritoire(Territoire $linkedTerritoire, array $columns = []): null | array | Territoire
     {
         $qb = $this->createQueryBuilder('t')
-            ->innerJoin('t.tourismTerritoires', 'tt')
+            ->innerJoin('t.linkedTerritoires', 'tt')
             ->andWhere('t.area = :area')
             ->andWhere('tt.id = :linkedId')
             ->setParameter('linkedId', $linkedTerritoire->getId())
             ->setParameter('area', TerritoireAreaEnum::TOURISME->value)
         ;
 
-        $qb = $this->selectOnlyColumns($columns, $qb, 'tt');
+        $qb = $this->selectOnlyColumns($columns, $qb, 't');
 
         return [] !== $columns ? $qb->getQuery()->getArrayResult() : $qb->getQuery()->getOneOrNullResult();
     }

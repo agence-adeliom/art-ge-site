@@ -238,7 +238,7 @@ class ReponseRepository extends ServiceEntityRepository
     public function getRepondantsGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): array
     {
         $qb = $this->createQueryBuilder('r')
-            ->select('t.name as typologie, r.uuid, u.company, MAX(r.points) as points, r.total')
+            ->select('t.name as typologie, r.uuid, u.company, u.city, MAX(r.points) as points, r.total')
             ->innerJoin('r.repondant', 'u')
             ->innerJoin('u.typologie', 't')
             ->groupBy('u.id')

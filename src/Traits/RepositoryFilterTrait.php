@@ -88,7 +88,7 @@ trait RepositoryFilterTrait
 
     private function addFilters(QueryBuilder $qb, DashboardFilterDTO | TerritoireFilterDTO $filterDTO): QueryBuilder
     {
-        if ($filterDTO instanceof TerritoireFilterDTO) {
+        if ($filterDTO instanceof TerritoireFilterDTO || ($filterDTO instanceof DashboardFilterDTO && [] === $filterDTO->getTerritoires())) {
             $qb = $this->filterByAreaZipCodes($qb, $filterDTO->getTerritoire());
         }
 
