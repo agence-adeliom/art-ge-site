@@ -31,7 +31,7 @@ class DashboardDataGlobalEventListener
             'repondants' => $repondants,
             'repondantsCount' => count($repondants), // 29 bas-rhin
             'score' => $this->reponseRepository->getPercentageGlobal($dashboardFilterDTO),
-            'piliersTODO' => $this->scoreRepository->getPercentagesByPiliersGlobal(), // TODO Make dynamic given the filters
+            'piliers' => $this->scoreRepository->getPercentagesByPiliersGlobal($dashboardFilterDTO),
         ]);
     }
 }
