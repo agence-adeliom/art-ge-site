@@ -34,8 +34,30 @@ class ReponseFormSubmission
         }
         $this->entityManager->persist($reponse);
         $this->entityManager->flush();
+
+        $this->generateReponseChoicesManyToMany($reponse);
+
         $this->messageBus->dispatch(new ReponseConfirmationMessage((int) $reponse->getId()));
 
         return $reponse;
+    }
+
+    private function generateReponseChoicesManyToMany(Reponse $reponse): void
+    {
+        $reponseId = $reponse->getId();
+        if ($reponseId) {
+            $sql = "INSERT INTO reponse_choice (reponse_id, choice_id) VALUES ";
+            foreach ($reponse->getRawForm() as $choices) {
+                foreach (array_keys($choices['answers']) as $choiceId) {
+                    $sql .= "(?, ?),";
+                    $params[] = $reponseId;
+                    $params[] = $choiceId;
+                }
+            }
+            $sql = substr($sql, 0, -1);
+            if (str_contains($sql, '?')) {
+                $this->entityManager->getConnection()->executeQuery($sql, $params);
+            }
+        }
     }
 }

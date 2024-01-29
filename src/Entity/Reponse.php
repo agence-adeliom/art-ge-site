@@ -40,9 +40,6 @@ class Reponse
     #[ORM\Column(options: ['comment' => 'Somme des points possible d\'obtenir'])]
     private int $total;
 
-    #[ORM\OneToMany(mappedBy: 'question', targetEntity: Choice::class)]
-    private Collection $choices;
-
     /**
      * @var array<mixed> $rawForm
      */
@@ -58,6 +55,9 @@ class Reponse
     #[ORM\OneToMany(mappedBy: 'reponse', targetEntity: Score::class, orphanRemoval: true)]
     #[ORM\OrderBy(['thematique' => 'ASC'])]
     private Collection $scores;
+
+    #[ORM\ManyToMany(targetEntity: Choice::class, inversedBy: 'reponses')]
+    private Collection $choices;
 
     public function __construct()
     {
@@ -155,30 +155,6 @@ class Reponse
     }
 
     /**
-     * @return Collection<int, Choice>
-     */
-    public function getChoices(): Collection
-    {
-        return $this->choices;
-    }
-
-    public function addChoice(Choice $choice): static
-    {
-        if (!$this->choices->contains($choice)) {
-            $this->choices->add($choice);
-        }
-
-        return $this;
-    }
-
-    public function removeChoice(Choice $choice): static
-    {
-        $this->choices->removeElement($choice);
-
-        return $this;
-    }
-
-    /**
      * @return array<mixed>
      */
     public function getRawForm(): array
@@ -228,6 +204,30 @@ class Reponse
             $this->scores->add($score);
             $score->setReponse($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Choice>
+     */
+    public function getChoices(): Collection
+    {
+        return $this->choices;
+    }
+
+    public function addChoice(Choice $choice): static
+    {
+        if (!$this->choices->contains($choice)) {
+            $this->choices->add($choice);
+        }
+
+        return $this;
+    }
+
+    public function removeChoice(Choice $choice): static
+    {
+        $this->choices->removeElement($choice);
 
         return $this;
     }

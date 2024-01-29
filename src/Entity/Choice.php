@@ -38,9 +38,13 @@ class Choice
     #[ORM\OneToMany(mappedBy: 'choice', targetEntity: ChoiceTypologie::class)]
     private Collection $choiceTypologies;
 
+    #[ORM\ManyToMany(targetEntity: Reponse::class, mappedBy: 'choices')]
+    private Collection $reponses;
+
     public function __construct()
     {
         $this->choiceTypologies = new ArrayCollection();
+        $this->reponses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -97,6 +101,33 @@ class Choice
         if (!$this->choiceTypologies->contains($choiceTypology)) {
             $this->choiceTypologies->add($choiceTypology);
             $choiceTypology->setChoice($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reponse>
+     */
+    public function getReponses(): Collection
+    {
+        return $this->reponses;
+    }
+
+    public function addReponse(Reponse $reponse): static
+    {
+        if (!$this->reponses->contains($reponse)) {
+            $this->reponses->add($reponse);
+            $reponse->addChoice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReponse(Reponse $reponse): static
+    {
+        if ($this->reponses->removeElement($reponse)) {
+            $reponse->removeChoice($this);
         }
 
         return $this;
