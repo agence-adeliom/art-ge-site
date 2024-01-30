@@ -61,8 +61,11 @@ body {
     src: url("../font/Canela-Thin.otf");
   }
 
+.DateRangePicker_picker {
+    @apply z-[100] fixed
+}
 .DateRangePicker {
-    @apply w-full
+    @apply w-full 
 }
 
 .DateRangePicker input {
@@ -82,4 +85,32 @@ body {
 
 .DateRangePickerInput_calendarIcon {
     @apply p-0 ml-auto mr-4
+}
+
+/*Range*/
+.CalendarDay__selected_span {
+    @apply bg-primary-400 border-primary-200
+}
+
+/*Range hover*/
+.CalendarDay__hovered_span, .CalendarDay__selected_span:hover {
+    @apply bg-primary-200 border-primary-400
+}
+
+/*Last and first*/
+.CalendarDay__selected {
+    @apply bg-primary-800 border-primary-600
+}
+/*Hover future selected*/
+.CalendarDay__hovered_span:hover {
+    @apply bg-primary-800 border-primary-600 text-white
+}
+
+/*Hover last and first*/
+.CalendarDay__selected:hover {
+    @apply bg-primary-950 border-primary-800
+}
+/*Range hover*/
+.CalendarDay__hovered {
+    @apply bg-primary-50 border-primary-200
 }

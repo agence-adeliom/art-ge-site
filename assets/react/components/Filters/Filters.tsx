@@ -94,7 +94,8 @@ const Filters = ({setTerritoryScore, filters} : {
                         isOutsideRange={() => false}
                         customInputIcon={<i className="fa-light fa-calendar text-sm"></i>}
                         inputIconPosition="after"
-                        displayFormat="DD MM YYYY"
+                        displayFormat="DD/MM/YYYY"
+                        appendToBody={true}
                     />
                 </div>
             
