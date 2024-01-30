@@ -10,27 +10,54 @@ import FooterResult from "@components/Navigation/FooterResults";
 import Tabs from "@components/Territory/Tabs";
 
 const Territory = () => {
-    const [territoryScore, setTerritoryScore] = useState(42)
-    const [respondantsTotal, setRespondantsTotal] = useState(342)
+
+    //Global data
+    const [territoryScore, setTerritoryScore] = useState(0)
+    const [respondantsTotal, setRespondantsTotal] = useState(0)
+    const [environnementScore, setEnvironnementScore] = useState(0.01)
+    const [economyScore, setEconomyScore] = useState(0.01)
+    const [socialScore, setSocialScore] = useState(0.01)
     
-    const [environnementScore, setEnvironnementScore] = useState(39)
+    //Filters
     const [filters, setFilters] = useState()
+    const [ot, setOt] = useState()
+    const [etablishment, setEtablishment] = useState()
+    const [territories, setTerritories] = useState()
+    const [departments, setDepartments] = useState()
 
     const apiFilter = (slug: string) => {
         fetch(`https://art-grand-est.ddev.site/api/dashboard/${slug}/filters`)
             .then(response => response.json())
             .then(data => {
                 setFilters(data.data);
+                setOt(data.data.ots);
+                setEtablishment(data.data.typologies)
+                setTerritories(data.data.tourisms)
+                setDepartments(data.data.departments)
+        });
+    }
+
+    const apiData = (slug: string) => {
+        fetch(`https://art-grand-est.ddev.site/api/dashboard/${slug}/data`)
+            .then(response => response.json())
+            .then(data => {
+               console.log(data.data)
+               setTerritoryScore(data.data.globals.score)
+               setRespondantsTotal(data.data.globals.repondantsCount)
+               setEnvironnementScore(data.data.globals.piliers.environnement)
+               setEconomyScore(data.data.globals.piliers.economie)
+               setSocialScore(data.data.globals.piliers.social)
         });
     }
 
     useEffect(() => {
         apiFilter('grand-est');
+        apiData('grand-est');
     }, [])
 
-    useEffect(() => {
-        console.log(filters)
-    }, [filters])
+    // useEffect(() => {
+    //     console.log(filters)
+    // }, [filters])
 
 
     return (
@@ -39,6 +66,10 @@ const Territory = () => {
                 <Filters
                     filters={filters}
                     setTerritoryScore={setTerritoryScore}
+                    ot={ot}
+                    etablishment={etablishment}
+                    territories={territories}
+                    departments={departments}
                 ></Filters>
             </div>
             <div className="w-full">
@@ -49,6 +80,8 @@ const Territory = () => {
                 />
                 <SustainabiltiesScores 
                     environnementScore={environnementScore}
+                    economyScore={economyScore}
+                    socialScore={socialScore}
                 />
 
                 <ActorsScores

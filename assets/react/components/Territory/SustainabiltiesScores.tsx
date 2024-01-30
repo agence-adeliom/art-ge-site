@@ -7,8 +7,10 @@ import Pie from "@components/Graph/Pie";
 import { Icon } from "@components/Typography/Icon";
 import {Text} from "@components/Typography/Text";
 
-const SustainabiltiesScores = ({environnementScore} : {
-    environnementScore: number
+const SustainabiltiesScores = ({environnementScore, economyScore, socialScore} : {
+    environnementScore: number,
+    economyScore: number,
+    socialScore: number
 }) => {
    
     return (
@@ -24,13 +26,13 @@ const SustainabiltiesScores = ({environnementScore} : {
             
                 <Pie
                     color='#60A5AB'
-                    percentage={44}
+                    percentage={economyScore}
                     type="Economie"
                     icon="fa-coins"
                 ></Pie>
                 <Pie
                     color='#7A9B91'
-                    percentage={32}
+                    percentage={socialScore}
                     type="Social"
                     icon="fa-people-group"
                 ></Pie>

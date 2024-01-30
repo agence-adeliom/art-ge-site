@@ -5,7 +5,7 @@ import Header from '@components/Territory/Header'
 import ProgressBarTerritory from "@components/ProgressBar/ProgressBarTerritory";
 import { Button } from '@components/Action/Button';
 
-const ScoreTerritory = ({territoryScore, respondantsTotal} : {
+const ScoreTerritory = ({territoryScore, respondantsTotal, } : {
     territoryScore: number,
     respondantsTotal: number
 }) => {

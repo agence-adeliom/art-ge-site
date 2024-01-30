@@ -1,23 +1,31 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { Text } from '@components/Typography/Text';
 import { Icon } from '@components/Typography/Icon';
 import { Checkbox } from "@components/Fields/Checkbox";
 
 
 const inputContainer = `group trans-default lg:hover:bg-tertiary-200 is-active:border-primary-600 is-active:bg-primary-50`
-const Filter = ({filterValue, setFilterValue, type} : {
+const Filter = ({filterValue, setFilterValue, type, allFilter} : {
     filterValue: any,
     setFilterValue: Function,
-    type: string
+    type: string,
+    allFilter: any
 }) => {
     const [openModal, setOpenModal] = useState(false)
 
     const [filterChecked, setFilterChecked] = useState<string[]>([])
+    
+    useEffect(() => {
+        if(filterChecked) {
+            setFilterValue(filterChecked)
+        }
+    }, [filterChecked])
 
 
     const handleCheckbox = (e : any) => {
         e.stopPropagation()
         e.target.parentNode.classList.toggle('is-active')
+        
         if (e.target.checked) {
             setFilterChecked([...filterChecked, e.target.id])
         } else {
@@ -28,12 +36,13 @@ const Filter = ({filterValue, setFilterValue, type} : {
     }
 
     return (
-        <div className="mt-4">
-            <Text color="black" size="sm">Territoires :</Text>
+        <div className="mt-4" onClick={() => setOpenModal(false)}>
+            <Text color="black" size="sm">{type} :</Text>
             <div className="mt-3" onClick={(e) => {e.stopPropagation(); setOpenModal(!openModal)}}>
 
                 <div className="flex items-center gap justify-between border-b border-neutral-300 pb-2 pt-3 pr-4">
-                    <Text color="neutral-700" size="sm">Tous les territoires</Text>
+                    <Text color="neutral-700" size="sm" className="text-ellipsis whitespace-nowrap w-full overflow-hidden">
+                        {filterChecked.length > 0 ? filterChecked.map((el : any) => `${el}, `) : `Tous les ${type}`}</Text>
                     <Icon icon="fa-solid fa-chevron-right" size={'sm'}></Icon>
                 </div>
             </div>
@@ -43,7 +52,7 @@ const Filter = ({filterValue, setFilterValue, type} : {
                     <Text size="lg" className="p-4" weight={500}>{type}</Text>
                     <div className="flex flex-col mt-2">
                     
-                    {filterValue && Object.values(filterValue).map((el : any, key : any) => (
+                    {allFilter && Object.values(allFilter).map((el : any, key : any) => (
                         <div key={key} className={`flex items-center ${inputContainer}`} onClick={(e) => {handleCheckbox(e)}}>
                             <input type="checkbox"  className={`filterCheckbox rounded m-2`} id={el.name}></input>
                             <label className="w-full py-2" onClick={(e) => e.stopPropagation()} htmlFor={el.name}>{el.name}</label>

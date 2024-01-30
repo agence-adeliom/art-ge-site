@@ -11,16 +11,26 @@ import { DateRangePicker,  } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 
 
-const Filters = ({setTerritoryScore, filters} : {
+const Filters = ({setTerritoryScore, filters, ot, etablishment, territories, departments} : {
     setTerritoryScore: Function,
-    filters: any
+    filters: any,
+    ot: any,
+    etablishment: any,
+    territories: any,
+    departments: any
 }) => {
 
-    const [departments, setdepartments] = useState()
+    const [departmentsFilter, setDepartmentsFilter] = useState()
+    const [otsFilter, setOtsFilter] = useState()
+    const [territoriesFilter, setTerritoriesFilter] = useState()
+    const [EstablishmentsFilter, setEstablishmentsFilter] = useState()
 
     useEffect(() => {
         if(filters) {
-            setdepartments(filters.departments)
+            setDepartmentsFilter(departments)
+            setOtsFilter(ot)
+            setTerritoriesFilter(territories)
+            setEstablishmentsFilter(etablishment)
         }
     }, [filters])
 
@@ -42,6 +52,7 @@ const Filters = ({setTerritoryScore, filters} : {
         return `${jour}/${mois}/${annee}`;
     }
 
+    
     useEffect(() => {
         if (startDate) {
             const dateOriginale = new Date(startDate!['_d']);
@@ -56,7 +67,11 @@ const Filters = ({setTerritoryScore, filters} : {
         }
     }, [endDate])
    
-    console.log(filterStartDate, filterEndDate)
+
+    // console.log('OT', otsFilter)
+    // console.log('department', departmentsFilter)
+    // console.log('territory', territoriesFilter)
+    // console.log('Establishment', EstablishmentsFilter)
 
 
     return (
@@ -69,9 +84,10 @@ const Filters = ({setTerritoryScore, filters} : {
                     Filtrer par :
                 </Text>
 
-                <Filter filterValue={departments} type={'Territoires'} setFilterValue={setdepartments}></Filter>
-                <Filter filterValue={departments} type={'Territoires'} setFilterValue={setdepartments}></Filter>
-                <Filter filterValue={departments} type={'Territoires'} setFilterValue={setdepartments}></Filter>
+                <Filter filterValue={territoriesFilter} allFilter={territories} type={'Territoires'} setFilterValue={setTerritoriesFilter}></Filter>
+                <Filter filterValue={departmentsFilter} allFilter={departments} type={'Départements'} setFilterValue={setDepartmentsFilter}></Filter>
+                <Filter filterValue={otsFilter} allFilter={ot} type={'Offices de tourismes'} setFilterValue={setOtsFilter}></Filter>
+                <Filter filterValue={EstablishmentsFilter} allFilter={etablishment} type={'Établissements'} setFilterValue={setEstablishmentsFilter}></Filter>
 
                 <div className="border-b border-neutral-300 pb-2">
                     <Text className="mt-6 mb-3" size="sm">Période :</Text>
@@ -109,7 +125,7 @@ const Filters = ({setTerritoryScore, filters} : {
                 icon="fa-solid fa-minus" 
                 iconSide="left"
                 className="mt-4"
-               // onClick={() => setTerritoryScore(territories)}
+                //onClick={() => setTerritoryScore(territories)}
                 >
                     Filtrer les résultats
             </Button>
