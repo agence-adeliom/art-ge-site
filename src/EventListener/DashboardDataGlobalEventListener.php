@@ -28,6 +28,7 @@ class DashboardDataGlobalEventListener
         $repondantUrl = fn(array $repondant) : array => [...$repondant, 'url' => $this->router->generate('app_resultat_single', ['uuid' => $repondant['uuid']], UrlGeneratorInterface::ABSOLUTE_URL)];
         $repondants = array_map($repondantUrl, $this->reponseRepository->getRepondantsGlobal($dashboardFilterDTO));
         $event->setGlobals([
+            'lastSubmission' => $this->reponseRepository->getLastSubmissionDate($dashboardFilterDTO),
             'repondants' => $repondants,
             'repondantsCount' => count($repondants), // 29 bas-rhin
             'score' => $this->reponseRepository->getPercentageGlobal($dashboardFilterDTO),

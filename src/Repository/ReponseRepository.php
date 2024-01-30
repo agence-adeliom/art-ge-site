@@ -252,6 +252,23 @@ class ReponseRepository extends ServiceEntityRepository
         ;
     }
 
+    public function getLastSubmissionDate(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): string
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('r.submittedAt')
+            ->innerJoin('r.repondant', 'u')
+            ->innerJoin('u.typologie', 'ty')
+            ->orderBy('r.submittedAt', 'DESC')
+            ->setMaxResults(1);
+
+        $qb = $this->addFilters($qb, $filterDTO);
+
+        return $qb
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
+
     public function getRepondantsByTypologieGlobal(TerritoireFilterDTO $territoireFilterDTO): array
     {
         $repondantsByTypologieGlobal = [];
