@@ -61,8 +61,12 @@ body {
     src: url("../font/Canela-Thin.otf");
   }
 
+.DateRangePicker {
+    @apply w-full
+}
+
 .DateRangePicker input {
-    @apply !w-[100px] p-0 text-center font-normal
+    @apply !w-[80px] p-0 text-center font-normal text-sm text-neutral-700
 }
 .DateInput {
     @apply w-fit
@@ -72,6 +76,10 @@ body {
     @apply border-0
 }
 
+.DateRangePickerInput {
+    @apply flex items-center
+}
+
 .DateRangePickerInput_calendarIcon {
-    @apply p-0
+    @apply p-0 ml-auto mr-4
 }
