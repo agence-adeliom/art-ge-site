@@ -18,9 +18,7 @@ const Filter = ({filterValue, setFilterValue, type} : {
     const handleCheckbox = (e : any) => {
         e.stopPropagation()
         e.target.parentNode.classList.toggle('is-active')
-        //console.log(e.target.checked)
         if (e.target.checked) {
-            //console.log('check',e.target.value)
             setFilterChecked([...filterChecked, e.target.id])
         } else {
             const index = filterChecked.indexOf(e.target.id)
@@ -28,14 +26,14 @@ const Filter = ({filterValue, setFilterValue, type} : {
         }
 
     }
-            //console.log(filterChecked)
 
     return (
         <div className="mt-4">
-            <p>Territoires :</p>
+            <Text color="black" size="sm">Territoires :</Text>
             <div className="mt-3" onClick={(e) => {e.stopPropagation(); setOpenModal(!openModal)}}>
+
                 <div className="flex items-center gap justify-between border-b border-neutral-300 pb-2 pt-3 pr-4">
-                    <Text>Tous les territoires</Text>
+                    <Text color="neutral-700" size="sm">Tous les territoires</Text>
                     <Icon icon="fa-solid fa-chevron-right" size={'sm'}></Icon>
                 </div>
             </div>
