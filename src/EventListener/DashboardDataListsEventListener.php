@@ -45,11 +45,19 @@ class DashboardDataListsEventListener
                     'departments' => $children,
                     'ots' => $subChildren,
                 ];
+            } elseif (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
+                foreach ($children as $child) {
+                    $child->setScore($this->territoireRepository->getPercentageByTerritoire($child));
+                    $child->setNumberOfReponses($this->reponseRepository->getNumberOfReponsesGlobal(DashboardFilterDTO::from(['territoire' => $child, 'territoires' => [$child]])));
+                }
+                $lists = [
+                    'ots' => $children,
+                ];
             }
-        } else {
-
         }
 
-        $event->setLists($lists);
+        if (isset($lists)) {
+            $event->setLists($lists);
+        }
     }
 }

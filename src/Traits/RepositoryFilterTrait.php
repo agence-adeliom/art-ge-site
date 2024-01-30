@@ -54,7 +54,7 @@ trait RepositoryFilterTrait
         if (!empty($filterTypologyDTO->getTypologies())) {
             $ors = [];
             foreach ($filterTypologyDTO->getTypologies() as $key => $typologie) {
-                $ors[] = $qb->expr()->eq('t.slug', ':typologie' . $key);
+                $ors[] = $qb->expr()->eq('ty.slug', ':typologie' . $key);
                 $qb->setParameter('typologie' . $key, $typologie);
             }
             $qb->andWhere($qb->expr()->orX(...$ors));
@@ -88,7 +88,7 @@ trait RepositoryFilterTrait
 
     private function addFilters(QueryBuilder $qb, DashboardFilterDTO | TerritoireFilterDTO $filterDTO): QueryBuilder
     {
-        if ($filterDTO instanceof TerritoireFilterDTO) {
+        if ($filterDTO instanceof TerritoireFilterDTO || ($filterDTO instanceof DashboardFilterDTO && [] === $filterDTO->getTerritoires())) {
             $qb = $this->filterByAreaZipCodes($qb, $filterDTO->getTerritoire());
         }
 

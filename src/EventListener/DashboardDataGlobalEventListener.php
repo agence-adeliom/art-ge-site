@@ -8,6 +8,8 @@ use App\Event\DashboardDataGlobalEvent;
 use App\Repository\ReponseRepository;
 use App\Repository\ScoreRepository;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 #[AsEventListener(event: DashboardDataGlobalEvent::class)]
 class DashboardDataGlobalEventListener
@@ -15,6 +17,7 @@ class DashboardDataGlobalEventListener
     public function __construct(
         private readonly ReponseRepository $reponseRepository,
         private readonly ScoreRepository $scoreRepository,
+        private readonly RouterInterface $router,
     ) {
     }
 
@@ -22,12 +25,13 @@ class DashboardDataGlobalEventListener
     {
         $dashboardFilterDTO = $event->getDashboardFilterDTO();
 
-        $repondants = $this->reponseRepository->getRepondantsGlobal($dashboardFilterDTO);
+        $repondantUrl = fn(array $repondant) : array => [...$repondant, 'url' => $this->router->generate('app_resultat_single', ['uuid' => $repondant['uuid']], UrlGeneratorInterface::ABSOLUTE_URL)];
+        $repondants = array_map($repondantUrl, $this->reponseRepository->getRepondantsGlobal($dashboardFilterDTO));
         $event->setGlobals([
             'repondants' => $repondants,
             'repondantsCount' => count($repondants), // 29 bas-rhin
             'score' => $this->reponseRepository->getPercentageGlobal($dashboardFilterDTO),
-            'piliersTODO' => $this->scoreRepository->getPercentagesByPiliersGlobal(), // TODO Make dynamic given the filters
+            'piliers' => $this->scoreRepository->getPercentagesByPiliersGlobal($dashboardFilterDTO),
         ]);
     }
 }

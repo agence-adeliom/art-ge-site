@@ -7,7 +7,9 @@ namespace App\Repository;
 use App\Dto\DashboardFilterDTO;
 use App\Dto\TerritoireFilterDTO;
 use App\Entity\Score;
+use App\Enum\DepartementEnum;
 use App\Enum\PilierEnum;
+use App\Enum\TerritoireAreaEnum;
 use App\Traits\RepositoryFilterTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -35,7 +37,7 @@ class ScoreRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('s')
             ->innerJoin('s.reponse', 'r')
             ->innerJoin('r.repondant', 'u')
-            ->innerJoin('u.typologie', 't')
+            ->innerJoin('u.typologie', 'ty')
             ->innerJoin('s.thematique', 'th')
             ->andWhere('th.slug = :slug')
             ->setParameter('slug', $slug)
@@ -111,7 +113,7 @@ class ScoreRepository extends ServiceEntityRepository
             ->addSelect('th.slug as slug')
             ->innerJoin('s.reponse', 'r')
             ->innerJoin('r.repondant', 'u')
-            ->innerJoin('u.typologie', 't')
+            ->innerJoin('u.typologie', 'ty')
             ->innerJoin('s.thematique', 'th')
             ->groupBy('s.thematique')
         ;
@@ -133,7 +135,7 @@ class ScoreRepository extends ServiceEntityRepository
 
         foreach ($filterDTO->getTypologies() ?? [] as $typology) {
             $qb = $this->getPercentagesByThematiquesQuery($filterDTO);
-            $qb->andWhere('t.slug = :typology')
+            $qb->andWhere('ty.slug = :typology')
                 ->setParameter('typology', $typology)
             ;
             $percentagesByTypologiseAndThematiques[$typology] = $qb->getQuery()->getArrayResult();
@@ -143,21 +145,95 @@ class ScoreRepository extends ServiceEntityRepository
     }
 
     /**
+     * Pour chaque pilier on va faire une requete SQL qui va nous permettre de compter le nombre de repondants
+     * par thematique, et a la fin on fait la moyenne de toutes ces sommes pour avoir la valeur par pilier
+     * La recherche par pilier est faite via une UNION sql des thematique.
+     * La requete est construite dans la boucle foreach des thematiques, et chaque fois qu'on rencontre un ?
+     * le parametres est ajoute au tableau des parametres.
+     * A la fin on converti le DQL en SQL et on joint le tout avec une UNION
+     *
      * @return array<string, int>
      */
-    public function getPercentagesByPiliersGlobal(): array
+    public function getPercentagesByPiliersGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): array
     {
-        // TODO Make dynamic given the filters
         $percentagesByPiliers = [];
 
         foreach (PilierEnum::cases() as $pilier) {
+            $counter = 0;
+            $dqls = [];
+            $parameters = [];
             $thematiques = PilierEnum::getThematiquesSlugsByPilier($pilier);
+            foreach ($thematiques as $thematique) {
+                $dql = $this->createQueryBuilder('s')
+                    ->select('SUM(s.points) as points, SUM(s.total) as total')
+                    ->innerJoin('s.reponse', 'r')
+                    ->innerJoin('s.thematique', 't')
+                    ->innerJoin('r.repondant', 'u')
+                    ->innerJoin('u.typologie', 'ty')
+                    ->groupBy('u.id')
+                    ->andWhere('t.slug = ?'.$counter++);
+                $parameters[] = $thematique->value;
 
-            $sql = 'SELECT ROUND(AVG(temp.percentage)) FROM (';
-            $sqlUnion = array_fill(0, count($thematiques), 'SELECT ROUND((SUM(S.points) / SUM(S.total)) * 100) as percentage FROM `score` S INNER JOIN thematique TH ON S.thematique_id = TH.id WHERE TH.slug = ?');
-            $sql .= implode(' UNION ', $sqlUnion) . ') as temp';
+                if ($filterDTO instanceof DashboardFilterDTO) {
+                    $territoires = $filterDTO->getTerritoires() ?: [$filterDTO->getTerritoire()];
+                    if ([] !== $territoires) {
+                        foreach ($territoires as $territoire) {
 
-            $percentagesByPiliers[$pilier->value] = (int) $this->getEntityManager()->getConnection()->executeQuery($sql, array_column($thematiques, 'value'))->fetchOne();
+                            if (TerritoireAreaEnum::REGION !== $territoire->getArea()) {
+                                $ors = [];
+                                if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
+                                    $department = DepartementEnum::tryFrom($territoire->getSlug());
+                                    if ($department) {
+                                        $ors[] = $dql->expr()->like('u.zip', '?'.$counter++);
+                                        $parameters[] = DepartementEnum::getCode($department) . '%';
+                                    }
+                                } else {
+                                    $ors[] = $dql->expr()->in('u.zip', '?'.$counter++);
+                                    $parameters[] = $territoire->getZips();
+                                }
+                                if ([] !== $ors) {
+                                    $dql->orWhere($dql->expr()->andX(...$ors));
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+                if (!empty($filterDTO->getTypologies())) {
+                    $ors = [];
+                    foreach ($filterDTO->getTypologies() as $typologie) {
+                        $ors[] = $dql->expr()->eq('ty.slug', '?'.$counter++);
+                        $parameters[] = $typologie;
+                    }
+                    $dql->andWhere($dql->expr()->orX(...$ors));
+                }
+
+                if ($filterDTO->hasDateRange()) {
+                    $dateFormat = 'Y-m-d H:i:s';
+                    if (null !== $filterDTO->getFrom() && null !== $filterDTO->getTo()) {
+                        $dql->andWhere('r.created_at BETWEEN ?'.$counter++.' AND ?'.$counter++);
+                        $parameters[] = $filterDTO->getFrom()->format($dateFormat);
+                        $parameters[] = $filterDTO->getTo()->format($dateFormat);
+                    } elseif (null !== $filterDTO->getFrom() && null === $filterDTO->getTo()) {
+                        $dql->andWhere('r.created_at >= ?'.$counter++);
+                        $parameters[] = $filterDTO->getFrom()->format($dateFormat);
+                    } elseif (null === $filterDTO->getFrom() && null !== $filterDTO->getTo()) {
+                        $dql->andWhere('r.created_at <= ?'.$counter++);
+                        $parameters[] = $filterDTO->getTo()->format($dateFormat);
+                    }
+                }
+
+                $dqls[] = $dql;
+            }
+
+            // le résultat est le produit en croix de toutes les sommes des points des thematiques divisées par les total des thematiques * 100
+            $sql = 'SELECT ROUND((SUM(temp.sclr_0) / SUM(temp.sclr_1)) * 100) as percentage FROM ((';
+            // pour chaque thematique on construit une requete sql
+            $sqlUnion = array_map(fn (QueryBuilder $dql): string => (string) $dql->getQuery()->getSQL(), $dqls);
+            // on construit l'UNION des requetes
+            $sql .= implode(') UNION (', $sqlUnion) . ')) as temp';
+            $percentagesByPiliers[$pilier->value] = (int) $this->getEntityManager()->getConnection()->executeQuery($sql, $parameters)->fetchOne();
         }
 
         return $percentagesByPiliers;

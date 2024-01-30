@@ -157,8 +157,8 @@ class ReponseRepository extends ServiceEntityRepository
         }
 
         return $qb
-            ->innerJoin('u.typologie', 't')
-            ->andWhere('t.slug = :slug')
+            ->innerJoin('u.typologie', 'ty')
+            ->andWhere('ty.slug = :slug')
             ->setParameter('slug', $slug)
         ;
     }
@@ -238,9 +238,9 @@ class ReponseRepository extends ServiceEntityRepository
     public function getRepondantsGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): array
     {
         $qb = $this->createQueryBuilder('r')
-            ->select('t.name as typologie, r.uuid, u.company, MAX(r.points) as points, r.total')
+            ->select('ty.name as typologie, r.uuid, u.company, u.city, MAX(r.points) as points, r.total')
             ->innerJoin('r.repondant', 'u')
-            ->innerJoin('u.typologie', 't')
+            ->innerJoin('u.typologie', 'ty')
             ->groupBy('u.id')
         ;
 
@@ -277,9 +277,9 @@ class ReponseRepository extends ServiceEntityRepository
             SELECT COUNT(id) FROM (
                 SELECT U.id FROM reponse R 
                     INNER JOIN repondant U ON U.id = R.repondant_id 
-                    INNER JOIN typologie T ON T.id = U.typologie_id 
+                    INNER JOIN typologie TY ON TY.id = U.typologie_id 
                 WHERE 
-                    T.slug = :slug 
+                    TY.slug = :slug 
                     ' . $zipCriteria . '
                 GROUP BY U.id
             ) as temp;
@@ -294,7 +294,7 @@ class ReponseRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('r')
             ->select('ROUND(SUM(r.points) / SUM(r.total) * 100) as percentage')
             ->innerJoin('r.repondant', 'u')
-            ->innerJoin('u.typologie', 't')
+            ->innerJoin('u.typologie', 'ty')
         ;
 
         $qb = $this->addFilters($qb, $filterDTO);
@@ -322,8 +322,8 @@ class ReponseRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('r')
             ->select('ROUND(SUM(r.points) / SUM(r.total) * 100) as percentage')
             ->innerJoin('r.repondant', 'u')
-            ->innerJoin('u.typologie', 't')
-            ->andWhere('t.slug = :typology')
+            ->innerJoin('u.typologie', 'ty')
+            ->andWhere('ty.slug = :typology')
             ->setParameter('typology', $typology)
             ->groupBy('u.id')
         ;

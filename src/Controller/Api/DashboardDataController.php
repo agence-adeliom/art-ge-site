@@ -89,7 +89,7 @@ class DashboardDataController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $territoires = $this->territoireRepository->getAllBySlugs(array_values(array_merge($departments,$ots,$tourisms,)));
+        $territoires = $this->territoireRepository->getAllBySlugs(array_values(array_merge($departments,$ots,$tourisms)));
         $dashboardFilterDTO = DashboardFilterDTO::from([
             'territoire' => $territoire,
             'territoires' => $territoires,
