@@ -96,6 +96,7 @@ const Territory = () => {
                     type="Environnement" 
                     color="primary-800"
                     barColor="#75B369"
+                    slug={'grand-est'}// TODO: make dynamic
                     percentage={39}
                     desc="Ci-dessous les résultats détaillés pour chaque thématique liée à l’environnement. <br/>
                     Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."
@@ -106,6 +107,7 @@ const Territory = () => {
                     type="Economie" 
                     color="secondary-800"
                     barColor="#60A5AB"
+                    slug={'grand-est'}// TODO: make dynamic
                     percentage={44}
                     desc="Les graphiques décrivent les résultats pour chaque thématique liée à l’économie. <br />
                     Elle évoque le vivre et consommer local ; le service de proximité, de qualité avec des acteurs vertueux."
@@ -116,6 +118,7 @@ const Territory = () => {
                     type="Social" 
                     color="tertiary-800"
                     barColor="#75B369"
+                    slug={'grand-est'}// TODO: make dynamic
                     percentage={32}
                     desc="Ci-dessous les résultats détaillés pour chaque thématique liée à l’environnement. 
                     Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."

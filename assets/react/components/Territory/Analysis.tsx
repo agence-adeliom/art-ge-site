@@ -4,33 +4,71 @@ import { Text } from "@components/Typography/Text";
 import { Icon } from "@components/Typography/Icon";
 import ProgressBarTerritorySimple from "@components/ProgressBar/ProgressBarTerritorySimple";
 import DurabilityCursor from "@components/Graph/DurabilityCursor";
+import LateralPanel from "@components/Modal/LateralPanel";
+import ProgressBar from "@components/ProgressBar/ProgressBar";
+import LateralPanelDashboard from "@components/Modal/LateralPanelDashboard";
+import ThematiqueRow from "@components/Territory/ThematiqueRow";
 
-const Analysis = ({type, color, percentage, desc, barColor, icon} : {
+interface ThematiqueDetail {
+    slug: string,
+    name: string,
+    percentage: number,
+}
+
+export type ThematiqueDetails = ThematiqueDetail[]
+
+const Analysis = ({type, color, percentage, desc, barColor, icon, slug} : {
     type: string,
     color: any,
     percentage: number,
     desc: string,
     barColor: any,
-    icon: string
+    icon: string,
+    slug: string,
 }) => {
     const [array, setArray] = useState([
         {
             name: 'Biodiversité',
+            slug: 'biodiversite-et-conservation-de-la-nature-sur-site',
             percentage: 42
         },
         {
             name: 'Eau',
+            slug: 'gestion-de-l-eau-et-de-l-erosion',
             percentage: 36
         },
         {
             name: 'Entretien',
+            slug: 'entretien-et-proprete',
             percentage: 27
         },
         {
             name: 'Énergie',
+            slug: 'gestion-de-l-energie',
             percentage: 33
         },
     ])
+
+    const fetchData = (t: string) => async () : Promise<void> => {
+        // TODO only fetch if not already fetched
+        const res = await fetch(`/api/dashboard/${slug}/thematique/${t}`);
+        const thematique = await res.json() as {
+            success: true,
+            data: ThematiqueDetails
+        } | {
+            success: false,
+            data: string
+        };
+
+        if (Array.isArray(thematique.data)) {
+            setThematiqueDetails(thematique.data);
+        } else {
+            setThematiqueDetails([]);
+        }
+    }
+
+    const [thematiqueDetails, setThematiqueDetails] = useState<ThematiqueDetails>([]);
+
     return (
         <div className="px-10 print:py-4 py-12 print:bg-white bg-gray-50 relative">
             <div className="absolute right-10 top-0">
@@ -44,12 +82,7 @@ const Analysis = ({type, color, percentage, desc, barColor, icon} : {
             <Text dangerouslySetInnerHTML={{__html: desc}}></Text>
             <div className="mt-8 relative">
                 {array.map((item, index) => (
-                    <div key={index} className="items-center flex gap-8 my-3">
-                        <Text size="sm" weight={500} className="w-[210px] flex-shrink-0">{item.name}</Text>
-                        <ProgressBarTerritorySimple percentage={item.percentage} color={barColor}></ProgressBarTerritorySimple>
-                        <Text className="font-title" size="2xl" color="neutral-600"><span className="text-black">{item.percentage}</span>/100</Text>
-                        <p className="ml-3 mr-7 flex-shrink-0">Voir le détail <Icon icon="fa-solid fa-chevron-right"></Icon></p>
-                    </div>
+                    <ThematiqueRow key={index} title={item.name} percentage={item.percentage} color={barColor} fetchData={fetchData(item.slug)} thematiqueDetails={thematiqueDetails}></ThematiqueRow>
                 ))}
                 <div className="print:hidden h-full absolute w-1 border-r border-dashed border-neutral-500 top-0 left-[568px]"></div>
             </div>
