@@ -24,10 +24,8 @@ const Filters = ({setTerritoryScore, filters} : {
         }
     }, [filters])
 
-    if (departments) {
-        console.log(departments)
-    }
-
+    // French locale
+    moment.locale('fr-fr');
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [focusedInput, setFocusedInput] = useState(null);
@@ -59,6 +57,7 @@ const Filters = ({setTerritoryScore, filters} : {
     }, [endDate])
    
     console.log(filterStartDate, filterEndDate)
+
 
     return (
         <div className="flex flex-col min-h-full">
@@ -95,6 +94,7 @@ const Filters = ({setTerritoryScore, filters} : {
                         isOutsideRange={() => false}
                         customInputIcon={<i className="fa-light fa-calendar text-sm"></i>}
                         inputIconPosition="after"
+                        displayFormat="DD MM YYYY"
                     />
                 </div>
             
