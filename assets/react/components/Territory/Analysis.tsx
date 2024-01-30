@@ -50,7 +50,18 @@ const Analysis = ({type, color, percentage, desc, barColor, icon, slug} : {
     ])
 
     const fetchData = (t: string) => async () : Promise<void> => {
-        // TODO only fetch if not already fetched
+        const localStorageKey = `thematique-${slug}-${t}`; // TODO handle when there are query params, add them the the id of the key
+        const localStorageValue = window.localStorage.getItem(localStorageKey);
+        if (localStorageValue) {
+            try {
+                const thematiqueDetails = JSON.parse(localStorageValue);
+                setThematiqueDetails(thematiqueDetails);
+                return;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
         const res = await fetch(`/api/dashboard/${slug}/thematique/${t}`);
         const thematique = await res.json() as {
             success: true,
@@ -61,6 +72,7 @@ const Analysis = ({type, color, percentage, desc, barColor, icon, slug} : {
         };
 
         if (Array.isArray(thematique.data)) {
+            window.localStorage.setItem(localStorageKey, JSON.stringify(thematique.data));
             setThematiqueDetails(thematique.data);
         } else {
             setThematiqueDetails([]);
