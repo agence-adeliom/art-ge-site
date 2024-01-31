@@ -26,11 +26,11 @@ const ThematiqueRow = ({title, percentage, color, thematiqueDetails, fetchData} 
     const [open, setOpen] = useState(false)
     return (
         <>
-            <div className="items-center flex gap-8 my-3">
-                <Text size="sm" weight={500} className="w-[210px] flex-shrink-0">{title}</Text>
+            <div className="items-center grid grid-cols-[minmax(0,250px)_minmax(0,_1fr)_80px_110px] gap-8 py-3">
+                <Text size="sm" weight={500} className="flex-shrink-0">{title}</Text>
                 <ProgressBarTerritorySimple percentage={percentage} color={color}></ProgressBarTerritorySimple>
                 <Text className="font-title" size="2xl" color="neutral-600"><span className="text-black">{percentage}</span>/100</Text>
-                <p className="ml-3 mr-7 flex-shrink-0" onClick={ event => handleDropdown(event)}>Voir le détail <Icon icon="fa-solid fa-chevron-right"></Icon></p>
+                <p className="flex-shrink-0" onClick={ event => handleDropdown(event)}>Voir le détail <Icon icon="fa-solid fa-chevron-right"></Icon></p>
             </div>
 
             {open && (
