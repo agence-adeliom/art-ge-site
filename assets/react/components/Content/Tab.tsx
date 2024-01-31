@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from "react";
 import {Text} from "@components/Typography/Text";
-import { RepondantItem, RepondantList, TerritoireItem, TerritoireList } from "@screens/Territory";
+import { RepondantItem, RepondantList, TerritoireItem, TerritoireList } from "@react/types/Dashboard";
 
 
 const tabClass= "col-span-1 text-center cursor-pointer relative"

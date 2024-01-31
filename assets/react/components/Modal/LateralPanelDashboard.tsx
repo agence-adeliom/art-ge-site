@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Icon } from '@components/Typography/Icon';
 import { Heading } from '@components/Typography/Heading';
 import { Text } from '@components/Typography/Text';
-import {ThematiqueDetails} from "@components/Territory/Analysis";
+import { ThematiqueDetails } from "@components/Territory/Analysis";
 import ProgressBarTerritorySimple from "@components/ProgressBar/ProgressBarTerritorySimple";
 
 const LateralPanelDashboard = ({closeDropdown, title, barColor, percentage, thematiqueDetails}: {

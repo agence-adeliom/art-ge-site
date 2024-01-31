@@ -9,7 +9,7 @@ import moment, { Moment } from 'moment';
 import 'react-dates/initialize';
 import { DateRangePicker,  } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
-import { SelectedTerritoires } from "@screens/Territory";
+import { SelectedTerritoires } from "@react/types/Dashboard";
 
 
 const Filters = ({apiData, filters, ot, etablishment, territories, departments, lastSubmission, setSelectedTerritoires, selectedTerritoires} : {

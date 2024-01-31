@@ -9,7 +9,8 @@ import ProgressBar from "@components/ProgressBar/ProgressBar";
 import LateralPanelDashboard from "@components/Modal/LateralPanelDashboard";
 import ThematiqueRow from "@components/Territory/ThematiqueRow";
 import { useParams } from "react-router-dom";
-import { SelectedTerritoires, Thematiques, getSearchParamsFromTerritories } from "@screens/Territory";
+import { SelectedTerritoires, Thematiques } from "@react/types/Dashboard";
+import { getSearchParamsFromTerritories } from "@screens/Territory";
 
 interface ThematiqueDetail {
     slug: string,

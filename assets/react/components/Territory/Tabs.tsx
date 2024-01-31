@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { Heading } from "@components/Typography/Heading";
 import { Text } from "@components/Typography/Text";
 import Tab from "@components/Content/Tab";
-import { Lists } from "@screens/Territory";
+import { Lists } from "@react/types/Dashboard";
 
 const Tabs = ({lists} : {
     lists: Lists,

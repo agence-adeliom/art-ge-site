@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { Text } from '@components/Typography/Text';
 import { Icon } from '@components/Typography/Icon';
 import { Checkbox } from "@components/Fields/Checkbox";
-import { SelectedTerritoires } from "@screens/Territory";
+import { SelectedTerritoires } from "@react/types/Dashboard";
 
 
 const inputContainer = `group trans-default lg:hover:bg-tertiary-200 is-active:border-primary-600 is-active:bg-primary-50`
