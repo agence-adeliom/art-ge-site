@@ -11,13 +11,14 @@ import { DateRangePicker,  } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 
 
-const Filters = ({setTerritoryScore, filters, ot, etablishment, territories, departments} : {
+const Filters = ({setTerritoryScore, filters, ot, etablishment, territories, departments, lastSubmission} : {
     setTerritoryScore: Function,
     filters: any,
     ot: any,
     etablishment: any,
     territories: any,
-    departments: any
+    departments: any,
+    lastSubmission: string,
 }) => {
 
     const [departmentsFilter, setDepartmentsFilter] = useState()
@@ -130,7 +131,7 @@ const Filters = ({setTerritoryScore, filters, ot, etablishment, territories, dep
                     Filtrer les résultats
             </Button>
 
-            <Text weight={400} size="sm" color="neutral-500" className="mt-auto pt-4">Dernière mise à jour : 17.01.2024</Text>
+            {lastSubmission && <Text weight={400} size="sm" color="neutral-500" className="mt-auto pt-4">Dernière mise à jour : {lastSubmission}</Text>}
         </div>
     )
 }

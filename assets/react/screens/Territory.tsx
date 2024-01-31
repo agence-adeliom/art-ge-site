@@ -17,7 +17,8 @@ const Territory = () => {
     const [environnementScore, setEnvironnementScore] = useState(0.01)
     const [economyScore, setEconomyScore] = useState(0.01)
     const [socialScore, setSocialScore] = useState(0.01)
-    
+    const [lastSubmission, setLastSubmission] = useState('')
+
     //Filters
     const [filters, setFilters] = useState()
     const [ot, setOt] = useState()
@@ -47,6 +48,7 @@ const Territory = () => {
                setEnvironnementScore(data.data.globals.piliers.environnement)
                setEconomyScore(data.data.globals.piliers.economie)
                setSocialScore(data.data.globals.piliers.social)
+               setLastSubmission(data.data.globals.lastSubmission)
         });
     }
 
@@ -70,6 +72,7 @@ const Territory = () => {
                     etablishment={etablishment}
                     territories={territories}
                     departments={departments}
+                    lastSubmission={lastSubmission}
                 ></Filters>
             </div>
             <div className="w-full">
