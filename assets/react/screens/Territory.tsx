@@ -10,7 +10,7 @@ import FooterResult from "@components/Navigation/FooterResults";
 import Tabs from "@components/Territory/Tabs";
 import { useParams } from "react-router-dom";
 import NoDataModal from "@components/Modal/NoDataModal";
-import { Lists, SelectedTerritoires, Sluggable, Thematiques } from "@react/types/Dashboard";
+import { ActorsScoresList, Lists, SelectedTerritoires, Sluggable, Thematiques } from "@react/types/Dashboard";
 
 export const getSearchParamsFromTerritories = (selectedTerritoires: SelectedTerritoires): string => {
     const params: string[][] = [];
@@ -36,6 +36,16 @@ const Territory = () => {
     const [lastSubmission, setLastSubmission] = useState('')
     const [thematiques, setThematiques] = useState<Thematiques>([])
     const [lists, setLists] = useState<Lists>({})
+    const [actorsScores, setActorsScores] = useState<ActorsScoresList>({
+        activite: null,
+        camping: null,  
+        chambre: null,
+        hotel: null,
+        insolite: null,
+        location: null,
+        restaurant: null,
+        visite: null
+    })
 
     //Filters
     const [filters, setFilters] = useState()
@@ -78,6 +88,7 @@ const Territory = () => {
                     setSocialScore(data.data.globals.piliers.social)
                     setLastSubmission(data.data.globals.lastSubmission)
                     setThematiques(data.data.scores.thematiques)
+                    setActorsScores(data.data.scores.typologies)
 
                     const lists: Lists = {};
                     lists.repondants = data.data.globals.repondants;
@@ -126,7 +137,7 @@ const Territory = () => {
                 />
 
                 <ActorsScores
-                    
+                    scores={actorsScores}
                 />
 
                 <div className="print:bg-white bg-neutral-50 p-10 pt-12 pb-0">

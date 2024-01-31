@@ -8,7 +8,6 @@ const Tabs = ({lists} : {
     lists: Lists,
 }) => {
     const [indexTab, setIndexTab] = useState(lists.departments !== undefined ? 0 : 1)
-    console.log('indexTab : ',indexTab, indexTab===1);
     
     const handleTab = (e : any) => {
         setIndexTab(parseInt(e.target.dataset.index, 10))

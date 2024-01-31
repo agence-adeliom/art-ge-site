@@ -40,3 +40,14 @@ export interface Lists {
     ots?: TerritoireList,
     repondants?: RepondantList,
 }
+
+export interface ActorsScoresList {
+    activite: number | null;
+    camping: number | null; 
+    chambre: number | null;
+    hotel: number | null;
+    insolite: number | null;
+    location: number | null;    
+    restaurant: number | null;  
+    visite: number | null;
+}
