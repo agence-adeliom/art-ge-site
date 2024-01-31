@@ -9,6 +9,7 @@ import Analysis from "@components/Territory/Analysis";
 import FooterResult from "@components/Navigation/FooterResults";
 import Tabs from "@components/Territory/Tabs";
 import { useParams } from "react-router-dom";
+import NoDataModal from "@components/Modal/NoDataModal";
 
 export type Sluggable = { slug: string, name: string };
 
@@ -33,6 +34,9 @@ const Territory = () => {
     const [departments, setDepartments] = useState<Sluggable[]>([])
     
     const [selectedTerritoires, setSelectedTerritoires] = useState<SelectedTerritoires>({departments: [], ots: [], tourisms: [], typologies: []})
+
+    // no data to display
+    const [openErrorPopin, setOpenErrorPopin] = useState(false);
 
     const apiFilter = () => {
         fetch(`https://art-grand-est.ddev.site/api/dashboard/${territoire}/filters`)
@@ -64,13 +68,17 @@ const Territory = () => {
         fetch(`https://art-grand-est.ddev.site/api/dashboard/${territoire}/data?${search}`)
             .then(response => response.json())
             .then(data => {
-               console.log(data.data)
-               setTerritoryScore(data.data.globals.score)
-               setRespondantsTotal(data.data.globals.repondantsCount)
-               setEnvironnementScore(data.data.globals.piliers.environnement)
-               setEconomyScore(data.data.globals.piliers.economie)
-               setSocialScore(data.data.globals.piliers.social)
-               setLastSubmission(data.data.globals.lastSubmission)
+                if (data.status === 'error') {
+                    setOpenErrorPopin(true);
+                } else {
+                    console.log(data.data)
+                    setTerritoryScore(data.data.globals.score)
+                    setRespondantsTotal(data.data.globals.repondantsCount)
+                    setEnvironnementScore(data.data.globals.piliers.environnement)
+                    setEconomyScore(data.data.globals.piliers.economie)
+                    setSocialScore(data.data.globals.piliers.social)
+                    setLastSubmission(data.data.globals.lastSubmission)
+                }
         });
     }
 
@@ -149,6 +157,7 @@ const Territory = () => {
                 ></Analysis>
                 <Tabs></Tabs>
                 <FooterResult></FooterResult>
+                {openErrorPopin && <NoDataModal closeModal={() => setOpenErrorPopin(false)}></NoDataModal>}
             </div> 
         </div>
     )
