@@ -9,6 +9,7 @@ import ProgressBar from "@components/ProgressBar/ProgressBar";
 import LateralPanelDashboard from "@components/Modal/LateralPanelDashboard";
 import ThematiqueRow from "@components/Territory/ThematiqueRow";
 import { useParams } from "react-router-dom";
+import { Thematiques } from "@screens/Territory";
 
 interface ThematiqueDetail {
     slug: string,
@@ -18,38 +19,16 @@ interface ThematiqueDetail {
 
 export type ThematiqueDetails = ThematiqueDetail[]
 
-const Analysis = ({type, color, percentage, desc, barColor, icon} : {
+const Analysis = ({type, color, percentage, desc, barColor, icon, thematiques} : {
     type: string,
     color: any,
     percentage: number,
     desc: string,
     barColor: any,
     icon: string,
+    thematiques: Thematiques,
 }) => {
     const { territoire = 'grand-est' } = useParams();
-    
-    const [array, setArray] = useState([
-        {
-            name: 'Biodiversité',
-            slug: 'biodiversite-et-conservation-de-la-nature-sur-site',
-            percentage: 42
-        },
-        {
-            name: 'Eau',
-            slug: 'gestion-de-l-eau-et-de-l-erosion',
-            percentage: 36
-        },
-        {
-            name: 'Entretien',
-            slug: 'entretien-et-proprete',
-            percentage: 27
-        },
-        {
-            name: 'Énergie',
-            slug: 'gestion-de-l-energie',
-            percentage: 33
-        },
-    ])
 
     const fetchData = (t: string) => async () : Promise<void> => {
         const localStorageKey = `thematique-${territoire}-${t}`; // TODO handle when there are query params, add them the the id of the key
@@ -95,10 +74,9 @@ const Analysis = ({type, color, percentage, desc, barColor, icon} : {
             </div>
             <Text dangerouslySetInnerHTML={{__html: desc}}></Text>
             <div className="mt-8 relative">
-                {array.map((item, index) => (
-                    <ThematiqueRow key={index} title={item.name} percentage={item.percentage} color={barColor} fetchData={fetchData(item.slug)} thematiqueDetails={thematiqueDetails}></ThematiqueRow>
+                {thematiques.map((thematique, index) => (
+                    <ThematiqueRow key={index} title={thematique.name} percentage={parseInt(thematique.score, 10)} color={barColor} fetchData={fetchData(thematique.slug)} thematiqueDetails={thematiqueDetails}></ThematiqueRow>
                 ))}
-                <div className="print:hidden h-full absolute w-1 border-r border-dashed border-neutral-500 top-0 left-[568px]"></div>
             </div>
             <DurabilityCursor />
         </div>

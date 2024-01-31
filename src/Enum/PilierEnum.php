@@ -23,7 +23,6 @@ enum PilierEnum: string
                 ThematiqueSlugEnum::ENTRETIEN_ET_PROPRETE,
                 ThematiqueSlugEnum::TRANSPORT_ET_MOBILITE,
                 ThematiqueSlugEnum::INCLUSIVITE_SOCIALE,
-                ThematiqueSlugEnum::COOPERATION_LOCALE_ET_LIENS_AVEC_LES_HABITANTS,
             ],
             self::ECONOMIE => [
                 ThematiqueSlugEnum::ACCES_AUX_PERSONNES_EN_SITUATION_DE_HANDICAP,

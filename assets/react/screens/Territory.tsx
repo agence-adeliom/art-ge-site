@@ -15,6 +15,16 @@ export type Sluggable = { slug: string, name: string };
 
 export type SelectedTerritoires = Record<string, string[]>;
 
+export interface Thematique {
+    avg_points: string;
+    avg_total: string;
+    name: string;
+    score: string;
+    slug: string;
+}
+
+export type Thematiques = Thematique[];
+
 const Territory = () => {
     const { territoire = 'grand-est' } = useParams();    
 
@@ -25,6 +35,7 @@ const Territory = () => {
     const [economyScore, setEconomyScore] = useState(0.01)
     const [socialScore, setSocialScore] = useState(0.01)
     const [lastSubmission, setLastSubmission] = useState('')
+    const [thematiques, setThematiques] = useState<Thematiques>([])
 
     //Filters
     const [filters, setFilters] = useState()
@@ -78,6 +89,7 @@ const Territory = () => {
                     setEconomyScore(data.data.globals.piliers.economie)
                     setSocialScore(data.data.globals.piliers.social)
                     setLastSubmission(data.data.globals.lastSubmission)
+                    setThematiques(data.data.scores.thematiques)
                 }
         });
     }
@@ -131,9 +143,10 @@ const Territory = () => {
                     type="Environnement" 
                     color="primary-800"
                     barColor="#75B369"
-                    percentage={39}
+                    percentage={environnementScore}
                     desc="Ci-dessous les résultats détaillés pour chaque thématique liée à l’environnement. <br/>
                     Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."
+                    thematiques={thematiques.slice(0,8)}
                 ></Analysis>
 
                 <Analysis 
@@ -141,9 +154,10 @@ const Territory = () => {
                     type="Economie" 
                     color="secondary-800"
                     barColor="#60A5AB"
-                    percentage={44}
+                    percentage={economyScore}
                     desc="Les graphiques décrivent les résultats pour chaque thématique liée à l’économie. <br />
                     Elle évoque le vivre et consommer local ; le service de proximité, de qualité avec des acteurs vertueux."
+                    thematiques={thematiques.slice(8,11)}
                 ></Analysis>
 
                 <Analysis 
@@ -151,9 +165,10 @@ const Territory = () => {
                     type="Social" 
                     color="tertiary-800"
                     barColor="#75B369"
-                    percentage={32}
+                    percentage={socialScore}
                     desc="Ci-dessous les résultats détaillés pour chaque thématique liée à l’environnement. 
                     Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."
+                    thematiques={thematiques.slice(11,-1)}
                 ></Analysis>
                 <Tabs></Tabs>
                 <FooterResult></FooterResult>
