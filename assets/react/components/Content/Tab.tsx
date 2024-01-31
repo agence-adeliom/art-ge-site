@@ -29,21 +29,21 @@ const Tab = ({type, index, handleTab, indexTab, datas}: {
                             return <React.Fragment key={key}>
                                         {key === 0 && <div className={className}><div className="font-bold">Typologie</div><div className="font-bold">Nom du répondant</div><div className="font-bold">Commune</div><div className="font-bold">Score</div><div className="font-bold">Action</div></div>}
                                         <a href={`/resultat/${data.uuid}`}  className={className + ' border-b border-gray-200 bg-gray-50'}>
-                                            <div>{data.typologie}</div>
-                                            <div>{data.company}</div>
-                                            <div>{data.city}</div>
-                                            <div>{data.total > 0 ? Math.round(data.points / data.total * 100) : 0}/100</div>
-                                            <div>Voir le détail</div>
+                                            <p>{data.typologie}</p>
+                                            <p>{data.company}</p>
+                                            <p>{data.city}</p>
+                                            <p>{data.total > 0 ? Math.round(data.points / data.total * 100) : 0}/100</p>
+                                            <p>Voir le détail</p>
                                         </a>
                                 </React.Fragment>;
                         } else { // liste des départments ou ots
-                            const className = "grid grid-cols-3 gap-10 p-3"
+                            const className = "grid grid-cols-[minmax(0,500px)_minmax(5rem,1fr)_minmax(5rem,1fr)] gap-10 p-3"
                             return <React.Fragment key={key}>
                                     {key === 0 && <div className={className}><div className="font-bold">Nom</div><div className="font-bold">Nombre de répondants</div><div className="font-bold">Score</div></div>}
-                                    <div  className={className + ' border-b border-gray-200 bg-gray-50'}>
-                                        <div className="w-[500px]">{data.name}</div>
-                                        <div className="w-20">{data.numberOfReponses}</div>
-                                        <div>{data.score}/100</div>
+                                    <div className={className + ' border-b border-gray-200 bg-gray-50'}>
+                                        <p>{data.name}</p>
+                                        <p>{data.numberOfReponses}</p>
+                                        <p>{data.score}/100</p>
                                     </div>
                                 </React.Fragment>;
                         }

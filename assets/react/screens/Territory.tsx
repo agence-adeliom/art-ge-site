@@ -52,6 +52,18 @@ export interface Lists {
     repondants?: RepondantList,
 }
 
+export const getSearchParamsFromTerritories = (selectedTerritoires: SelectedTerritoires): string => {
+    const params: string[][] = [];
+    for (const [key, value] of Object.entries(selectedTerritoires)) {
+        if (Array.isArray(value)){    
+            for(const v of value) {         
+                params.push([key + '[]', v]);
+            }
+        }
+    }
+    return new URLSearchParams(params).toString();
+}
+
 const Territory = () => {
     const { territoire = 'grand-est' } = useParams();    
 
@@ -89,20 +101,8 @@ const Territory = () => {
         });
     }
 
-    const getSearchParamsFromTerritories = (): string => {
-        const params: string[][] = [];
-        for (const [key, value] of Object.entries(selectedTerritoires)) {
-            if (Array.isArray(value)){    
-                for(const v of value) {         
-                    params.push([key + '[]', v]);
-                }
-            }
-        }
-        return new URLSearchParams(params).toString();
-    }
-
     const apiData = () => {
-        const search = getSearchParamsFromTerritories();
+        const search = getSearchParamsFromTerritories(selectedTerritoires);
         
         fetch(`https://art-grand-est.ddev.site/api/dashboard/${territoire}/data?${search}`)
             .then(response => response.json())
@@ -181,6 +181,7 @@ const Territory = () => {
                     desc="Ci-dessous les résultats détaillés pour chaque thématique liée à l’environnement. <br/>
                     Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."
                     thematiques={thematiques.slice(0,8)}
+                    selectedTerritoires={selectedTerritoires}
                 ></Analysis>
 
                 <Analysis 
@@ -192,6 +193,7 @@ const Territory = () => {
                     desc="Les graphiques décrivent les résultats pour chaque thématique liée à l’économie. <br />
                     Elle évoque le vivre et consommer local ; le service de proximité, de qualité avec des acteurs vertueux."
                     thematiques={thematiques.slice(8,11)}
+                    selectedTerritoires={selectedTerritoires}
                 ></Analysis>
 
                 <Analysis 
@@ -203,6 +205,7 @@ const Territory = () => {
                     desc="Ci-dessous les résultats détaillés pour chaque thématique liée à l’environnement. 
                     Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."
                     thematiques={thematiques.slice(11,-1)}
+                    selectedTerritoires={selectedTerritoires}
                 ></Analysis>
                 <Tabs lists={lists}></Tabs>
                 <FooterResult></FooterResult>
