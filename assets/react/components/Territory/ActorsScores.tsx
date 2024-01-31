@@ -13,7 +13,7 @@ const ActorsScores = ({ scores } : {
             <Heading variant="display-4">Score détaillé par type d’acteur touristique</Heading>
             <Text className="mt-4" size="sm">Vous trouverez ci-dessous le score global de l’ensemble des filtres sélectionnés pour chaque typologie de prestataire.</Text>
 
-            <div className="grid grid-cols-8 gap-4 mt-10 relative">
+            <div className="grid sm:grid-cols-4 md:grid-cols-8 gap-4 mt-10 relative">
                 {Object.entries(scores).map(([actor, score]) => (
                     <Bar 
                         key={actor}
@@ -21,7 +21,7 @@ const ActorsScores = ({ scores } : {
                         type={actor}
                     />
                 ))}
-               <div className="print:hidden w-full h-1 border-b border-neutral-500 border-dashed absolute left-0 top-[216px]"></div>
+               <div className="hidden md:block print:hidden w-full h-1 border-b border-neutral-500 border-dashed absolute left-0 top-[216px]"></div>
             </div>
             <DurabilityCursor />
         </div>

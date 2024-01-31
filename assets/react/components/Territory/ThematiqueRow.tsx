@@ -26,7 +26,7 @@ const ThematiqueRow = ({title, percentage, color, thematiqueDetails, fetchData} 
     const [open, setOpen] = useState(false)
     return (
         <>
-            <div className="items-center grid grid-cols-[minmax(0,250px)_minmax(0,_1fr)_80px_110px] gap-8 py-3">
+            <div className="items-center grid grid-cols-1 md:grid-cols-[minmax(0,250px)_minmax(0,_1fr)_80px_110px] gap-8 py-3">
                 <Text size="sm" weight={500} className="flex-shrink-0">{title}</Text>
                 <ProgressBarTerritorySimple percentage={percentage} color={color}></ProgressBarTerritorySimple>
                 <Text className="font-title" size="2xl" color="neutral-600"><span className="text-black">{percentage}</span>/100</Text>

@@ -2,7 +2,7 @@ import React from "react";
 import {Text} from "@components/Typography/Text";
 import { Icon } from "@components/Typography/Icon";
 
-const barContainer = "w-full h-[267px] relative bg-neutral-100"
+const barContainer = "w-full h-[100px] md:h-[267px] relative bg-neutral-100"
 const progressBar = "w-full absolute bottom-0 left-0"
 const Bar = ({percentage, type} : {
     percentage: number,
@@ -43,7 +43,7 @@ const Bar = ({percentage, type} : {
     }
 
     return (
-        <div className="text-center" key={type}>
+        <div className={isNaN(percentage) === false ? "text-center" : "hidden"} key={type}>
             {<Text className="font-title mb-2" color="neutral-600" size="2xl" dangerouslySetInnerHTML={{__html: isNaN(percentage) === false ? `${percentage}/100` : '&nbsp;'}}></Text>}
             <div className={`${barContainer}`}>
                 <div className={`${progressBar}`} style={{background: color, height: `${percentage}%`}}></div>
