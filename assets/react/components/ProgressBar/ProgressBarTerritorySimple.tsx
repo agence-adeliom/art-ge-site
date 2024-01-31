@@ -4,14 +4,15 @@ import {Text} from "@components/Typography/Text";
 
 const progressContainer = "bg-neutral-200 h-4 w-full"
 const progressBar = " h-full w-full relative trans-default"
-const ProgressBarTerritorySimple = ({percentage, color}: {
+const ProgressBarTerritorySimple = ({percentage, color, separator = true}: {
     percentage?: number,
-    color: number
+    color: number,
+    separator?: boolean
 }) => {
     return (
         <>
             <div className="w-full relative">
-                <div className="print:hidden h-[calc(100%+2.5rem)] absolute w-1 border-r border-dashed border-neutral-500 top-[-1.25rem] left-[33%] z-10"></div>
+                {separator && <div className="print:hidden h-[calc(100%+2.5rem)] absolute w-1 border-r border-dashed border-neutral-500 top-[-1.25rem] left-[33%] z-10"></div>}
                 <div className={progressContainer}>
                     <div className={`${progressBar}`} style={{ width: `${percentage}%`, background: color}}></div>
                 </div>

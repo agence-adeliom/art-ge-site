@@ -5,10 +5,12 @@ import { Icon } from '@components/Typography/Icon';
 import { Heading } from '@components/Typography/Heading';
 import { Text } from '@components/Typography/Text';
 import {ThematiqueDetails} from "@components/Territory/Analysis";
+import ProgressBarTerritorySimple from "@components/ProgressBar/ProgressBarTerritorySimple";
 
-const LateralPanelDashboard = ({closeDropdown, title, percentage, thematiqueDetails}: {
+const LateralPanelDashboard = ({closeDropdown, title, barColor, percentage, thematiqueDetails}: {
     closeDropdown: Function,
     title: string,
+    barColor: number,
     percentage?: number,
     thematiqueDetails: ThematiqueDetails,
 }) => {
@@ -27,21 +29,23 @@ const LateralPanelDashboard = ({closeDropdown, title, percentage, thematiqueDeta
                     <Icon icon="fa-xmark" size="lg"></Icon>
                 </div>
                 <div className="bg-white h-full w-full p-10 min-h-screen">
-                    <Heading variant={'display-4'} className="mr-10" raw={true}>{title}</Heading>
-
-                    <div className="bg-neutral-100 p-4 mt-4">
+                    <Heading variant={'display-4'} className="mr-10 mb-10" raw={true}>{title}</Heading>
+                    <Text color="neutral-700" className="mb-4">Moyenne régionnale : <strong>{percentage}/100</strong></Text>
+                    <Text color="neutral-700" className="mb-4">Les actions des répondants :</Text>
+                    <div>
                         { thematiqueDetails.map((item) => (
-                            <div key={item.slug}>
-                                <p>{item.slug}</p>
-                                <p>{item.name}</p>
-                                <p>{item.percentage}%</p>
+                            <div key={item.slug} className="border-b py-3">
+                                <Text color="neutral-700" className="flex-shrink-0">{item.name}</Text>
+                                <div className="grid grid-cols-[1fr_80px] gap-6 items-center">
+                                    <ProgressBarTerritorySimple percentage={item.percentage} color={barColor} separator={false}></ProgressBarTerritorySimple>
+                                    <Text className="font-title" size="2xl" color="neutral-600"><span className="text-black">{item.percentage}</span>/100</Text>
+                                </div>
                             </div>
                         )) }
                     </div>
                 </div>
 
                 </div>
-
 
             </LateralPanelAnim>
 

@@ -30,7 +30,7 @@ const ThematiqueRow = ({title, percentage, color, thematiqueDetails, fetchData} 
                 <Text size="sm" weight={500} className="flex-shrink-0">{title}</Text>
                 <ProgressBarTerritorySimple percentage={percentage} color={color}></ProgressBarTerritorySimple>
                 <Text className="font-title" size="2xl" color="neutral-600"><span className="text-black">{percentage}</span>/100</Text>
-                <p className="flex-shrink-0" onClick={ event => handleDropdown(event)}>Voir le détail <Icon icon="fa-solid fa-chevron-right"></Icon></p>
+                <p className="flex-shrink-0 cursor-pointer" onClick={ event => handleDropdown(event)}>Voir le détail <Icon icon="fa-solid fa-chevron-right"></Icon></p>
             </div>
 
             {open && (
@@ -38,6 +38,7 @@ const ThematiqueRow = ({title, percentage, color, thematiqueDetails, fetchData} 
                     title={title}
                     percentage={percentage}
                     thematiqueDetails={thematiqueDetails}
+                    barColor={color}
                     closeDropdown={closeDropdown} />
             )}
 
