@@ -1,17 +1,17 @@
 import React, { useEffect, useState} from "react";
 import {Text} from "@components/Typography/Text";
+import { RepondantItem, RepondantList, TerritoireItem, TerritoireList } from "@screens/Territory";
 
 
 const tabClass= "col-span-1 text-center cursor-pointer relative"
 const activeClass= "w-full h-1 bg-primary-600 absolute left-0 bottom-0 trans-default"
-const Tab = ({type, index, handleTab, indexTab, array}: {
+const Tab = ({type, index, handleTab, indexTab, datas}: {
     type: string,
-    index: string,
+    index: number,
     handleTab: Function,
-    indexTab: string,
-    array: any
+    indexTab: number,
+    datas: RepondantList | TerritoireList
 }) => {
-
     const [openTab, setOpenTab] = useState(false)
 
     return(
@@ -21,19 +21,33 @@ const Tab = ({type, index, handleTab, indexTab, array}: {
                 <div className={`${activeClass}  ${ index === indexTab ? 'opacity-100' : 'opacity-0' }`}></div>
             </div>
             
-            {/* {openTab && <div>Hello {index}</div>} */}
             {index === indexTab && 
                 <div className="col-span-full order-last">
-                    <div>
-                   
-                    </div>
-                    {array.map((el : any, key : any) => (
-                        <div key={key} className="flex gap-10">
-                            <div className="w-[500px]">{el.Nom}</div>
-                            <div className="w-20">{el.rep}</div>
-                            <div>{el.percentage}</div>
-                        </div>
-                    ))}
+                    {datas.map((data : RepondantItem | TerritoireItem, key : number) => {
+                        if ('uuid' in data) { // liste des répondants
+                            const className = "grid grid-cols-5 gap-10 p-3"
+                            return <React.Fragment key={key}>
+                                        {key === 0 && <div className={className}><div className="font-bold">Typologie</div><div className="font-bold">Nom du répondant</div><div className="font-bold">Commune</div><div className="font-bold">Score</div><div className="font-bold">Action</div></div>}
+                                        <a href={`/resultat/${data.uuid}`}  className={className + ' border-b border-gray-200 bg-gray-50'}>
+                                            <div>{data.typologie}</div>
+                                            <div>{data.company}</div>
+                                            <div>{data.city}</div>
+                                            <div>{data.total > 0 ? Math.round(data.points / data.total * 100) : 0}/100</div>
+                                            <div>Voir le détail</div>
+                                        </a>
+                                </React.Fragment>;
+                        } else { // liste des départments ou ots
+                            const className = "grid grid-cols-3 gap-10 p-3"
+                            return <React.Fragment key={key}>
+                                    {key === 0 && <div className={className}><div className="font-bold">Nom</div><div className="font-bold">Nombre de répondants</div><div className="font-bold">Score</div></div>}
+                                    <div  className={className + ' border-b border-gray-200 bg-gray-50'}>
+                                        <div className="w-[500px]">{data.name}</div>
+                                        <div className="w-20">{data.numberOfReponses}</div>
+                                        <div>{data.score}/100</div>
+                                    </div>
+                                </React.Fragment>;
+                        }
+                    })}
                 </div>
             }
         </>

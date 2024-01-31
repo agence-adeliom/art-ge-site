@@ -25,6 +25,33 @@ export interface Thematique {
 
 export type Thematiques = Thematique[];
 
+export interface TerritoireItem {
+    slug: string;
+    name:  string;
+    numberOfReponses: number;
+    score: number;
+}
+
+export type TerritoireList = TerritoireItem[]
+
+export interface RepondantItem {
+    city: string;
+    company: string;
+    points: number;
+    total: number;
+    typologie: string;
+    url: string;
+    uuid: string;
+}
+
+export type RepondantList = RepondantItem[]
+
+export interface Lists {
+    departments?: TerritoireList,
+    ots?: TerritoireList,
+    repondants?: RepondantList,
+}
+
 const Territory = () => {
     const { territoire = 'grand-est' } = useParams();    
 
@@ -36,6 +63,7 @@ const Territory = () => {
     const [socialScore, setSocialScore] = useState(0.01)
     const [lastSubmission, setLastSubmission] = useState('')
     const [thematiques, setThematiques] = useState<Thematiques>([])
+    const [lists, setLists] = useState<Lists>({})
 
     //Filters
     const [filters, setFilters] = useState()
@@ -90,6 +118,12 @@ const Territory = () => {
                     setSocialScore(data.data.globals.piliers.social)
                     setLastSubmission(data.data.globals.lastSubmission)
                     setThematiques(data.data.scores.thematiques)
+
+                    const lists: Lists = {};
+                    lists.repondants = data.data.globals.repondants;
+                    lists.departments = data.data.lists.departments ?? [];
+                    lists.ots = data.data.lists.ots ?? [];
+                    setLists(lists);
                 }
         });
     }
@@ -170,7 +204,7 @@ const Territory = () => {
                     Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."
                     thematiques={thematiques.slice(11,-1)}
                 ></Analysis>
-                <Tabs></Tabs>
+                <Tabs lists={lists}></Tabs>
                 <FooterResult></FooterResult>
                 {openErrorPopin && <NoDataModal closeModal={() => setOpenErrorPopin(false)}></NoDataModal>}
             </div> 
