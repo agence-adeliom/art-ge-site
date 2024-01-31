@@ -10,6 +10,10 @@ import FooterResult from "@components/Navigation/FooterResults";
 import Tabs from "@components/Territory/Tabs";
 import { useParams } from "react-router-dom";
 
+export type Sluggable = { slug: string; name: string };
+
+export type SelectedTerritories = Record<string, Sluggable[]>;
+
 const Territory = () => {
     const { territoire = 'grand-est' } = useParams();    
 
@@ -23,13 +27,13 @@ const Territory = () => {
 
     //Filters
     const [filters, setFilters] = useState()
-    const [ot, setOt] = useState()
-    const [etablishment, setEtablishment] = useState()
-    const [territories, setTerritories] = useState()
-    const [departments, setDepartments] = useState()
+    const [ot, setOt] = useState<Sluggable[]>([])
+    const [etablishment, setEtablishment] = useState<Sluggable[]>([])
+    const [territories, setTerritories] = useState<Sluggable[]>([])
+    const [departments, setDepartments] = useState<Sluggable[]>([])
 
-    const apiFilter = (slug: string) => {
-        fetch(`https://art-grand-est.ddev.site/api/dashboard/${slug}/filters`)
+    const apiFilter = () => {
+        fetch(`https://art-grand-est.ddev.site/api/dashboard/${territoire}/filters`)
             .then(response => response.json())
             .then(data => {
                 setFilters(data.data);
@@ -40,8 +44,24 @@ const Territory = () => {
         });
     }
 
-    const apiData = (slug: string) => {
-        fetch(`https://art-grand-est.ddev.site/api/dashboard/${slug}/data`)
+    const getSearchParamsFromTerritories = (): string => {
+        const allTerritories: SelectedTerritories = {departments, ot, territories};
+        
+        const params: string[][] = [];
+        for (const [key, value] of Object.entries(allTerritories)) {
+            if (Array.isArray(value)){    
+                for(const v of value) {         
+                    params.push([key + '[]', v.slug]);
+                }
+            }
+        }    
+        return new URLSearchParams(params).toString();
+    }
+
+    const apiData = () => {
+        const search = getSearchParamsFromTerritories();
+        
+        fetch(`https://art-grand-est.ddev.site/api/dashboard/${territoire}/data?${search}`)
             .then(response => response.json())
             .then(data => {
                console.log(data.data)
@@ -55,8 +75,8 @@ const Territory = () => {
     }
 
     useEffect(() => {
-        apiFilter(territoire);
-        apiData(territoire);
+        apiFilter();
+        apiData();
     }, [])
 
     // useEffect(() => {
@@ -69,7 +89,7 @@ const Territory = () => {
             <div className="print:hidden z-10 w-[320px] h-screen top-0 sticky py-16 px-10 shadow-[0_2px_4px_4px_rgba(113,113,122,0.12)] flex-shrink-0">
                 <Filters
                     filters={filters}
-                    setTerritoryScore={setTerritoryScore}
+                    apiData={apiData}
                     ot={ot}
                     etablishment={etablishment}
                     territories={territories}

@@ -11,8 +11,8 @@ import { DateRangePicker,  } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 
 
-const Filters = ({setTerritoryScore, filters, ot, etablishment, territories, departments, lastSubmission} : {
-    setTerritoryScore: Function,
+const Filters = ({apiData, filters, ot, etablishment, territories, departments, lastSubmission} : {
+    apiData: Function,
     filters: any,
     ot: any,
     etablishment: any,
@@ -126,7 +126,7 @@ const Filters = ({setTerritoryScore, filters, ot, etablishment, territories, dep
                 icon="fa-solid fa-minus" 
                 iconSide="left"
                 className="mt-4"
-                //onClick={() => setTerritoryScore(territories)}
+                onClick={() => apiData()}
                 >
                     Filtrer les résultats
             </Button>
