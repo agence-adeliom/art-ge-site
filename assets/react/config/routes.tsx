@@ -12,7 +12,7 @@ export enum RoutePaths {
   INFO = '/informations',
   RESULT_ARCHIVE = '/resultat',
   RESULTATS = '/resultat/*',
-  TERRITORY = '/territoire/*',
+  TERRITORY = '/territoire/:territoire',
 }
 
 export const routes = createBrowserRouter([

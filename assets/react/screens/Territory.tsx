@@ -8,8 +8,10 @@ import ActorsScores from "@components/Territory/ActorsScores";
 import Analysis from "@components/Territory/Analysis";
 import FooterResult from "@components/Navigation/FooterResults";
 import Tabs from "@components/Territory/Tabs";
+import { useParams } from "react-router-dom";
 
 const Territory = () => {
+    const { territoire = 'grand-est' } = useParams();    
 
     //Global data
     const [territoryScore, setTerritoryScore] = useState(0)
@@ -53,8 +55,8 @@ const Territory = () => {
     }
 
     useEffect(() => {
-        apiFilter('grand-est');
-        apiData('grand-est');
+        apiFilter(territoire);
+        apiData(territoire);
     }, [])
 
     // useEffect(() => {
@@ -99,7 +101,6 @@ const Territory = () => {
                     type="Environnement" 
                     color="primary-800"
                     barColor="#75B369"
-                    slug={'grand-est'}// TODO: make dynamic
                     percentage={39}
                     desc="Ci-dessous les résultats détaillés pour chaque thématique liée à l’environnement. <br/>
                     Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."
@@ -110,7 +111,6 @@ const Territory = () => {
                     type="Economie" 
                     color="secondary-800"
                     barColor="#60A5AB"
-                    slug={'grand-est'}// TODO: make dynamic
                     percentage={44}
                     desc="Les graphiques décrivent les résultats pour chaque thématique liée à l’économie. <br />
                     Elle évoque le vivre et consommer local ; le service de proximité, de qualité avec des acteurs vertueux."
@@ -121,7 +121,6 @@ const Territory = () => {
                     type="Social" 
                     color="tertiary-800"
                     barColor="#75B369"
-                    slug={'grand-est'}// TODO: make dynamic
                     percentage={32}
                     desc="Ci-dessous les résultats détaillés pour chaque thématique liée à l’environnement. 
                     Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."

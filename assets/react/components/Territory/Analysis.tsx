@@ -8,6 +8,7 @@ import LateralPanel from "@components/Modal/LateralPanel";
 import ProgressBar from "@components/ProgressBar/ProgressBar";
 import LateralPanelDashboard from "@components/Modal/LateralPanelDashboard";
 import ThematiqueRow from "@components/Territory/ThematiqueRow";
+import { useParams } from "react-router-dom";
 
 interface ThematiqueDetail {
     slug: string,
@@ -17,15 +18,16 @@ interface ThematiqueDetail {
 
 export type ThematiqueDetails = ThematiqueDetail[]
 
-const Analysis = ({type, color, percentage, desc, barColor, icon, slug} : {
+const Analysis = ({type, color, percentage, desc, barColor, icon} : {
     type: string,
     color: any,
     percentage: number,
     desc: string,
     barColor: any,
     icon: string,
-    slug: string,
 }) => {
+    const { territoire = 'grand-est' } = useParams();
+    
     const [array, setArray] = useState([
         {
             name: 'Biodiversité',
@@ -50,7 +52,7 @@ const Analysis = ({type, color, percentage, desc, barColor, icon, slug} : {
     ])
 
     const fetchData = (t: string) => async () : Promise<void> => {
-        const localStorageKey = `thematique-${slug}-${t}`; // TODO handle when there are query params, add them the the id of the key
+        const localStorageKey = `thematique-${territoire}-${t}`; // TODO handle when there are query params, add them the the id of the key
         const localStorageValue = window.localStorage.getItem(localStorageKey);
         if (localStorageValue) {
             try {
@@ -62,7 +64,7 @@ const Analysis = ({type, color, percentage, desc, barColor, icon, slug} : {
             }
         }
 
-        const res = await fetch(`/api/dashboard/${slug}/thematique/${t}`);
+        const res = await fetch(`/api/dashboard/${territoire}/thematique/${t}`);
         const thematique = await res.json() as {
             success: true,
             data: ThematiqueDetails
