@@ -2,14 +2,17 @@ import React, {useEffect, useState} from "react";
 import { Text } from '@components/Typography/Text';
 import { Icon } from '@components/Typography/Icon';
 import { Checkbox } from "@components/Fields/Checkbox";
+import { SelectedTerritoires } from "@screens/Territory";
 
 
 const inputContainer = `group trans-default lg:hover:bg-tertiary-200 is-active:border-primary-600 is-active:bg-primary-50`
-const Filter = ({filterValue, setFilterValue, type, allFilter} : {
+const Filter = ({filterValue, setFilterValue, type, allFilter, setSelectedTerritoires, selectedTerritoires} : {
     filterValue: any,
     setFilterValue: Function,
     type: string,
-    allFilter: any
+    allFilter: any,
+    setSelectedTerritoires: Function,
+    selectedTerritoires: SelectedTerritoires,
 }) => {
     const [openModal, setOpenModal] = useState(false)
 
@@ -25,12 +28,39 @@ const Filter = ({filterValue, setFilterValue, type, allFilter} : {
     const handleCheckbox = (e : any) => {
         e.stopPropagation()
         e.target.parentNode.classList.toggle('is-active')
+
+        const targetSlug = e.target.id;
+        const type = e.target.dataset.type;
+        let realType;
+        if (type) {
+            if (type === 'Territoires' ){
+                realType = 'tourisms';
+            } else if (type === 'Départements') {
+                realType = 'departments';
+            } else if (type === 'Offices de tourismes') {
+                realType = 'ots';
+            } else if (type === 'Établissements') {
+                realType = 'typologies';
+            }
+        }
         
         if (e.target.checked) {
-            setFilterChecked([...filterChecked, e.target.id])
+            if (realType !== undefined && ! selectedTerritoires[realType].find((slug) => slug === targetSlug)) {
+                selectedTerritoires[realType].push(targetSlug)
+                setSelectedTerritoires(selectedTerritoires)
+            }
+            
+            setFilterChecked([...filterChecked, targetSlug])
         } else {
-            const index = filterChecked.indexOf(e.target.id)
+            const index = filterChecked.indexOf(targetSlug)
             filterChecked.splice(index, 1)
+            if (realType !== undefined) {
+                const index = selectedTerritoires[realType].findIndex((slug) => slug === targetSlug);
+                if (index > -1) {
+                    selectedTerritoires[realType].splice(index, 1);
+                    setSelectedTerritoires(selectedTerritoires)
+                }
+            }
         }
 
     }
@@ -54,8 +84,8 @@ const Filter = ({filterValue, setFilterValue, type, allFilter} : {
                     
                     {allFilter && Object.values(allFilter).map((el : any, key : any) => (
                         <div key={key} className={`flex items-center ${inputContainer}`} onClick={(e) => {handleCheckbox(e)}}>
-                            <input type="checkbox"  className={`filterCheckbox rounded m-2`} id={el.name}></input>
-                            <label className="w-full py-2" onClick={(e) => e.stopPropagation()} htmlFor={el.name}>{el.name}</label>
+                            <input type="checkbox"  className={`filterCheckbox rounded m-2`} id={el.slug} data-type={type}></input>
+                            <label className="w-full py-2" onClick={(e) => e.stopPropagation()} htmlFor={el.slug}>{el.name}</label>
                         </div>
                     ))}
                 </div>

@@ -98,17 +98,26 @@ class DashboardDataController extends AbstractController
             'to' => $to,
         ]);
 
-        $event = new DashboardDataGlobalEvent($dashboardFilterDTO);
-        $this->eventDispatcher->dispatch($event);
-        $globals = $event->getGlobals();
+        try {
 
-        $event = new DashboardDataScoresEvent($dashboardFilterDTO);
-        $this->eventDispatcher->dispatch($event);
-        $scores = $event->getScores();
+            $event = new DashboardDataGlobalEvent($dashboardFilterDTO);
+            $this->eventDispatcher->dispatch($event);
+            $globals = $event->getGlobals();
 
-        $event = new DashboardDataListsEvent($dashboardFilterDTO);
-        $this->eventDispatcher->dispatch($event);
-        $lists = $event->getLists();
+            $event = new DashboardDataScoresEvent($dashboardFilterDTO);
+            $this->eventDispatcher->dispatch($event);
+            $scores = $event->getScores();
+
+            $event = new DashboardDataListsEvent($dashboardFilterDTO);
+            $this->eventDispatcher->dispatch($event);
+            $lists = $event->getLists();
+                
+        } catch (\Throwable $e) {
+            return $this->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR, [], ['groups' => self::DASHBOARD_API_DATA_GROUP]);
+        }
 
         return $this->json([
             'status' => 'success',

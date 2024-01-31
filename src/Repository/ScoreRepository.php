@@ -188,8 +188,7 @@ class ScoreRepository extends ServiceEntityRepository
                                         $parameters[] = DepartementEnum::getCode($department) . '%';
                                     }
                                 } else {
-                                    $ors[] = $dql->expr()->in('u.zip', '?'.$counter++);
-                                    $parameters[] = $territoire->getZips();
+                                    $ors[] = $dql->expr()->in('u.zip', implode(',', $territoire->getZips()));
                                 }
                                 if ([] !== $ors) {
                                     $dql->orWhere($dql->expr()->andX(...$ors));

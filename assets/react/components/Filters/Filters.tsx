@@ -9,9 +9,10 @@ import moment, { Moment } from 'moment';
 import 'react-dates/initialize';
 import { DateRangePicker,  } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
+import { SelectedTerritoires } from "@screens/Territory";
 
 
-const Filters = ({apiData, filters, ot, etablishment, territories, departments, lastSubmission} : {
+const Filters = ({apiData, filters, ot, etablishment, territories, departments, lastSubmission, setSelectedTerritoires, selectedTerritoires} : {
     apiData: Function,
     filters: any,
     ot: any,
@@ -19,6 +20,8 @@ const Filters = ({apiData, filters, ot, etablishment, territories, departments, 
     territories: any,
     departments: any,
     lastSubmission: string,
+    setSelectedTerritoires: Function,
+    selectedTerritoires: SelectedTerritoires,
 }) => {
 
     const [departmentsFilter, setDepartmentsFilter] = useState()
@@ -85,10 +88,10 @@ const Filters = ({apiData, filters, ot, etablishment, territories, departments, 
                     Filtrer par :
                 </Text>
 
-                <Filter filterValue={territoriesFilter} allFilter={territories} type={'Territoires'} setFilterValue={setTerritoriesFilter}></Filter>
-                <Filter filterValue={departmentsFilter} allFilter={departments} type={'Départements'} setFilterValue={setDepartmentsFilter}></Filter>
-                <Filter filterValue={otsFilter} allFilter={ot} type={'Offices de tourismes'} setFilterValue={setOtsFilter}></Filter>
-                <Filter filterValue={EstablishmentsFilter} allFilter={etablishment} type={'Établissements'} setFilterValue={setEstablishmentsFilter}></Filter>
+                <Filter filterValue={territoriesFilter} allFilter={territories} type={'Territoires'} setFilterValue={setTerritoriesFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
+                <Filter filterValue={departmentsFilter} allFilter={departments} type={'Départements'} setFilterValue={setDepartmentsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
+                <Filter filterValue={otsFilter} allFilter={ot} type={'Offices de tourismes'} setFilterValue={setOtsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
+                <Filter filterValue={EstablishmentsFilter} allFilter={etablishment} type={'Établissements'} setFilterValue={setEstablishmentsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
 
                 <div className="border-b border-neutral-300 pb-2">
                     <Text className="mt-6 mb-3" size="sm">Période :</Text>

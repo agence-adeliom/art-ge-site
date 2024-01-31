@@ -10,9 +10,9 @@ import FooterResult from "@components/Navigation/FooterResults";
 import Tabs from "@components/Territory/Tabs";
 import { useParams } from "react-router-dom";
 
-export type Sluggable = { slug: string; name: string };
+export type Sluggable = { slug: string, name: string };
 
-export type SelectedTerritories = Record<string, Sluggable[]>;
+export type SelectedTerritoires = Record<string, string[]>;
 
 const Territory = () => {
     const { territoire = 'grand-est' } = useParams();    
@@ -28,9 +28,11 @@ const Territory = () => {
     //Filters
     const [filters, setFilters] = useState()
     const [ot, setOt] = useState<Sluggable[]>([])
-    const [etablishment, setEtablishment] = useState<Sluggable[]>([])
+    const [typologies, setTypologies] = useState<Sluggable[]>([])
     const [territories, setTerritories] = useState<Sluggable[]>([])
     const [departments, setDepartments] = useState<Sluggable[]>([])
+    
+    const [selectedTerritoires, setSelectedTerritoires] = useState<SelectedTerritoires>({departments: [], ots: [], tourisms: [], typologies: []})
 
     const apiFilter = () => {
         fetch(`https://art-grand-est.ddev.site/api/dashboard/${territoire}/filters`)
@@ -38,23 +40,21 @@ const Territory = () => {
             .then(data => {
                 setFilters(data.data);
                 setOt(data.data.ots);
-                setEtablishment(data.data.typologies)
+                setTypologies(data.data.typologies)
                 setTerritories(data.data.tourisms)
                 setDepartments(data.data.departments)
         });
     }
 
     const getSearchParamsFromTerritories = (): string => {
-        const allTerritories: SelectedTerritories = {departments, ot, territories};
-        
         const params: string[][] = [];
-        for (const [key, value] of Object.entries(allTerritories)) {
+        for (const [key, value] of Object.entries(selectedTerritoires)) {
             if (Array.isArray(value)){    
                 for(const v of value) {         
-                    params.push([key + '[]', v.slug]);
+                    params.push([key + '[]', v]);
                 }
             }
-        }    
+        }
         return new URLSearchParams(params).toString();
     }
 
@@ -91,10 +91,12 @@ const Territory = () => {
                     filters={filters}
                     apiData={apiData}
                     ot={ot}
-                    etablishment={etablishment}
+                    etablishment={typologies}
                     territories={territories}
                     departments={departments}
                     lastSubmission={lastSubmission}
+                    setSelectedTerritoires={setSelectedTerritoires}
+                    selectedTerritoires={selectedTerritoires}
                 ></Filters>
             </div>
             <div className="w-full">
