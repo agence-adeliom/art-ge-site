@@ -43,7 +43,7 @@ const Bar = ({percentage, type} : {
     }
 
     return (
-        <div className={isNaN(percentage) === false ? "text-center" : "hidden"} key={type}>
+        <div className={isNaN(percentage) === false ? "text-center" : "hidden md:block"} key={type}>
             {<Text className="font-title mb-2" color="neutral-600" size="2xl" dangerouslySetInnerHTML={{__html: isNaN(percentage) === false ? `${percentage}/100` : '&nbsp;'}}></Text>}
             <div className={`${barContainer}`}>
                 <div className={`${progressBar}`} style={{background: color, height: `${percentage}%`}}></div>
