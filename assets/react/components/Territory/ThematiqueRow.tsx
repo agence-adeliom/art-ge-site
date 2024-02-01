@@ -4,6 +4,7 @@ import ProgressBarTerritorySimple
     from "@components/ProgressBar/ProgressBarTerritorySimple";
 import LateralPanelDashboard from "@components/Modal/LateralPanelDashboard";
 import {Icon} from "@components/Typography/Icon";
+import Link from "@components/Action/Link/Link";
 import {ThematiqueDetails} from "@components/Territory/Analysis";
 
 const ThematiqueRow = ({title, percentage, color, thematiqueDetails, fetchData} : {
@@ -30,7 +31,9 @@ const ThematiqueRow = ({title, percentage, color, thematiqueDetails, fetchData} 
                 <Text size="sm" weight={500} className="flex-shrink-0">{title}</Text>
                 <ProgressBarTerritorySimple percentage={percentage} color={color}></ProgressBarTerritorySimple>
                 <Text className="font-title" size="2xl" color="neutral-600"><span className="text-black">{percentage}</span>/100</Text>
-                <p className="flex-shrink-0 cursor-pointer" onClick={ event => handleDropdown(event)}>Voir le détail <Icon icon="fa-solid fa-chevron-right"></Icon></p>
+                <Link
+                    label="Voir le détail"
+                    onClickFunction={handleDropdown}/>
             </div>
 
             {open && (

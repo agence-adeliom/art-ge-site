@@ -70,16 +70,14 @@ const Filters = ({apiData, filters, ot, etablishment, territories, departments, 
             setFilterEndDate(handleDateChange(dateOriginale));
         }
     }, [endDate])
-   
 
-    // console.log('OT', otsFilter)
-    // console.log('department', departmentsFilter)
-    // console.log('territory', territoriesFilter)
-    // console.log('Establishment', EstablishmentsFilter)
 
+    const [filterId, setFilterId] = useState<number | null>(null)
+
+  
 
     return (
-        <div className="flex flex-col min-h-full">
+        <div className="flex flex-col min-h-full h-full overflow-scroll">
             <a href="https://www.art-grandest.fr/" target='_blank' >
                 <img src={Logo} alt="Logo ART GE" className=""/>
             </a>
@@ -87,13 +85,20 @@ const Filters = ({apiData, filters, ot, etablishment, territories, departments, 
                 <Text color="neutral-700" className="mt-12" weight={400}>
                     Filtrer par :
                 </Text>
+                    <div onClick={() => setFilterId(1)}>
+                        <Filter id={1} filterId={filterId} setFilterId={setFilterId} filterValue={territoriesFilter} allFilter={territories} type={'Territoires'} setFilterValue={setTerritoriesFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
+                    </div>
+                    <div onClick={() => setFilterId(2)}>
+                        <Filter id={2} filterId={filterId} setFilterId={setFilterId} filterValue={departmentsFilter} allFilter={departments} type={'Départements'} setFilterValue={setDepartmentsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
+                    </div>
+                    <div onClick={() => setFilterId(3)}>
+                        <Filter id={3} filterId={filterId} setFilterId={setFilterId} filterValue={otsFilter} allFilter={ot} type={'Offices de tourismes'} setFilterValue={setOtsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
+                    </div>
+                    <div onClick={() => setFilterId(4)}>
+                        <Filter id={4} filterId={filterId} setFilterId={setFilterId} filterValue={EstablishmentsFilter} allFilter={etablishment} type={'Établissements'} setFilterValue={setEstablishmentsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
+                    </div>
 
-                <Filter filterValue={territoriesFilter} allFilter={territories} type={'Territoires'} setFilterValue={setTerritoriesFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
-                <Filter filterValue={departmentsFilter} allFilter={departments} type={'Départements'} setFilterValue={setDepartmentsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
-                <Filter filterValue={otsFilter} allFilter={ot} type={'Offices de tourismes'} setFilterValue={setOtsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
-                <Filter filterValue={EstablishmentsFilter} allFilter={etablishment} type={'Établissements'} setFilterValue={setEstablishmentsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
-
-                <div className="border-b border-neutral-300 pb-2">
+                <div className="border-b border-neutral-300 pb-2" onClick={() => setFilterId(null)}>
                     <Text className="mt-6 mb-3" size="sm">Période :</Text>
                     <DateRangePicker
                         startDate={startDate} 

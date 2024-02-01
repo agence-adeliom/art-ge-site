@@ -1,9 +1,9 @@
 import React, { useEffect, useState} from "react";
 import {Text} from "@components/Typography/Text";
 import { RepondantItem, RepondantList, TerritoireItem, TerritoireList } from "@react/types/Dashboard";
+import Link from "@components/Action/Link/Link";
 
-
-const tabClass= "col-span-1 text-center cursor-pointer relative text-sm md:text-base md:m-4"
+const tabClass= "col-span-1 text-center cursor-pointer relative text-sm md:text-base md:py-4"
 const activeClass= "w-full h-1 bg-primary-600 absolute left-0 bottom-0 trans-default"
 const Tab = ({type, index, handleTab, indexTab, datas}: {
     type: string,
@@ -12,7 +12,6 @@ const Tab = ({type, index, handleTab, indexTab, datas}: {
     indexTab: number,
     datas: RepondantList | TerritoireList
 }) => {
-    const [openTab, setOpenTab] = useState(false)
 
     return(
         <>
@@ -22,18 +21,20 @@ const Tab = ({type, index, handleTab, indexTab, datas}: {
             </div>
             
             {index === indexTab && 
-                <div className="col-span-full order-last">
+                <div className="col-span-full order-last -mx-10 mt-8">
                     {datas.map((data : RepondantItem | TerritoireItem, key : number) => {
                         if ('uuid' in data) { // liste des répondants
                             const className = "block md:grid grid-cols-5 gap-10 p-3"
                             return <React.Fragment key={key}>
                                         {key === 0 && <div className={className}><div className="font-bold">Typologie</div><div className="font-bold">Nom du répondant</div><div className="font-bold">Commune</div><div className="font-bold">Score</div><div className="font-bold">Action</div></div>}
-                                        <a href={`/resultat/${data.uuid}`}  className={className + ' border-b border-gray-200 bg-gray-50'}>
+                                        <a href={`/resultat/${data.uuid}`}  className={className + ' border-b border-gray-200 bg-gray-50'} target="_blank">
                                             <p>{data.typologie}</p>
                                             <p>{data.company}</p>
                                             <p>{data.city}</p>
                                             <p>{data.total > 0 ? Math.round(data.points / data.total * 100) : 0}/100</p>
-                                            <p>Voir le détail</p>
+                                            <Link
+                                                label="Voir le détail"
+                                                />
                                         </a>
                                 </React.Fragment>;
                         } else { // liste des départments ou ots

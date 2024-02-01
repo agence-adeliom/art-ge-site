@@ -1,6 +1,7 @@
 import React from "react";
 import { Text } from "@components/Typography/Text";
 import { Icon } from "@components/Typography/Icon";
+import  Link  from "@components/Action/Link/Link";
 
 const cleanPercentage = (percentage : number) => {
   const tooLow = !Number.isFinite(+percentage) || percentage < 0;
@@ -49,6 +50,15 @@ const Pie = ({ percentage, color, type, icon} : {
     type: string,
     icon: string
 }) => {
+
+  let scrollToBlock = document.getElementById(`${type}-analysis`)!;
+  const handleScroll = () => {
+    console.log('boudning' , scrollToBlock)
+    scrollToBlock.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  
+
   const pct = cleanPercentage(percentage);
   return (
     <div className="w-fit">
@@ -64,8 +74,10 @@ const Pie = ({ percentage, color, type, icon} : {
       <div className="text-center mt-6">
           <span style={{color: color}}><Icon icon={`fa-light ${icon}`}  size={'4xl'}></Icon></span>
           <Text style={{color: color}} size='2xl' className={'font-title'}>{type}</Text>
-          <div className="mt-2">
-              <Text>Le score en détail</Text>
+          <div className="mt-2 flex justify-center">
+              <Link
+                    label="Le score en détail"
+                    onClickFunction={() =>handleScroll()}/>
           </div>
       </div>
     </div>

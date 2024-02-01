@@ -6,14 +6,20 @@ import { SelectedTerritoires } from "@react/types/Dashboard";
 
 
 const inputContainer = `group trans-default lg:hover:bg-tertiary-200 is-active:border-primary-600 is-active:bg-primary-50`
-const Filter = ({filterValue, setFilterValue, type, allFilter, setSelectedTerritoires, selectedTerritoires} : {
+const Filter = ({id, setFilterId, filterId, setFilterValue, type, allFilter, setSelectedTerritoires, selectedTerritoires} : {
     filterValue: any,
+    id: number,
+    setFilterId: Function,
+    filterId?: number | null,
     setFilterValue: Function,
     type: string,
     allFilter: any,
     setSelectedTerritoires: Function,
     selectedTerritoires: SelectedTerritoires,
 }) => {
+
+    
+
     const [openModal, setOpenModal] = useState(false)
 
     const [filterChecked, setFilterChecked] = useState<string[]>([])
@@ -24,6 +30,13 @@ const Filter = ({filterValue, setFilterValue, type, allFilter, setSelectedTerrit
         }
     }, [filterChecked])
 
+    useEffect(() => {
+        if(filterId === id) {
+            setOpenModal(true)
+        } else {
+            setOpenModal(false)
+        }
+    }, [filterId])
 
     const handleCheckbox = (e : any) => {
         e.stopPropagation()
@@ -66,9 +79,11 @@ const Filter = ({filterValue, setFilterValue, type, allFilter, setSelectedTerrit
     }
 
     return (
-        <div className="mt-4" onClick={() => setOpenModal(false)}>
+        <div className="mt-4"
+        >
             <Text color="black" size="sm">{type} :</Text>
-            <div className="mt-3" onClick={(e) => {e.stopPropagation(); setOpenModal(!openModal)}}>
+            <div className="mt-3" 
+            >
 
                 <div className="flex items-center gap justify-between border-b border-neutral-300 pb-2 pt-3 pr-4">
                     <Text color="neutral-700" size="sm" className="text-ellipsis whitespace-nowrap w-full overflow-hidden">
@@ -77,8 +92,10 @@ const Filter = ({filterValue, setFilterValue, type, allFilter, setSelectedTerrit
                 </div>
             </div>
             { 
-                <div className={`absolute top-0 left-[calc(100%+40px)] w-[400px] bg-white shadow-lg h-[300px] overflow-scroll ${openModal ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}> 
-                 <div onClick={() => setOpenModal(false)} className="absolute top-4 right-4 cursor-pointer"><Icon icon="fa-solid fa-xmark"></Icon></div>
+                <div className={`fixed top-0 left-[320px] w-[400px] bg-white shadow-lg h-screen overflow-scroll ${openModal ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}> 
+                    <div onClick={(e) => {e.stopPropagation(),setFilterId(null)}} className="absolute top-4 right-4 cursor-pointer">
+                        <Icon icon="fa-solid fa-xmark"></Icon>
+                    </div>
                     <Text size="lg" className="p-4" weight={500}>{type}</Text>
                     <div className="flex flex-col mt-2">
                     
