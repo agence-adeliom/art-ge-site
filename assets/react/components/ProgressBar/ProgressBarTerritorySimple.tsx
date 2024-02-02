@@ -12,7 +12,7 @@ const ProgressBarTerritorySimple = ({percentage, color, separator = true}: {
     return (
         <>
             <div className="w-full relative">
-                {separator && <div className="print:hidden h-[calc(100%+2.5rem)] absolute w-1 border-r border-dashed border-neutral-500 top-[-1.25rem] left-[33%] z-10"></div>}
+                {separator && <div className="print:hidden h-[calc(100%+2.5rem)] absolute w-[1px] border-r border-dashed border-neutral-500 top-[-1.25rem] left-[33%] z-10"></div>}
                 <div className={progressContainer}>
                     <div className={`${progressBar}`} style={{ width: `${percentage}%`, background: color}}></div>
                 </div>

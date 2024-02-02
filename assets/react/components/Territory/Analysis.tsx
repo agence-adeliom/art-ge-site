@@ -66,9 +66,9 @@ const Analysis = ({type, color, percentage, desc, barColor, icon, thematiques, s
     const [thematiqueDetails, setThematiqueDetails] = useState<ThematiqueDetails>([]);
 
     return (
-        <div className="px-10 print:py-4 py-12 print:bg-white bg-gray-50 relative"  id={`${type}-analysis`}>
+        <div className="px-4 lg:px-10 print:py-4 py-12 print:bg-white bg-gray-50 relative"  id={`${type}-analysis`}>
             <div className="absolute right-10 top-0">
-            <Icon icon={icon} size={null} color={color} className="text-[144px] opacity-20"></Icon>
+            <Icon icon={icon} size={null} color={color} className="text-4xllg:text-[144px] opacity-20"></Icon>
             </div>
             <div className="flex gap-4 items-center">
                 <Heading variant={'display-5'} color={color}>{type}</Heading>

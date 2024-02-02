@@ -111,7 +111,7 @@ const Territory = () => {
 
     return (
         <div className="flex">
-            <div className="hidden md:block print:hidden z-10 w-[320px] h-screen top-0 sticky py-16 px-10 shadow-[0_2px_4px_4px_rgba(113,113,122,0.12)] flex-shrink-0">
+            <div className="hidden md:block print:hidden z-10 w-[320px] h-screen top-0 sticky py-16 px-4 lg:px-10 shadow-[0_2px_4px_4px_rgba(113,113,122,0.12)] flex-shrink-0">
                 <Filters
                     filters={filters}
                     apiData={apiData}
@@ -124,7 +124,7 @@ const Territory = () => {
                     selectedTerritoires={selectedTerritoires}
                 ></Filters>
             </div>
-            <div className="w-full">
+            <div className="w-full overflow-hidden">
                 <Header></Header>
                 <ScoreTerritory
                     territoryScore={territoryScore}
