@@ -12,8 +12,9 @@ import 'react-dates/lib/css/_datepicker.css';
 import { SelectedTerritoires } from "@react/types/Dashboard";
 
 
-const Filters = ({apiData, filters, ot, etablishment, territories, departments, lastSubmission, setSelectedTerritoires, selectedTerritoires} : {
+const Filters = ({apiData,filters, setOt, setFilterMobile, ot, etablishment, territories, departments, lastSubmission, setSelectedTerritoires, selectedTerritoires} : {
     apiData: Function,
+    setFilterMobile: Function,
     filters: any,
     ot: any,
     etablishment: any,
@@ -22,6 +23,7 @@ const Filters = ({apiData, filters, ot, etablishment, territories, departments, 
     lastSubmission: string,
     setSelectedTerritoires: Function,
     selectedTerritoires: SelectedTerritoires,
+    setOt: Function
 }) => {
 
     const [departmentsFilter, setDepartmentsFilter] = useState()
@@ -74,28 +76,57 @@ const Filters = ({apiData, filters, ot, etablishment, territories, departments, 
 
     const [filterId, setFilterId] = useState<number | null>(null)
 
+
+    console.log(departmentsFilter)
+
+
+    const apiFilter = () => {
+            const departments = `departments=${departmentsFilter}`
+            console.log(departments)
+            fetch(`https://art-grand-est.ddev.site/api/dashboard/grand-est/filters?${departments}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.data)
+                    //setFilters(data.data);
+                    setOt(data.data.ots);
+                    //setTypologies(data.data.typologies)
+                    //setTerritories(data.data.tourisms)
+                    //setDepartments(data.data.departments)
+        });
+    }
+
+    console.log(departmentsFilter)
+
+    // useEffect(() => {
+    //     if(departmentsFilter) {
+    //          apiFilter()
+    //     } 
+    // }, [departmentsFilter])
   
 
     return (
         <div className="flex flex-col min-h-full h-full overflow-scroll">
-            <a href="https://www.art-grandest.fr/" target='_blank' >
+            <a href="https://www.art-grandest.fr/" target='_blank' className="hidden md:block">
                 <img src={Logo} alt="Logo ART GE" className=""/>
             </a>
             <div className="relative">
-                <Text color="neutral-700" className="mt-12" weight={400}>
+                <div onClick={(e) => {e.stopPropagation(),setFilterMobile(false)}} className="absolute top-4 right-4 cursor-pointer md:hidden">
+                    <Icon icon="fa-solid fa-xmark"></Icon>
+                </div>
+                <Text color="neutral-700" className="md:mt-12" weight={400}>
                     Filtrer par :
                 </Text>
                     <div onClick={() => setFilterId(1)}>
-                        <Filter id={1} filterId={filterId} setFilterId={setFilterId} filterValue={territoriesFilter} allFilter={territories} type={'Territoires'} setFilterValue={setTerritoriesFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
+                        <Filter id={1} filterId={filterId} setFilterId={setFilterId} setOt={setOt} filterValue={territoriesFilter} allFilter={territories} type={'Territoires'} setFilterValue={setTerritoriesFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
                     </div>
                     <div onClick={() => setFilterId(2)}>
-                        <Filter id={2} filterId={filterId} setFilterId={setFilterId} filterValue={departmentsFilter} allFilter={departments} type={'Départements'} setFilterValue={setDepartmentsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
+                        <Filter id={2} filterId={filterId} setFilterId={setFilterId} setOt={setOt}  filterValue={departmentsFilter} allFilter={departments} type={'Départements'} setFilterValue={setDepartmentsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
                     </div>
                     <div onClick={() => setFilterId(3)}>
-                        <Filter id={3} filterId={filterId} setFilterId={setFilterId} filterValue={otsFilter} allFilter={ot} type={'Offices de tourismes'} setFilterValue={setOtsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
+                        <Filter id={3} filterId={filterId} setFilterId={setFilterId} setOt={setOt}  filterValue={otsFilter} allFilter={ot} type={'Offices de tourismes'} setFilterValue={setOtsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
                     </div>
                     <div onClick={() => setFilterId(4)}>
-                        <Filter id={4} filterId={filterId} setFilterId={setFilterId} filterValue={EstablishmentsFilter} allFilter={etablishment} type={'Établissements'} setFilterValue={setEstablishmentsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
+                        <Filter id={4} filterId={filterId} setFilterId={setFilterId}  setOt={setOt} filterValue={EstablishmentsFilter} allFilter={etablishment} type={'Établissements'} setFilterValue={setEstablishmentsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
                     </div>
 
                 <div className="border-b border-neutral-300 pb-2" onClick={() => setFilterId(null)}>
@@ -134,7 +165,8 @@ const Filters = ({apiData, filters, ot, etablishment, territories, departments, 
                 icon="fa-solid fa-minus" 
                 iconSide="left"
                 className="mt-4"
-                onClick={() => apiData()}
+                size={'lg'}
+                onClick={() => {apiData(), setFilterMobile(false)}}
                 >
                     Filtrer les résultats
             </Button>

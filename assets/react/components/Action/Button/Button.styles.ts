@@ -40,7 +40,7 @@ export const buttonStyles = cva(
         variant: 'secondary',
         disabled: true,
         className: [
-          'border border-neutral-500 text-neutral-500',
+          'bg-neutral-700 text-white',
         ],
       },
       {
@@ -70,8 +70,8 @@ export const buttonStyles = cva(
         variant: 'secondary',
         disabled: false,
         className: [
-          'border bg-white border-primary-600 text-primary-600',
-          'lg:hover:border-primary-800 lg:hover:text-primary-800',
+          'bg-neutral-700 text-white border border-neutral-700',
+          'lg:hover:border-neutral-500  lg:hover:bg-white lg:hover:text-neutral-400',
         ],
       },
       {

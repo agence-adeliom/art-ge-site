@@ -11,6 +11,7 @@ import Tabs from "@components/Territory/Tabs";
 import { useParams } from "react-router-dom";
 import NoDataModal from "@components/Modal/NoDataModal";
 import { ActorsScoresList, Lists, SelectedTerritoires, Sluggable, Thematiques } from "@react/types/Dashboard";
+import { Button } from "@components/Action/Button";
 
 export const getSearchParamsFromTerritories = (selectedTerritoires: SelectedTerritoires): string => {
     const params: string[][] = [];
@@ -80,7 +81,7 @@ const Territory = () => {
                 if (data.status === 'error') {
                     setOpenErrorPopin(true);
                 } else {
-                    console.log(data.data)
+                    //console.log(data.data)
                     setTerritoryScore(data.data.globals.score)
                     setRespondantsTotal(data.data.globals.repondantsCount)
                     setEnvironnementScore(data.data.globals.piliers.environnement)
@@ -108,10 +109,13 @@ const Territory = () => {
     //     console.log(filters)
     // }, [filters])
 
+    const [filterMobile, setFilterMobile] = useState(false);
+    const filterClassPannel = filterMobile ? 'max-md:translate-x-0' : 'max-md:translate-x-full';
+    const filterClass = "bg-white z-[1000] w-full fixed top-0 meft-0 trans-default md:block print:hidden z-10 md:w-[320px] h-screen md:sticky py-4 md:py-10 px-4 lg:px-10 shadow-[0_2px_4px_4px_rgba(113,113,122,0.12)] flex-shrink-0"
 
     return (
         <div className="flex">
-            <div className="hidden md:block print:hidden z-10 w-[320px] h-screen top-0 sticky py-16 px-4 lg:px-10 shadow-[0_2px_4px_4px_rgba(113,113,122,0.12)] flex-shrink-0">
+            <div className={`${filterClassPannel} ${filterClass}`}>
                 <Filters
                     filters={filters}
                     apiData={apiData}
@@ -122,6 +126,8 @@ const Territory = () => {
                     lastSubmission={lastSubmission}
                     setSelectedTerritoires={setSelectedTerritoires}
                     selectedTerritoires={selectedTerritoires}
+                    setFilterMobile={setFilterMobile}
+                    setOt={setOt}
                 ></Filters>
             </div>
             <div className="w-full overflow-hidden">
@@ -179,6 +185,11 @@ const Territory = () => {
                     selectedTerritoires={selectedTerritoires}
                 ></Analysis>
                 <Tabs lists={lists}></Tabs>
+                <div className="fixed bottom-0 left-0 bg-white p-4 pt-2 w-full z-[100] md:hidden">
+                    <Button variant="secondary" className="w-full " icon="fa-minus" onClick={() => setFilterMobile(true)}>
+                        Filtrer les résultats
+                    </Button>
+                </div>
                 <FooterResult></FooterResult>
                 {openErrorPopin && <NoDataModal closeModal={() => setOpenErrorPopin(false)}></NoDataModal>}
             </div> 

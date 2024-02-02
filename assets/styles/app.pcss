@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
-/* Typography */
-/* @import "./tailwind/components/typography/index.pcss"; */
-
 body {
     @apply text-neutral-700;
 }
@@ -18,7 +13,6 @@ body {
 }
 
 .mobileLeftBleed {
-    /* @apply -left-4 md:left-[calc((100%-769px-1rem))] */
     @apply -left-[calc(1rem)] sm:-left-[calc(((100vw-640px)/2)+1rem)] md:-left-[calc((100vw-768px)/2+1rem)] 
 }
 
@@ -56,13 +50,16 @@ body {
     @apply cursor-pointer last:rounded-b p-4 border-b last:border-none border-neutral-400 flex flex-row gap-1 items-center relative hover:bg-primary-600 hover:text-white trans-default
 }
 
+/* Font */
 @font-face {
     font-family: "Canela";
     src: url("../font/Canela-Thin.otf");
   }
 
+
+/* Date picker */
 .DateRangePicker_picker {
-    @apply z-[100] fixed
+    @apply z-[1000] fixed
 }
 .DateRangePicker {
     @apply w-full 
@@ -87,7 +84,7 @@ body {
     @apply p-0 ml-auto mr-4
 }
 
-/*Range*/
+/* Range */
 .CalendarDay__selected_span {
     @apply bg-primary-400 border-primary-200
 }

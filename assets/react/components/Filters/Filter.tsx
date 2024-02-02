@@ -6,7 +6,7 @@ import { SelectedTerritoires } from "@react/types/Dashboard";
 
 
 const inputContainer = `group trans-default lg:hover:bg-tertiary-200 is-active:border-primary-600 is-active:bg-primary-50`
-const Filter = ({id, setFilterId, filterId, setFilterValue, type, allFilter, setSelectedTerritoires, selectedTerritoires} : {
+const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilter, setSelectedTerritoires, selectedTerritoires} : {
     filterValue: any,
     id: number,
     setFilterId: Function,
@@ -16,6 +16,7 @@ const Filter = ({id, setFilterId, filterId, setFilterValue, type, allFilter, set
     allFilter: any,
     setSelectedTerritoires: Function,
     selectedTerritoires: SelectedTerritoires,
+    setOt: Function
 }) => {
 
     
@@ -23,6 +24,24 @@ const Filter = ({id, setFilterId, filterId, setFilterValue, type, allFilter, set
     const [openModal, setOpenModal] = useState(false)
 
     const [filterChecked, setFilterChecked] = useState<string[]>([])
+
+
+    // const apiFilter = () => {
+    //     const departments = type == 'Départements' && `departments=${filterChecked.join('&departments=')}`
+    //     const ot = type == 'Offices de tourismes' && `ots=${filterChecked.join('&departments=')}`
+    //     const tourisms = type == 'Territoires' && `tourisms=${filterChecked.join('&touurisms=')}`
+    //     console.log(departments)
+    //     fetch(`https://art-grand-est.ddev.site/api/dashboard/grand-est/filters?${departments}&${tourisms}&${ot}`)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             console.log(data.data)
+    //             //setFilters(data.data);
+    //             setOt(data.data.ots);
+    //             //setTypologies(data.data.typologies)
+    //             //setTerritories(data.data.tourisms)
+    //             //setDepartments(data.data.departments)
+    //     });
+    // }
     
     useEffect(() => {
         if(filterChecked) {
@@ -40,7 +59,19 @@ const Filter = ({id, setFilterId, filterId, setFilterValue, type, allFilter, set
 
     const handleCheckbox = (e : any) => {
         e.stopPropagation()
-        e.target.parentNode.classList.toggle('is-active')
+        //prevent click on parent div 
+        if ( e.target.parentNode.classList.contains('inputContainer')) {
+            e.target.parentNode.classList.toggle('is-active')
+       
+        
+
+        if (e.target.checked) {
+            setFilterChecked([...filterChecked, e.target.id])
+        } else {
+            const index = filterChecked.indexOf(e.target.id)
+            filterChecked.splice(index, 1)
+            setFilterChecked([...filterChecked])
+        }
 
         const targetSlug = e.target.id;
         const type = e.target.dataset.type;
@@ -64,7 +95,8 @@ const Filter = ({id, setFilterId, filterId, setFilterValue, type, allFilter, set
             }
             
             setFilterChecked([...filterChecked, targetSlug])
-        } else {
+            
+        } else if (e.target.checked === false) {
             const index = filterChecked.indexOf(targetSlug)
             filterChecked.splice(index, 1)
             if (realType !== undefined) {
@@ -76,7 +108,17 @@ const Filter = ({id, setFilterId, filterId, setFilterValue, type, allFilter, set
             }
         }
 
+        }
+
     }
+
+    // useEffect(() => {
+    //     if(filterChecked.length > 0) {
+    //         apiFilter();
+    //     } else {
+
+    //     }
+    // }, [filterChecked])
 
     return (
         <div className="mt-4"
@@ -92,7 +134,7 @@ const Filter = ({id, setFilterId, filterId, setFilterValue, type, allFilter, set
                 </div>
             </div>
             { 
-                <div className={`fixed top-0 left-[320px] w-[400px] bg-white shadow-lg h-screen overflow-scroll ${openModal ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}> 
+                <div className={`fixed top-0 w-full z-[200] left-0 md:left-[320px] md:w-[400px] bg-white shadow-lg h-screen overflow-scroll ${openModal ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}> 
                     <div onClick={(e) => {e.stopPropagation(),setFilterId(null)}} className="absolute top-4 right-4 cursor-pointer">
                         <Icon icon="fa-solid fa-xmark"></Icon>
                     </div>
@@ -100,7 +142,7 @@ const Filter = ({id, setFilterId, filterId, setFilterValue, type, allFilter, set
                     <div className="flex flex-col mt-2">
                     
                     {allFilter && Object.values(allFilter).map((el : any, key : any) => (
-                        <div key={key} className={`flex items-center ${inputContainer}`} onClick={(e) => {handleCheckbox(e)}}>
+                        <div key={key} className={`flex items-center inputContainer ${inputContainer}`} onClick={(e) => {e.stopPropagation(), handleCheckbox(e)}}>
                             <input type="checkbox"  className={`filterCheckbox rounded m-2`} id={el.slug} data-type={type}></input>
                             <label className="w-full py-2" onClick={(e) => e.stopPropagation()} htmlFor={el.slug}>{el.name}</label>
                         </div>
