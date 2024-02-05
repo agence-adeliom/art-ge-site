@@ -77,13 +77,17 @@ const Filters = ({apiData,filters, setOt, setFilterMobile, ot, etablishment, ter
     const [filterId, setFilterId] = useState<number | null>(null)
 
 
-    console.log(departmentsFilter)
+    console.log('filter', departmentsFilter)
+   // console.log('dep',departments)
 
 
     const apiFilter = () => {
-            const departments = `departments=${departmentsFilter}`
+            const departmentsSlug =  departmentsFilter == departments || departmentsFilter===undefined  ? [] : `departments=${departmentsFilter}` 
+            
+            console.log(departmentsSlug)
+
             console.log(departments)
-            fetch(`https://art-grand-est.ddev.site/api/dashboard/grand-est/filters?${departments}`)
+            fetch(`https://art-grand-est.ddev.site/api/dashboard/grand-est/filters?${departmentsSlug}`)
                 .then(response => response.json())
                 .then(data => {
                     console.log(data.data)
@@ -92,20 +96,18 @@ const Filters = ({apiData,filters, setOt, setFilterMobile, ot, etablishment, ter
                     //setTypologies(data.data.typologies)
                     //setTerritories(data.data.tourisms)
                     //setDepartments(data.data.departments)
-        });
-    }
+            });
+        }
+   
+    useEffect(() => {
+        if (departmentsFilter !== undefined) {
+            apiFilter()
+        }
+    }, [departmentsFilter])
 
-    console.log(departmentsFilter)
-
-    // useEffect(() => {
-    //     if(departmentsFilter) {
-    //          apiFilter()
-    //     } 
-    // }, [departmentsFilter])
-  
 
     return (
-        <div className="flex flex-col min-h-full h-full overflow-scroll">
+        <div className="flex flex-col min-h-full h-full">
             <a href="https://www.art-grandest.fr/" target='_blank' className="hidden md:block">
                 <img src={Logo} alt="Logo ART GE" className=""/>
             </a>

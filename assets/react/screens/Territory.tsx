@@ -115,7 +115,7 @@ const Territory = () => {
 
     return (
         <div className="flex">
-            <div className={`${filterClassPannel} ${filterClass}`}>
+            <div className={`${filterClassPannel} ${filterClass} overflow-scroll`}>
                 <Filters
                     filters={filters}
                     apiData={apiData}
