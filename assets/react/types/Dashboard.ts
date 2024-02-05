@@ -4,6 +4,11 @@ export type Sluggable = { slug: string, name: string };
 
 export type SelectedTerritoires = Record<string, string[]>;
 
+export interface DateRange {
+    startDate: Date | null,
+    endDate: Date | null,
+}
+
 export interface Thematique {
     avg_points: string;
     avg_total: string;

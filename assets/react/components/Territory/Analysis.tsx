@@ -9,7 +9,7 @@ import ProgressBar from "@components/ProgressBar/ProgressBar";
 import LateralPanelDashboard from "@components/Modal/LateralPanelDashboard";
 import ThematiqueRow from "@components/Territory/ThematiqueRow";
 import { useParams } from "react-router-dom";
-import { SelectedTerritoires, Thematiques } from "@react/types/Dashboard";
+import { DateRange, SelectedTerritoires, Thematiques } from "@react/types/Dashboard";
 import { getSearchParamsFromTerritories } from "@screens/Territory";
 
 interface ThematiqueDetail {
@@ -20,7 +20,7 @@ interface ThematiqueDetail {
 
 export type ThematiqueDetails = ThematiqueDetail[]
 
-const Analysis = ({type, color, percentage, desc, barColor, icon, thematiques, selectedTerritoires} : {
+const Analysis = ({type, color, percentage, desc, barColor, icon, thematiques, selectedTerritoires, dateRange} : {
     type: string,
     color: any,
     percentage: number,
@@ -29,11 +29,12 @@ const Analysis = ({type, color, percentage, desc, barColor, icon, thematiques, s
     icon: string,
     thematiques: Thematiques,
     selectedTerritoires: SelectedTerritoires,
+    dateRange: DateRange,
 }) => {
     const { territoire = 'grand-est' } = useParams();
 
     const fetchData = (t: string) => async () : Promise<void> => {
-        const search = getSearchParamsFromTerritories(selectedTerritoires);
+        const search = getSearchParamsFromTerritories(selectedTerritoires, dateRange);
         const localStorageKey = `thematique-${territoire}-${t}-${search}`;
         const localStorageValue = window.localStorage.getItem(localStorageKey);
         if (localStorageValue) {

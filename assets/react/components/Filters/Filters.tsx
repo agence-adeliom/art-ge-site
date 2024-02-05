@@ -1,18 +1,15 @@
-import React, {useEffect, useState} from "react"
+import React, { ReactNode, useState} from "react"
 import Logo from '@images/logo/logo.png';
 import { Text } from '@components/Typography/Text';
 import { Icon } from '@components/Typography/Icon';
 import Filter from '@components/Filters/Filter';
 import { Button } from '@components/Action/Button'; 
-import moment, { Moment } from 'moment';
 
 import 'react-dates/initialize';
-import { DateRangePicker,  } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 import { SelectedTerritoires } from "@react/types/Dashboard";
 
-
-const Filters = ({apiData, apiFilter,filters, setOt, setFilterMobile, ot, etablishment, territories, departments, lastSubmission, setSelectedTerritoires, selectedTerritoires} : {
+const Filters = ({apiData, children, apiFilter,filters, setOt, setFilterMobile, ot, etablishment, territories, departments, lastSubmission, setSelectedTerritoires, selectedTerritoires} : {
     apiData: Function,
     apiFilter: Function,
     setFilterMobile: Function,
@@ -24,46 +21,13 @@ const Filters = ({apiData, apiFilter,filters, setOt, setFilterMobile, ot, etabli
     lastSubmission: string,
     setSelectedTerritoires: Function,
     selectedTerritoires: SelectedTerritoires,
-    setOt: Function
+    setOt: Function,
+    children: ReactNode
 }) => {
-
     const [departmentsFilter, setDepartmentsFilter] = useState()
     const [otsFilter, setOtsFilter] = useState()
     const [territoriesFilter, setTerritoriesFilter] = useState()
     const [EstablishmentsFilter, setEstablishmentsFilter] = useState()
-
-    // French locale
-    moment.locale('fr-fr');
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
-    const [focusedInput, setFocusedInput] = useState(null);
-
-    const [filterStartDate, setFilterStartDate] = useState<string>();
-    const [filterEndDate, setFilterEndDate] = useState<string>();
-    
-
-    const handleDateChange = (date : any) => {
-        const jour = ("0" + date.getDate()).slice(-2);
-        const mois = ("0" + (date.getMonth() + 1)).slice(-2);
-        const annee = date.getFullYear();
-        
-        return `${jour}/${mois}/${annee}`;
-    }
-
-    
-    useEffect(() => {
-        if (startDate) {
-            const dateOriginale = new Date(startDate!['_d']);
-            setFilterStartDate(handleDateChange(dateOriginale));
-        }
-    }, [startDate])
-
-    useEffect(() => {
-        if (endDate) {
-            const dateOriginale = new Date(endDate!['_d']);
-            setFilterEndDate(handleDateChange(dateOriginale));
-        }
-    }, [endDate])
 
     const [filterId, setFilterId] = useState<number | null>(null)
 
@@ -94,34 +58,9 @@ const Filters = ({apiData, apiFilter,filters, setOt, setFilterMobile, ot, etabli
 
                 <div className="border-b border-neutral-300 pb-2" onClick={() => setFilterId(null)}>
                     <Text className="mt-6 mb-3" size="sm">Période :</Text>
-                    <DateRangePicker
-                        startDate={startDate} 
-                        startDateId="inputStartDate"
-                        endDate={endDate} 
-                        endDateId="inputEndDate"
-                        //@ts-ignore
-                        onDatesChange={({ startDate, endDate }) => {
-                        setStartDate(startDate), setEndDate(endDate);
-                        }} 
-                        focusedInput={focusedInput} 
-                        onFocusChange={(focusedInput: any) => setFocusedInput(focusedInput)}
-                        numberOfMonths={1}
-                        startDatePlaceholderText={'Début'}
-                        endDatePlaceholderText={'Fin'}
-                        customArrowIcon={'-'}
-                        openDirection={'up'}
-                        isOutsideRange={() => false}
-                        customInputIcon={<i className="fa-light fa-calendar text-sm"></i>}
-                        inputIconPosition="after"
-                        displayFormat="DD/MM/YYYY"
-                        appendToBody={true}
-                    />
+                    { children }
                 </div>
-            
-
             </div>
-            
-            
             
             <Button 
                 variant="secondary" 

@@ -10,10 +10,13 @@ import FooterResult from "@components/Navigation/FooterResults";
 import Tabs from "@components/Territory/Tabs";
 import { useParams } from "react-router-dom";
 import NoDataModal from "@components/Modal/NoDataModal";
-import { ActorsScoresList, Lists, SelectedTerritoires, Sluggable, Thematiques } from "@react/types/Dashboard";
+import { ActorsScoresList, DateRange, Lists, SelectedTerritoires, Sluggable, Thematiques } from "@react/types/Dashboard";
 import { Button } from "@components/Action/Button";
+import moment from 'moment';
+import { DateRangePicker,  } from 'react-dates';
+moment.locale('fr-fr');
 
-export const getSearchParamsFromTerritories = (selectedTerritoires: SelectedTerritoires): string => {
+export const getSearchParamsFromTerritories = (selectedTerritoires: SelectedTerritoires, dateRange: DateRange): string => {
     const params: string[][] = [];
     for (const [key, value] of Object.entries(selectedTerritoires)) {
         if (Array.isArray(value)){    
@@ -21,6 +24,12 @@ export const getSearchParamsFromTerritories = (selectedTerritoires: SelectedTerr
                 params.push([key + '[]', v]);
             }
         }
+    }
+    if (dateRange.startDate) {
+        params.push(['from', moment(dateRange.startDate).format('YYYY-MM-DD')]);
+    }
+    if (dateRange.endDate) {
+        params.push(['to', moment(dateRange.endDate).format('YYYY-MM-DD')]);
     }
     return new URLSearchParams(params).toString();
 }
@@ -57,11 +66,15 @@ const Territory = () => {
     
     const [selectedTerritoires, setSelectedTerritoires] = useState<SelectedTerritoires>({departments: [], ots: [], tourisms: [], typologies: []})
 
+    // date range
+    const [dateRange, setDateRange] = useState<{startDate: Date|null, endDate: Date|null}>({startDate: null, endDate: null});
+    const [focusedInput, setFocusedInput] = useState(null);
+
     // no data to display
     const [openErrorPopin, setOpenErrorPopin] = useState(false);
 
     const apiFilter = () => {
-        const search = getSearchParamsFromTerritories(selectedTerritoires);
+        const search = getSearchParamsFromTerritories(selectedTerritoires, dateRange);
         
         fetch(`https://art-grand-est.ddev.site/api/dashboard/${territoire}/filters?${search}`)
             .then(response => response.json())
@@ -75,7 +88,7 @@ const Territory = () => {
     }
 
     const apiData = () => {
-        const search = getSearchParamsFromTerritories(selectedTerritoires);
+        const search = getSearchParamsFromTerritories(selectedTerritoires, dateRange);
         
         fetch(`https://art-grand-est.ddev.site/api/dashboard/${territoire}/data?${search}`)
             .then(response => response.json())
@@ -130,7 +143,28 @@ const Territory = () => {
                     selectedTerritoires={selectedTerritoires}
                     setFilterMobile={setFilterMobile}
                     setOt={setOt}
-                ></Filters>
+                >
+                    <DateRangePicker
+                        startDate={dateRange.startDate} 
+                        startDateId="inputStartDate"
+                        endDate={dateRange.endDate} 
+                        endDateId="inputEndDate"
+                        //@ts-ignore
+                        onDatesChange={({ startDate, endDate } : { startDate: Date|null, endDate: Date|null }) => setDateRange({startDate, endDate})} 
+                        focusedInput={focusedInput} 
+                        onFocusChange={(focusedInput: any) => setFocusedInput(focusedInput)}
+                        numberOfMonths={1}
+                        startDatePlaceholderText={'Début'}
+                        endDatePlaceholderText={'Fin'}
+                        customArrowIcon={'-'}
+                        openDirection={'up'}
+                        isOutsideRange={() => false}
+                        customInputIcon={<i className="fa-light fa-calendar text-sm"></i>}
+                        inputIconPosition="after"
+                        displayFormat="DD/MM/YYYY"
+                        appendToBody={true}
+                    />
+                </Filters>
             </div>
             <div className="w-full overflow-hidden">
                 <Header></Header>
@@ -161,6 +195,7 @@ const Territory = () => {
                     Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."
                     thematiques={thematiques.slice(0,8)}
                     selectedTerritoires={selectedTerritoires}
+                    dateRange={dateRange}
                 ></Analysis>
 
                 <Analysis 
@@ -173,6 +208,7 @@ const Territory = () => {
                     Elle évoque le vivre et consommer local ; le service de proximité, de qualité avec des acteurs vertueux."
                     thematiques={thematiques.slice(8,11)}
                     selectedTerritoires={selectedTerritoires}
+                    dateRange={dateRange}
                 ></Analysis>
 
                 <Analysis 
@@ -185,6 +221,7 @@ const Territory = () => {
                     Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."
                     thematiques={thematiques.slice(11,-1)}
                     selectedTerritoires={selectedTerritoires}
+                    dateRange={dateRange}
                 ></Analysis>
                 <Tabs lists={lists}></Tabs>
                 <div className="fixed bottom-0 left-0 bg-white p-4 pt-2 w-full z-[100] md:hidden">

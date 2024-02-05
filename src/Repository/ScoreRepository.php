@@ -211,14 +211,14 @@ class ScoreRepository extends ServiceEntityRepository
                 if ($filterDTO->hasDateRange()) {
                     $dateFormat = 'Y-m-d H:i:s';
                     if (null !== $filterDTO->getFrom() && null !== $filterDTO->getTo()) {
-                        $dql->andWhere('r.created_at BETWEEN ?'.$counter++.' AND ?'.$counter++);
+                        $dql->andWhere('r.submittedAt BETWEEN ?'.$counter++.' AND ?'.$counter++);
                         $parameters[] = $filterDTO->getFrom()->format($dateFormat);
                         $parameters[] = $filterDTO->getTo()->format($dateFormat);
                     } elseif (null !== $filterDTO->getFrom() && null === $filterDTO->getTo()) {
-                        $dql->andWhere('r.created_at >= ?'.$counter++);
+                        $dql->andWhere('r.submittedAt >= ?'.$counter++);
                         $parameters[] = $filterDTO->getFrom()->format($dateFormat);
                     } elseif (null === $filterDTO->getFrom() && null !== $filterDTO->getTo()) {
-                        $dql->andWhere('r.created_at <= ?'.$counter++);
+                        $dql->andWhere('r.submittedAt <= ?'.$counter++);
                         $parameters[] = $filterDTO->getTo()->format($dateFormat);
                     }
                 }

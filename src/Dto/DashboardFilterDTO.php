@@ -21,6 +21,13 @@ class DashboardFilterDTO implements FilterTypologyDTOInterface, FilterDateDTOInt
 
     public static function from(array $datas = []): self
     {
+        if (!empty($datas['from'])) {
+            $datas['from'] = \DateTimeImmutable::createFromFormat('Y-m-d', $datas['from']);
+        }
+        if (!empty($datas['to'])) {
+            $datas['to'] = \DateTimeImmutable::createFromFormat('Y-m-d', $datas['to']);
+        }
+
         return new DashboardFilterDTO(
             $datas['territoire'],
             $datas['territoires'] ?? [],

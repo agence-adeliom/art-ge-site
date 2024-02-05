@@ -68,16 +68,16 @@ trait RepositoryFilterTrait
         if ($filterDateDTO->hasDateRange()) {
             $dateFormat = 'Y-m-d H:i:s';
             if (null !== $filterDateDTO->getFrom() && null !== $filterDateDTO->getTo()) {
-                $qb->andWhere('r.created_at BETWEEN :from AND :to')
+                $qb->andWhere('r.submittedAt BETWEEN :from AND :to')
                     ->setParameter('from', $filterDateDTO->getFrom()->format($dateFormat))
                     ->setParameter('to', $filterDateDTO->getTo()->format($dateFormat))
                 ;
             } elseif (null !== $filterDateDTO->getFrom() && null === $filterDateDTO->getTo()) {
-                $qb->andWhere('r.created_at >= :from')
+                $qb->andWhere('r.submittedAt >= :from')
                     ->setParameter('from', $filterDateDTO->getFrom()->format($dateFormat))
                 ;
             } elseif (null === $filterDateDTO->getFrom() && null !== $filterDateDTO->getTo()) {
-                $qb->andWhere('r.created_at <= :to')
+                $qb->andWhere('r.submittedAt <= :to')
                     ->setParameter('to', $filterDateDTO->getTo()->format($dateFormat))
                 ;
             }
