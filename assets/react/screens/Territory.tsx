@@ -58,7 +58,6 @@ const Territory = () => {
     })
 
     //Filters
-    const [filters, setFilters] = useState()
     const [ot, setOt] = useState<Sluggable[]>([])
     const [typologies, setTypologies] = useState<Sluggable[]>([])
     const [territories, setTerritories] = useState<Sluggable[]>([])
@@ -79,7 +78,6 @@ const Territory = () => {
         fetch(`https://art-grand-est.ddev.site/api/dashboard/${territoire}/filters?${search}`)
             .then(response => response.json())
             .then(data => {
-                setFilters(data.data);
                 setOt(data.data.ots);
                 setTypologies(data.data.typologies)
                 setTerritories(data.data.tourisms)
@@ -131,7 +129,6 @@ const Territory = () => {
         <div className="flex">
             <div className={`${filterClassPannel} ${filterClass} overflow-auto`}>
                 <Filters
-                    filters={filters}
                     apiData={apiData}
                     apiFilter={apiFilter}
                     ot={ot}

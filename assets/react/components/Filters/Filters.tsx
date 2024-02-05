@@ -8,12 +8,12 @@ import { Button } from '@components/Action/Button';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { SelectedTerritoires } from "@react/types/Dashboard";
+import { useParams } from "react-router-dom";
 
-const Filters = ({apiData, children, apiFilter,filters, setOt, setFilterMobile, ot, etablishment, territories, departments, lastSubmission, setSelectedTerritoires, selectedTerritoires} : {
+const Filters = ({apiData, children, setOt, setFilterMobile, ot, etablishment, territories, departments, lastSubmission, setSelectedTerritoires, selectedTerritoires} : {
     apiData: Function,
     apiFilter: Function,
     setFilterMobile: Function,
-    filters: any,
     ot: any,
     etablishment: any,
     territories: any,
@@ -24,6 +24,8 @@ const Filters = ({apiData, children, apiFilter,filters, setOt, setFilterMobile, 
     setOt: Function,
     children: ReactNode
 }) => {
+    const { territoire = 'grand-est' } = useParams();
+
     const [departmentsFilter, setDepartmentsFilter] = useState()
     const [otsFilter, setOtsFilter] = useState()
     const [territoriesFilter, setTerritoriesFilter] = useState()
@@ -46,9 +48,9 @@ const Filters = ({apiData, children, apiFilter,filters, setOt, setFilterMobile, 
                     <div onClick={() => setFilterId(1)}>
                         <Filter id={1} filterId={filterId} setFilterId={setFilterId} setOt={setOt} filterValue={territoriesFilter} allFilter={territories} type={'Territoires'} setFilterValue={setTerritoriesFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
                     </div>
-                    <div onClick={() => setFilterId(2)}>
+                    { territoire === 'grand-est' && <div onClick={() => setFilterId(2)}>
                         <Filter id={2} filterId={filterId} setFilterId={setFilterId} setOt={setOt}  filterValue={departmentsFilter} allFilter={departments} type={'Départements'} setFilterValue={setDepartmentsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
-                    </div>
+                    </div>}
                     <div onClick={() => setFilterId(3)}>
                         <Filter id={3} filterId={filterId} setFilterId={setFilterId} setOt={setOt}  filterValue={otsFilter} allFilter={ot} type={'Offices de tourismes'} setFilterValue={setOtsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
                     </div>
