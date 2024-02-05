@@ -61,7 +61,9 @@ const Territory = () => {
     const [openErrorPopin, setOpenErrorPopin] = useState(false);
 
     const apiFilter = () => {
-        fetch(`https://art-grand-est.ddev.site/api/dashboard/${territoire}/filters`)
+        const search = getSearchParamsFromTerritories(selectedTerritoires);
+        
+        fetch(`https://art-grand-est.ddev.site/api/dashboard/${territoire}/filters?${search}`)
             .then(response => response.json())
             .then(data => {
                 setFilters(data.data);
@@ -101,13 +103,12 @@ const Territory = () => {
     }
 
     useEffect(() => {
-        apiFilter();
         apiData();
     }, [])
 
-    // useEffect(() => {
-    //     console.log(filters)
-    // }, [filters])
+    useEffect(() => {
+        apiFilter();
+    }, [selectedTerritoires])
 
     const [filterMobile, setFilterMobile] = useState(false);
     const filterClassPannel = filterMobile ? 'max-md:translate-x-0' : 'max-md:translate-x-full';
@@ -119,6 +120,7 @@ const Territory = () => {
                 <Filters
                     filters={filters}
                     apiData={apiData}
+                    apiFilter={apiFilter}
                     ot={ot}
                     etablishment={typologies}
                     territories={territories}

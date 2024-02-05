@@ -18,30 +18,9 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
     selectedTerritoires: SelectedTerritoires,
     setOt: Function
 }) => {
-
-    
-
     const [openModal, setOpenModal] = useState(false)
 
-    const [filterChecked, setFilterChecked] = useState<string[]>([])
-
-
-    // const apiFilter = () => {
-    //     const departments = type == 'Départements' && `departments=${filterChecked.join('&departments=')}`
-    //     const ot = type == 'Offices de tourismes' && `ots=${filterChecked.join('&departments=')}`
-    //     const tourisms = type == 'Territoires' && `tourisms=${filterChecked.join('&touurisms=')}`
-    //     console.log(departments)
-    //     fetch(`https://art-grand-est.ddev.site/api/dashboard/grand-est/filters?${departments}&${tourisms}&${ot}`)
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             console.log(data.data)
-    //             //setFilters(data.data);
-    //             setOt(data.data.ots);
-    //             //setTypologies(data.data.typologies)
-    //             //setTerritories(data.data.tourisms)
-    //             //setDepartments(data.data.departments)
-    //     });
-    // }
+    const [filterChecked, setFilterChecked] = useState<string[]>([]);
     
     useEffect(() => {
         if(filterChecked) {
@@ -75,7 +54,7 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
 
         const targetSlug = e.target.id;
         const type = e.target.dataset.type;
-        let realType;
+        let realType: string | undefined;
         if (type) {
             if (type === 'Territoires' ){
                 realType = 'tourisms';
@@ -91,7 +70,13 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
         if (e.target.checked) {
             if (realType !== undefined && ! selectedTerritoires[realType].find((slug) => slug === targetSlug)) {
                 selectedTerritoires[realType].push(targetSlug)
-                setSelectedTerritoires(selectedTerritoires)
+                
+                setSelectedTerritoires(() => ({
+                    departments: Array.from(new Set([...selectedTerritoires['departments'], ...(realType === 'departments' ? [targetSlug] : [])])),
+                    ots: Array.from(new Set([...selectedTerritoires['ots'], ...(realType === 'ots' ? [targetSlug] : [])])),
+                    tourisms: Array.from(new Set([...selectedTerritoires['tourisms'], ...(realType === 'tourisms' ? [targetSlug] : [])])),
+                    typologies: Array.from(new Set([...selectedTerritoires['typologies'], ...(realType === 'typologies' ? [targetSlug] : [])])),
+                }));
             }
             
             setFilterChecked([...filterChecked, targetSlug])
@@ -103,22 +88,19 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
                 const index = selectedTerritoires[realType].findIndex((slug) => slug === targetSlug);
                 if (index > -1) {
                     selectedTerritoires[realType].splice(index, 1);
-                    setSelectedTerritoires(selectedTerritoires)
+                
+                    setSelectedTerritoires(() => ({
+                        departments: Array.from(new Set([...selectedTerritoires['departments']])),
+                        ots: Array.from(new Set([...selectedTerritoires['ots']])),
+                        tourisms: Array.from(new Set([...selectedTerritoires['tourisms']])),
+                        typologies: Array.from(new Set([...selectedTerritoires['typologies']])),
+                    }));
                 }
             }
         }
 
         }
-
     }
-
-    // useEffect(() => {
-    //     if(filterChecked.length > 0) {
-    //         apiFilter();
-    //     } else {
-
-    //     }
-    // }, [filterChecked])
 
     return (
         <div className="mt-4"

@@ -12,8 +12,9 @@ import 'react-dates/lib/css/_datepicker.css';
 import { SelectedTerritoires } from "@react/types/Dashboard";
 
 
-const Filters = ({apiData,filters, setOt, setFilterMobile, ot, etablishment, territories, departments, lastSubmission, setSelectedTerritoires, selectedTerritoires} : {
+const Filters = ({apiData, apiFilter,filters, setOt, setFilterMobile, ot, etablishment, territories, departments, lastSubmission, setSelectedTerritoires, selectedTerritoires} : {
     apiData: Function,
+    apiFilter: Function,
     setFilterMobile: Function,
     filters: any,
     ot: any,
@@ -30,15 +31,6 @@ const Filters = ({apiData,filters, setOt, setFilterMobile, ot, etablishment, ter
     const [otsFilter, setOtsFilter] = useState()
     const [territoriesFilter, setTerritoriesFilter] = useState()
     const [EstablishmentsFilter, setEstablishmentsFilter] = useState()
-
-    useEffect(() => {
-        if(filters) {
-            setDepartmentsFilter(departments)
-            setOtsFilter(ot)
-            setTerritoriesFilter(territories)
-            setEstablishmentsFilter(etablishment)
-        }
-    }, [filters])
 
     // French locale
     moment.locale('fr-fr');
@@ -73,38 +65,7 @@ const Filters = ({apiData,filters, setOt, setFilterMobile, ot, etablishment, ter
         }
     }, [endDate])
 
-
     const [filterId, setFilterId] = useState<number | null>(null)
-
-
-    console.log('filter', departmentsFilter)
-   // console.log('dep',departments)
-
-
-    const apiFilter = () => {
-            const departmentsSlug =  departmentsFilter == departments || departmentsFilter===undefined  ? [] : `departments=${departmentsFilter}` 
-            
-            console.log(departmentsSlug)
-
-            console.log(departments)
-            fetch(`https://art-grand-est.ddev.site/api/dashboard/grand-est/filters?${departmentsSlug}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data.data)
-                    //setFilters(data.data);
-                    setOt(data.data.ots);
-                    //setTypologies(data.data.typologies)
-                    //setTerritories(data.data.tourisms)
-                    //setDepartments(data.data.departments)
-            });
-        }
-   
-    useEffect(() => {
-        if (departmentsFilter !== undefined) {
-            apiFilter()
-        }
-    }, [departmentsFilter])
-
 
     return (
         <div className="flex flex-col min-h-full h-full">
