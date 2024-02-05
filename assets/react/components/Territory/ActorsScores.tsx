@@ -12,7 +12,7 @@ const ActorsScores = ({ scores } : {
         <div className="px-4 lg:px-10 max-lg:pr-0 py-12">
             <Heading variant="display-4">Score détaillé par type d’acteur touristique</Heading>
             <Text className="mt-4" size="sm">Vous trouverez ci-dessous le score global de l’ensemble des filtres sélectionnés pour chaque typologie de prestataire.</Text>
-            <div className="w-full overflow-scroll">
+            <div className="w-full overflow-auto">
                 <div className="grid grid-cols-8 gap-4 mt-10 relative w-max lg:w-full max-lg:pr-10 ">
                     {Object.entries(scores).map(([actor, score]) => (
                         <Bar 

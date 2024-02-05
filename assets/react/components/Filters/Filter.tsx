@@ -116,7 +116,7 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
                 </div>
             </div>
             { 
-                <div className={`fixed top-0 w-full z-[200] left-0 md:left-[320px] md:w-[400px] bg-white shadow-lg h-screen overflow-scroll ${openModal ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}> 
+                <div className={`fixed top-0 w-full z-[200] left-0 md:left-[320px] md:w-[400px] bg-white shadow-lg h-screen overflow-auto ${openModal ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}> 
                     <div onClick={(e) => {e.stopPropagation(),setFilterId(null)}} className="absolute top-4 right-4 cursor-pointer">
                         <Icon icon="fa-solid fa-xmark"></Icon>
                     </div>

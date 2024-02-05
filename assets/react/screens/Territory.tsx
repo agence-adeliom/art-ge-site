@@ -129,7 +129,7 @@ const Territory = () => {
 
     return (
         <div className="flex">
-            <div className={`${filterClassPannel} ${filterClass} overflow-scroll`}>
+            <div className={`${filterClassPannel} ${filterClass} overflow-auto`}>
                 <Filters
                     filters={filters}
                     apiData={apiData}
@@ -163,6 +163,7 @@ const Territory = () => {
                         inputIconPosition="after"
                         displayFormat="DD/MM/YYYY"
                         appendToBody={true}
+                        hideKeyboardShortcutsPanel={true}
                     />
                 </Filters>
             </div>
