@@ -126,6 +126,59 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
     }
 
     /**
+     * @param array<string> $linkedTerritoires les slugs des territoires passés via les filtres URL encodés
+     * @param array<string>|array<empty> $columns
+     *
+     * @return array<Territoire>|array<mixed>|null ($columns is not empty ? array<mixed> : array<Territoire> | null)
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTourismsByLinkedTerritoires(array $linkedTerritoires, array $columns = []): null | array
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->innerJoin('t.linkedTerritoires', 'tt')
+            ->andWhere('t.area = :area')
+            ->setParameter('area', TerritoireAreaEnum::TOURISME->value);
+
+        $orModule = $qb->expr()->orX();
+        foreach ($linkedTerritoires as $key => $linkedTerritoire) {
+            $orModule->add($qb->expr()->eq('tt.slug', ':linkedTerritoire' . $key));
+            $qb->setParameter('linkedTerritoire' . $key, $linkedTerritoire);
+        }
+        $qb->andWhere($orModule);
+
+        $qb = $this->selectOnlyColumns($columns, $qb, 't');
+
+        return [] !== $columns ? $qb->getQuery()->getArrayResult() : $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @param array<string>|array<empty> $columns
+     *
+     * @return array<Territoire>|array<mixed>|null ($columns is not empty ? array<mixed> : array<Territoire> | null)
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getDepartmentsByTourismsTerritoires(array $tourismsTerritoires, array $columns = []): null | array
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->innerJoin('t.tourismTerritoires', 'tt')
+            ->andWhere('t.area = :area')
+            ->setParameter('area', TerritoireAreaEnum::DEPARTEMENT->value);
+
+        foreach ($tourismsTerritoires as $tourismTerritoire) {
+            $qb
+                ->orWhere('tt.slug = :tourismTerritoire')
+                ->setParameter('tourismTerritoire', $tourismTerritoire)
+            ;
+        }
+
+        $qb = $this->selectOnlyColumns($columns, $qb, 't');
+
+        return [] !== $columns ? $qb->getQuery()->getArrayResult() : $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
      * @param array<string>              $departments
      * @param array<string>|array<empty> $columns
      *
@@ -144,6 +197,28 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
         ;
 
         $qb = $this->selectOnlyColumns($columns, $qb, 'tc');
+
+        return [] !== $columns ? $qb->getQuery()->getArrayResult() : $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @param array<string>              $tourisms
+     * @param array<string>|array<empty> $columns
+     *
+     * @return array<mixed>|array<Territoire> ($columns is not empty ? array<mixed> : array<Territoire>)
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getTourismsBySlugs(array $tourisms, array $columns = []): array | null
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->andWhere('t.area = :area')
+            ->andWhere('t.slug IN (:tourisms)')
+            ->setParameter('tourisms', $tourisms)
+            ->setParameter('area', TerritoireAreaEnum::TOURISME->value)
+        ;
+
+        $qb = $this->selectOnlyColumns($columns, $qb, 't');
 
         return [] !== $columns ? $qb->getQuery()->getArrayResult() : $qb->getQuery()->getResult();
     }
