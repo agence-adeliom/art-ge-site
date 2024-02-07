@@ -67,18 +67,33 @@ class DashboardFilterController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
-            return new JsonResponse([
-                'status' => 'success',
-                'data' => $this->getDataByDepartment($territoire),
-            ], 200);
-        }
+        if ([] === $departments && [] === $ots && [] === $tourisms) {
+            if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
+                return new JsonResponse([
+                    'status' => 'success',
+                    'data' => $this->getDataByDepartment($territoire),
+                ], 200);
+            }
 
-        if (TerritoireAreaEnum::OT === $territoire->getArea()) {
-            return new JsonResponse([
-                'status' => 'success',
-                'data' => $this->getDataByOT($territoire),
-            ], 200);
+            if (TerritoireAreaEnum::OT === $territoire->getArea()) {
+                return new JsonResponse([
+                    'status' => 'success',
+                    'data' => $this->getDataByOT($territoire),
+                ], 200);
+            }
+        } else {
+            if ([] !== $departments) {
+                return new JsonResponse([
+                    'status' => 'success',
+                    'data' => $this->getDataByDepartments($departments),
+                ], 200);
+            }
+            if ([] !== $tourisms) {
+                return new JsonResponse([
+                    'status' => 'success',
+                    'data' => $this->getDataByTourisms($tourisms),
+                ], 200);
+            }
         }
 
         return $this->json([
@@ -104,6 +119,36 @@ class DashboardFilterController extends AbstractController
             'departments' => $this->allDepartments(),
             'ots' => $ots,
             'tourisms' => $this->allTourisms() ?: null,
+            'typologies' => $this->typologieRepository->getSlugsAndNames(),
+        ];
+    }
+
+    /** @param array<string> $departmentsSlugs les slugs des departements passés via les filtres URL encodés */
+    private function getDataByDepartments(array $departmentsSlugs): array
+    {
+        $departments = $this->allDepartments();
+        $ots = $this->territoireRepository->getOTsByDepartments($departmentsSlugs, $this->columns);
+        $tourisms = $this->territoireRepository->getTourismsByLinkedTerritoires($departmentsSlugs, $this->columns);
+
+        return [
+            'departments' => $departments,
+            'ots' => $ots,
+            'tourisms' => $tourisms ?: null,
+            'typologies' => $this->typologieRepository->getSlugsAndNames(),
+        ];
+    }
+
+    /** @param array<string> $tourismsSlugs les slugs des departements passés via les filtres URL encodés */
+    private function getDataByTourisms(array $tourismsSlugs): array
+    {
+        $departments = $this->territoireRepository->getDepartmentsByTourismsTerritoires($tourismsSlugs, $this->columns);
+        $ots = $this->territoireRepository->getOTsByDepartments($departments, $this->columns);
+        $tourisms = $this->territoireRepository->getTourismsBySlugs($tourismsSlugs, $this->columns);
+
+        return [
+            'departments' => $departments,
+            'ots' => $ots,
+            'tourisms' => $tourisms ?: null,
             'typologies' => $this->typologieRepository->getSlugsAndNames(),
         ];
     }

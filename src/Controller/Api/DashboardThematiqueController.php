@@ -7,9 +7,6 @@ namespace App\Controller\Api;
 use App\Dto\DashboardFilterDTO;
 use App\Entity\Choice;
 use App\Entity\Thematique;
-use App\Event\DashboardDataGlobalEvent;
-use App\Event\DashboardDataListsEvent;
-use App\Event\DashboardDataScoresEvent;
 use App\Repository\ReponseRepository;
 use App\Repository\TerritoireRepository;
 use App\Repository\TypologieRepository;
@@ -84,8 +81,8 @@ class DashboardThematiqueController extends AbstractController
         #[MapQueryParameter] ?array $ots = [],
         #[MapQueryParameter] ?array $tourisms = [],
         #[MapQueryParameter] ?array $typologies = [],
-        #[MapQueryParameter] ?string $from = null,
-        #[MapQueryParameter] ?string $to = null,
+        #[MapQueryParameter] string $from = null,
+        #[MapQueryParameter] string $to = null,
     ): JsonResponse {
         $territoire = $this->territoireRepository->getOneByUuidOrSlug($identifier);
 
@@ -96,7 +93,7 @@ class DashboardThematiqueController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $territoires = $this->territoireRepository->getAllBySlugs(array_values(array_merge($departments,$ots,$tourisms)));
+        $territoires = $this->territoireRepository->getAllBySlugs(array_values(array_merge($departments, $ots, $tourisms)));
         $dashboardFilterDTO = DashboardFilterDTO::from([
             'territoire' => $territoire,
             'territoires' => $territoires,
@@ -115,6 +112,7 @@ class DashboardThematiqueController extends AbstractController
             } catch (\DivisionByZeroError $e) {
                 $percentage = 0;
             }
+
             return [
                 'slug' => $choice->getSlug(),
                 'name' => $choice->getLibelle(),

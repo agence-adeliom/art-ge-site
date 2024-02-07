@@ -2,6 +2,4 @@
 
 cd $DDEV_APPROOT
 
-./.secrets/decrypt.sh .secrets/.inventory.yaml
 ddev php vendor/bin/dep $*
-./.secrets/encrypt.sh .secrets/.inventory.yaml

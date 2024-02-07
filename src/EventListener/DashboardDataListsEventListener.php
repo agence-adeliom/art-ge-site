@@ -25,8 +25,7 @@ class DashboardDataListsEventListener
         $dashboardFilterDTO = $event->getDashboardFilterDTO();
         $territoires = $dashboardFilterDTO->getTerritoires();
 
-
-        if([] === $territoires) {
+        if ([] === $territoires) {
             // no filter applied; use the default territoire data
             $territoire = $dashboardFilterDTO->getTerritoire();
             $subChildren = [];

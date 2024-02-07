@@ -19,8 +19,8 @@ moment.locale('fr-fr');
 export const getSearchParamsFromTerritories = (selectedTerritoires: SelectedTerritoires, dateRange: DateRange): string => {
     const params: string[][] = [];
     for (const [key, value] of Object.entries(selectedTerritoires)) {
-        if (Array.isArray(value)){    
-            for(const v of value) {         
+        if (Array.isArray(value)){
+            for(const v of value) {
                 params.push([key + '[]', v]);
             }
         }
@@ -35,7 +35,7 @@ export const getSearchParamsFromTerritories = (selectedTerritoires: SelectedTerr
 }
 
 const Territory = () => {
-    const { territoire = 'grand-est' } = useParams();    
+    const { territoire = 'grand-est' } = useParams();
 
     //Global data
     const [territoryScore, setTerritoryScore] = useState(0)
@@ -48,7 +48,7 @@ const Territory = () => {
     const [lists, setLists] = useState<Lists>({})
     const [actorsScores, setActorsScores] = useState<ActorsScoresList>({
         activite: null,
-        camping: null,  
+        camping: null,
         chambre: null,
         hotel: null,
         insolite: null,
@@ -62,7 +62,7 @@ const Territory = () => {
     const [typologies, setTypologies] = useState<Sluggable[]>([])
     const [territories, setTerritories] = useState<Sluggable[]>([])
     const [departments, setDepartments] = useState<Sluggable[]>([])
-    
+
     const [selectedTerritoires, setSelectedTerritoires] = useState<SelectedTerritoires>({departments: [], ots: [], tourisms: [], typologies: []})
 
     // date range
@@ -143,13 +143,13 @@ const Territory = () => {
                 >
                     <div className="datePickerContainer">
                         <DateRangePicker
-                            startDate={dateRange.startDate} 
+                            startDate={dateRange.startDate}
                             startDateId="inputStartDate"
-                            endDate={dateRange.endDate} 
+                            endDate={dateRange.endDate}
                             endDateId="inputEndDate"
                             //@ts-ignore
-                            onDatesChange={({ startDate, endDate } : { startDate: Date|null, endDate: Date|null }) => setDateRange({startDate, endDate})} 
-                            focusedInput={focusedInput} 
+                            onDatesChange={({ startDate, endDate } : { startDate: Date|null, endDate: Date|null }) => setDateRange({startDate, endDate})}
+                            focusedInput={focusedInput}
                             onFocusChange={(focusedInput: any) => setFocusedInput(focusedInput)}
                             numberOfMonths={1}
                             startDatePlaceholderText={'Début'}
@@ -172,7 +172,7 @@ const Territory = () => {
                     territoryScore={territoryScore}
                     respondantsTotal={respondantsTotal}
                 />
-                <SustainabiltiesScores 
+                <SustainabiltiesScores
                     environnementScore={environnementScore}
                     economyScore={economyScore}
                     socialScore={socialScore}
@@ -187,7 +187,7 @@ const Territory = () => {
                 </div>
                 <Analysis
                     icon="fa-thin fa-leaf"
-                    type="Environnement" 
+                    type="Environnement"
                     color="primary-800"
                     barColor="#75B369"
                     percentage={environnementScore}
@@ -198,9 +198,9 @@ const Territory = () => {
                     dateRange={dateRange}
                 ></Analysis>
 
-                <Analysis 
+                <Analysis
                     icon="fa-thin fa-coins"
-                    type="Economie" 
+                    type="Economie"
                     color="secondary-800"
                     barColor="#60A5AB"
                     percentage={economyScore}
@@ -211,13 +211,13 @@ const Territory = () => {
                     dateRange={dateRange}
                 ></Analysis>
 
-                <Analysis 
+                <Analysis
                     icon="fa-thin fa-people-group"
-                    type="Social" 
+                    type="Social"
                     color="tertiary-800"
                     barColor="#75B369"
                     percentage={socialScore}
-                    desc="Ci-dessous les résultats détaillés pour chaque thématique liée à l’environnement. 
+                    desc="Ci-dessous les résultats détaillés pour chaque thématique liée à l’environnement.
                     Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."
                     thematiques={thematiques.slice(11,-1)}
                     selectedTerritoires={selectedTerritoires}
@@ -231,7 +231,7 @@ const Territory = () => {
                 </div>
                 <FooterResult></FooterResult>
                 {openErrorPopin && <NoDataModal closeModal={() => setOpenErrorPopin(false)}></NoDataModal>}
-            </div> 
+            </div>
         </div>
     )
 }

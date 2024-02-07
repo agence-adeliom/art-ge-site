@@ -150,7 +150,7 @@ class ScoreRepository extends ServiceEntityRepository
      * La recherche par pilier est faite via une UNION sql des thematique.
      * La requete est construite dans la boucle foreach des thematiques, et chaque fois qu'on rencontre un ?
      * le parametres est ajoute au tableau des parametres.
-     * A la fin on converti le DQL en SQL et on joint le tout avec une UNION
+     * A la fin on converti le DQL en SQL et on joint le tout avec une UNION.
      *
      * @return array<string, int>
      */
@@ -171,20 +171,20 @@ class ScoreRepository extends ServiceEntityRepository
                     ->innerJoin('r.repondant', 'u')
                     ->innerJoin('u.typologie', 'ty')
                     ->groupBy('u.id')
-                    ->andWhere('t.slug = ?'.$counter++);
+                    ->andWhere('t.slug = ?' . $counter++)
+                ;
                 $parameters[] = $thematique->value;
 
                 if ($filterDTO instanceof DashboardFilterDTO) {
                     $territoires = $filterDTO->getTerritoires() ?: [$filterDTO->getTerritoire()];
                     if ([] !== $territoires) {
                         foreach ($territoires as $territoire) {
-
                             if (TerritoireAreaEnum::REGION !== $territoire->getArea()) {
                                 $ors = [];
                                 if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
                                     $department = DepartementEnum::tryFrom($territoire->getSlug());
                                     if ($department) {
-                                        $ors[] = $dql->expr()->like('u.zip', '?'.$counter++);
+                                        $ors[] = $dql->expr()->like('u.zip', '?' . $counter++);
                                         $parameters[] = DepartementEnum::getCode($department) . '%';
                                     }
                                 } else {
@@ -194,7 +194,6 @@ class ScoreRepository extends ServiceEntityRepository
                                     $dql->orWhere($dql->expr()->andX(...$ors));
                                 }
                             }
-
                         }
                     }
                 }
@@ -202,7 +201,7 @@ class ScoreRepository extends ServiceEntityRepository
                 if (!empty($filterDTO->getTypologies())) {
                     $ors = [];
                     foreach ($filterDTO->getTypologies() as $typologie) {
-                        $ors[] = $dql->expr()->eq('ty.slug', '?'.$counter++);
+                        $ors[] = $dql->expr()->eq('ty.slug', '?' . $counter++);
                         $parameters[] = $typologie;
                     }
                     $dql->andWhere($dql->expr()->orX(...$ors));
@@ -211,14 +210,14 @@ class ScoreRepository extends ServiceEntityRepository
                 if ($filterDTO->hasDateRange()) {
                     $dateFormat = 'Y-m-d H:i:s';
                     if (null !== $filterDTO->getFrom() && null !== $filterDTO->getTo()) {
-                        $dql->andWhere('r.submittedAt BETWEEN ?'.$counter++.' AND ?'.$counter++);
+                        $dql->andWhere('r.submittedAt BETWEEN ?' . $counter++ . ' AND ?' . $counter++);
                         $parameters[] = $filterDTO->getFrom()->format($dateFormat);
                         $parameters[] = $filterDTO->getTo()->format($dateFormat);
                     } elseif (null !== $filterDTO->getFrom() && null === $filterDTO->getTo()) {
-                        $dql->andWhere('r.submittedAt >= ?'.$counter++);
+                        $dql->andWhere('r.submittedAt >= ?' . $counter++);
                         $parameters[] = $filterDTO->getFrom()->format($dateFormat);
                     } elseif (null === $filterDTO->getFrom() && null !== $filterDTO->getTo()) {
-                        $dql->andWhere('r.submittedAt <= ?'.$counter++);
+                        $dql->andWhere('r.submittedAt <= ?' . $counter++);
                         $parameters[] = $filterDTO->getTo()->format($dateFormat);
                     }
                 }
