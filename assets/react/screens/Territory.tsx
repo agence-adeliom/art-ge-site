@@ -74,8 +74,8 @@ const Territory = () => {
 
     const apiFilter = () => {
         const search = getSearchParamsFromTerritories(selectedTerritoires, dateRange);
-        
-        fetch(`https://art-grand-est.ddev.site/api/dashboard/${territoire}/filters?${search}`)
+
+        fetch(`/api/dashboard/${territoire}/filters?${search}`)
             .then(response => response.json())
             .then(data => {
                 setOt(data.data.ots);
@@ -87,8 +87,8 @@ const Territory = () => {
 
     const apiData = () => {
         const search = getSearchParamsFromTerritories(selectedTerritoires, dateRange);
-        
-        fetch(`https://art-grand-est.ddev.site/api/dashboard/${territoire}/data?${search}`)
+
+        fetch(`/api/dashboard/${territoire}/data?${search}`)
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'error') {
