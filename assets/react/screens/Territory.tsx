@@ -141,27 +141,29 @@ const Territory = () => {
                     setFilterMobile={setFilterMobile}
                     setOt={setOt}
                 >
-                    <DateRangePicker
-                        startDate={dateRange.startDate} 
-                        startDateId="inputStartDate"
-                        endDate={dateRange.endDate} 
-                        endDateId="inputEndDate"
-                        //@ts-ignore
-                        onDatesChange={({ startDate, endDate } : { startDate: Date|null, endDate: Date|null }) => setDateRange({startDate, endDate})} 
-                        focusedInput={focusedInput} 
-                        onFocusChange={(focusedInput: any) => setFocusedInput(focusedInput)}
-                        numberOfMonths={1}
-                        startDatePlaceholderText={'Début'}
-                        endDatePlaceholderText={'Fin'}
-                        customArrowIcon={'-'}
-                        openDirection={'up'}
-                        isOutsideRange={() => false}
-                        customInputIcon={<i className="fa-light fa-calendar text-sm"></i>}
-                        inputIconPosition="after"
-                        displayFormat="DD/MM/YYYY"
-                        appendToBody={true}
-                        hideKeyboardShortcutsPanel={true}
-                    />
+                    <div className="datePickerContainer">
+                        <DateRangePicker
+                            startDate={dateRange.startDate} 
+                            startDateId="inputStartDate"
+                            endDate={dateRange.endDate} 
+                            endDateId="inputEndDate"
+                            //@ts-ignore
+                            onDatesChange={({ startDate, endDate } : { startDate: Date|null, endDate: Date|null }) => setDateRange({startDate, endDate})} 
+                            focusedInput={focusedInput} 
+                            onFocusChange={(focusedInput: any) => setFocusedInput(focusedInput)}
+                            numberOfMonths={1}
+                            startDatePlaceholderText={'Début'}
+                            endDatePlaceholderText={'Fin'}
+                            customArrowIcon={'-'}
+                            openDirection={'up'}
+                            isOutsideRange={() => false}
+                            customInputIcon={<i className="fa-light fa-calendar text-sm"></i>}
+                            inputIconPosition="after"
+                            displayFormat="DD/MM/YYYY"
+                            appendToBody={true}
+                            hideKeyboardShortcutsPanel={true}
+                        />
+                    </div>
                 </Filters>
             </div>
             <div className="w-full overflow-hidden">

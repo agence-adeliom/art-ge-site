@@ -75,7 +75,7 @@ const Filters = ({apiData, children, setOt, setFilterMobile, ot, etablishment, t
                     Filtrer les résultats
             </Button>
 
-            {lastSubmission && <Text weight={400} size="sm" color="neutral-500" className="mt-auto pt-4">Dernière mise à jour : {lastSubmission}</Text>}
+            {lastSubmission && <Text weight={400} size="sm" color="neutral-500" className="mt-auto py-10 ">Dernière mise à jour : {lastSubmission}</Text>}
         </div>
     )
 }
