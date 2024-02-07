@@ -77,8 +77,8 @@ class DashboardDataController extends AbstractController
         #[MapQueryParameter] ?array $ots = [],
         #[MapQueryParameter] ?array $tourisms = [],
         #[MapQueryParameter] ?array $typologies = [],
-        #[MapQueryParameter] ?string $from = null,
-        #[MapQueryParameter] ?string $to = null,
+        #[MapQueryParameter] string $from = null,
+        #[MapQueryParameter] string $to = null,
     ): JsonResponse {
         $territoire = $this->territoireRepository->getOneByUuidOrSlug($identifier);
 
@@ -89,7 +89,7 @@ class DashboardDataController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $territoires = $this->territoireRepository->getAllBySlugs(array_values(array_merge($departments,$ots,$tourisms)));
+        $territoires = $this->territoireRepository->getAllBySlugs(array_values(array_merge($departments, $ots, $tourisms)));
         $dashboardFilterDTO = DashboardFilterDTO::from([
             'territoire' => $territoire,
             'territoires' => $territoires,
@@ -99,7 +99,6 @@ class DashboardDataController extends AbstractController
         ]);
 
         try {
-
             $event = new DashboardDataGlobalEvent($dashboardFilterDTO);
             $this->eventDispatcher->dispatch($event);
             $globals = $event->getGlobals();
@@ -111,7 +110,6 @@ class DashboardDataController extends AbstractController
             $event = new DashboardDataListsEvent($dashboardFilterDTO);
             $this->eventDispatcher->dispatch($event);
             $lists = $event->getLists();
-                
         } catch (\Throwable $e) {
             return $this->json([
                 'status' => 'error',

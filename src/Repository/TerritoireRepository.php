@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Dto\DashboardFilterDTO;
-use App\Dto\TerritoireFilterDTO;
 use App\Entity\Territoire;
 use App\Enum\DepartementEnum;
-use App\Enum\PilierEnum;
 use App\Enum\TerritoireAreaEnum;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -66,12 +63,10 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
             ->setParameter('slug', $slug)
             ->getQuery()
             ->getOneOrNullResult()
-            ;
+        ;
     }
 
     /**
-     * @param array<string> $slug
-     *
      * @return Territoire[]
      */
     public function getAllBySlugs(array $slugs): array
@@ -126,7 +121,7 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
     }
 
     /**
-     * @param array<string> $linkedTerritoires les slugs des territoires passés via les filtres URL encodés
+     * @param array<string>              $linkedTerritoires les slugs des territoires passés via les filtres URL encodés
      * @param array<string>|array<empty> $columns
      *
      * @return array<Territoire>|array<mixed>|null ($columns is not empty ? array<mixed> : array<Territoire> | null)
@@ -138,7 +133,8 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
         $qb = $this->createQueryBuilder('t')
             ->innerJoin('t.linkedTerritoires', 'tt')
             ->andWhere('t.area = :area')
-            ->setParameter('area', TerritoireAreaEnum::TOURISME->value);
+            ->setParameter('area', TerritoireAreaEnum::TOURISME->value)
+        ;
 
         $orModule = $qb->expr()->orX();
         foreach ($linkedTerritoires as $key => $linkedTerritoire) {
@@ -164,7 +160,8 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
         $qb = $this->createQueryBuilder('t')
             ->innerJoin('t.tourismTerritoires', 'tt')
             ->andWhere('t.area = :area')
-            ->setParameter('area', TerritoireAreaEnum::DEPARTEMENT->value);
+            ->setParameter('area', TerritoireAreaEnum::DEPARTEMENT->value)
+        ;
 
         foreach ($tourismsTerritoires as $tourismTerritoire) {
             $qb
@@ -209,7 +206,7 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
      *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getTourismsBySlugs(array $tourisms, array $columns = []): array | null
+    public function getTourismsBySlugs(array $tourisms, array $columns = []): null | array
     {
         $qb = $this->createQueryBuilder('t')
             ->andWhere('t.area = :area')
@@ -225,21 +222,21 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
 
     public function getPercentageByTerritoire(Territoire $territoire): int
     {
-        $sql = "SELECT ROUND(SUM(temp.percentage) / SUM(temp.total) * 100) as percentage FROM (
+        $sql = 'SELECT ROUND(SUM(temp.percentage) / SUM(temp.total) * 100) as percentage FROM (
             SELECT U.id as `user`, U.zip, ROUND(SUM(R.points) / SUM(R.total) * 100) as percentage, SUM(R.total) as total 
             FROM reponse R 
             INNER JOIN repondant U ON R.repondant_id = U.id 
             GROUP BY U.id
         ) as temp 
-        ";
+        ';
 
-        if ($territoire->getArea() === TerritoireAreaEnum::DEPARTEMENT) {
-            $sql .= "WHERE zip LIKE ?;";
+        if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
+            $sql .= 'WHERE zip LIKE ?;';
             $department = DepartementEnum::tryFrom($territoire->getSlug());
             $departmentCode = DepartementEnum::getCode($department);
             $params = [$departmentCode . '%'];
-        } elseif ($territoire->getArea() === TerritoireAreaEnum::OT || $territoire->getArea() === TerritoireAreaEnum::TOURISME) {
-            $sql .= "WHERE zip IN (". implode(',', $territoire->getZips()) . ")";
+        } elseif (TerritoireAreaEnum::OT === $territoire->getArea() || TerritoireAreaEnum::TOURISME === $territoire->getArea()) {
+            $sql .= 'WHERE zip IN (' . implode(',', $territoire->getZips()) . ')';
             $params = [];
         } else {
             $params = [];

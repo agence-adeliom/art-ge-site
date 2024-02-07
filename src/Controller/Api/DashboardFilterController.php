@@ -67,7 +67,6 @@ class DashboardFilterController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-
         if ([] === $departments && [] === $ots && [] === $tourisms) {
             if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
                 return new JsonResponse([

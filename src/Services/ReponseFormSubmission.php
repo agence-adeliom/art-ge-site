@@ -46,10 +46,10 @@ class ReponseFormSubmission
     {
         $reponseId = $reponse->getId();
         if ($reponseId) {
-            $sql = "INSERT INTO reponse_choice (reponse_id, choice_id) VALUES ";
+            $sql = 'INSERT INTO reponse_choice (reponse_id, choice_id) VALUES ';
             foreach ($reponse->getRawForm() as $choices) {
                 foreach (array_keys($choices['answers']) as $choiceId) {
-                    $sql .= "(?, ?),";
+                    $sql .= '(?, ?),';
                     $params[] = $reponseId;
                     $params[] = $choiceId;
                 }

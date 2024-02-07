@@ -22,12 +22,12 @@ trait RepositoryFilterTrait
             if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
                 $department = DepartementEnum::tryFrom($territoire->getSlug());
                 if ($department) {
-                    $ors[] = $qb->expr()->like('u.zip', ':zip'.$key);
-                    $qb->setParameter('zip'.$key, DepartementEnum::getCode($department) . '%');
+                    $ors[] = $qb->expr()->like('u.zip', ':zip' . $key);
+                    $qb->setParameter('zip' . $key, DepartementEnum::getCode($department) . '%');
                 }
             } else {
-                $ors[] = $qb->expr()->in('u.zip', ':zip'.$key);
-                $qb->setParameter('zip'.$key, $territoire->getZips());
+                $ors[] = $qb->expr()->in('u.zip', ':zip' . $key);
+                $qb->setParameter('zip' . $key, $territoire->getZips());
             }
             if ([] !== $ors) {
                 $addJoin = true;
@@ -101,12 +101,10 @@ trait RepositoryFilterTrait
             }
         }
 
-        $qb = $this->addFiltersTypologyAndDateToQueryBuilder($qb, $filterDTO);
-
-        return $qb;
+        return $this->addFiltersTypologyAndDateToQueryBuilder($qb, $filterDTO);
     }
 
-    private function addFiltersTypologyAndDateToQueryBuilder(QueryBuilder $qb, FilterTypologyDTOInterface & FilterDateDTOInterface $territoireFilterDTO): QueryBuilder
+    private function addFiltersTypologyAndDateToQueryBuilder(QueryBuilder $qb, FilterDateDTOInterface & FilterTypologyDTOInterface $territoireFilterDTO): QueryBuilder
     {
         $qb = $this->filterByTypology($qb, $territoireFilterDTO);
 

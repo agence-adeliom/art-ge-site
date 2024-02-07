@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Dto\DashboardFilterDTO;
-use App\Dto\FilterTypologyDTOInterface;
 use App\Dto\TerritoireFilterDTO;
 use App\Entity\Reponse;
-use App\Entity\Territoire;
 use App\Enum\DepartementEnum;
 use App\Enum\TerritoireAreaEnum;
 use App\Traits\RepositoryFilterTrait;
@@ -196,15 +194,6 @@ class ReponseRepository extends ServiceEntityRepository
         ;
     }
 
-    /**
-     *
-     *
-     *
-     *
-     *
-     */
-
-
     public function getNumberOfReponsesGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): int
     {
         $qb = $this->createQueryBuilder('r')
@@ -222,7 +211,7 @@ class ReponseRepository extends ServiceEntityRepository
 //            :
             (int) $qb
                 ->getQuery()
-                ->getSingleScalarResult();
+                ->getSingleScalarResult()
         ;
     }
 
@@ -259,14 +248,15 @@ class ReponseRepository extends ServiceEntityRepository
             ->innerJoin('r.repondant', 'u')
             ->innerJoin('u.typologie', 'ty')
             ->orderBy('r.submittedAt', 'DESC')
-            ->setMaxResults(1);
+            ->setMaxResults(1)
+        ;
 
         $qb = $this->addFilters($qb, $filterDTO);
 
         return $qb
             ->getQuery()
             ->getSingleScalarResult()
-            ;
+        ;
     }
 
     public function getRepondantsByTypologieGlobal(TerritoireFilterDTO $territoireFilterDTO): array
@@ -349,12 +339,13 @@ class ReponseRepository extends ServiceEntityRepository
 
         $percentagesByTypology = $qb
             ->getQuery()
-            ->getSingleColumnResult();
+            ->getSingleColumnResult()
+        ;
 
         if (count($percentagesByTypology)) {
             return (int) round(array_sum($percentagesByTypology) / count($percentagesByTypology));
-        } else {
-            return null;
         }
+
+        return null;
     }
 }
