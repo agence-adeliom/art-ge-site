@@ -61,7 +61,7 @@ const Pie = ({ percentage, color, type, icon} : {
 
   const pct = cleanPercentage(percentage);
   return (
-    <div className="w-fit">
+    <div className="w-fit lg:w-1/3 lg:flex lg:flex-col lg:items-center">
         <div className="w-fit relative">
           <svg width={200} height={200}>
           <g transform={`rotate(-90 ${"100 100"})`}>

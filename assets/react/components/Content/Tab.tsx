@@ -16,12 +16,12 @@ const Tab = ({type, index, handleTab, indexTab, datas}: {
     return(
         <>  {/* Version desktop */}
             <div className={`${tabClass}`} data-index={index} onClick={(e) => {handleTab(e) }}>
-                <Text weight={500} className="uppercase pointer-events-none" color="neutral-700" onClick={e => e.stopPropagation()}>{type}</Text>
+                <Text weight={500} className="uppercase pointer-events-none" color="neutral-700" onClick={e => e.stopPropagation()}>{`${datas.length} ${type}`}</Text>
                 <div className={`${activeClass}  ${ index === indexTab ? 'opacity-100' : 'opacity-0' }`}></div>
             </div>
             
             {index === indexTab && 
-                <div className="col-span-full order-last">
+                <div className="col-span-full order-last lg:pt-5 lg:-mx-10">
                     {datas.map((data : RepondantItem | TerritoireItem, key : number) => {
                         if ('uuid' in data) { // liste des répondants
                             const className = "block flex-wrap md:grid grid-cols-5 gap-10 p-3 lg:px-10"
@@ -38,13 +38,14 @@ const Tab = ({type, index, handleTab, indexTab, datas}: {
                                         </a>
                                 </React.Fragment>;
                         } else { // liste des départments ou ots
-                            const className = "block md:grid grid-cols-[minmax(0,500px)_minmax(5rem,1fr)_minmax(5rem,1fr)] gap-10 p-3 lg:px-10"
+                            // const className = "block md:grid grid-cols-[minmax(0,500px)_minmax(5rem,1fr)_minmax(5rem,1fr)] gap-10 p-3 lg:px-10"
+                            const className = "flex flex-col gap-3 md:grid md:grid-cols-6 md:gap-10 p-3 lg:px-10"
                             return <React.Fragment key={key}>
-                                    {key === 0 && <div className={`${className} max-md:hidden`}><div className="font-bold">Nom</div><div className="font-bold">Nombre de répondants</div><div className="font-bold">Score</div></div>}
+                                    {key === 0 && <div className={`${className} max-md:hidden`}><div className="font-bold md:col-span-3">Nom</div><div className="font-bold md:col-span-2">Nombre de répondants</div><div className="font-bold md:col-span-1">Score</div></div>}
                                     <div className={className + ' border-b border-gray-200 bg-gray-50 w-full'}>
-                                        <p><span className="font-bold md:hidden">Nom : </span>{data.name}</p>
-                                        <p><span className="font-bold md:hidden">Nombre de répondants : </span>{data.numberOfReponses}</p>
-                                        <p><span className="font-bold md:hidden">Score :</span> {data.score}/100</p>
+                                        <p className="md:col-span-3"><span className="font-bold md:hidden">Nom : </span>{data.name}</p>
+                                        <p className="md:col-span-2"><span className="font-bold md:hidden">Nombre de répondants : </span>{data.numberOfReponses}</p>
+                                        <p className="md:col-span-1"><span className="font-bold md:hidden">Score :</span> <span className="font-semibold">{data.score}</span>/100</p>
                                     </div>
                                 </React.Fragment>;
                         }
