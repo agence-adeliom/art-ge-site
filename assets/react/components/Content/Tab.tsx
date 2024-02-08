@@ -33,6 +33,7 @@ const Tab = ({type, index, handleTab, indexTab, datas}: {
                                             <p><span className="font-bold md:hidden">Commune : </span>{data.city}</p>
                                             <p><span className="font-bold md:hidden">Score : </span>{data.total > 0 ? Math.round(data.points / data.total * 100) : 0}/100</p>
                                             <Link
+                                                icon="fa-chevron-right"
                                                 label="Voir le détail"
                                                 />
                                         </a>

@@ -77,6 +77,7 @@ const Pie = ({ percentage, color, type, icon} : {
           <div className="mt-2 flex justify-center">
               <Link
                     label="Le score en détail"
+                    icon="fa-chevron-down"
                     onClickFunction={() =>handleScroll()}/>
           </div>
       </div>

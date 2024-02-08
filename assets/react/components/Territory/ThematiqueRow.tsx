@@ -36,6 +36,7 @@ const ThematiqueRow = ({title, percentage, color, thematiqueDetails, fetchData} 
                 </div>
                 
                 <Link
+                    icon="fa-chevron-right"
                     label="Voir le détail"
                     onClickFunction={handleDropdown}/>
             </div>

@@ -12,7 +12,7 @@ const ScoreTerritory = ({territoryScore, respondantsTotal, } : {
     return (
         <div className="print:py-4 py-12 px-4 lg:px-10 bg-white">
             <div className="flex justify-between items-center">
-                <Heading variant="display-4" weight={400} className="" >
+                <Heading variant="display-4" weight={400} className="mb-4" >
                     Score du territoire
                 </Heading>
                 <Button onClick={() => window.print()} size="lg" className="max-lg:hidden print:hidden" >
@@ -27,7 +27,7 @@ const ScoreTerritory = ({territoryScore, respondantsTotal, } : {
                 </div>
                 <div className="ml-2 text-2xl text-neutral-600 font-title">pour {respondantsTotal} répondants</div>
             </div>      
-            <div className="mt-12">
+            <div className="mt-8">
                 <ProgressBarTerritory percentage={territoryScore}></ProgressBarTerritory>
             </div>
         </div>

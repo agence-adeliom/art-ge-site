@@ -13,7 +13,7 @@ const ActorsScores = ({ scores } : {
             <Heading variant="display-4">Score détaillé par type d’acteur touristique</Heading>
             <Text className="mt-4" size="sm">Vous trouverez ci-dessous le score global de l’ensemble des filtres sélectionnés pour chaque typologie de prestataire.</Text>
             <div className="w-full overflow-auto">
-                <div className="grid grid-cols-8 gap-4 mt-10 relative w-max lg:w-full max-lg:pr-10 ">
+                <div className="grid grid-cols-8 gap-4 mt-10 relative w-max lg:w-full max-lg:mr-10 ">
                     {Object.entries(scores).map(([actor, score]) => (
                         <Bar 
                             key={actor}
@@ -21,7 +21,9 @@ const ActorsScores = ({ scores } : {
                             type={actor}
                         />
                     ))}
-                <div className="hidden md:block print:hidden w-full h-1 border-b border-neutral-500 border-dashed absolute left-0 top-[216px]"></div>
+                    <svg className="block print:hidden w-full absolute left-0 top-[216px]" width="100%" height="1" viewBox="0 0 100% 1" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <line y1="0.5" x2="100%" y2="0.5" stroke="#71717A" stroke-dasharray="8 8"/>
+                    </svg>
                 </div>
                 <DurabilityCursor />
             </div>
