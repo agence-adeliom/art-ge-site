@@ -11,12 +11,16 @@ const mobileTabClass= 'w-1/3 relative flex-shrink-0 text-center min-w-[144px] it
 const Tabs = ({lists} : {
     lists: Lists,
 }) => {
-    const [indexTab, setIndexTab] = useState(lists.departments !== undefined ? 0 : 1)
+    const defaultIndexTab = lists.departments !== undefined && lists.departments.length > 0 ? 0 : (
+        lists.ots !== undefined && lists.ots.length > 0 ? 1 : 2
+    )
     
+    const [indexTab, setIndexTab] = useState<number>(defaultIndexTab)
+
     const handleTab = (e : any) => {
         setIndexTab(parseInt(e.target.dataset.index, 10))
     }
-    
+
     return (
         <div className="py-12">
             <div className="px-4 lg:px-10">
@@ -27,29 +31,29 @@ const Tabs = ({lists} : {
                 <div className="lg:px-10 lg:grid lg:grid-cols-3 relative w-full">
                     <div className="max-lg:hidden absolute w-full h-[2px] bg-neutral-300 left-0 top-[70px] md:top-[54px]"></div>
                      {/* Version mobile TAB */}
-                    
+
                     <div  className="lg:hidden col-span-full flex border-b border-neutral-300 items-stretch overflow-x-auto">
-                        <div onClick={(e) => {handleTab(e) }} data-index={0} className={`${mobileTabClass}`}>
+                        {lists.departments && lists.departments.length > 0 && <div onClick={(e) => {handleTab(e) }} data-index={0} className={`${mobileTabClass}`}>
                             <Text weight={500} className="uppercase pointer-events-none" color="neutral-700" onClick={e => e.stopPropagation()}>{lists.departments?.length} départements</Text>
                             <div className={`${activeClass} ${indexTab === 0 ? 'opacity-100' : 'opacity-0'}`}></div>
-                        </div>
-                        <div onClick={(e) => {handleTab(e) }} data-index={1} className={`${mobileTabClass}`}>
+                        </div>}
+                        {lists.ots && lists.ots.length > 0 && <div onClick={(e) => {handleTab(e) }} data-index={1} className={`${mobileTabClass}`}>
                             <Text weight={500} className="uppercase pointer-events-none" color="neutral-700" onClick={e => e.stopPropagation()}>{lists.ots?.length} offices de tourisme</Text>
                             <div className={`${activeClass} ${indexTab === 1 ? 'opacity-100' : 'opacity-0'}`}></div>
-                        </div>
-                        <div onClick={(e) => {handleTab(e) }} data-index={2} className={`${mobileTabClass}`}>
+                        </div>}
+                        {lists.repondants && lists.repondants.length > 0 && <div onClick={(e) => {handleTab(e) }} data-index={2} className={`${mobileTabClass}`}>
                             <Text weight={500} className="uppercase pointer-events-none" color="neutral-700" onClick={e => e.stopPropagation()}>{lists.repondants?.length} répondants</Text>
                             <div className={`${activeClass} ${indexTab === 2 ? 'opacity-100' : 'opacity-0'}`}></div>
-                        </div>
+                        </div>}
                     </div>
 
 
                     {lists.departments && lists.departments.length > 0 && <Tab type="départements" index={0} handleTab={handleTab} indexTab={indexTab} datas={lists.departments}></Tab>}
                     {lists.ots && lists.ots.length > 0 && <Tab type="offices de tourisme" index={1} handleTab={handleTab} indexTab={indexTab} datas={lists.ots}></Tab>}
-                    {lists.repondants && lists.repondants.length > 0 && <Tab type="répondants" index={2} handleTab={handleTab} indexTab={indexTab} datas={lists.repondants}></Tab>}               
+                    {lists.repondants && lists.repondants.length > 0 && <Tab type="répondants" index={2} handleTab={handleTab} indexTab={indexTab} datas={lists.repondants}></Tab>}
                 </div>
             </div>
-            
+
         </div>
     )
 }

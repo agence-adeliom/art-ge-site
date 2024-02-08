@@ -26,8 +26,8 @@ const NoDataModal = ( { closeModal }: {
                         </Icon>
                     </div>
                 </div>
-                
-                <Text weight={400} color="neutral-700">N'hésitez pas à revenir pour voir si de nouvelles données sont disponibles.</Text>
+
+                <Text weight={400} color="neutral-700">N'hésitez pas à revenir ultérieurement pour voir si de nouvelles données sont disponibles.</Text>
                 <div className="flex gap-3 flex-wrap">
                     <Button onClick={() => closeModal()} className="w-full sm:w-fit" variant="secondary">Je comprends</Button>
                 </div>

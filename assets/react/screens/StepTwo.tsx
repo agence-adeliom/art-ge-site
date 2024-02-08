@@ -35,8 +35,8 @@ const establishmentData: {
   {
     value: 3,
     iconSrc: Bed,
-    alt: 'Chambre d’hôte',
-    title: 'Une chambre d’hôte',
+    alt: 'Chambre d’hôtes',
+    title: 'Une chambre d’hôtes',
   },
   {
     value: 4,

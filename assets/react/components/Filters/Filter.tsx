@@ -53,6 +53,7 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
         }
 
         const targetSlug = e.target.id;
+        const targetName = e.target.dataset.name;
         const type = e.target.dataset.type;
         let realType: string | undefined;
         if (type) {
@@ -79,10 +80,10 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
                 }));
             }
             
-            setFilterChecked([...filterChecked, targetSlug])
+            setFilterChecked([...filterChecked, targetName])
             
         } else if (e.target.checked === false) {
-            const index = filterChecked.indexOf(targetSlug)
+            const index = filterChecked.indexOf(targetName)
             filterChecked.splice(index, 1)
             if (realType !== undefined) {
                 const index = selectedTerritoires[realType].findIndex((slug) => slug === targetSlug);
@@ -111,7 +112,7 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
 
                 <div className="flex items-center gap justify-between border-b border-neutral-300 pb-2 pt-3 pr-4">
                     <Text color="neutral-700" size="sm" className="text-ellipsis whitespace-nowrap w-full overflow-hidden">
-                        {filterChecked.length > 0 ? filterChecked.map((el : any) => `${el}, `) : `Tous les ${type}`}</Text>
+                        {filterChecked.length > 0 ? filterChecked.map((el : any, index: number) => (index > 0 && index < filterChecked.length && filterChecked.length > 1 ? ', ' : '') + `${el}`) : `Tous les ${type}`}</Text>
                     <Icon icon="fa-solid fa-chevron-right" size={'sm'}></Icon>
                 </div>
             </div>
@@ -125,7 +126,7 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
                     
                     {allFilter && Object.values(allFilter).map((el : any, key : any) => (
                         <div key={key} className={`flex items-center inputContainer ${inputContainer}`} onClick={(e) => {e.stopPropagation(), handleCheckbox(e)}}>
-                            <input type="checkbox"  className={`filterCheckbox rounded m-2`} id={el.slug} data-type={type}></input>
+                            <input type="checkbox"  className={`filterCheckbox rounded m-2`} id={el.slug} data-name={el.name} data-type={type}></input>
                             <label className="w-full py-2" onClick={(e) => e.stopPropagation()} htmlFor={el.slug}>{el.name}</label>
                         </div>
                     ))}

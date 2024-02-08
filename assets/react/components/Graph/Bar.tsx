@@ -15,7 +15,7 @@ const Bar = ({percentage, type} : {
     if (type === 'hotel'){
         color = '#264653';
         icon = "fa-duotone fa-hotel";
-        name = 'Hôtel';
+        name = 'Hôtels';
     } else if (type === 'location'){
         color = '#1557b7';
         icon = "fa-duotone fa-apartment";
@@ -35,7 +35,7 @@ const Bar = ({percentage, type} : {
     } else if (type === 'chambre'){
         color = '#E55E3C';
         icon = "fa-duotone fa-bed-front";
-        name = 'Chambres d’hôte';   
+        name = 'Chambres d’hôtes';   
     } else if (type === 'activite'){
         color = '#664E76';
         icon = "fa-duotone fa-tree";

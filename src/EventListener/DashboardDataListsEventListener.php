@@ -53,6 +53,19 @@ class DashboardDataListsEventListener
                     'ots' => $children,
                 ];
             }
+        } else {
+            $childrens = [];
+            foreach ($territoires as $territoire) {
+                $children = $territoire->getTerritoiresChildren()->toArray();
+                foreach ($children as $child) {
+                    $child->setScore($this->territoireRepository->getPercentageByTerritoire($child));
+                    $child->setNumberOfReponses($this->reponseRepository->getNumberOfReponsesGlobal(DashboardFilterDTO::from(['territoire' => $child, 'territoires' => [$child]])));
+                    $childrens[] = $child;
+                }
+            }
+            $lists = [
+                'ots' => $childrens,
+            ];
         }
 
         if (isset($lists)) {

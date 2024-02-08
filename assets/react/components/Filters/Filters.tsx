@@ -70,7 +70,7 @@ const Filters = ({apiData, children, setOt, setFilterMobile, ot, etablishment, t
                 iconSide="left"
                 className="mt-4"
                 size={'lg'}
-                onClick={() => {apiData(), setFilterMobile(false)}}
+                onClick={() => {apiData(), setFilterMobile(false), setFilterId(null)}}
                 >
                     Filtrer les résultats
             </Button>
