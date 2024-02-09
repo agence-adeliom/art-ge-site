@@ -15,11 +15,12 @@ const ActorsScores = ({ scores } : {
             <div className="w-full overflow-auto">
                 <div className="grid grid-cols-8 gap-4 mt-10 relative w-max lg:w-full max-lg:mr-10 ">
                     {Object.entries(scores).map(([actor, score]) => (
-                        <Bar 
+                        score && 
+                            <Bar 
                             key={actor}
                             percentage={parseInt(score, 10)} 
                             type={actor}
-                        />
+                            />
                     ))}
                     <svg className="block print:hidden w-full absolute left-0 top-[216px]" width="100%" height="1" preserveAspectRatio="none"  fill="none" xmlns="http://www.w3.org/2000/svg">
                         <line y1="0.5" x2="100%" y2="0.5" stroke="#71717A" strokeDasharray="8 8"/>

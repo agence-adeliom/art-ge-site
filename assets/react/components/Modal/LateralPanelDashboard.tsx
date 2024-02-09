@@ -7,12 +7,13 @@ import { Text } from '@components/Typography/Text';
 import { ThematiqueDetails } from "@components/Territory/Analysis";
 import ProgressBarTerritorySimple from "@components/ProgressBar/ProgressBarTerritorySimple";
 
-const LateralPanelDashboard = ({closeDropdown, title, barColor, percentage, thematiqueDetails}: {
+const LateralPanelDashboard = ({closeDropdown, showDialog, title, barColor, percentage, thematiqueDetails}: {
     closeDropdown: Function,
     title: string,
     barColor: number,
     percentage?: number,
     thematiqueDetails: ThematiqueDetails,
+    showDialog: boolean
 }) => {
 
     const [open, setOpen] = useState<number>(-1);
@@ -22,8 +23,10 @@ const LateralPanelDashboard = ({closeDropdown, title, barColor, percentage, them
     };
 
     return (
+        <AnimatePresence>
+        { showDialog && (
         <>
-            <LateralPanelAnim isVisible>
+            <LateralPanelAnim>
                 <div className="h-auto w-full">
                 <div onClick={() => closeDropdown()} className="cursor-pointer absolute top-6 right-6">
                     <Icon icon="fa-xmark" size="lg"></Icon>
@@ -51,17 +54,21 @@ const LateralPanelDashboard = ({closeDropdown, title, barColor, percentage, them
 
             <motion.div
             key={`backdrop`}
-            className="fixed w-screen h-screen top-0 left-0 bg-black bg-opacity-50 z-[50]"
+            className="fixed w-screen cursor-pointer h-screen top-0 left-0 bg-black bg-opacity-50 z-[50]"
             initial={{  opacity: 0 }}
             onClick={() =>closeDropdown()}
             animate={{  opacity: 100 }}
+            exit={{  opacity: 0 }}
             transition={{
                 ease: "easeIn",
                 duration: 0.3
               }}
             >
             </motion.div>
-        </>
+        
+            </>
+            )}
+        </AnimatePresence>
 
 
     )

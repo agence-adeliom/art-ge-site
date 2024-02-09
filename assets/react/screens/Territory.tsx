@@ -94,7 +94,6 @@ const Territory = () => {
                 if (data.status === 'error') {
                     setOpenErrorPopin(true);
                 } else {
-                    //console.log(data.data)
                     setTerritoryScore(data.data.globals.score)
                     setRespondantsTotal(data.data.globals.repondantsCount)
                     setEnvironnementScore(data.data.globals.piliers.environnement)

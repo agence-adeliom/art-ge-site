@@ -52,16 +52,16 @@ const ResultCard = ({title, percentage, chosenChoices, notChosenChoices, ...prop
                 </div>
             </div>
             
-            {open && (
-                <LateralPanel
+    
+            <LateralPanel
                 title={title}
                 closeDropdown={closeDropdown}
                 progressBar={<ProgressBar percentage={percentage}></ProgressBar>}
                 percentage={percentage}
                 chosenChoices={chosenChoices}
                 notChosenChoices={notChosenChoices}
-                />
-            )}
+                showDialog={open}
+            />
 
         </div>
 

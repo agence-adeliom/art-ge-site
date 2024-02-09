@@ -43,19 +43,19 @@ const Bar = ({percentage, type} : {
     }
 
     return (
-        <div className={`${isNaN(percentage) === false ? "text-center" : ""} w-[85px] flex-shrink-0 col-span-1 lg:w-full`} key={type}>
-            {<Text className="font-title mb-2" color="neutral-600" size="2xl" dangerouslySetInnerHTML={{__html: isNaN(percentage) === false ? `${percentage}/100` : '&nbsp;'}}></Text>}
-            <div className={`${barContainer}`}>
-                <div className={`${progressBar}`} style={{background: color, height: `${percentage}%`}}></div>
-            </div>
-            <div className="w-12 h-12 relative left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center bg-white" style={{border: `4px solid ${color}`, color: color}}>
-                <Icon variant={'duotone'} size={'xl'} icon={icon}></Icon>
-            </div>
+        <>
+            <div className={`${isNaN(percentage) === false ? "text-center" : ""} w-[85px] flex-shrink-0 col-span-1 lg:w-full`} key={type}>
+                {<Text className="font-title mb-2" color="neutral-600" size="2xl" dangerouslySetInnerHTML={{__html: isNaN(percentage) === false ? `${percentage}/100` : '&nbsp;'}}></Text>}
+                <div className={`${barContainer}`}>
+                    <div className={`${progressBar}`} style={{background: color, height: `${percentage}%`}}></div>
+                </div>
+                <div className="w-12 h-12 relative left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full flex items-center justify-center bg-white" style={{border: `4px solid ${color}`, color: color}}>
+                    <Icon variant={'duotone'} size={'xl'} icon={icon}></Icon>
+                </div>
 
-            <Text size="sm" className="text-center">{name}</Text>
-
-        </div>
-        
+                <Text size="sm" className="text-center">{name}</Text>
+            </div>
+        </>
     )
 }
 

@@ -41,14 +41,13 @@ const ThematiqueRow = ({title, percentage, color, thematiqueDetails, fetchData} 
                     onClickFunction={handleDropdown}/>
             </div>
 
-            {open && (
-                <LateralPanelDashboard
-                    title={title}
-                    percentage={percentage}
-                    thematiqueDetails={thematiqueDetails}
-                    barColor={color}
-                    closeDropdown={closeDropdown} />
-            )}
+            <LateralPanelDashboard
+                title={title}
+                percentage={percentage}
+                thematiqueDetails={thematiqueDetails}
+                barColor={color}
+                closeDropdown={closeDropdown} 
+                showDialog={open}/>
 
         </>
 

@@ -53,7 +53,6 @@ const Pie = ({ percentage, color, type, icon} : {
 
   let scrollToBlock = document.getElementById(`${type}-analysis`)!;
   const handleScroll = () => {
-    console.log('boudning' , scrollToBlock)
     scrollToBlock.scrollIntoView({ behavior: 'smooth' });
   }
 
