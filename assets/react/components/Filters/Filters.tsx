@@ -68,11 +68,19 @@ const Filters = ({apiData, children, setOt, setFilterMobile, ot, etablishment, t
                 variant="secondary" 
                 icon="fa-solid fa-minus" 
                 iconSide="left"
-                className="mt-4"
+                className="mt-4 md:w-full justify-end"
                 size={'lg'}
                 onClick={() => {apiData(), setFilterMobile(false), setFilterId(null)}}
                 >
                     Filtrer les résultats
+            </Button>
+
+            <Button
+            variant="resetFilter"
+            className="p-0 mt-4"
+            onClick={() =>location.reload()}>
+                <Icon icon="fa-solid fa-arrows-rotate"></Icon>
+                Réinitialiser les filtres
             </Button>
 
             {lastSubmission && <Text weight={400} size="sm" color="neutral-500" className="mt-auto py-10 ">Dernière mise à jour : {lastSubmission}</Text>}

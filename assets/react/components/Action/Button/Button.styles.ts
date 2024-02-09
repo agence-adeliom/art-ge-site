@@ -11,7 +11,8 @@ export const buttonStyles = cva(
         primary: '',
         secondary: '',
         tertiary: '',
-        textOnly: ''
+        textOnly: '',
+        resetFilter: ''
       },
       size: {
         sm: 'text-xs py-1 px-2',
@@ -70,8 +71,8 @@ export const buttonStyles = cva(
         variant: 'secondary',
         disabled: false,
         className: [
-          'bg-neutral-700 text-white border border-neutral-700',
-          'lg:hover:border-neutral-500  lg:hover:bg-white lg:hover:text-neutral-400',
+          'text-white border bg-neutral-700',
+          'lg:hover:bg-black',
         ],
       },
       {
@@ -88,6 +89,14 @@ export const buttonStyles = cva(
         className: [
           'text-primary-600',
           'lg:hover:text-primary-800',
+        ],
+      },
+      {
+        variant: 'resetFilter',
+        disabled: false,
+        className: [
+          'text-neutral-700',
+          'lg:hover:text-black',
         ],
       },
       {

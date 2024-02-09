@@ -152,8 +152,8 @@ const Territory = () => {
                             focusedInput={focusedInput}
                             onFocusChange={(focusedInput: any) => setFocusedInput(focusedInput)}
                             numberOfMonths={1}
-                            startDatePlaceholderText={'Début'}
-                            endDatePlaceholderText={'Fin'}
+                            startDatePlaceholderText={'01/01/2024'}
+                            endDatePlaceholderText={`Aujourd'hui`}
                             customArrowIcon={'-'}
                             openDirection={'up'}
                             isOutsideRange={() => false}

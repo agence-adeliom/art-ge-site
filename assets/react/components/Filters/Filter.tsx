@@ -103,36 +103,40 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
         }
     }
 
+
     return (
-        <div className="mt-4"
-        >
+        <div className="mt-5">
             <Text color="black" size="sm">{type} :</Text>
             <div className="mt-3" 
             >
 
-                <div className="flex items-center gap justify-between border-b border-neutral-300 pb-2 pt-3 pr-4">
+                <div className="flex items-center gap justify-between border-b border-neutral-300 pb-2 pr-4">
                     <Text color="neutral-700" size="sm" className="text-ellipsis whitespace-nowrap w-full overflow-hidden">
-                        {filterChecked.length > 0 ? filterChecked.map((el : any, index: number) => (index > 0 && index < filterChecked.length && filterChecked.length > 1 ? ', ' : '') + `${el}`) : `Tous les ${type}`}</Text>
+                        {filterChecked.length > 0 ? filterChecked.map((el : any, index: number) => (index > 0 && index < filterChecked.length && filterChecked.length > 1 ? ', ' : '') + `${el}`) : `Tous les ${type.toLowerCase()}`}</Text>
                     <Icon icon="fa-solid fa-chevron-right" size={'sm'}></Icon>
                 </div>
             </div>
             { 
-                <div className={`fixed top-0 w-full z-[200] left-0 md:left-[320px] md:w-[400px] bg-white shadow-lg h-screen overflow-auto ${openModal ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}> 
+                <div className={`fixed top-0 w-full left-0 md:left-[320px] md:w-[400px] bg-white shadow-lg h-screen overflow-auto trans-default ${openModal ? 'translate-x-0 opacity-1 z-[200]' : 'opacity-0 -translate-x-[calc(100%)] pointer-events-none'}`}> 
                     <div onClick={(e) => {e.stopPropagation(),setFilterId(null)}} className="absolute top-4 right-4 cursor-pointer">
                         <Icon icon="fa-solid fa-xmark"></Icon>
                     </div>
-                    <Text size="lg" className="p-4" weight={500}>{type}</Text>
+                    <Text size="4xl" className="p-10 pb-7 font-title" weight={500}>{type}</Text>
                     <div className="flex flex-col mt-2">
                     
                     {allFilter && Object.values(allFilter).map((el : any, key : any) => (
                         <div key={key} className={`flex items-center inputContainer ${inputContainer}`} onClick={(e) => {e.stopPropagation(), handleCheckbox(e)}}>
-                            <input type="checkbox"  className={`filterCheckbox rounded m-2`} id={el.slug} data-name={el.name} data-type={type}></input>
-                            <label className="w-full py-2" onClick={(e) => e.stopPropagation()} htmlFor={el.slug}>{el.name}</label>
+                            <input type="checkbox"  className={`filterCheckbox rounded ml-10 m-2`} id={el.slug} data-name={el.name} data-type={type}></input>
+                            <label className="w-full py-2 pr-10 text-sm" onClick={(e) => e.stopPropagation()} htmlFor={el.slug}>{el.name}</label>
                         </div>
                     ))}
-                </div>
+                    </div>
                 </div>
             }
+            <div 
+                onClick={(e) => {e.stopPropagation(),setFilterId(null)}}
+                className={`fixed w-[calc(100vw-320px)] h-screen top-0 right-0 bg-black bg-opacity-50 z-[50] trans-default ${openModal ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+            </div>
         </div>
     )
 }

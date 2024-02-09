@@ -69,14 +69,14 @@ const Analysis = ({type, color, percentage, desc, barColor, icon, thematiques, s
     return (
         <div className="px-4 lg:px-10 print:py-4 py-12 print:bg-white bg-gray-50 relative"  id={`${type}-analysis`}>
             <div className="absolute right-10 top-0">
-            <Icon icon={icon} size={null} color={color} className="text-4xllg:text-[144px] opacity-20"></Icon>
+            <Icon icon={icon} size={null} color={color} className="text-4xl lg:text-[144px] opacity-20"></Icon>
             </div>
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-4 items-center mb-2">
                 <Heading variant={'display-5'} color={color}>{type}</Heading>
                 <span>-</span>
                 <Text size="2xl" color="neutral-700" className="font-title mt-2"><span className={`text-4xl text-${color}`}>{percentage}</span>/100</Text>
             </div>
-            <Text dangerouslySetInnerHTML={{__html: desc}}></Text>
+            <Text dangerouslySetInnerHTML={{__html: desc}} color="neutral-700" size="sm"></Text>
             <div className="mt-8 relative">
                 {thematiques.map((thematique, index) => (
                     <ThematiqueRow key={index} title={thematique.name} percentage={parseInt(thematique.score, 10)} color={barColor} fetchData={fetchData(thematique.slug)} thematiqueDetails={thematiqueDetails}></ThematiqueRow>
