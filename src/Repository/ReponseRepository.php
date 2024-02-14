@@ -335,8 +335,7 @@ class ReponseRepository extends ServiceEntityRepository
             ->groupBy('u.id')
         ;
 
-        $qb = $this->addFilters($qb, $filterDTO);
-
+        $qb = $this->addFilters($qb, $filterDTO, false);
         $percentagesByTypology = $qb
             ->getQuery()
             ->getSingleColumnResult()

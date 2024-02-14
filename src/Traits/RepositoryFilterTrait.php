@@ -15,7 +15,7 @@ use Doctrine\ORM\QueryBuilder;
 
 trait RepositoryFilterTrait
 {
-    private function filterByAreaZipCodes(QueryBuilder $qb, Territoire $territoire, int $key = 0): QueryBuilder
+    private function filterByAreaZipCodes(QueryBuilder $qb, Territoire $territoire, int $key = 0, bool $orWhere = true): QueryBuilder
     {
         if (TerritoireAreaEnum::REGION !== $territoire->getArea()) {
             $ors = [];
@@ -42,7 +42,11 @@ trait RepositoryFilterTrait
                     $qb->innerJoin('r.repondant', 'u');
                 }
 
-                $qb->orWhere($qb->expr()->andX(...$ors));
+                if ($orWhere) {
+                    $qb->orWhere($qb->expr()->andX(...$ors));
+                } else {
+                    $qb->andWhere($qb->expr()->orX(...$ors));
+                }
             }
         }
 
@@ -86,7 +90,7 @@ trait RepositoryFilterTrait
         return $qb;
     }
 
-    private function addFilters(QueryBuilder $qb, DashboardFilterDTO | TerritoireFilterDTO $filterDTO): QueryBuilder
+    private function addFilters(QueryBuilder $qb, DashboardFilterDTO | TerritoireFilterDTO $filterDTO, bool $orWhere = true): QueryBuilder
     {
         if ($filterDTO instanceof TerritoireFilterDTO || ($filterDTO instanceof DashboardFilterDTO && [] === $filterDTO->getTerritoires())) {
             $qb = $this->filterByAreaZipCodes($qb, $filterDTO->getTerritoire());
@@ -96,7 +100,7 @@ trait RepositoryFilterTrait
             $territoires = $filterDTO->getTerritoires();
             if ([] !== $territoires) {
                 foreach ($territoires as $key => $territoire) {
-                    $qb = $this->filterByAreaZipCodes($qb, $territoire, $key);
+                    $qb = $this->filterByAreaZipCodes($qb, $territoire, $key, $orWhere);
                 }
             }
         }
