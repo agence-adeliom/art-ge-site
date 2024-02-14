@@ -58,6 +58,8 @@ task('set-permissions', function () {
     run("chmod -R 775 {{release_path}}/public/bundles/");
     run("chmod -R g+w {{release_path}}/var/cache");
     run("chmod -R g+w {{release_path}}/var/log");
+    run("mkdir -p {{release_path}}/var/upload/files");
+    run("chmod -R 775 {{release_path}}/var/upload/files");
 });
 
 before('deploy:vendors', 'dotenv:set-env');

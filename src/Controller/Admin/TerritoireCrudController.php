@@ -74,7 +74,7 @@ class TerritoireCrudController extends AbstractCrudController
         $uploadDirectory = $this->parameterBag->get('upload_directory');
         yield ImageField::new('postalCodesFile', 'Ajout en groupe des codes postaux via un fichier CSV')
             ->hideOnIndex()
-            ->setHelp('Il faut que la première colonne du fichier soit une liste de code postaux / numéros de département. <br /> La première ligne n\'est pas prise en compte car c\'est l\'entête de la colonne<br /><a download="zip_territoire_modele.csv" href="data:text/csv;charset=utf-8,cp%0A67000%0A67500%0Aetc...">Télécharger le modèle CSV <i class="fa fa-download"></i></a>')
+            ->setHelp('Il faut que la première colonne du fichier soit une liste de code postaux / numéros de département. <br /> La première ligne n\'est pas prise en compte car c\'est l\'entête de la colonne<br /><a download="zip_territoire_modele.csv" href="data:text/csv;charset=utf-8,zip%0A67000%0A67500%0Aetc...">Télécharger le modèle CSV <i class="fa fa-download"></i></a>')
             ->setUploadDir($uploadDirectory)
             ->setFormTypeOption('mapped', false)
             ->setUploadedFileNamePattern('[year]/[month]/[day]/[slug]-[contenthash].[extension]')
