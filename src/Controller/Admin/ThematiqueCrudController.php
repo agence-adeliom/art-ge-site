@@ -39,7 +39,6 @@ class ThematiqueCrudController extends AbstractCrudController
         $actions->remove(Crud::PAGE_INDEX, Action::DELETE);
         $actions->add(Crud::PAGE_INDEX, Action::DETAIL);
         $actions->setPermission(Action::DELETE, 'ROLE_SUPER_ADMIN');
-        $actions->setPermission(Action::EDIT, 'ROLE_SUPER_ADMIN');
 
         return $actions;
     }
