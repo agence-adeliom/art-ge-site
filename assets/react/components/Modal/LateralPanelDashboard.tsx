@@ -6,13 +6,16 @@ import { Heading } from '@components/Typography/Heading';
 import { Text } from '@components/Typography/Text';
 import { ThematiqueDetails } from "@components/Territory/Analysis";
 import ProgressBarTerritorySimple from "@components/ProgressBar/ProgressBarTerritorySimple";
+import {ScoreLink} from "@screens/Resultats";
+import ThematiqueLinks from "@components/Modal/ThematiqueLinks";
 
-const LateralPanelDashboard = ({closeDropdown, showDialog, title, barColor, percentage, thematiqueDetails}: {
+const LateralPanelDashboard = ({closeDropdown, showDialog, title, barColor, percentage, thematiqueDetails, thematiqueLinks}: {
     closeDropdown: Function,
     title: string,
     barColor: number,
     percentage?: number,
     thematiqueDetails: ThematiqueDetails,
+    thematiqueLinks: ScoreLink[],
     showDialog: boolean
 }) => {
 
@@ -46,6 +49,7 @@ const LateralPanelDashboard = ({closeDropdown, showDialog, title, barColor, perc
                             </div>
                         )) }
                     </div>
+                    <ThematiqueLinks links={thematiqueLinks}></ThematiqueLinks>
                 </div>
 
                 </div>
@@ -65,7 +69,7 @@ const LateralPanelDashboard = ({closeDropdown, showDialog, title, barColor, perc
               }}
             >
             </motion.div>
-        
+
             </>
             )}
         </AnimatePresence>

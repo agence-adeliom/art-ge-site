@@ -26,6 +26,7 @@ class ResultatApiPresenter
         $scores = array_map(fn (Score $score): array => [
             'name' => htmlentities($score->getThematique()->getName()),
             'slug' => $score->getThematique()->getSlug(),
+            'links' => array_values($score->getThematique()->getLinks() ?? []),
             'points' => $score->getPoints(),
             'total' => $score->getTotal(),
             'percentage' => $this->percentagePresenter->displayPercentage((int) $score->getPoints(), $score->getTotal()),

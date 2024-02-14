@@ -88,9 +88,9 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Réponses', '', Reponse::class);
         yield MenuItem::linkToCrud('Territoires', '', Territoire::class);
 
-        yield MenuItem::section('Super Admin')->setPermission('ROLE_SUPER_ADMIN');
-        yield MenuItem::linkToCrud('Thématiques', '', Thematique::class)->setPermission('ROLE_SUPER_ADMIN');
-        yield MenuItem::linkToCrud('Questions', '', Question::class)->setPermission('ROLE_SUPER_ADMIN');
-        yield MenuItem::linkToCrud('Choix', '', Choice::class)->setPermission('ROLE_SUPER_ADMIN');
+        yield MenuItem::section('Super Admin');
+        yield MenuItem::linkToCrud('Thématiques', '', Thematique::class);
+        yield MenuItem::linkToCrud('Questions', '', Question::class);
+        yield MenuItem::linkToCrud('Choix', '', Choice::class);
     }
 }

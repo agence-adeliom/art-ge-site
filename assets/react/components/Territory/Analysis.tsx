@@ -11,6 +11,7 @@ import ThematiqueRow from "@components/Territory/ThematiqueRow";
 import { useParams } from "react-router-dom";
 import { DateRange, SelectedTerritoires, Thematiques } from "@react/types/Dashboard";
 import { getSearchParamsFromTerritories } from "@screens/Territory";
+import {ScoreLink} from "@screens/Resultats";
 
 interface ThematiqueDetail {
     slug: string,
@@ -33,10 +34,18 @@ const Analysis = ({type, color, percentage, desc, barColor, icon, thematiques, s
 }) => {
     const { territoire = 'grand-est' } = useParams();
 
+    const [thematiqueDetails, setThematiqueDetails] = useState<ThematiqueDetails>([]);
+    const [thematiqueLinks, setThematiqueLinks] = useState<ScoreLink[]>([]);
+
     const fetchData = (t: string) => async () : Promise<void> => {
         const search = getSearchParamsFromTerritories(selectedTerritoires, dateRange);
+
         const localStorageKey = `thematique-${territoire}-${t}-${search}`;
+        const localStorageKeyLinks = localStorageKey + 'links';
+
         const localStorageValue = window.localStorage.getItem(localStorageKey);
+        const localStorageValueLinks = window.localStorage.getItem(localStorageKeyLinks);
+
         if (localStorageValue) {
             try {
                 const thematiqueDetails = JSON.parse(localStorageValue);
@@ -47,24 +56,37 @@ const Analysis = ({type, color, percentage, desc, barColor, icon, thematiques, s
             }
         }
 
+        if (localStorageValueLinks) {
+            try {
+                const links = JSON.parse(localStorageValueLinks);
+                setThematiqueLinks(links);
+                return;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
         const res = await fetch(`/api/dashboard/${territoire}/thematique/${t}?${search}`);
         const thematique = await res.json() as {
             success: true,
+            links: ScoreLink[],
             data: ThematiqueDetails
         } | {
             success: false,
+            links: ScoreLink[],
             data: string
         };
 
         if (Array.isArray(thematique.data)) {
             window.localStorage.setItem(localStorageKey, JSON.stringify(thematique.data));
+            window.localStorage.setItem(localStorageKeyLinks, JSON.stringify(thematique.links));
             setThematiqueDetails(thematique.data);
+            setThematiqueLinks(thematique.links);
         } else {
             setThematiqueDetails([]);
+            setThematiqueLinks([]);
         }
     }
-
-    const [thematiqueDetails, setThematiqueDetails] = useState<ThematiqueDetails>([]);
 
     return (
         <div className="px-4 lg:px-10 print:py-4 py-12 print:bg-white bg-gray-50 relative"  id={`${type}-analysis`}>
@@ -79,7 +101,7 @@ const Analysis = ({type, color, percentage, desc, barColor, icon, thematiques, s
             <Text dangerouslySetInnerHTML={{__html: desc}} color="neutral-700" size="sm"></Text>
             <div className="mt-8 relative">
                 {thematiques.map((thematique, index) => (
-                    <ThematiqueRow key={index} title={thematique.name} percentage={parseInt(thematique.score, 10)} color={barColor} fetchData={fetchData(thematique.slug)} thematiqueDetails={thematiqueDetails}></ThematiqueRow>
+                    <ThematiqueRow key={index} title={thematique.name} percentage={parseInt(thematique.score, 10)} color={barColor} fetchData={fetchData(thematique.slug)} thematiqueDetails={thematiqueDetails} thematiqueLinks={thematiqueLinks}></ThematiqueRow>
                 ))}
             </div>
             <DurabilityCursor />

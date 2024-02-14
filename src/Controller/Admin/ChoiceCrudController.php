@@ -46,7 +46,6 @@ class ChoiceCrudController extends AbstractCrudController
     {
         yield IdField::new('id');
         yield TextField::new('libelle');
-        yield TextField::new('slug');
         yield AssociationField::new('question');
     }
 }

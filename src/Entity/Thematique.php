@@ -38,6 +38,10 @@ class Thematique implements \Stringable
     #[ORM\OneToMany(mappedBy: 'thematique', targetEntity: Score::class, orphanRemoval: true)]
     private Collection $scores;
 
+    /** @var array<mixed> $links */
+    #[ORM\Column(nullable: true)]
+    private ?array $links = null;
+
     public function __construct()
     {
         $this->scores = new ArrayCollection();
@@ -114,6 +118,29 @@ class Thematique implements \Stringable
         if (!$this->scores->contains($score)) {
             $this->scores->add($score);
             $score->setThematique($this);
+        }
+
+        return $this;
+    }
+
+    /** @return array<mixed> */
+    public function getLinks(): ?array
+    {
+        return $this->links;
+    }
+
+    /** @param array<mixed> $links */
+    public function setLinks(?array $links): static
+    {
+        $this->links = $links;
+
+        return $this;
+    }
+
+    public function addLink(string $link): static
+    {
+        if (false === array_search($link, $this->links, true)) {
+            $this->links[] = $link;
         }
 
         return $this;

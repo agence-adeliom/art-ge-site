@@ -89,6 +89,7 @@ class DashboardThematiqueController extends AbstractController
         if (!$territoire) {
             return $this->json([
                 'status' => 'error',
+                'links' => [],
                 'data' => 'Territoire not found',
             ], Response::HTTP_BAD_REQUEST);
         }
@@ -122,6 +123,7 @@ class DashboardThematiqueController extends AbstractController
 
         return $this->json([
             'status' => 'success',
+            'links' => array_values($thematique->getLinks() ?? []),
             'data' => $choices,
         ], Response::HTTP_OK, [], ['groups' => self::DASHBOARD_API_THEMATIQUE_GROUP]);
     }

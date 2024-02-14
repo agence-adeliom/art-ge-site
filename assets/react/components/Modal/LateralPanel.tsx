@@ -5,11 +5,13 @@ import { Icon } from '@components/Typography/Icon';
 import { Heading } from '@components/Typography/Heading';
 import { Text } from '@components/Typography/Text';
 import { Accordion } from '@components/Accordion/Accordion';
-import {Choice} from "@screens/Resultats";
+import {Choice, ScoreLink} from "@screens/Resultats";
+import ThematiqueLinks from "@components/Modal/ThematiqueLinks";
 
-const LateralPanel = ({showDialog, closeDropdown, title, progressBar, chosenChoices, notChosenChoices, ...props}: {
+const LateralPanel = ({showDialog, closeDropdown, title, links, progressBar, chosenChoices, notChosenChoices, ...props}: {
     closeDropdown: Function,
     title: string,
+    links: ScoreLink[],
     progressBar: ReactComponentElement<any, any>,
     percentage: number,
     chosenChoices: Choice[],
@@ -53,23 +55,7 @@ const LateralPanel = ({showDialog, closeDropdown, title, progressBar, chosenChoi
                             isOpen={open === 2}
                         ></Accordion>
 
-                        <div className="bg-neutral-100 p-4 mt-4">
-                            <Text weight={600}>Pour aller plus loin...</Text>
-                            <div className="flex flex-col gap-2 mt-2">
-                                <a href="#" className="flex gap-2 items-center group">
-                                    <Icon icon={'fa-file'} color="primary-600" className="group-hover:text-tertiary-800 trans-default"></Icon>
-                                    <Text weight={600} color="primary-600" className="group-hover:text-primary-800 trans-default">Pour aller plus loin...</Text>
-                                </a>
-                                <a href="#" className="flex gap-2 items-center group">
-                                    <Icon icon={'fa-arrow-up-right-from-square'} color="primary-600" className="group-hover:text-primary-800 trans-default"></Icon>
-                                    <Text weight={600} color="primary-600" className="group-hover:text-primary-800 trans-default">Pour aller plus loin...</Text>
-                                </a>
-                                <a href="#" className="flex gap-2 items-center group">
-                                    <Icon icon={'fa-circle-play'} color="primary-600" className="group-hover:text-primary-800 trans-default"></Icon>
-                                    <Text weight={600} color="primary-600" className="group-hover:text-primary-800 trans-default">Pour aller plus loin...</Text>
-                                </a>
-                            </div>
-                        </div>
+                        <ThematiqueLinks links={links}></ThematiqueLinks>
                     </div>
 
                     </div>

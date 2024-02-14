@@ -1,14 +1,14 @@
-import React, { useId, useState} from "react";
+import React, { useState} from "react";
 import { Heading } from "@components/Typography/Heading";
 import ProgressBar from "@components/ProgressBar/ProgressBar";
 import { Text } from "@components/Typography/Text";
 import { Button } from "@components/Action/Button";
 import LateralPanel from "@components/Modal/LateralPanel"
-import { LateralPanelAnim } from "@components/Animation/LateralPanel";
-import {Choice} from "@screens/Resultats";
+import {Choice, ScoreLink} from "@screens/Resultats";
 
-const ResultCard = ({title, percentage, chosenChoices, notChosenChoices, ...props} : {
+const ResultCard = ({title, links, percentage, chosenChoices, notChosenChoices, ...props} : {
     title: string,
+    links: ScoreLink[],
     percentage: number,
     src?: string,
     chosenChoices: Choice[],
@@ -51,10 +51,11 @@ const ResultCard = ({title, percentage, chosenChoices, notChosenChoices, ...prop
 
                 </div>
             </div>
-            
-    
+
+
             <LateralPanel
                 title={title}
+                links={links}
                 closeDropdown={closeDropdown}
                 progressBar={<ProgressBar percentage={percentage}></ProgressBar>}
                 percentage={percentage}

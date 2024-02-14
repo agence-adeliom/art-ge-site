@@ -15,11 +15,24 @@ export interface Choice {
   slug: string;
 }
 
+enum ScoreLinkType {
+  doc = 'doc',
+  link = 'link',
+  video = 'video',
+}
+
+export interface ScoreLink {
+  type: ScoreLinkType;
+  label: string;
+  link: string;
+}
+
 interface Score {
   name: string;
   slug: string;
   points: number;
   total: number;
+  links: ScoreLink[];
   percentage: number;
   chosenChoices: Choice[];
   notChosenChoices: Choice[];
@@ -89,7 +102,7 @@ const Resultats = () => {
                   navigator.clipboard.writeText(window.location.href),
                   setCopyToUrl(true)
                 )
-                  
+
 
                 }
               >
@@ -120,6 +133,7 @@ const Resultats = () => {
                 key={score.slug}
                 percentage={score.percentage}
                 title={score.name}
+                links={score.links}
                 chosenChoices={score.chosenChoices}
                 notChosenChoices={score.notChosenChoices}
               ></ResultCard>
