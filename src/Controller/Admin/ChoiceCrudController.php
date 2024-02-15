@@ -43,8 +43,8 @@ class ChoiceCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield IdField::new('id');
+        yield IdField::new('id')->hideOnForm();
         yield TextField::new('libelle');
-        yield AssociationField::new('question');
+        yield AssociationField::new('question')->hideOnForm();
     }
 }
