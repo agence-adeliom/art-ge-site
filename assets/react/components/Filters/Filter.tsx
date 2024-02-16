@@ -21,6 +21,7 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
     const [openModal, setOpenModal] = useState(false)
 
     const [filterChecked, setFilterChecked] = useState<string[]>([]);
+
     
     useEffect(() => {
         if(filterChecked) {
@@ -101,6 +102,7 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
         }
 
         }
+        
     }
 
 
@@ -117,7 +119,7 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
                 </div>
             </div>
                 <>
-                    <div className={`fixed top-0 w-full left-0 md:left-[320px] md:w-[400px] bg-white shadow-lg h-screen overflow-auto trans-default z-[200] ${openModal ? 'opacity-1 translate-x-0' : 'pointer-events-none opacity-0 translate-x-full md:-translate-x-full'}`}> 
+                    <div className={`fixed top-0 w-full left-0 md:left-[320px] md:w-[400px] bg-white shadow-lg h-screen overflow-auto trans-default z-[200] ${openModal ? 'opacity-1 translate-x-0' : 'pointer-events-none opacity-0 translate-x-full md:-translate-x-0'}`}> 
                         <div onClick={(e) => {e.stopPropagation(),setFilterId(null)}} className="absolute top-4 right-4 cursor-pointer">
                             <Icon icon="fa-solid fa-xmark"></Icon>
                         </div>
@@ -130,6 +132,17 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
                                 <label className="w-full py-2 pr-10 text-sm cursor-pointer" onClick={(e) => e.stopPropagation()} htmlFor={el.slug}>{el.name}</label>
                             </div>
                         ))}
+
+                        { allFilter == null &&
+                            
+                            <div className="px-10">
+                                <Text weight={600} size={'sm'}>Il n'existe pas de {type.toLowerCase()} pour votre sélection…</Text>
+                                <Text size={'sm'} className="pt-2">
+                                    Désactivez ou modifiez vos filtres pour accéder à ces éléments.
+                                </Text>
+                            </div>
+                        }
+                            
                         </div>
                     </div>
 
