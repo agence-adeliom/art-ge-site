@@ -3,7 +3,7 @@ import {Text} from "@components/Typography/Text";
 import { Icon } from "@components/Typography/Icon";
 
 const barContainer = "w-full h-[267px] relative bg-neutral-100"
-const progressBar = "w-full absolute bottom-0 left-0"
+const progressBar = "w-full h-full absolute bottom-0 left-0 animation-progress"
 const Bar = ({percentage, type} : {
     percentage: number,
     type: string

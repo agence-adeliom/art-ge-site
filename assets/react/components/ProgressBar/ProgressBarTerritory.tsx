@@ -3,7 +3,7 @@ import Leaf from "@icones/leafs-color.svg";
 import {Text} from "@components/Typography/Text";
 
 const progressContainer = "bg-neutral-200 h-4 w-full relative"
-const progressBar = "bg-primary-600 h-full w-full absolute top-0 left-0 trans-default"
+const progressBar = "bg-primary-600 h-full w-full absolute top-0 left-0 animation-progress"
 const number = "absolute text-black top-full mt-1 text-sm"
 const seuil = "absolute left-[33%] -translate-x-1/2 h-[88px] flex flex-col items-center gap-4"
 const seuilIndicator = "bg-secondary-600 w-1 rounded-full"

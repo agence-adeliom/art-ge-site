@@ -27,7 +27,7 @@ const Circle = ({ color, pct } : {
       strokeDasharray={circ}
       strokeDashoffset={pct ? strokePct : 0}
       strokeLinecap="butt"
-      className="trans-default"
+      className="animation-progress"
     ></circle>
   );
 };

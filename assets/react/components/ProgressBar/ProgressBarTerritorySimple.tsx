@@ -3,7 +3,7 @@ import Leaf from "@icones/leafs-color.svg";
 import {Text} from "@components/Typography/Text";
 
 const progressContainer = "bg-neutral-200 h-4 w-full"
-const progressBar = " h-full w-full relative trans-default"
+const progressBar = "h-full w-full relative animation-progress"
 const ProgressBarTerritorySimple = ({percentage, color, separator = true}: {
     percentage?: number,
     color: number,
