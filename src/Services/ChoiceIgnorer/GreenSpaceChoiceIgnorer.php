@@ -27,6 +27,9 @@ class GreenSpaceChoiceIgnorer extends AbstractChoiceIgnorer
             'je-limite-les-pertes-d-eau-lors-de-l-arrosage-des-espaces-verts-horaire-goutte-a-goutte-paillage-oyas',
             'j-arrose-les-vegetaux-en-pleine-terre-uniquement-lors-de-leur-premiere-annee-et-je-n-arrose-pas-le-gazon',
         ],
+        ThematiqueSlugEnum::GESTION_DES_DECHETS->value => [
+            'je-composte-paille-broie-pour-les-disposer-au-pied-des-plantations-si-espaces-verts',
+        ],
     ];
 
     /** @return array<string, array<string>> */
