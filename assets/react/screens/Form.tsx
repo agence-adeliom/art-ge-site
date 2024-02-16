@@ -309,7 +309,7 @@ const Form = () => {
                               </label>
                             </div>
                           );
-                        })}
+                        })}  
                       <Button
                         icon="fa-minus"
                         className="my-10"

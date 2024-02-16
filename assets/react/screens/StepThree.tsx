@@ -10,6 +10,9 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepAnim } from '@components/Animation/Step';
+import { Fields } from '@react/types/Fields';
+import { TextInput } from '@components/Fields/TextInput';
+
 
 const arrayQuestions: { text: string; id: 'restauration' | 'greenSpace' }[] = [
   {
@@ -25,16 +28,18 @@ const arrayQuestions: { text: string; id: 'restauration' | 'greenSpace' }[] = [
 interface DataFields {
   restauration: number;
   greenSpace: number;
+  contact_by_bird?: string;
 }
 
 const StepThree = () => {
   const { wizard, feedRepondantAndGoToNextStep, prevStep } = useWizard();
 
-  const { booleanNumberRequired } = useValidation();
+  const { booleanNumberRequired, textOptional } = useValidation();
 
   const schema: ObjectSchema<DataFields> = yup.object().shape({
     restauration: booleanNumberRequired,
     greenSpace: booleanNumberRequired,
+    contact_by_bird: textOptional
   });
 
   const {
@@ -51,7 +56,7 @@ const StepThree = () => {
     feedRepondantAndGoToNextStep(data);
     getQuestions(data.restauration === 1, data.greenSpace === 1);
   };
-
+ 
   const getQuestions = async (isRestauration: boolean, isGreenSpace: boolean) => {
     try {
       const response = await fetch(`api/form?restauration=${isRestauration}&green_space=${isGreenSpace}`);
@@ -106,6 +111,17 @@ const StepThree = () => {
               </div>
             );
           })}
+
+          <TextInput
+            containerClass=""
+            label={'test'}
+            name={'contact_by_bird'}
+            type={Fields.TEXT}
+            placeholder={'test'}
+            control={control}
+            autoCompleteChoice={false}
+            defaultValue={''}
+          ></TextInput>   
 
           <Button
             size="lg"

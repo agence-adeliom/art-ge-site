@@ -16,7 +16,7 @@ const phoneOptionalRegex: RegExp =
 
 export const useValidation = () => {
   return {
-    textOptional: yup.string().notRequired(),
+    textOptional: yup.string(),
     textRequired: yup.string().required(ValidationString.REQUIRED),
     booleanNumberRequired: yup
       .number()
