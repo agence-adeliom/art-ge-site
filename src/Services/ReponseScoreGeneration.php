@@ -9,6 +9,7 @@ use App\Entity\Score;
 use App\Repository\ChoiceTypologieRepository;
 use App\Repository\ThematiqueRepository;
 use App\Services\ChoiceIgnorer\GreenSpaceChoiceIgnorer;
+use App\Services\ChoiceIgnorer\RestaurationAndGreenSpaceChoiceIgnorer;
 use App\Services\ChoiceIgnorer\RestaurationChoiceIgnorer;
 use App\ValueObject\RepondantTypologie;
 use App\ValueObject\ScoreGeneration;
@@ -18,6 +19,7 @@ class ReponseScoreGeneration
     public function __construct(
         private readonly ThematiqueRepository $thematiqueRepository,
         private readonly ChoiceTypologieRepository $choiceTypologieRepository,
+        private readonly RestaurationAndGreenSpaceChoiceIgnorer $restaurationAndGreenSpaceChoiceIgnorer,
         private readonly GreenSpaceChoiceIgnorer $greenSpaceChoiceIgnorer,
         private readonly RestaurationChoiceIgnorer $restaurationChoiceIgnorer,
     ) {
@@ -35,11 +37,16 @@ class ReponseScoreGeneration
         foreach ($processedForm['pointsByQuestions'] as $questionId => $thematiquePoints) {
             /** @var \App\Entity\Question $question */
             $question = $this->thematiqueRepository->findOneBy(['id' => $questionId])?->getQuestion();
-            if (false === $repondantTypologieVO->getGreenSpace()) {
-                $questionChoices = $this->greenSpaceChoiceIgnorer->onlyNotIgnored($question);
-            }
-            if (false === $repondantTypologieVO->getRestauration()) {
-                $questionChoices = array_merge($questionChoices ?? [], $this->restaurationChoiceIgnorer->onlyNotIgnored($question) ?? []);
+            $questionChoices = [];
+            if (false === $repondantTypologieVO->getRestauration() && false === $repondantTypologieVO->getGreenSpace()) {
+                $questionChoices = $this->restaurationAndGreenSpaceChoiceIgnorer->onlyNotIgnored($question);
+            } else {
+                if (false === $repondantTypologieVO->getGreenSpace()) {
+                    $questionChoices = $this->greenSpaceChoiceIgnorer->onlyNotIgnored($question);
+                }
+                if (false === $repondantTypologieVO->getRestauration()) {
+                    $questionChoices = array_merge($questionChoices ?? [], $this->restaurationChoiceIgnorer->onlyNotIgnored($question) ?? []);
+                }
             }
             $thematique = $this->thematiqueRepository->getOneByQuestionId($questionId);
             if ($thematique) {
