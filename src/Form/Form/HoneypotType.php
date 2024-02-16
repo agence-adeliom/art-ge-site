@@ -35,7 +35,7 @@ final class HoneypotType extends EmailType
             if ($formParent && $options['causesError']) {
                 $error = sprintf("%s - HoneyPot field triggered by '%s' - Form is invalid", $formParent->getName(), $data);
                 $this->logger->info($error);
-                $formParent->addError(new FormError('Form is invalid.'));
+                $formParent->addError(new FormError('HoneyPot field triggered'));
             }
         });
     }

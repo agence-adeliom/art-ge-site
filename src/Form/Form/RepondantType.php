@@ -35,6 +35,7 @@ class RepondantType extends AbstractType
             ->add('city', TextType::class)
             ->add('zip', TextType::class)
             ->add('country', TextType::class)
+            ->add('contact_by_bird', HoneypotType::class)
             ->add('restauration', CheckboxType::class, [
                 'false_values' => [0, '0', 'off', 'false', false, 'no'],
             ])
