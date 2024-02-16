@@ -41,7 +41,7 @@ const Header = ({step, ...props} : {
         <>
             <div className="container flex justify-between items-center py-4">
                 <a href="https://www.art-grandest.fr/" target='_blank' >
-                    <img src={Logo} alt="Logo ART GE" className=""/>
+                    <img src={Logo} alt="Logo ART GE" width="185" height="61" className=""/>
                 </a>
                 { hasTitle ?
                     <Text color="neutral-500" className="hidden md:block" weight={400}>
