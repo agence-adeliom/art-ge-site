@@ -155,12 +155,13 @@ const Territory = () => {
                             endDatePlaceholderText={`Aujourd'hui`}
                             customArrowIcon={'-'}
                             openDirection={'up'}
-                            isOutsideRange={() => false}
                             customInputIcon={<i className="fa-light fa-calendar text-sm"></i>}
                             inputIconPosition="after"
                             displayFormat="DD/MM/YYYY"
                             appendToBody={true}
                             hideKeyboardShortcutsPanel={true}
+                            isOutsideRange={(day: any) => day.isAfter(moment().endOf('day'))}
+                            maxDate={moment().endOf('day')}
                         />
                     </div>
                 </Filters>
