@@ -123,3 +123,14 @@ body {
 .animation-progress {
     @apply transition-all duration-700 ease-in-out;
 }
+
+/* Media query print */
+
+@media print {
+    #filters {
+        display: none;
+    }
+    #breakAfter {
+        break-after: page;
+    }
+}

@@ -126,7 +126,7 @@ const Territory = () => {
 
     return (
         <div className="flex">
-            <div className={`${filterClassPannel} ${filterClass} overflow-auto`}>
+            <div className={`${filterClassPannel} ${filterClass} overflow-auto`} id="filters">
                 <Filters
                     apiData={apiData}
                     apiFilter={apiFilter}
@@ -224,7 +224,7 @@ const Territory = () => {
                     dateRange={dateRange}
                 ></Analysis>
                 <Tabs lists={lists}></Tabs>
-                <div className="fixed bottom-0 left-0 bg-white p-4 pt-2 w-full z-[100] md:hidden">
+                <div className="fixed bottom-0 left-0 bg-white p-4 pt-2 w-full z-[100] md:hidden print:hidden">
                     <Button variant="secondary" className="w-full " icon="fa-minus" onClick={() => setFilterMobile(true)}>
                         Filtrer les résultats
                     </Button>

@@ -14,7 +14,7 @@ const SustainabiltiesScores = ({environnementScore, economyScore, socialScore} :
 }) => {
    
     return (
-        <div className="print:bg-white bg-neutral-100 py-12 px-4 lg:px-10 w-full">
+        <div className="print:bg-white bg-neutral-100 print:py-0 py-12 px-4 lg:px-10 w-full">
            <Heading variant="display-4">Score détaillé par enjeu durable </Heading>
            <div className="mt-10 w-full flex flex-wrap justify-center gap-10 lg:gap-0 lg:justify-between">
                 <Pie

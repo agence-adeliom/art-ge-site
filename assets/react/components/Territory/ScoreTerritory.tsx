@@ -10,7 +10,7 @@ const ScoreTerritory = ({territoryScore, respondantsTotal, } : {
     respondantsTotal: number
 }) => {
     return (
-        <div className="print:py-4 py-12 px-4 lg:px-10 bg-white">
+        <div className="print:py-4 py-12 px-4 lg:px-10 bg-white" id="breakAfter">
             <div className="flex justify-between items-center">
                 <Heading variant="display-4" weight={400} className="mb-4" >
                     Score du territoire
