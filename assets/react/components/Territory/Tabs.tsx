@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { Heading } from "@components/Typography/Heading";
 import { Text } from "@components/Typography/Text";
 import Tab from "@components/Content/Tab";
@@ -14,6 +14,9 @@ const Tabs = ({lists} : {
     const defaultIndexTab = lists.departments !== undefined && lists.departments.length > 0 ? 0 : (
         lists.ots !== undefined && lists.ots.length > 0 ? 1 : 2
     )
+    useEffect(() => {
+        setIndexTab(defaultIndexTab)
+    }, [lists])
     
     const [indexTab, setIndexTab] = useState<number>(defaultIndexTab)
 
