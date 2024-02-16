@@ -39,7 +39,7 @@ class ReponseScoreGeneration
                 $questionChoices = $this->greenSpaceChoiceIgnorer->onlyNotIgnored($question);
             }
             if (false === $repondantTypologieVO->getRestauration()) {
-                $questionChoices = $this->restaurationChoiceIgnorer->onlyNotIgnored($question);
+                $questionChoices = array_merge($questionChoices ?? [], $this->restaurationChoiceIgnorer->onlyNotIgnored($question) ?? []);
             }
             $thematique = $this->thematiqueRepository->getOneByQuestionId($questionId);
             if ($thematique) {

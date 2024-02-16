@@ -548,6 +548,68 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                     ],
                 ]
             ],
+            ['EMMA', 'ARTGE', '0123456789', 'test@test.com', "TEST EMMA", '18 AVENUE DE COLMAR', '68390', 'MULHOUSE', 'hotel', false, false, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+                [
+                    ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value => [
+                        "je-limite-drastiquement-l-eclairage-nocturne-les-lumieres-exterieures-sont-eteintes-au-plus-tard-2h-apres-le-coucher-du-soleil-sans-passage",
+                        "j-ai-des-partenariats-avec-des-organismes-locaux-ou-nationaux-pour-la-valorisation-de-la-connaissance-sur-les-especes-locales-et-leur-observation",
+                    ],
+                    ThematiqueSlugEnum::GESTION_DES_DECHETS->value => [
+                        "je-privilegie-le-materiel-d-occasion-au-moins-20-notamment-pour-l-ameublement-et-le-materiel-electronique",
+                        "je-donne-mes-equipements-en-fin-de-vie-et-en-bon-etat-de-fonctionnement-a-des-associations",
+                        "j-ai-forme-mes-equipes-ou-me-suis-forme-e-si-je-travaille-seul-e-a-la-reduction-des-dechets",
+                    ],
+                    ThematiqueSlugEnum::GESTION_DE_L_EAU_ET_DE_L_EROSION->value => [
+                        "je-recycle-l-eau-de-certains-usages-rincage-eau-de-cuisson-carafes-d-eau-pour-l-arrosage-exterieur",
+                        "tous-les-points-d-eau-sont-dotes-de-reducteurs-de-debits-wc-double-debits-mousseurs-detecteurs-sous-robinets",
+                    ],
+                    ThematiqueSlugEnum::ECO_CONSTRUCTION->value => [
+                        "j-ai-utilise-au-moins-3-materiaux-biosources-pour-la-construction-ou-l-isolation-bois-paille-chanvre-liege-ouate-de-cellulose",
+                        "meubles-et-decoratio   n-sont-majoritairement-en-bois-non-agglomere-non-exotique-a-base-de-vegetal-en-metal-ou-a-partir-d-objets-recycles-ou-de-seconde-vie",
+                    ],
+                    ThematiqueSlugEnum::GESTION_DE_L_ENERGIE->value => [
+                        'j-affiche-des-consignes-sur-les-reductions-d-energie-pour-moi-meme-ainsi-que-les-salaries',
+                        'une-ventilation-double-flux-et-ou-bouches-d-aeration-hygroreglables-sont-installees'
+                    ],
+                    ThematiqueSlugEnum::ENTRETIEN_ET_PROPRETE->value => [
+                        "j-ai-des-consignes-claires-sur-l-utilisation-des-produits-d-entretien-ex-quantite-de-produit-par-rapport-a-la-durete-de-l-eau",
+                        "j-utilise-des-pompes-de-dosage-pour-diluer-les-produits-concentres-ou-des-doseurs",
+                    ],
+                    ThematiqueSlugEnum::TRANSPORT_ET_MOBILITE->value => [
+                        "j-ai-au-moins-2-des-places-de-stationnement-equipees-de-recharges-pour-voitures-electriques",
+                        "j-ai-une-offre-dediee-aux-voyageurs-a-pied-en-train-ou-a-velo",
+                        "je-communique-des-instructions-claires-pour-realiser-des-activites-autour-de-mon-site-sans-voiture"
+                    ],
+                    ThematiqueSlugEnum::ACCES_AUX_PERSONNES_EN_SITUATION_DE_HANDICAP->value => [
+                        'je-dispose-de-la-marque-d-Etat-tourisme-et-handicap-visuel',
+                        'je-dispose-de-la-marque-d-Etat-tourisme-et-handicap-auditif',
+                        'j-accueille-les-chiens-guides'
+                    ],
+                    ThematiqueSlugEnum::INCLUSIVITE_SOCIALE->value => [
+                        "je-propose-des-offres-accessibles-a-tout-public-avec-une-tarification-ou-des-prestations-adaptees",
+                    ],
+                    ThematiqueSlugEnum::SENSIBILISATION_DES_ACTEURS->value => [
+                        'je-n-ai-rien-entrepris-en-ce-sens',
+                    ],
+                    ThematiqueSlugEnum::BIEN_ETRE_DE_L_EQUIPE->value => [
+                        'j-ai-mis-en-place-un-management-facilitant-la-remontee-d-information-au-dela-du-cadre-legal-entretiens-reguliers-entretiens-croises-boite-a-idee',
+                        'des-actions-sont-mises-en-oeuvre-pour-prevenir-et-limiter-les-tms-troubles-musculo-squelettiques-et-psychologiques'
+                    ],
+                    ThematiqueSlugEnum::DEVELOPPEMENT_ECONOMIQUE_LOCAL->value => [
+                        'au-moins-80-de-mes-fournisseurs-non-alimentaires-sont-locaux-dans-un-rayon-de-moins-de-150-km',
+                    ],
+                    ThematiqueSlugEnum::COOPERATION_LOCALE_ET_LIENS_AVEC_LES_HABITANTS->value => [
+                        "l-un-de-nos-salaries-dirigeant-est-elu-ou-benevole-au-sein-d-une-instance-publique-ou-professionnelle-et-du-temps-lui-est-mis-a-disposition-pour-s-impliquer",
+                        "la-structure-soutient-une-association-locale-par-du-don-financier-du-temps-offert-du-pret-de-materiel-ou-toute-forme-d-aide-significative",
+                    ],
+                    ThematiqueSlugEnum::CULTURE_ET_PATRIMOINE->value => [
+                        "notre-structure-soutient-une-association-culturelle-locale-ou-non",
+                    ],
+                    ThematiqueSlugEnum::LABELS->value => [
+                        'je-n-ai-rien-entrepris-en-ce-sens',
+                    ],
+                ]
+            ],
         ];
 
         foreach ($repondantDatas as $repondantData) {
