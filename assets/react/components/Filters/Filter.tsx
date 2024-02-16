@@ -43,14 +43,12 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
         if ( e.target.parentNode.classList.contains('inputContainer')) {
             e.target.parentNode.classList.toggle('is-active')
        
-        
-
+    
         if (e.target.checked) {
             setFilterChecked([...filterChecked, e.target.id])
         } else {
-            const index = filterChecked.indexOf(e.target.id)
+            const index = filterChecked.indexOf(e.target.dataset.name);
             filterChecked.splice(index, 1)
-            setFilterChecked([...filterChecked])
         }
 
         const targetSlug = e.target.id;
@@ -84,8 +82,6 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
             setFilterChecked([...filterChecked, targetName])
             
         } else if (e.target.checked === false) {
-            const index = filterChecked.indexOf(targetName)
-            filterChecked.splice(index, 1)
             if (realType !== undefined) {
                 const index = selectedTerritoires[realType].findIndex((slug) => slug === targetSlug);
                 if (index > -1) {
