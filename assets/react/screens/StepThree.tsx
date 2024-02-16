@@ -113,7 +113,7 @@ const StepThree = () => {
           })}
 
           <TextInput
-            containerClass=""
+            containerClass="sr-only"
             label={'test'}
             name={'contact_by_bird'}
             type={Fields.TEXT}
