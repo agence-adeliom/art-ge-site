@@ -62,7 +62,7 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
                 realType = 'tourisms';
             } else if (type === 'Départements') {
                 realType = 'departments';
-            } else if (type === 'Offices de tourismes') {
+            } else if (type === 'Offices de tourisme') {
                 realType = 'ots';
             } else if (type === 'Établissements') {
                 realType = 'typologies';
