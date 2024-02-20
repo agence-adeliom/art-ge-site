@@ -7,12 +7,12 @@ namespace App\Controller\Api;
 use App\Dto\DashboardFilterDTO;
 use App\Entity\Choice;
 use App\Entity\Thematique;
+use App\Repository\ChoiceRepository;
 use App\Repository\ReponseRepository;
 use App\Repository\TerritoireRepository;
 use App\Repository\TypologieRepository;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
@@ -27,7 +27,7 @@ class DashboardThematiqueController extends AbstractController
         private readonly TerritoireRepository $territoireRepository,
         private readonly ReponseRepository $reponseRepository,
         private readonly TypologieRepository $typologieRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ChoiceRepository $choiceRepository,
     ) {
     }
 
@@ -107,9 +107,14 @@ class DashboardThematiqueController extends AbstractController
         $numberOfReponses = $this->reponseRepository->getNumberOfReponsesGlobal($dashboardFilterDTO);
 
         // le nombre de réponse pour chaque choix ainsi que les infos sur le choix
-        $choices = $thematique->getQuestion()->getChoices()->map(function (Choice $choice) use ($numberOfReponses) {
+        $choices = $thematique->getQuestion()->getChoices()->map(function (Choice $choice) use ($numberOfReponses, $dashboardFilterDTO) {
+            $reponsesCount = $this->choiceRepository->getNumberOfReponses($choice, $dashboardFilterDTO);
             try {
-                $percentage = $choice->getReponses()->count() / $numberOfReponses * 100;
+                if ($numberOfReponses > 1) {
+                    $percentage = $reponsesCount / $numberOfReponses * 100;
+                } else {
+                    $percentage = 100;
+                }
             } catch (\DivisionByZeroError $e) {
                 $percentage = 0;
             }

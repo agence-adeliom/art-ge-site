@@ -198,6 +198,8 @@ class ReponseRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('r')
             ->select('COUNT(r.id)')
+            ->innerJoin('r.repondant', 'u')
+            ->innerJoin('u.typologie', 'ty')
         ;
 
         $qb = $this->addFilters($qb, $filterDTO);
