@@ -23,6 +23,7 @@ class ResultatController extends AbstractController
     public function __invoke(Reponse $reponse): array
     {
         return [
+            'id' => $reponse->getId(),
             'page' => 'resultat',
             'resultats' => $this->resultatApiPresenter->present($reponse),
         ];

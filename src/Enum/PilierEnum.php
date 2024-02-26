@@ -25,15 +25,15 @@ enum PilierEnum: string
                 ThematiqueSlugEnum::INCLUSIVITE_SOCIALE,
             ],
             self::ECONOMIE => [
-                ThematiqueSlugEnum::ACCES_AUX_PERSONNES_EN_SITUATION_DE_HANDICAP,
-                ThematiqueSlugEnum::SENSIBILISATION_DES_ACTEURS,
-                ThematiqueSlugEnum::BIEN_ETRE_DE_L_EQUIPE,
-                ThematiqueSlugEnum::INCLUSIVITE_SOCIALE,
+                ThematiqueSlugEnum::DEVELOPPEMENT_ECONOMIQUE_LOCAL,
+                ThematiqueSlugEnum::CULTURE_ET_PATRIMOINE,
+                ThematiqueSlugEnum::COOPERATION_LOCALE_ET_LIENS_AVEC_LES_HABITANTS,
             ],
             self::SOCIAL => [
-                ThematiqueSlugEnum::DEVELOPPEMENT_ECONOMIQUE_LOCAL,
-                ThematiqueSlugEnum::COOPERATION_LOCALE_ET_LIENS_AVEC_LES_HABITANTS,
-                ThematiqueSlugEnum::CULTURE_ET_PATRIMOINE,
+                ThematiqueSlugEnum::ACCES_AUX_PERSONNES_EN_SITUATION_DE_HANDICAP,
+                ThematiqueSlugEnum::INCLUSIVITE_SOCIALE,
+                ThematiqueSlugEnum::SENSIBILISATION_DES_ACTEURS,
+                ThematiqueSlugEnum::BIEN_ETRE_DE_L_EQUIPE,
             ],
         };
     }

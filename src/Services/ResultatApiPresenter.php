@@ -23,6 +23,8 @@ class ResultatApiPresenter
             'slug' => $choice->getSlug(),
         ];
 
+        $removeZeroChoice = fn (array $choice): bool => $choice['slug'] !== 'je-n-ai-rien-entrepris-en-ce-sens';
+
         $scores = array_map(fn (Score $score): array => [
             'name' => htmlentities($score->getThematique()->getName()),
             'slug' => $score->getThematique()->getSlug(),
@@ -30,8 +32,8 @@ class ResultatApiPresenter
             'points' => $score->getPoints(),
             'total' => $score->getTotal(),
             'percentage' => $this->percentagePresenter->displayPercentage((int) $score->getPoints(), $score->getTotal()),
-            'chosenChoices' => array_map($choiceMapper, $score->getChosenChoices()),
-            'notChosenChoices' => array_map($choiceMapper, $score->getNotChosenChoices()),
+            'chosenChoices' => array_filter(array_map($choiceMapper, $score->getChosenChoices()), $removeZeroChoice),
+            'notChosenChoices' => array_filter(array_map($choiceMapper, $score->getNotChosenChoices()), $removeZeroChoice),
         ], $reponse->getScores()->toArray());
 
         return [

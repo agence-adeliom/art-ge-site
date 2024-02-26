@@ -21,9 +21,7 @@ class GreenSpaceChoiceIgnorer extends AbstractChoiceIgnorer
             'j-ai-un-potager-en-permaculture-0-phyto-sur-au-moins-2-de-mon-terrain-et-je-valorise-sa-production-sur-ma-carte',
         ],
         ThematiqueSlugEnum::GESTION_DE_L_EAU_ET_DE_L_EROSION->value => [
-            'j-evite-l-artificialisation-des-parkings-je-privilegie-le-revetement-poreux-les-espaces-bitumes-sont-limites-aux-voies-de-circulation-de-lourds-vehicules-et-pour-les-places-pmr',
             'j-ai-installe-un-systeme-de-phyto-epuration-traitement-de-l-eau-d-assainissement-par-les-plantes',
-            'j-ai-mis-en-place-un-systeme-de-toilettes-seches',
             'je-limite-les-pertes-d-eau-lors-de-l-arrosage-des-espaces-verts-horaire-goutte-a-goutte-paillage-oyas',
             'j-arrose-les-vegetaux-en-pleine-terre-uniquement-lors-de-leur-premiere-annee-et-je-n-arrose-pas-le-gazon',
         ],

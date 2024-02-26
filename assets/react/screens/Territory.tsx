@@ -193,7 +193,7 @@ const Territory = () => {
                     percentage={environnementScore}
                     desc="Ci-dessous les résultats détaillés pour chaque thématique liée à l’environnement. <br/>
                     Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."
-                    thematiques={thematiques.slice(0,8)}
+                    thematiques={thematiques.slice(0,7)}
                     selectedTerritoires={selectedTerritoires}
                     dateRange={dateRange}
                 ></Analysis>
@@ -206,7 +206,7 @@ const Territory = () => {
                     percentage={economyScore}
                     desc="Les graphiques décrivent les résultats pour chaque thématique liée à l’économie. <br />
                     Elle évoque le vivre et consommer local ; le service de proximité, de qualité avec des acteurs vertueux."
-                    thematiques={thematiques.slice(8,11)}
+                    thematiques={thematiques.slice(11)}
                     selectedTerritoires={selectedTerritoires}
                     dateRange={dateRange}
                 ></Analysis>
@@ -219,7 +219,7 @@ const Territory = () => {
                     percentage={socialScore}
                     desc="Ci-dessous les résultats détaillés pour chaque thématique liée à l’environnement.
                     Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."
-                    thematiques={thematiques.slice(11,-1)}
+                    thematiques={thematiques.slice(7,11)}
                     selectedTerritoires={selectedTerritoires}
                     dateRange={dateRange}
                 ></Analysis>
