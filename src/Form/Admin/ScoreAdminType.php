@@ -17,6 +17,7 @@ class ScoreAdminType extends AbstractType
             ->add('thematique')
             ->add('points')
             ->add('total')
+            ->add('pourcentage')
         ;
     }
 

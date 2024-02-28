@@ -85,6 +85,14 @@ class Score
         return $this;
     }
 
+    public function getPercentage(): string
+    {
+        if ($this->getTotal() <= 0) {
+            return 0 . '%';
+        }
+        return round(($this->getPoints() / $this->getTotal()) * 100) . '%';
+    }
+
     /**
      * @return array{chosenChoices: array<Choice>, notChosenChoices: array<Choice>}
      */

@@ -126,7 +126,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                 $ecpisImported[$sirenEPCI] = $epci;
 
                 /** IMPORT DES TERRITOIRES */
-                $nameTerritoire = $e['Office de tourisme '];
+                $nameTerritoire = preg_replace('#^OT #', '', $e['Office de tourisme ']);
                 $territoireSlug = $slugger->slug(strtolower((string) $nameTerritoire))->toString();
                 if (in_array($territoireSlug, array_keys($territoiresImported))) {
                     $territoire = $territoiresImported[$territoireSlug];

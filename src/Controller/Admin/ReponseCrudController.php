@@ -70,6 +70,7 @@ class ReponseCrudController extends AbstractCrudController
         yield DateField::new('submittedAt', 'Envoyé le');
         yield NumberField::new('points');
         yield NumberField::new('total');
+        yield TextField::new('percentage', 'Pourcentage')->hideOnForm();
         yield BooleanField::new('completed')->renderAsSwitch(false);
         yield CollectionField::new('scores')
             ->setEntryType(ScoreAdminType::class)
