@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: CityRepository::class)]
 #[ORM\Index(fields: ['zip'], name: 'idx_zip')]
 #[ORM\Index(fields: ['insee'], name: 'idx_insee')]
-class City
+class City implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -120,5 +120,10 @@ class City
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
     }
 }

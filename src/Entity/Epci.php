@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EpciRepository::class)]
-class Epci
+class Epci implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -131,5 +131,10 @@ class Epci
     public function getZips(): Collection
     {
         return $this->cities->map(fn (City $city): string => $city->getZip());
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
     }
 }

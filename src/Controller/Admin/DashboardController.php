@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\Choice;
+use App\Entity\City;
 use App\Entity\EasyAdmin\User;
+use App\Entity\Epci;
 use App\Entity\Question;
 use App\Entity\Repondant;
 use App\Entity\Reponse;
@@ -86,7 +88,11 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Formulaire');
         yield MenuItem::linkToCrud('Répondants', '', Repondant::class);
         yield MenuItem::linkToCrud('Réponses', '', Reponse::class);
+
+        yield MenuItem::section('Données géographiques');
         yield MenuItem::linkToCrud('Territoires', '', Territoire::class);
+        yield MenuItem::linkToCrud('EPCI', '', Epci::class);
+        yield MenuItem::linkToCrud('Villes', '', City::class);
 
         yield MenuItem::section('Super Admin');
         yield MenuItem::linkToCrud('Thématiques', '', Thematique::class);
