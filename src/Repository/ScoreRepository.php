@@ -191,7 +191,7 @@ class ScoreRepository extends ServiceEntityRepository
                                     $ors[] = $dql->expr()->in('u.zip', implode(',', $territoire->getZips()));
                                 }
                                 if ([] !== $ors) {
-                                    $dql->orWhere($dql->expr()->andX(...$ors));
+                                    $dql->andWhere($dql->expr()->andX(...$ors));
                                 }
                             }
                         }

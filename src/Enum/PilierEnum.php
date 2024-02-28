@@ -22,7 +22,6 @@ enum PilierEnum: string
                 ThematiqueSlugEnum::GESTION_DE_L_ENERGIE,
                 ThematiqueSlugEnum::ENTRETIEN_ET_PROPRETE,
                 ThematiqueSlugEnum::TRANSPORT_ET_MOBILITE,
-                ThematiqueSlugEnum::INCLUSIVITE_SOCIALE,
             ],
             self::ECONOMIE => [
                 ThematiqueSlugEnum::DEVELOPPEMENT_ECONOMIQUE_LOCAL,
