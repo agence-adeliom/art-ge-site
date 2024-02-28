@@ -47,13 +47,13 @@ const LateralPanel = ({showDialog, closeDropdown, title, links, progressBar, cho
                             handleClick={(event) => handleClick(event, 1)}
                             isOpen={open === 1}
                         ></Accordion>
-                        <Accordion
+                        {notChosenChoices && notChosenChoices.length > 0 && <Accordion
                             key={2}
                             question={"Ce que je peux faire demain"}
                             choices={notChosenChoices}
                             handleClick={(event) => handleClick(event, 2)}
                             isOpen={open === 2}
-                        ></Accordion>
+                        ></Accordion>}
 
                         <ThematiqueLinks links={links}></ThematiqueLinks>
                     </div>

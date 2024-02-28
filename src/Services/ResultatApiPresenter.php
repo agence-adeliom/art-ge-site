@@ -7,11 +7,17 @@ namespace App\Services;
 use App\Entity\Choice;
 use App\Entity\Reponse;
 use App\Entity\Score;
+use App\Services\ChoiceIgnorer\GreenSpaceChoiceIgnorer;
+use App\Services\ChoiceIgnorer\RestaurationAndGreenSpaceChoiceIgnorer;
+use App\Services\ChoiceIgnorer\RestaurationChoiceIgnorer;
 
 class ResultatApiPresenter
 {
     public function __construct(
         private readonly PercentagePresenter $percentagePresenter,
+        private readonly RestaurationChoiceIgnorer $restaurationChoiceIgnorer,
+        private readonly GreenSpaceChoiceIgnorer $greenSpaceChoiceIgnorer,
+        private readonly RestaurationAndGreenSpaceChoiceIgnorer $restaurationAndGreenSpaceChoiceIgnorer,
     ) {
     }
 
@@ -25,7 +31,31 @@ class ResultatApiPresenter
 
         $removeZeroChoice = fn (array $choice): bool => $choice['slug'] !== 'je-n-ai-rien-entrepris-en-ce-sens';
 
-        $scores = array_map(fn (Score $score): array => [
+        $isRestauration = $reponse->getRepondant()->isRestauration();
+        $isGreenSpace = $reponse->getRepondant()->isGreenSpace();
+
+        $removeNonApplicableChoices = function (Choice $choice) use ($isRestauration, $isGreenSpace): bool {
+            if (in_array($choice->getSlug(), ['je-n-ai-rien-entrepris-en-ce-sens', 'je-ne-suis-pas-concerne-e-car-je-n-ai-pas-d-equipe'])) {
+                return false;
+            }
+
+            $choicesToKeep = [];
+            if (!$isRestauration && !$isGreenSpace) {
+                $choicesToKeep = $this->restaurationAndGreenSpaceChoiceIgnorer->onlyNotIgnored($choice->getQuestion());
+            } elseif (!$isGreenSpace && $isRestauration) {
+                $choicesToKeep = $this->greenSpaceChoiceIgnorer->onlyNotIgnored($choice->getQuestion());
+            } elseif ($isGreenSpace && !$isRestauration) {
+                $choicesToKeep = $this->restaurationChoiceIgnorer->onlyNotIgnored($choice->getQuestion());
+            }
+
+            if (null !== $choicesToKeep) {
+                return in_array($choice->getId(), $choicesToKeep);
+            }
+
+            return true;
+        };
+
+        $scores = array_map(fn (Score $score) : array => [
             'name' => htmlentities($score->getThematique()->getName()),
             'slug' => $score->getThematique()->getSlug(),
             'links' => array_values($score->getThematique()->getLinks() ?? []),
@@ -33,7 +63,7 @@ class ResultatApiPresenter
             'total' => $score->getTotal(),
             'percentage' => $this->percentagePresenter->displayPercentage((int) $score->getPoints(), $score->getTotal()),
             'chosenChoices' => array_filter(array_map($choiceMapper, $score->getChosenChoices()), $removeZeroChoice),
-            'notChosenChoices' => array_filter(array_map($choiceMapper, $score->getNotChosenChoices()), $removeZeroChoice),
+            'notChosenChoices' => array_values(array_map($choiceMapper, array_filter($score->getNotChosenChoices(), $removeNonApplicableChoices))),
         ], $reponse->getScores()->toArray());
 
         return [
