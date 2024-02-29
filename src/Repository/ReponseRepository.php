@@ -37,21 +37,12 @@ class ReponseRepository extends ServiceEntityRepository
             ->select('COUNT(r.id)')
             ->innerJoin('r.repondant', 'u')
             ->innerJoin('u.typologie', 'ty')
+            ->groupBy('u.id')
         ;
 
         $qb = $this->addFilters($qb, $filterDTO);
 
-        return
-//            $filterDTO instanceof TerritoireFilterDTO ?
-//            (int) $qb
-//                ->getQuery()
-//                ->enableResultCache(86400, 'getNumberOfReponsesGlobal' . $filterDTO->getTerritoire()->getId())
-//                ->getSingleScalarResult()
-//            :
-            (int) $qb
-                ->getQuery()
-                ->getSingleScalarResult()
-        ;
+        return count($qb->getQuery()->getSingleColumnResult());
     }
 
     public function getRepondantsGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): array
