@@ -10,8 +10,6 @@ export interface DateRange {
 }
 
 export interface Thematique {
-    avg_points: string;
-    avg_total: string;
     name: string;
     score: string;
     slug: string;

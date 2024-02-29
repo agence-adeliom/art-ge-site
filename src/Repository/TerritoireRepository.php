@@ -226,12 +226,13 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
         return [] !== $columns ? $qb->getQuery()->getArrayResult() : $qb->getQuery()->getResult();
     }
 
-    public function getPercentageByTerritoire(Territoire $territoire): int
+    public function getPercentageByTerritoire(Territoire $territoire, array $reponsesIds = []): int
     {
-        $sql = 'SELECT ROUND(SUM(temp.percentage) / SUM(temp.total) * 100) as percentage FROM (
-            SELECT U.id as `user`, U.zip, ROUND(SUM(R.points) / SUM(R.total) * 100) as percentage, SUM(R.total) as total 
+        $sql = 'SELECT ROUND(SUM(temp.points) / SUM(temp.total) * 100) as percentage FROM (
+            SELECT U.id as `user`, U.zip, SUM(R.points) as points, SUM(R.total) as total 
             FROM reponse R 
             INNER JOIN repondant U ON R.repondant_id = U.id 
+            ' . ([] !== $reponsesIds ? 'WHERE R.id IN (' . implode(',', $reponsesIds) . ')' : '') . '
             GROUP BY U.id
         ) as temp 
         ';

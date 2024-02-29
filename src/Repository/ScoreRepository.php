@@ -32,12 +32,10 @@ class ScoreRepository extends ServiceEntityRepository
         parent::__construct($registry, Score::class);
     }
 
-    private function getPercentagesByThematiquesQuery(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): QueryBuilder
+    private function getPercentagesByThematiquesQuery(DashboardFilterDTO | TerritoireFilterDTO $filterDTO, array $reponsesIds = []): QueryBuilder
     {
         $qb = $this->createQueryBuilder('s')
-            ->select('ROUND(AVG(s.points)) as avg_points')
-            ->addSelect('ROUND(AVG(s.total)) as avg_total')
-            ->addSelect('ROUND((SUM(s.points) / SUM(s.total)) * 100) as score')
+            ->select('ROUND((SUM(s.points) / SUM(s.total)) * 100) as score')
             ->addSelect('th.name as name')
             ->addSelect('th.slug as slug')
             ->innerJoin('s.reponse', 'r')
@@ -47,25 +45,25 @@ class ScoreRepository extends ServiceEntityRepository
             ->groupBy('s.thematique')
         ;
 
+        if ([] !== $reponsesIds) {
+            $qb
+                ->andWhere('r.id IN (:reponsesIds)')
+                ->setParameter('reponsesIds', $reponsesIds)
+            ;
+        }
+
         return $this->addFilters($qb, $filterDTO);
     }
 
-    public function getPercentagesByThematiques(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): array
+    public function getPercentagesByThematiques(DashboardFilterDTO | TerritoireFilterDTO $filterDTO, array $reponsesIds = []): array
     {
-        return $this->getPercentagesByThematiquesQuery($filterDTO)->getQuery()->getArrayResult();
+        return $this->getPercentagesByThematiquesQuery($filterDTO, $reponsesIds)->getQuery()->getArrayResult();
     }
 
     /**
-     * Pour chaque pilier on va faire une requete SQL qui va nous permettre de compter le nombre de repondants
-     * par thematique, et a la fin on fait la moyenne de toutes ces sommes pour avoir la valeur par pilier
-     * La recherche par pilier est faite via une UNION sql des thematique.
-     * La requete est construite dans la boucle foreach des thematiques, et chaque fois qu'on rencontre un ?
-     * le parametres est ajoute au tableau des parametres.
-     * A la fin on converti le DQL en SQL et on joint le tout avec une UNION.
-     *
      * @return array<string, int>
      */
-    public function getPercentagesByPiliersGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): array
+    public function getPercentagesByPiliersGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO, array $reponsesIds = []): array
     {
         $percentagesByPiliers = [];
 
@@ -75,7 +73,6 @@ class ScoreRepository extends ServiceEntityRepository
             $parameters = [];
             $thematiques = PilierEnum::getThematiquesSlugsByPilier($pilier);
             foreach ($thematiques as $thematique) {
-                $parameters2 = [];
                 $dql = $this->createQueryBuilder('s')
                     ->select('SUM(s.points) as points, SUM(s.total) as total')
                     ->innerJoin('s.reponse', 'r')
@@ -86,6 +83,12 @@ class ScoreRepository extends ServiceEntityRepository
                     ->andWhere('t.slug = ?' . $counter++)
                 ;
                 $parameters[] = $thematique->value;
+
+                if ([] !== $reponsesIds) {
+                    $dql
+                        ->andWhere('r.id IN (' . implode(',', $reponsesIds) . ')')
+                    ;
+                }
 
                 if ($filterDTO instanceof DashboardFilterDTO) {
                     $territoires = $filterDTO->getTerritoires() ?: [$filterDTO->getTerritoire()];
@@ -98,7 +101,6 @@ class ScoreRepository extends ServiceEntityRepository
                                     if ($department) {
                                         $ors[] = $dql->expr()->like('u.zip', '?' . $counter++);
                                         $parameters[] = DepartementEnum::getCode($department) . '%';
-                                        $parameters2[] = DepartementEnum::getCode($department) . '%';
                                     }
                                 } else {
                                     $ors[] = $dql->expr()->in('u.zip', implode(',', $territoire->getZips()));
@@ -116,7 +118,6 @@ class ScoreRepository extends ServiceEntityRepository
                     foreach ($filterDTO->getTypologies() as $typologie) {
                         $ors[] = $dql->expr()->eq('ty.slug', '?' . $counter++);
                         $parameters[] = $typologie;
-                        $parameters2[] = $typologie;
                     }
                     $dql->andWhere($dql->expr()->orX(...$ors));
                 }
@@ -126,70 +127,23 @@ class ScoreRepository extends ServiceEntityRepository
                     if (null !== $filterDTO->getFrom() && null !== $filterDTO->getTo()) {
                         $dql->andWhere('r.submittedAt BETWEEN ?' . $counter++ . ' AND ?' . $counter++);
                         $parameters[] = $filterDTO->getFrom()->format($dateFormat);
-                        $parameters2[] = $filterDTO->getFrom()->format($dateFormat);
                         $parameters[] = $filterDTO->getTo()->format($dateFormat);
-                        $parameters2[] = $filterDTO->getTo()->format($dateFormat);
                     } elseif (null !== $filterDTO->getFrom() && null === $filterDTO->getTo()) {
                         $dql->andWhere('r.submittedAt >= ?' . $counter++);
                         $parameters[] = $filterDTO->getFrom()->format($dateFormat);
-                        $parameters2[] = $filterDTO->getFrom()->format($dateFormat);
                     } elseif (null === $filterDTO->getFrom() && null !== $filterDTO->getTo()) {
                         $dql->andWhere('r.submittedAt <= ?' . $counter++);
                         $parameters[] = $filterDTO->getTo()->format($dateFormat);
-                        $parameters2[] = $filterDTO->getTo()->format($dateFormat);
                     }
                 }
 
                 $dqls[] = $dql;
-                $parameters = array_merge($parameters, $parameters2);
             }
 
             // le résultat est le produit en croix de toutes les sommes des points des thematiques divisées par les total des thematiques * 100
             $sql = 'SELECT ROUND((SUM(temp.sclr_0) / SUM(temp.sclr_1)) * 100) as percentage FROM ((';
             // pour chaque thematique on construit une requete sql
             $sqlUnion = array_map(fn (QueryBuilder $dql): string => (string) $dql->getQuery()->getSQL(), $dqls);
-
-            //On construit la requete interne qui va aller chercher tous les reponses ID en utilisant les memes filtres
-            /**
-             * On récupère l'occurence de t2_.slug jusqu'à GROUP et on va reprendre ce filtre WHERE pour l'insérer
-             * dans notre sous-query pour qu'on récupère les réponses avec les mêmes filtres
-             *
-             * Ca permet de transformer:
-             *
-             * SELECT SUM(s0_.points) AS sclr_0, SUM(s0_.total) AS sclr_1 FROM score s0_
-             * INNER JOIN reponse r1_ ON s0_.reponse_id = r1_.id
-             * INNER JOIN thematique t2_ ON s0_.thematique_id = t2_.id
-             * INNER JOIN repondant r3_ ON r1_.repondant_id = r3_.id
-             * INNER JOIN typologie t4_ ON r3_.typologie_id = t4_.id
-             * WHERE t2_.slug = ? AND r3_.zip LIKE ? AND t4_.slug = ? AND (r1_.submitted_at BETWEEN ? AND ?)
-             * GROUP BY r3_.id
-             *
-             * en ca :
-             *
-             * SELECT SUM(s0_.points) AS sclr_0, SUM(s0_.total) AS sclr_1 FROM score s0_
-             * INNER JOIN reponse r1_ ON s0_.reponse_id = r1_.id
-             * INNER JOIN thematique t2_ ON s0_.thematique_id = t2_.id
-             * INNER JOIN repondant r3_ ON r1_.repondant_id = r3_.id
-             * INNER JOIN typologie t4_ ON r3_.typologie_id = t4_.id
-             * WHERE t2_.slug = ? AND r3_.zip LIKE ? AND t4_.slug = ? AND (r1_.submitted_at BETWEEN ? AND ?)
-             *
-             * AND r1_.id IN (
-             *     SELECT reponse.id FROM reponse
-             *     INNER JOIN repondant ON reponse.repondant_id = repondant.id
-             *     INNER JOIN typologie ON repondant.typologie_id = typologie.id
-             *     WHERE 1 = 1 AND r3_.zip LIKE ? AND t4_.slug = ? AND (r1_.submitted_at BETWEEN ? AND ?)
-             * )
-             * GROUP BY r3_.id
-             *
-             */
-            foreach ($sqlUnion as $key => $uni) {
-                $innerQuery = ' SELECT reponse.id FROM reponse INNER JOIN repondant ON reponse.repondant_id = repondant.id INNER JOIN typologie ON repondant.typologie_id = typologie.id WHERE 1 = 1';
-                preg_match('#t2_\.slug.* GROUP#', $uni, $matches);
-                $innerQuery .= str_replace('t2_.slug = ?', '', $matches[0]);
-                $innerQuery = str_replace(' GROUP', '', $innerQuery);
-                $innerQuery = ' AND r1_.id IN (' . $innerQuery . ') ';
-                $sqlUnion[$key] = str_replace('GROUP BY ', $innerQuery . 'GROUP BY ', $uni);
-            }
 
             $sql .= implode(') UNION (', $sqlUnion) . ')) as temp';
             $percentagesByPiliers[$pilier->value] = (int) $this->getEntityManager()->getConnection()->executeQuery($sql, $parameters)->fetchOne();

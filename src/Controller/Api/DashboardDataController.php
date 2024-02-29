@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Dto\DashboardFilterDTO;
+use App\Enum\DepartementEnum;
+use App\Enum\TerritoireAreaEnum;
 use App\Event\DashboardDataGlobalEvent;
 use App\Event\DashboardDataListsEvent;
 use App\Event\DashboardDataScoresEvent;
 use App\Repository\TerritoireRepository;
 use App\Repository\TypologieRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -30,6 +33,7 @@ class DashboardDataController extends AbstractController
         private readonly TerritoireRepository $territoireRepository,
         private readonly TypologieRepository $typologieRepository,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -98,16 +102,18 @@ class DashboardDataController extends AbstractController
             'to' => $to,
         ]);
 
+        $reponsesIds = $this->getLastReponsesIds($dashboardFilterDTO);
+
         try {
-            $event = new DashboardDataGlobalEvent($dashboardFilterDTO);
+            $event = new DashboardDataGlobalEvent($dashboardFilterDTO, $reponsesIds);
             $this->eventDispatcher->dispatch($event);
             $globals = $event->getGlobals();
 
-            $event = new DashboardDataScoresEvent($dashboardFilterDTO);
+            $event = new DashboardDataScoresEvent($dashboardFilterDTO, $reponsesIds);
             $this->eventDispatcher->dispatch($event);
             $scores = $event->getScores();
 
-            $event = new DashboardDataListsEvent($dashboardFilterDTO);
+            $event = new DashboardDataListsEvent($dashboardFilterDTO, $reponsesIds);
             $this->eventDispatcher->dispatch($event);
             $lists = $event->getLists();
         } catch (\Throwable $e) {
@@ -125,5 +131,66 @@ class DashboardDataController extends AbstractController
                 'lists' => $lists,
             ],
         ], Response::HTTP_OK, [], ['groups' => self::DASHBOARD_API_DATA_GROUP]);
+    }
+
+    private function getLastReponsesIds(DashboardFilterDTO $dashboardFilterDTO): array
+    {
+        $zipCriteria = '';
+        $zipParams = [];
+        $territoire = $dashboardFilterDTO->getTerritoire();
+        if (TerritoireAreaEnum::REGION !== $territoire->getArea()) {
+            if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
+                $department = DepartementEnum::tryFrom($territoire->getSlug());
+                if ($department) {
+                    $zipCriteria = 'AND U.zip LIKE :zip';
+                    $zipParams = ['zip' => DepartementEnum::getCode($department) . '%'];
+                }
+            } else {
+                $zipCriteria = 'AND U.zip IN (:zip)';
+                $zipParams = ['zip' => $territoire->getZips()];
+            }
+        }
+
+        $typologyCriteria = '';
+        $typologyParams = [];
+        if ([] !== $dashboardFilterDTO->getTypologies() ?? []) {
+            $typologyCriteriaTemp = [];
+            $typologyCriteria = 'AND (';
+            foreach ($dashboardFilterDTO->getTypologies() ?? [] as $key => $typology) {
+                $typologyCriteriaTemp[] = 'TY.slug = :typology' . $key;
+                $typologyParams['typology' . $key] = $typology;
+            }
+            $typologyCriteria .= implode(' OR ', $typologyCriteriaTemp) . ') ';
+        }
+
+        $dateCriteria = '';
+        $dateParams = [];
+        if ($dashboardFilterDTO->hasDateRange()) {
+            $dateFormat = 'Y-m-d H:i:s';
+            $dateCriteria = 'AND ';
+            if (null !== $dashboardFilterDTO->getFrom() && null !== $dashboardFilterDTO->getTo()) {
+                $dateCriteria .= 'R.submitted_at BETWEEN :from AND :to';
+                $dateParams['from'] = $dashboardFilterDTO->getFrom()->format($dateFormat);
+                $dateParams['to'] = $dashboardFilterDTO->getTo()->format($dateFormat);
+            } elseif (null !== $dashboardFilterDTO->getFrom() && null === $dashboardFilterDTO->getTo()) {
+                $dateCriteria .= 'R.submitted_at >= :from';
+                $dateParams['from'] = $dashboardFilterDTO->getFrom()->format($dateFormat);
+            } elseif (null === $dashboardFilterDTO->getFrom() && null !== $dashboardFilterDTO->getTo()) {
+                $dateCriteria .= 'R.submitted_at <= :to';
+                $dateParams['to'] = $dashboardFilterDTO->getTo()->format($dateFormat);
+            }
+        }
+
+        return $this->entityManager->getConnection()->executeQuery('
+            SELECT R.id, MAX(R.submitted_at)
+            FROM reponse R
+            INNER JOIN repondant U ON U.id = R.repondant_id 
+            INNER JOIN typologie TY ON TY.id = U.typologie_id 
+            WHERE 1 = 1
+                    ' . $typologyCriteria . '
+                    ' . $zipCriteria . '
+                    ' . $dateCriteria . '
+            GROUP BY R.repondant_id'
+            , [...$typologyParams, ...$zipParams, ...$dateParams])->fetchFirstColumn();
     }
 }

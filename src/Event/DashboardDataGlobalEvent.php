@@ -14,8 +14,12 @@ class DashboardDataGlobalEvent extends Event
      */
     private array $globals = [];
 
+    /**
+     * @param array<int> $reponsesIds
+     */
     public function __construct(
         private readonly DashboardFilterDTO $dashboardFilterDTO,
+        private readonly array $reponsesIds = []
     ) {
     }
 
@@ -32,5 +36,10 @@ class DashboardDataGlobalEvent extends Event
     public function setGlobals(array $globals): void
     {
         $this->globals = $globals;
+    }
+
+    public function getReponsesIds(): array
+    {
+        return $this->reponsesIds;
     }
 }

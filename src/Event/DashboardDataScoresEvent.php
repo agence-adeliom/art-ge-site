@@ -14,8 +14,12 @@ class DashboardDataScoresEvent extends Event
      */
     private array $scores = [];
 
+    /**
+     * @param array<int> $reponsesIds
+     */
     public function __construct(
         private readonly DashboardFilterDTO $dashboardFilterDTO,
+        private readonly array $reponsesIds = []
     ) {
     }
 
@@ -32,5 +36,10 @@ class DashboardDataScoresEvent extends Event
     public function setScores(array $scores): void
     {
         $this->scores = $scores;
+    }
+
+    public function getReponsesIds(): array
+    {
+        return $this->reponsesIds;
     }
 }

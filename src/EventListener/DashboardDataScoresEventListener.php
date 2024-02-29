@@ -23,11 +23,16 @@ class DashboardDataScoresEventListener
     public function __invoke(DashboardDataScoresEvent $event): void
     {
         $dashboardFilterDTO = $event->getDashboardFilterDTO();
+        $responsesIds = $event->getReponsesIds();
 
-        $thematiques = $this->scoreRepository->getPercentagesByThematiques($dashboardFilterDTO);
+        $thematiques = $this->scoreRepository->getPercentagesByThematiques($dashboardFilterDTO, $responsesIds);
         $typologies = [];
         foreach ($this->typologieRepository->getSlugs() as $typology) {
-            $typologies[$typology] = $this->reponseRepository->getPercentagesByTypology($typology, $dashboardFilterDTO);
+            if ([] === $dashboardFilterDTO->getTypologies() || in_array($typology, $dashboardFilterDTO->getTypologies())) {
+                $typologies[$typology] = $this->reponseRepository->getPercentagesByTypology($typology, $dashboardFilterDTO, $responsesIds);
+            } else {
+                $typologies[$typology] = null;
+            }
         }
 
         $event->setScores([

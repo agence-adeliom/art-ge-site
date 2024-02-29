@@ -34,7 +34,7 @@ class ReponseRepository extends ServiceEntityRepository
     public function getNumberOfReponsesGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): int
     {
         $qb = $this->createQueryBuilder('r')
-            ->select('COUNT(r.id)')
+            ->select('r.id, MAX(r.submittedAt) as HIDDEN submittedAt')
             ->innerJoin('r.repondant', 'u')
             ->innerJoin('u.typologie', 'ty')
             ->groupBy('u.id')
@@ -80,7 +80,7 @@ class ReponseRepository extends ServiceEntityRepository
         ;
     }
 
-    public function getPercentageGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): int
+    public function getPercentageGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO, array $reponsesIds = []): int
     {
         $qb = $this->createQueryBuilder('r')
             ->select('ROUND(SUM(r.points) / SUM(r.total) * 100) as percentage')
@@ -90,13 +90,20 @@ class ReponseRepository extends ServiceEntityRepository
 
         $qb = $this->addFilters($qb, $filterDTO);
 
+        if ([] !== $reponsesIds) {
+            $qb
+                ->andWhere('r.id IN (:reponsesIds)')
+                ->setParameter('reponsesIds', $reponsesIds)
+            ;
+        }
+
         return (int) $qb
             ->getQuery()
             ->getSingleScalarResult()
         ;
     }
 
-    public function getPercentagesByTypology(string $typology, DashboardFilterDTO | TerritoireFilterDTO $filterDTO): ?int
+    public function getPercentagesByTypology(string $typology, DashboardFilterDTO | TerritoireFilterDTO $filterDTO, array $reponsesIds = []): ?int
     {
         $qb = $this->createQueryBuilder('r')
             ->select('ROUND(SUM(r.points) / SUM(r.total) * 100) as percentage')
@@ -108,6 +115,14 @@ class ReponseRepository extends ServiceEntityRepository
         ;
 
         $qb = $this->addFilters($qb, $filterDTO, false);
+
+        if ([] !== $reponsesIds) {
+            $qb
+                ->andWhere('r.id IN (:reponsesIds)')
+                ->setParameter('reponsesIds', $reponsesIds)
+            ;
+        }
+
         $percentagesByTypology = $qb
             ->getQuery()
             ->getSingleColumnResult()
