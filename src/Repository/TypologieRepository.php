@@ -42,6 +42,7 @@ class TypologieRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('t')
             ->select('t.slug, t.name')
+            ->orderBy('t.name', 'ASC')
             ->getQuery()
             ->getArrayResult()
         ;
