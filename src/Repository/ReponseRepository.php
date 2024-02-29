@@ -217,15 +217,6 @@ class ReponseRepository extends ServiceEntityRepository
         ;
     }
 
-    public function getNumberOfReponsesRegionGlobal(): int
-    {
-        return (int) $this->createQueryBuilder('r')
-            ->select('COUNT(r.id)')
-            ->getQuery()
-            ->getSingleScalarResult()
-        ;
-    }
-
     public function getRepondantsGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): array
     {
         $qb = $this->createQueryBuilder('r')
@@ -261,43 +252,6 @@ class ReponseRepository extends ServiceEntityRepository
         ;
     }
 
-    public function getRepondantsByTypologieGlobal(TerritoireFilterDTO $territoireFilterDTO): array
-    {
-        $repondantsByTypologieGlobal = [];
-
-        $zipCriteria = '';
-        $zipParams = [];
-        $territoire = $territoireFilterDTO->getTerritoire();
-        if (TerritoireAreaEnum::REGION !== $territoire->getArea()) {
-            if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
-                $department = DepartementEnum::tryFrom($territoire->getSlug());
-                if ($department) {
-                    $zipCriteria = 'AND U.zip LIKE :zip';
-                    $zipParams = ['zip' => DepartementEnum::getCode($department) . '%'];
-                }
-            } else {
-                $zipCriteria = 'AND U.zip IN (:zip)';
-                $zipParams = ['zip' => $territoire->getZips()];
-            }
-        }
-
-        foreach ($territoireFilterDTO->getTypologies() ?? [] as $typology) {
-            $repondantsByTypologieGlobal[$typology] = $this->getEntityManager()->getConnection()->executeQuery('
-            SELECT COUNT(id) FROM (
-                SELECT U.id FROM reponse R 
-                    INNER JOIN repondant U ON U.id = R.repondant_id 
-                    INNER JOIN typologie TY ON TY.id = U.typologie_id 
-                WHERE 
-                    TY.slug = :slug 
-                    ' . $zipCriteria . '
-                GROUP BY U.id
-            ) as temp;
-            ', ['slug' => $typology, ...$zipParams])->fetchOne();
-        }
-
-        return $repondantsByTypologieGlobal;
-    }
-
     public function getPercentageGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): int
     {
         $qb = $this->createQueryBuilder('r')
@@ -307,18 +261,6 @@ class ReponseRepository extends ServiceEntityRepository
         ;
 
         $qb = $this->addFilters($qb, $filterDTO);
-
-        return (int) $qb
-            ->getQuery()
-            ->getSingleScalarResult()
-        ;
-    }
-
-    public function getPercentageRegionGlobal(): int
-    {
-        $qb = $this->createQueryBuilder('r')
-            ->select('ROUND(SUM(r.points) / SUM(r.total) * 100) as percentage')
-        ;
 
         return (int) $qb
             ->getQuery()

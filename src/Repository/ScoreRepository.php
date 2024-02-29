@@ -127,24 +127,6 @@ class ScoreRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array<mixed>
-     */
-    public function getPercentagesByTypologiesAndThematiques(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): array
-    {
-        $percentagesByTypologiseAndThematiques = [];
-
-        foreach ($filterDTO->getTypologies() ?? [] as $typology) {
-            $qb = $this->getPercentagesByThematiquesQuery($filterDTO);
-            $qb->andWhere('ty.slug = :typology')
-                ->setParameter('typology', $typology)
-            ;
-            $percentagesByTypologiseAndThematiques[$typology] = $qb->getQuery()->getArrayResult();
-        }
-
-        return $percentagesByTypologiseAndThematiques;
-    }
-
-    /**
      * Pour chaque pilier on va faire une requete SQL qui va nous permettre de compter le nombre de repondants
      * par thematique, et a la fin on fait la moyenne de toutes ces sommes pour avoir la valeur par pilier
      * La recherche par pilier est faite via une UNION sql des thematique.
