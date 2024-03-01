@@ -48,7 +48,7 @@ class ResultatApiPresenter
                 $choicesToKeep = $this->restaurationChoiceIgnorer->onlyNotIgnored($choice->getQuestion());
             }
 
-            if (null !== $choicesToKeep) {
+            if ([] !== $choicesToKeep) {
                 return in_array($choice->getId(), $choicesToKeep);
             }
 
