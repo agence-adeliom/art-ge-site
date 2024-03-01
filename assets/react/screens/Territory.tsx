@@ -217,8 +217,7 @@ const Territory = () => {
                     color="tertiary-800"
                     barColor="#75B369"
                     percentage={socialScore}
-                    desc="Ci-dessous les résultats détaillés pour chaque thématique liée à l’environnement.
-                    Elle regroupe le respect et la protection de la nature, de la biodiversité ainsi que la réduction de l’impact environnemental."
+                    desc="Favoriser les échanges, donner du sens, sensibiliser et transmettre sont les valeurs du pilier social dont les résultats sont visibles ci-après"
                     thematiques={thematiques.slice(7,11)}
                     selectedTerritoires={selectedTerritoires}
                     dateRange={dateRange}
