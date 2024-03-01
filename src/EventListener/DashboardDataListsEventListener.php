@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EventListener;
 
 use App\Dto\DashboardFilterDTO;
+use App\Entity\Territoire;
 use App\Enum\TerritoireAreaEnum;
 use App\Event\DashboardDataListsEvent;
 use App\Repository\ReponseRepository;
@@ -31,10 +32,12 @@ class DashboardDataListsEventListener
             $territoire = $dashboardFilterDTO->getTerritoire();
             $subChildren = [];
             $children = $territoire->getTerritoiresChildren()->toArray();
+            usort($children, static fn (Territoire $a, Territoire $b) => $a->getName() <=> $b->getName());
             if (TerritoireAreaEnum::REGION === $territoire->getArea()) {
                 foreach ($children as $child) {
                     $child->setScore($this->territoireRepository->getPercentageByTerritoire($child, $responsesIds));
                     $child->setNumberOfReponses($this->reponseRepository->getNumberOfReponsesGlobal(DashboardFilterDTO::from(['territoire' => $child, 'territoires' => [$child]]), $responsesIds));
+                    usort($children, static fn (Territoire $a, Territoire $b) => $a->getName() <=> $b->getName());
                     foreach ($child->getTerritoiresChildren()->toArray() as $subChild) {
                         $subChild->setScore($this->territoireRepository->getPercentageByTerritoire($subChild, $responsesIds));
                         $subChild->setNumberOfReponses($this->reponseRepository->getNumberOfReponsesGlobal(DashboardFilterDTO::from(['territoire' => $subChild, 'territoires' => [$subChild]]), $responsesIds));
