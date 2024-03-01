@@ -79,7 +79,6 @@ class ScoreRepository extends ServiceEntityRepository
                     ->innerJoin('s.thematique', 't')
                     ->innerJoin('r.repondant', 'u')
                     ->innerJoin('u.typologie', 'ty')
-                    ->groupBy('u.id')
                     ->andWhere('t.slug = ?' . $counter++)
                 ;
                 $parameters[] = $thematique->value;
