@@ -32,7 +32,7 @@ class DashboardDataGlobalEventListener
             /* @phpstan-ignore-next-line */
             'lastSubmission' => \DateTime::createFromFormat('Y-m-d H:i:s', $this->reponseRepository->getLastSubmissionDate($dashboardFilterDTO))->format('d.m.Y'),
             'repondants' => $repondants,
-            'repondantsCount' => count($responsesIds),
+            'repondantsCount' => count($repondants),
             'score' => $this->reponseRepository->getPercentageGlobal($dashboardFilterDTO, $responsesIds),
             'piliers' => $this->scoreRepository->getPercentagesByPiliersGlobal($dashboardFilterDTO, $responsesIds),
         ]);

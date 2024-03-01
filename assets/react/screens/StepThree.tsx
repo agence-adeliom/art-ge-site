@@ -56,7 +56,7 @@ const StepThree = () => {
     feedRepondantAndGoToNextStep(data);
     getQuestions(data.restauration === 1, data.greenSpace === 1);
   };
- 
+
   const getQuestions = async (isRestauration: boolean, isGreenSpace: boolean) => {
     try {
       const response = await fetch(`api/form?restauration=${isRestauration}&green_space=${isGreenSpace}`);
@@ -90,7 +90,7 @@ const StepThree = () => {
             Retour
           </Button>
           <Heading variant="display-4" className="mt-2 lg:mt-6">
-            Vous proposez...
+            Vous êtes...
           </Heading>
           <Text className="mt-6" color="neutral-500" weight={400} size="sm">
             Indiquez l’activité de votre établissement touristique.
@@ -121,7 +121,7 @@ const StepThree = () => {
             control={control}
             autoCompleteChoice={false}
             defaultValue={''}
-          ></TextInput>   
+          ></TextInput>
 
           <Button
             size="lg"

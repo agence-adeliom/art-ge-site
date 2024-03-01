@@ -59,8 +59,8 @@ const establishmentData: {
   {
     value: 7,
     iconSrc: Trees,
-    alt: 'Une activité de loisir',
-    title: 'Une activité de loisir',
+    alt: 'Une activité de loisirs',
+    title: 'Une activité de loisirs',
   },
   {
     value: 8,
@@ -95,7 +95,7 @@ const StepTwo: FunctionComponent = () => {
           Retour
         </Button>
         <Heading variant="display-4" className="mt-2 lg:mt-6">
-          Vous proposez...
+          Vous êtes...
         </Heading>
         <Text className="mt-6" color="neutral-500" weight={400} size="sm">
           Indiquez l’activité de votre établissement touristique.

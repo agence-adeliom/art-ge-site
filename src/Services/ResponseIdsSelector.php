@@ -38,8 +38,7 @@ class ResponseIdsSelector
                             }
                         }
                     } else {
-                        $zipCriterias[] = ' U.zip IN (:zip' . $key . ') ';
-                        $zipParams['zip' . $key] = $territoire->getZips();
+                        $zipCriterias[] = ' U.zip IN ("' . implode('","', $territoire->getZips()) . '") ';
                     }
                 }
             }
@@ -81,8 +80,8 @@ class ResponseIdsSelector
         return $this->entityManager->getConnection()->executeQuery('
             SELECT R.id, MAX(R.submitted_at)
             FROM reponse R
-            INNER JOIN repondant U ON U.id = R.repondant_id 
-            INNER JOIN typologie TY ON TY.id = U.typologie_id 
+            INNER JOIN repondant U ON U.id = R.repondant_id
+            INNER JOIN typologie TY ON TY.id = U.typologie_id
             WHERE 1 = 1
                     ' . $typologyCriteria . '
                     ' . $zipCriteria . '

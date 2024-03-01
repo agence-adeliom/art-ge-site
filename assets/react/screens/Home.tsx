@@ -41,7 +41,7 @@ const Home = () => {
               <img className="w-[195px] h-[64px] lg:w-[282px] lg:h-[93px]" src={Logo} alt=""></img>
               <div className="flex flex-col gap-4">
                 <Heading variant="display-3" className="mt-6 lg:mt-12">
-                  Bienvenue sur notre calculateur tourisme durable
+                  Bienvenue sur notre calculateur tourisme durable : Eco Boussole
                 </Heading>
                 <Text color="neutral-700">
                   L’Agence Régionale du Tourisme Grand Est vous invite à
