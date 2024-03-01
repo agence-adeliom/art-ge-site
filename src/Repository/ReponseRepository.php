@@ -111,7 +111,6 @@ class ReponseRepository extends ServiceEntityRepository
             ->innerJoin('u.typologie', 'ty')
             ->andWhere('ty.slug = :typology')
             ->setParameter('typology', $typology)
-            ->groupBy('u.id')
         ;
 
         $qb = $this->addFilters($qb, $filterDTO, false);
@@ -123,15 +122,10 @@ class ReponseRepository extends ServiceEntityRepository
             ;
         }
 
-        $percentagesByTypology = $qb
+        $result = $qb
             ->getQuery()
-            ->getSingleColumnResult()
-        ;
+            ->getSingleScalarResult();
 
-        if (count($percentagesByTypology)) {
-            return (int) round(array_sum($percentagesByTypology) / count($percentagesByTypology));
-        }
-
-        return null;
+        return null !== $result ? (int) $result : null;
     }
 }
