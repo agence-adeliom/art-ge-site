@@ -31,7 +31,7 @@ class ReponseRepository extends ServiceEntityRepository
         parent::__construct($registry, Reponse::class);
     }
 
-    public function getNumberOfReponsesGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): int
+    public function getNumberOfReponsesGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO, array $reponsesIds = []): int
     {
         $qb = $this->createQueryBuilder('r')
             ->select('r.id, MAX(r.submittedAt) as HIDDEN submittedAt')
@@ -41,6 +41,13 @@ class ReponseRepository extends ServiceEntityRepository
         ;
 
         $qb = $this->addFilters($qb, $filterDTO);
+
+        if ([] !== $reponsesIds) {
+            $qb
+                ->andWhere('r.id IN (:reponsesIds)')
+                ->setParameter('reponsesIds', $reponsesIds)
+            ;
+        }
 
         return count($qb->getQuery()->getSingleColumnResult());
     }
