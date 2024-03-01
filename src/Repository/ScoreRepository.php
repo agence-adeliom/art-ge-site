@@ -92,9 +92,9 @@ class ScoreRepository extends ServiceEntityRepository
                 if ($filterDTO instanceof DashboardFilterDTO) {
                     $territoires = $filterDTO->getTerritoires() ?: [$filterDTO->getTerritoire()];
                     if ([] !== $territoires) {
+                        $ors = [];
                         foreach ($territoires as $territoire) {
                             if (TerritoireAreaEnum::REGION !== $territoire->getArea()) {
-                                $ors = [];
                                 if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
                                     $department = DepartementEnum::tryFrom($territoire->getSlug());
                                     if ($department) {
@@ -110,10 +110,10 @@ class ScoreRepository extends ServiceEntityRepository
                                 } else {
                                     $ors[] = $dql->expr()->in('u.zip', implode(',', $territoire->getZips()));
                                 }
-                                if ([] !== $ors) {
-                                    $dql->andWhere($dql->expr()->andX(...$ors));
-                                }
                             }
+                        }
+                        if ([] !== $ors) {
+                            $dql->andWhere($dql->expr()->orX(...$ors));
                         }
                     }
                 }

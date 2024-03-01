@@ -12,6 +12,7 @@ use App\Event\DashboardDataListsEvent;
 use App\Event\DashboardDataScoresEvent;
 use App\Repository\TerritoireRepository;
 use App\Repository\TypologieRepository;
+use App\Services\ResponseIdsSelector;
 use Doctrine\ORM\EntityManagerInterface;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,7 +34,7 @@ class DashboardDataController extends AbstractController
         private readonly TerritoireRepository $territoireRepository,
         private readonly TypologieRepository $typologieRepository,
         private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly EntityManagerInterface $entityManager,
+        private readonly ResponseIdsSelector $responseIdsSelector,
     ) {
     }
 
@@ -102,7 +103,7 @@ class DashboardDataController extends AbstractController
             'to' => $to,
         ]);
 
-        $reponsesIds = $this->getLastReponsesIds($dashboardFilterDTO);
+        $reponsesIds = $this->responseIdsSelector->getLastReponsesIds($dashboardFilterDTO);
 
         try {
             $event = new DashboardDataGlobalEvent($dashboardFilterDTO, $reponsesIds);
@@ -131,71 +132,5 @@ class DashboardDataController extends AbstractController
                 'lists' => $lists,
             ],
         ], Response::HTTP_OK, [], ['groups' => self::DASHBOARD_API_DATA_GROUP]);
-    }
-
-    private function getLastReponsesIds(DashboardFilterDTO $dashboardFilterDTO): array
-    {
-        $zipCriteria = '';
-        $zipParams = [];
-        $territoire = $dashboardFilterDTO->getTerritoire();
-        if (TerritoireAreaEnum::REGION !== $territoire->getArea()) {
-            if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
-                $department = DepartementEnum::tryFrom($territoire->getSlug());
-                if ($department) {
-                    if ($department === DepartementEnum::ALSACE) {
-                        $zipCriteria = 'AND U.zip BETWEEN :zip67 AND :zip69';
-                        $zipParams = ['zip67' => '67%', 'zip69' => '69%'];
-                    } else {
-                        $zipCriteria = 'AND U.zip LIKE :zip';
-                        $zipParams = ['zip' => DepartementEnum::getCode($department) . '%'];
-                    }
-                }
-            } else {
-                $zipCriteria = 'AND U.zip IN (:zip)';
-                $zipParams = ['zip' => $territoire->getZips()];
-            }
-        }
-
-        $typologyCriteria = '';
-        $typologyParams = [];
-        if ([] !== $dashboardFilterDTO->getTypologies() ?? []) {
-            $typologyCriteriaTemp = [];
-            $typologyCriteria = 'AND (';
-            foreach ($dashboardFilterDTO->getTypologies() ?? [] as $key => $typology) {
-                $typologyCriteriaTemp[] = 'TY.slug = :typology' . $key;
-                $typologyParams['typology' . $key] = $typology;
-            }
-            $typologyCriteria .= implode(' OR ', $typologyCriteriaTemp) . ') ';
-        }
-
-        $dateCriteria = '';
-        $dateParams = [];
-        if ($dashboardFilterDTO->hasDateRange()) {
-            $dateFormat = 'Y-m-d H:i:s';
-            $dateCriteria = 'AND ';
-            if (null !== $dashboardFilterDTO->getFrom() && null !== $dashboardFilterDTO->getTo()) {
-                $dateCriteria .= 'R.submitted_at BETWEEN :from AND :to';
-                $dateParams['from'] = $dashboardFilterDTO->getFrom()->format($dateFormat);
-                $dateParams['to'] = $dashboardFilterDTO->getTo()->format($dateFormat);
-            } elseif (null !== $dashboardFilterDTO->getFrom() && null === $dashboardFilterDTO->getTo()) {
-                $dateCriteria .= 'R.submitted_at >= :from';
-                $dateParams['from'] = $dashboardFilterDTO->getFrom()->format($dateFormat);
-            } elseif (null === $dashboardFilterDTO->getFrom() && null !== $dashboardFilterDTO->getTo()) {
-                $dateCriteria .= 'R.submitted_at <= :to';
-                $dateParams['to'] = $dashboardFilterDTO->getTo()->format($dateFormat);
-            }
-        }
-
-        return $this->entityManager->getConnection()->executeQuery('
-            SELECT R.id, MAX(R.submitted_at)
-            FROM reponse R
-            INNER JOIN repondant U ON U.id = R.repondant_id 
-            INNER JOIN typologie TY ON TY.id = U.typologie_id 
-            WHERE 1 = 1
-                    ' . $typologyCriteria . '
-                    ' . $zipCriteria . '
-                    ' . $dateCriteria . '
-            GROUP BY R.repondant_id'
-            , [...$typologyParams, ...$zipParams, ...$dateParams])->fetchFirstColumn();
     }
 }

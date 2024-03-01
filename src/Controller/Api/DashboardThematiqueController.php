@@ -11,6 +11,7 @@ use App\Repository\ChoiceRepository;
 use App\Repository\ReponseRepository;
 use App\Repository\TerritoireRepository;
 use App\Repository\TypologieRepository;
+use App\Services\ResponseIdsSelector;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -28,6 +29,7 @@ class DashboardThematiqueController extends AbstractController
         private readonly ReponseRepository $reponseRepository,
         private readonly TypologieRepository $typologieRepository,
         private readonly ChoiceRepository $choiceRepository,
+        private readonly ResponseIdsSelector $responseIdsSelector,
     ) {
     }
 
@@ -103,8 +105,10 @@ class DashboardThematiqueController extends AbstractController
             'to' => $to,
         ]);
 
+        $reponsesIds = $this->responseIdsSelector->getLastReponsesIds($dashboardFilterDTO);
+
         // récupérer le nombre de réponse pour cette thematique (c'est le nombre de répondant global en fait)
-        $numberOfReponses = $this->reponseRepository->getNumberOfReponsesGlobal($dashboardFilterDTO);
+        $numberOfReponses = $this->reponseRepository->getNumberOfReponsesGlobal($dashboardFilterDTO, $reponsesIds);
 
         // le nombre de réponse pour chaque choix ainsi que les infos sur le choix
         $choices = $thematique->getQuestion()->getChoices()->map(function (Choice $choice) use ($numberOfReponses, $dashboardFilterDTO) {

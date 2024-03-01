@@ -29,7 +29,7 @@ class DashboardDataScoresEventListener
         $typologies = [];
         foreach ($this->typologieRepository->getSlugs() as $typology) {
             if ([] === $dashboardFilterDTO->getTypologies() || in_array($typology, $dashboardFilterDTO->getTypologies())) {
-                $typologies[$typology] = $this->reponseRepository->getPercentagesByTypology($typology, $dashboardFilterDTO, $responsesIds);
+                $typologies[$typology] = $this->reponseRepository->getPercentagesByTypology($typology, $responsesIds);
             } else {
                 $typologies[$typology] = null;
             }

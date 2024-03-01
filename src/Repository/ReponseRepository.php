@@ -107,7 +107,7 @@ class ReponseRepository extends ServiceEntityRepository
         ;
     }
 
-    public function getPercentagesByTypology(string $typology, DashboardFilterDTO | TerritoireFilterDTO $filterDTO, array $reponsesIds = []): ?int
+    public function getPercentagesByTypology(string $typology, array $reponsesIds = []): ?int
     {
         $qb = $this->createQueryBuilder('r')
             ->select('ROUND(SUM(r.points) / SUM(r.total) * 100) as percentage')
@@ -116,8 +116,6 @@ class ReponseRepository extends ServiceEntityRepository
             ->andWhere('ty.slug = :typology')
             ->setParameter('typology', $typology)
         ;
-
-        $qb = $this->addFilters($qb, $filterDTO, false);
 
         if ([] !== $reponsesIds) {
             $qb

@@ -36,7 +36,7 @@ const LateralPanelDashboard = ({closeDropdown, showDialog, title, barColor, perc
                 </div>
                 <div className="bg-white h-full w-full p-10 min-h-screen">
                     <Heading variant={'display-4'} className="mr-10 mb-10" raw={true}>{title}</Heading>
-                    <Text color="neutral-700" className="mb-4">Moyenne régionnale : <strong>{percentage}/100</strong></Text>
+                    <Text color="neutral-700" className="mb-4">Moyenne de la thématique : <strong>{percentage}/100</strong></Text>
                     <Text color="neutral-700" className="mb-4">Les actions des répondants :</Text>
                     <div>
                         { thematiqueDetails.map((item) => (
