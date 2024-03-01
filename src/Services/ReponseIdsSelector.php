@@ -9,7 +9,7 @@ use App\Enum\DepartementEnum;
 use App\Enum\TerritoireAreaEnum;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ResponseIdsSelector
+class ReponseIdsSelector
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,

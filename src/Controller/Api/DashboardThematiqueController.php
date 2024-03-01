@@ -11,7 +11,7 @@ use App\Repository\ChoiceRepository;
 use App\Repository\ReponseRepository;
 use App\Repository\TerritoireRepository;
 use App\Repository\TypologieRepository;
-use App\Services\ResponseIdsSelector;
+use App\Services\ReponseIdsSelector;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,7 +29,7 @@ class DashboardThematiqueController extends AbstractController
         private readonly ReponseRepository $reponseRepository,
         private readonly TypologieRepository $typologieRepository,
         private readonly ChoiceRepository $choiceRepository,
-        private readonly ResponseIdsSelector $responseIdsSelector,
+        private readonly ReponseIdsSelector $reponseIdsSelector,
     ) {
     }
 

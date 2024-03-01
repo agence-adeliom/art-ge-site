@@ -10,7 +10,7 @@ use App\Event\DashboardDataListsEvent;
 use App\Event\DashboardDataScoresEvent;
 use App\Repository\TerritoireRepository;
 use App\Repository\TypologieRepository;
-use App\Services\ResponseIdsSelector;
+use App\Services\ReponseIdsSelector;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -28,7 +28,7 @@ class DashboardDataController extends AbstractController
         private readonly TerritoireRepository $territoireRepository,
         private readonly TypologieRepository $typologieRepository,
         private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly ResponseIdsSelector $responseIdsSelector,
+        private readonly ReponseIdsSelector $reponseIdsSelector,
     ) {
     }
 
@@ -97,7 +97,7 @@ class DashboardDataController extends AbstractController
             'to' => $to,
         ]);
 
-        $reponsesIds = $this->responseIdsSelector->getLastReponsesIds($dashboardFilterDTO);
+        $reponsesIds = $this->reponseIdsSelector->getLastReponsesIds($dashboardFilterDTO);
 
         try {
             $event = new DashboardDataGlobalEvent($dashboardFilterDTO, $reponsesIds);
