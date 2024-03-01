@@ -22,7 +22,7 @@ trait RepositoryFilterTrait
             if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
                 $department = DepartementEnum::tryFrom($territoire->getSlug());
                 if ($department) {
-                    if ($department === DepartementEnum::ALSACE) {
+                    if (DepartementEnum::ALSACE === $department) {
                         $ors[] = $qb->expr()->between('u.zip', ':zip67', ':zip69');
                         $qb->setParameter('zip67', '67%');
                         $qb->setParameter('zip69', '69%');

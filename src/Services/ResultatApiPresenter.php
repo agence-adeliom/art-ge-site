@@ -29,7 +29,7 @@ class ResultatApiPresenter
             'slug' => $choice->getSlug(),
         ];
 
-        $removeZeroChoice = fn (array $choice): bool => $choice['slug'] !== 'je-n-ai-rien-entrepris-en-ce-sens';
+        $removeZeroChoice = fn (array $choice): bool => 'je-n-ai-rien-entrepris-en-ce-sens' !== $choice['slug'];
 
         $isRestauration = $reponse->getRepondant()->isRestauration();
         $isGreenSpace = $reponse->getRepondant()->isGreenSpace();
@@ -55,7 +55,7 @@ class ResultatApiPresenter
             return true;
         };
 
-        $scores = array_map(fn (Score $score) : array => [
+        $scores = array_map(fn (Score $score): array => [
             'name' => htmlentities($score->getThematique()->getName()),
             'slug' => $score->getThematique()->getSlug(),
             'links' => array_values($score->getThematique()->getLinks() ?? []),

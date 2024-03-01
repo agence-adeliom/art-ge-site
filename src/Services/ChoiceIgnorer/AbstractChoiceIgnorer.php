@@ -23,12 +23,13 @@ abstract class AbstractChoiceIgnorer
      *
      * @return Question|array question with ignored choices
      */
-    public function ignoreChoices(Question $question, bool $returnChoicesOnly = false): Question | array
+    public function ignoreChoices(Question $question, bool $returnChoicesOnly = false): array | Question
     {
         if (!$this->shoudIgnore($question)) {
             if ($returnChoicesOnly) {
                 return $question->getChoices()->toArray();
             }
+
             return $question;
         }
 

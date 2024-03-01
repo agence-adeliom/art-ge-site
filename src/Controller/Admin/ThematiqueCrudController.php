@@ -11,8 +11,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ThematiqueCrudController extends AbstractCrudController
@@ -47,6 +45,7 @@ class ThematiqueCrudController extends AbstractCrudController
     {
         yield TextField::new('name');
         yield CollectionField::new('links', 'Liens')
-            ->setEntryType(ThematiqueLinkAdminType::class);
+            ->setEntryType(ThematiqueLinkAdminType::class)
+        ;
     }
 }

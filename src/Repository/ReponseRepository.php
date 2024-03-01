@@ -126,7 +126,8 @@ class ReponseRepository extends ServiceEntityRepository
 
         $result = $qb
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
 
         return null !== $result ? (int) $result : null;
     }

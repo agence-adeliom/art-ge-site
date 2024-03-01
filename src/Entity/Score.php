@@ -90,6 +90,7 @@ class Score
         if ($this->getTotal() <= 0) {
             return 0 . '%';
         }
+
         return round(($this->getPoints() / $this->getTotal()) * 100) . '%';
     }
 

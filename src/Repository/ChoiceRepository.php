@@ -34,7 +34,7 @@ class ChoiceRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getSingleScalarResult()
-            ;
+        ;
     }
 
     public function getNumberOfReponses(Choice $choice, DashboardFilterDTO $dashboardFilterDTO): int
@@ -46,7 +46,7 @@ class ChoiceRepository extends ServiceEntityRepository
             if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
                 $department = DepartementEnum::tryFrom($territoire->getSlug());
                 if ($department) {
-                    if ($department === DepartementEnum::ALSACE) {
+                    if (DepartementEnum::ALSACE === $department) {
                         $zipCriteria = 'AND U.zip BETWEEN :zip67 AND :zip69';
                         $zipParams = ['zip67' => '67%', 'zip69' => '69%'];
                     } else {
@@ -81,7 +81,6 @@ class ChoiceRepository extends ServiceEntityRepository
             INNER JOIN typologie TY ON TY.id = U.typologie_id 
             WHERE C.id = :id
                     ' . $typologyCriteria . '
-                    ' . $zipCriteria
-            , [...['id' => $choice->getId()], ...$typologyParams, ...$zipParams])->fetchOne();
+                    ' . $zipCriteria, [...['id' => $choice->getId()], ...$typologyParams, ...$zipParams])->fetchOne();
     }
 }

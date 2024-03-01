@@ -11,7 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ResponseIdsSelector
 {
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
     ) {
@@ -29,7 +28,7 @@ class ResponseIdsSelector
                     if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
                         $department = DepartementEnum::tryFrom($territoire->getSlug());
                         if ($department) {
-                            if ($department === DepartementEnum::ALSACE) {
+                            if (DepartementEnum::ALSACE === $department) {
                                 $zipCriterias[] = ' U.zip BETWEEN :zip67' . $key . ' AND :zip69' . $key . ' ';
                                 $zipParams['zip67' . $key] = '67%';
                                 $zipParams['zip69' . $key] = '69%';
@@ -77,7 +76,7 @@ class ResponseIdsSelector
                 $dateCriteria .= 'R.submitted_at <= :to';
                 $dateParams['to'] = $dashboardFilterDTO->getTo()->format($dateFormat);
             }
-        };
+        }
 
         return $this->entityManager->getConnection()->executeQuery('
             SELECT R.id, MAX(R.submitted_at)
@@ -88,7 +87,6 @@ class ResponseIdsSelector
                     ' . $typologyCriteria . '
                     ' . $zipCriteria . '
                     ' . $dateCriteria . '
-            GROUP BY R.repondant_id'
-            , [...$typologyParams, ...$zipParams, ...$dateParams])->fetchFirstColumn();
+            GROUP BY R.repondant_id', [...$typologyParams, ...$zipParams, ...$dateParams])->fetchFirstColumn();
     }
 }

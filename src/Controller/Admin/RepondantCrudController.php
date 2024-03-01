@@ -40,12 +40,13 @@ class RepondantCrudController extends AbstractCrudController
         $actions = parent::configureActions($actions);
         $actions->remove(Crud::PAGE_INDEX, Action::NEW);
         $actions->add(Crud::PAGE_INDEX, Action::DETAIL);
+
         return $actions;
     }
 
     public function configureFields(string $pageName): iterable
     {
-        if ($pageName !== Crud::PAGE_EDIT) {
+        if (Crud::PAGE_EDIT !== $pageName) {
             yield IdField::new('id');
             yield TextField::new('fullname', 'Prénom Nom')->onlyOnIndex();
             yield TextField::new('email');
@@ -64,7 +65,8 @@ class RepondantCrudController extends AbstractCrudController
             yield CollectionField::new('reponses')
                 ->setEntryType(ReponseAdminType::class)
                 ->setTemplatePath('admin/crud/reponse_admin.html.twig')
-                ->hideOnIndex();
+                ->hideOnIndex()
+            ;
         } else {
             yield TextField::new('email');
             yield TextField::new('firstname', 'Prénom');
@@ -77,7 +79,6 @@ class RepondantCrudController extends AbstractCrudController
             yield TextField::new('phone', 'Téléphone');
             yield TextField::new('company', 'Entreprise');
             yield AssociationField::new('typologie');
-
         }
     }
 

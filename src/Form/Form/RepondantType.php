@@ -53,7 +53,7 @@ class RepondantType extends AbstractType
                 $repondant = $event->getData();
                 $repondant->setCountry('France');
                 $code = substr((string) $repondant->getZip(), 0, 2);
-                if ($code === '67' || $code === '68') {
+                if ('67' === $code || '68' === $code) {
                     $department = $this->departmentRepository->findOneBy(['slug' => 'alsace']);
                 } else {
                     $department = $this->departmentRepository->getByCode($code);

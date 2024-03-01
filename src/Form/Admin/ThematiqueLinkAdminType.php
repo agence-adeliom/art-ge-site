@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Form\Admin;
 
-use App\Entity\Score;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ThematiqueLinkAdminType extends AbstractType
 {
@@ -20,7 +18,7 @@ class ThematiqueLinkAdminType extends AbstractType
             ->add('type', ChoiceType::class, [
                 'required' => true,
                 'constraints' => [
-                    new \Symfony\Component\Validator\Constraints\NotBlank()
+                    new \Symfony\Component\Validator\Constraints\NotBlank(),
                 ],
                 'choices' => [
                     'Lien vers un document' => 'doc',
@@ -31,13 +29,13 @@ class ThematiqueLinkAdminType extends AbstractType
             ->add('label', TextType::class, [
                 'required' => true,
                 'constraints' => [
-                    new \Symfony\Component\Validator\Constraints\NotBlank()
+                    new \Symfony\Component\Validator\Constraints\NotBlank(),
                 ],
             ])
             ->add('link', UrlType::class, [
                 'required' => true,
                 'constraints' => [
-                    new \Symfony\Component\Validator\Constraints\NotBlank()
+                    new \Symfony\Component\Validator\Constraints\NotBlank(),
                 ],
             ])
         ;

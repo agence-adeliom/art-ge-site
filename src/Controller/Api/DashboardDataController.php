@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Dto\DashboardFilterDTO;
-use App\Enum\DepartementEnum;
-use App\Enum\TerritoireAreaEnum;
 use App\Event\DashboardDataGlobalEvent;
 use App\Event\DashboardDataListsEvent;
 use App\Event\DashboardDataScoresEvent;
 use App\Repository\TerritoireRepository;
 use App\Repository\TypologieRepository;
 use App\Services\ResponseIdsSelector;
-use Doctrine\ORM\EntityManagerInterface;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

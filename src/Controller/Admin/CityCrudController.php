@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\City;
-use App\Entity\Epci;
-use App\Entity\Question;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class CityCrudController extends AbstractCrudController
@@ -36,6 +32,7 @@ class CityCrudController extends AbstractCrudController
     {
         $actions = parent::configureActions($actions);
         $actions->add(Crud::PAGE_INDEX, Action::DETAIL);
+
         return $actions;
     }
 
