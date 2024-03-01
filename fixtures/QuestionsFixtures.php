@@ -48,7 +48,7 @@ class QuestionsFixtures extends Fixture
                 "J'ai formé mes équipes, ou me suis formé(e) si je travaille seul(e), à la réduction du gaspillage alimentaire",
                 "Je n'imprime plus de flyers, de guides ou de publications papier",
                 "Mes contrats avec les prestataires externes indiquent mes critères de réductions et de valorisations des déchets",
-                "J'ai mis le tri 5 flux (bois, carton, verre, métal, plastique) en place (même si je ne suis pas concerné par la réglementation)",
+                "J'ai mis le tri 5 flux (bois, carton, verre, métal, plastique) en place",
                 "Je n'ai rien entrepris en ce sens",
             ],
             "Gestion de l'eau et de l'érosion" => [
@@ -171,7 +171,7 @@ class QuestionsFixtures extends Fixture
                 "Notre structure soutient une association culturelle (locale ou non)",
                 "Notre établissement restaure ou développe le patrimoine architectural en respectant les techniques et savoir faire traditionnels locaux",
                 "Nous participons à au moins un évènement culturel chaque année",
-                "Je propose un plat traditionnel local dans mon menu et je le mets en avant dans mon offre / boutique",
+                "Je propose un plat traditionnel local dans mon menu et / ou je le mets en avant dans mon offre / boutique",
                 "J'emploie / je mets en avant des artistes locaux",
                 "Je n'ai rien entrepris en ce sens",
             ],

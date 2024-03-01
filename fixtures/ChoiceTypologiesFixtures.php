@@ -38,7 +38,7 @@ class ChoiceTypologiesFixtures extends Fixture implements DependentFixtureInterf
     {
         /** @var string $datasDirectory */
         $datasDirectory = $this->parameterBag->get('datas_directory');
-        $ponderationsFile = file_get_contents($datasDirectory . '/ponderations2.csv');
+        $ponderationsFile = file_get_contents($datasDirectory . '/ponderations.csv');
         if ($ponderationsFile) {
             $csvEncoder = new CsvEncoder();
             $ponderationsDatas = $csvEncoder->decode($ponderationsFile, 'csv');

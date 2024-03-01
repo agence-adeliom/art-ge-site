@@ -155,7 +155,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                         "je-suis-partenaire-au-moins-une-fois-par-an-a-un-evenement-en-lien-avec-les-habitants-ou-associations-de-la-commune",
                     ],
                     ThematiqueSlugEnum::CULTURE_ET_PATRIMOINE->value => [
-                        "je-propose-un-plat-traditionnel-local-dans-mon-menu-et-je-le-mets-en-avant-dans-mon-offre-boutique",
+                        "je-propose-un-plat-traditionnel-local-dans-mon-menu-et-ou-je-le-mets-en-avant-dans-mon-offre-boutique",
                     ],
                     ThematiqueSlugEnum::LABELS->value => [
                         'je-n-ai-rien-entrepris-en-ce-sens',
@@ -212,7 +212,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                         "je-participe-au-moins-deux-fois-par-an-a-des-reunions-de-travail-avec-mon-ot-le-cdt-le-crt-ou-les-collectivites-locales",
                     ],
                     ThematiqueSlugEnum::CULTURE_ET_PATRIMOINE->value => [
-                        "je-propose-un-plat-traditionnel-local-dans-mon-menu-et-je-le-mets-en-avant-dans-mon-offre-boutique",
+                        "je-propose-un-plat-traditionnel-local-dans-mon-menu-et-ou-je-le-mets-en-avant-dans-mon-offre-boutique",
                     ],
                     ThematiqueSlugEnum::LABELS->value => [
                         'accueil-velo',
@@ -346,7 +346,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                     ],
                     ThematiqueSlugEnum::CULTURE_ET_PATRIMOINE->value => [
                         "nous-participons-a-au-moins-un-evenement-culturel-chaque-annee",
-                        "je-propose-un-plat-traditionnel-local-dans-mon-menu-et-je-le-mets-en-avant-dans-mon-offre-boutique",
+                        "je-propose-un-plat-traditionnel-local-dans-mon-menu-et-ou-je-le-mets-en-avant-dans-mon-offre-boutique",
                         "j-emploie-je-mets-en-avant-des-artistes-locaux",
                     ],
                     ThematiqueSlugEnum::LABELS->value => [
@@ -403,7 +403,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                     ThematiqueSlugEnum::CULTURE_ET_PATRIMOINE->value => [
                         "notre-structure-soutient-une-association-culturelle-locale-ou-non",
                         "nous-participons-a-au-moins-un-evenement-culturel-chaque-annee",
-                        "je-propose-un-plat-traditionnel-local-dans-mon-menu-et-je-le-mets-en-avant-dans-mon-offre-boutique",
+                        "je-propose-un-plat-traditionnel-local-dans-mon-menu-et-ou-je-le-mets-en-avant-dans-mon-offre-boutique",
                         "j-emploie-je-mets-en-avant-des-artistes-locaux",
                     ],
                     ThematiqueSlugEnum::LABELS->value => [
@@ -477,7 +477,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                     ],
                     ThematiqueSlugEnum::CULTURE_ET_PATRIMOINE->value => [
                         "notre-etablissement-restaure-ou-developpe-le-patrimoine-architectural-en-respectant-les-techniques-et-savoir-faire-traditionnels-locaux",
-                        "je-propose-un-plat-traditionnel-local-dans-mon-menu-et-je-le-mets-en-avant-dans-mon-offre-boutique",
+                        "je-propose-un-plat-traditionnel-local-dans-mon-menu-et-ou-je-le-mets-en-avant-dans-mon-offre-boutique",
                         "j-emploie-je-mets-en-avant-des-artistes-locaux",
                     ],
                     ThematiqueSlugEnum::LABELS->value => [
@@ -541,7 +541,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                         "l-un-de-nos-salaries-dirigeant-est-elu-ou-benevole-au-sein-d-une-instance-publique-ou-professionnelle-et-du-temps-lui-est-mis-a-disposition-pour-s-impliquer",
                     ],
                     ThematiqueSlugEnum::CULTURE_ET_PATRIMOINE->value => [
-                        "je-propose-un-plat-traditionnel-local-dans-mon-menu-et-je-le-mets-en-avant-dans-mon-offre-boutique",
+                        "je-propose-un-plat-traditionnel-local-dans-mon-menu-et-ou-je-le-mets-en-avant-dans-mon-offre-boutique",
                     ],
                     ThematiqueSlugEnum::LABELS->value => [
                         'je-n-ai-rien-entrepris-en-ce-sens',
@@ -659,7 +659,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                         $reponse->addChoice($choice);
                         $rawForm[$question->getId()]['answers'][$choice->getId()] = 'on';
                     } else {
-                        dump('choice not founst for slug : ' . $repondantChoicesSlug);
+                        dump('choice not found for slug : ' . $repondantChoicesSlug);
                     }
                 }
             }
