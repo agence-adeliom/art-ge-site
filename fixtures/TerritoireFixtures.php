@@ -76,7 +76,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                 $departement->setArea(TerritoireAreaEnum::DEPARTEMENT);
                 $departements[DepartementEnum::getCode($departementEnum)] = $departement;
                 $manager->persist($departement);
-                if ($departement->getSlug() === 'haut-rhin') {
+                if ($departement->getSlug() === 'alsace') {
                     $routeDesVins->addLinkedTerritoire($departement);
                     $departement->addTourismTerritoire($routeDesVins);
                 }
@@ -139,7 +139,11 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                 $territoire->setUseSlug(true);
                 $territoire->setIsPublic(true);
                 foreach ($departementsCodes[$sirenEPCI] as $departmentParentCode) {
-                    $territoire->addParent($departements[$departmentParentCode]);
+                    if ((int) $departmentParentCode === 67 || (int) $departmentParentCode === 68) {
+                        $territoire->addParent($departements['67|68']);
+                    } else {
+                        $territoire->addParent($departements[$departmentParentCode]);
+                    }
                 }
                 foreach ($cityCodes[$sirenEPCI] as $city) {
                     $territoire->addZip($city->getZip());

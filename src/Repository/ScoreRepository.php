@@ -98,8 +98,14 @@ class ScoreRepository extends ServiceEntityRepository
                                 if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
                                     $department = DepartementEnum::tryFrom($territoire->getSlug());
                                     if ($department) {
-                                        $ors[] = $dql->expr()->like('u.zip', '?' . $counter++);
-                                        $parameters[] = DepartementEnum::getCode($department) . '%';
+                                        if ($department === DepartementEnum::ALSACE) {
+                                            $ors[] = $dql->expr()->between('u.zip', '?' . $counter++, '?' . $counter++);
+                                            $parameters[] = '67%';
+                                            $parameters[] = '69%';
+                                        } else {
+                                            $ors[] = $dql->expr()->like('u.zip', '?' . $counter++);
+                                            $parameters[] = DepartementEnum::getCode($department) . '%';
+                                        }
                                     }
                                 } else {
                                     $ors[] = $dql->expr()->in('u.zip', implode(',', $territoire->getZips()));

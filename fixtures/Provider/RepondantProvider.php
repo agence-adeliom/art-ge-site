@@ -16,8 +16,7 @@ class RepondantProvider extends Base
         'Meurthe-et-Moselle',
         'Meuse',
         'Moselle',
-        'Bas-Rhin',
-        'Haut-Rhin',
+        'Alsace',
     ];
 
     public static function departement(): string

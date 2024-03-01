@@ -234,10 +234,17 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
                 ' . ([] !== $reponsesIds ? ' WHERE R.id IN (' . implode(',', $reponsesIds) . ') ' : ' ');
 
         if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
-            $sql .= ([] === $reponsesIds ? ' WHERE ' : ' AND ') . ' U.zip LIKE ?;';
+            $sql .= ([] === $reponsesIds ? ' WHERE ' : ' AND ');
             $department = DepartementEnum::tryFrom($territoire->getSlug());
-            $departmentCode = DepartementEnum::getCode($department);
-            $params = [$departmentCode . '%'];
+            if ($department === DepartementEnum::ALSACE) {
+                $sql .= ' U.zip BETWEEN ? AND ?';
+                $params[] = '67%';
+                $params[] = '69%';
+            } else {
+                $sql .= ' U.zip LIKE ?';
+                $departmentCode = DepartementEnum::getCode($department);
+                $params = [$departmentCode . '%'];
+            }
         } elseif (TerritoireAreaEnum::OT === $territoire->getArea() || TerritoireAreaEnum::TOURISME === $territoire->getArea()) {
             $sql .= ([] === $reponsesIds ? ' WHERE ' : ' AND ') . ' U.zip IN (' . implode(',', $territoire->getZips()) . ')';
             $params = [];

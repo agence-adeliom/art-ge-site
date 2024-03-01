@@ -22,8 +22,14 @@ trait RepositoryFilterTrait
             if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
                 $department = DepartementEnum::tryFrom($territoire->getSlug());
                 if ($department) {
-                    $ors[] = $qb->expr()->like('u.zip', ':zip' . $key);
-                    $qb->setParameter('zip' . $key, DepartementEnum::getCode($department) . '%');
+                    if ($department === DepartementEnum::ALSACE) {
+                        $ors[] = $qb->expr()->between('u.zip', ':zip67', ':zip69');
+                        $qb->setParameter('zip67', '67%');
+                        $qb->setParameter('zip69', '69%');
+                    } else {
+                        $ors[] = $qb->expr()->like('u.zip', ':zip' . $key);
+                        $qb->setParameter('zip' . $key, DepartementEnum::getCode($department) . '%');
+                    }
                 }
             } else {
                 $ors[] = $qb->expr()->in('u.zip', ':zip' . $key);

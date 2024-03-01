@@ -46,8 +46,13 @@ class ChoiceRepository extends ServiceEntityRepository
             if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
                 $department = DepartementEnum::tryFrom($territoire->getSlug());
                 if ($department) {
-                    $zipCriteria = 'AND U.zip LIKE :zip';
-                    $zipParams = ['zip' => DepartementEnum::getCode($department) . '%'];
+                    if ($department === DepartementEnum::ALSACE) {
+                        $zipCriteria = 'AND U.zip BETWEEN :zip67 AND :zip69';
+                        $zipParams = ['zip67' => '67%', 'zip69' => '69%'];
+                    } else {
+                        $zipCriteria = 'AND U.zip LIKE :zip';
+                        $zipParams = ['zip' => DepartementEnum::getCode($department) . '%'];
+                    }
                 }
             } else {
                 $zipCriteria = 'AND U.zip IN (:zip)';

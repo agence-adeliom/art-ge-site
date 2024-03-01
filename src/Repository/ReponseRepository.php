@@ -7,11 +7,8 @@ namespace App\Repository;
 use App\Dto\DashboardFilterDTO;
 use App\Dto\TerritoireFilterDTO;
 use App\Entity\Reponse;
-use App\Enum\DepartementEnum;
-use App\Enum\TerritoireAreaEnum;
 use App\Traits\RepositoryFilterTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
