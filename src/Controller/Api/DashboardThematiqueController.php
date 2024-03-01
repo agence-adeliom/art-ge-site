@@ -8,7 +8,6 @@ use App\Dto\DashboardFilterDTO;
 use App\Entity\Choice;
 use App\Entity\Thematique;
 use App\Repository\ChoiceRepository;
-use App\Repository\ReponseRepository;
 use App\Repository\TerritoireRepository;
 use App\Repository\TypologieRepository;
 use App\Services\ReponseIdsSelector;
@@ -26,7 +25,6 @@ class DashboardThematiqueController extends AbstractController
 
     public function __construct(
         private readonly TerritoireRepository $territoireRepository,
-        private readonly ReponseRepository $reponseRepository,
         private readonly TypologieRepository $typologieRepository,
         private readonly ChoiceRepository $choiceRepository,
         private readonly ReponseIdsSelector $reponseIdsSelector,
@@ -105,16 +103,14 @@ class DashboardThematiqueController extends AbstractController
             'to' => $to,
         ]);
 
-        $reponsesIds = $this->responseIdsSelector->getLastReponsesIds($dashboardFilterDTO);
-
-        // récupérer le nombre de réponse pour cette thematique (c'est le nombre de répondant global en fait)
-        $numberOfReponses = $this->reponseRepository->getNumberOfReponsesGlobal($dashboardFilterDTO, $reponsesIds);
+        $reponsesIds = $this->reponseIdsSelector->getLastReponsesIds($dashboardFilterDTO);
 
         // le nombre de réponse pour chaque choix ainsi que les infos sur le choix
-        $choices = $thematique->getQuestion()->getChoices()->map(function (Choice $choice) use ($numberOfReponses, $dashboardFilterDTO) {
-            $reponsesCount = $this->choiceRepository->getNumberOfReponses($choice, $dashboardFilterDTO);
+        $choices = $thematique->getQuestion()->getChoices()->map(function (Choice $choice) use ($reponsesIds) {
+            $reponsesCountByChoice = $this->choiceRepository->getNumberOfReponses($choice, $reponsesIds);
+            $numberOfReponses = count($reponsesIds);
             if ($numberOfReponses > 1) {
-                $percentage = $reponsesCount / $numberOfReponses * 100;
+                $percentage = ($reponsesCountByChoice / $numberOfReponses) * 100;
             } else {
                 $percentage = 100;
             }
