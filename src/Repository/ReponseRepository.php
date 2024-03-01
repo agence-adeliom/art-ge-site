@@ -78,7 +78,7 @@ class ReponseRepository extends ServiceEntityRepository
 
         $qb = $this->addFilters($qb, $filterDTO);
 
-        return $qb
+        return (string) $qb
             ->getQuery()
             ->getSingleScalarResult()
         ;

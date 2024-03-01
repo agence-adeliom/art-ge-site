@@ -55,6 +55,7 @@ class FormApiController extends AbstractController
         }
 
         if (false === $restauration) {
+            /** @phpstan-ignore-next-line */
             $questions = array_map($this->restaurationChoiceIgnorer->ignoreChoices(...), $questions);
         }
 

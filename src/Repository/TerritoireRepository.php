@@ -235,7 +235,7 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
 
         if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
             $sql .= ([] === $reponsesIds ? ' WHERE ' : ' AND ');
-            $department = DepartementEnum::tryFrom($territoire->getSlug());
+            $department = DepartementEnum::from($territoire->getSlug());
             if (DepartementEnum::ALSACE === $department) {
                 $sql .= ' U.zip BETWEEN ? AND ?';
                 $params[] = '67%';

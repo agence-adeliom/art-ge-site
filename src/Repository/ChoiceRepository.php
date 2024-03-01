@@ -62,10 +62,10 @@ class ChoiceRepository extends ServiceEntityRepository
 
         $typologyCriteria = '';
         $typologyParams = [];
-        if ([] !== $dashboardFilterDTO->getTypologies() ?? []) {
+        if ([] !== $dashboardFilterDTO->getTypologies()) {
             $typologyCriteriaTemp = [];
             $typologyCriteria = 'AND (';
-            foreach ($dashboardFilterDTO->getTypologies() ?? [] as $key => $typology) {
+            foreach ($dashboardFilterDTO->getTypologies() as $key => $typology) {
                 $typologyCriteriaTemp[] = 'TY.slug = :typology' . $key;
                 $typologyParams['typology' . $key] = $typology;
             }

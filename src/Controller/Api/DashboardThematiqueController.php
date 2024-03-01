@@ -96,7 +96,7 @@ class DashboardThematiqueController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $territoires = $this->territoireRepository->getAllBySlugs(array_values(array_merge($departments, $ots, $tourisms)));
+        $territoires = $this->territoireRepository->getAllBySlugs(array_values(array_merge($departments ?? [], $ots ?? [], $tourisms ?? [])));
         $dashboardFilterDTO = DashboardFilterDTO::from([
             'territoire' => $territoire,
             'territoires' => $territoires,
@@ -113,14 +113,10 @@ class DashboardThematiqueController extends AbstractController
         // le nombre de réponse pour chaque choix ainsi que les infos sur le choix
         $choices = $thematique->getQuestion()->getChoices()->map(function (Choice $choice) use ($numberOfReponses, $dashboardFilterDTO) {
             $reponsesCount = $this->choiceRepository->getNumberOfReponses($choice, $dashboardFilterDTO);
-            try {
-                if ($numberOfReponses > 1) {
-                    $percentage = $reponsesCount / $numberOfReponses * 100;
-                } else {
-                    $percentage = 100;
-                }
-            } catch (\DivisionByZeroError $e) {
-                $percentage = 0;
+            if ($numberOfReponses > 1) {
+                $percentage = $reponsesCount / $numberOfReponses * 100;
+            } else {
+                $percentage = 100;
             }
 
             return [

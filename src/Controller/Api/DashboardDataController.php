@@ -24,9 +24,6 @@ class DashboardDataController extends AbstractController
     /** @var string */
     final public const DASHBOARD_API_DATA_GROUP = 'dashboard:api:data:read';
 
-    /** @var string[] */
-    private array $columns = ['slug', 'name'];
-
     public function __construct(
         private readonly TerritoireRepository $territoireRepository,
         private readonly TypologieRepository $typologieRepository,
@@ -91,7 +88,7 @@ class DashboardDataController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $territoires = $this->territoireRepository->getAllBySlugs(array_values(array_merge($departments, $ots, $tourisms)));
+        $territoires = $this->territoireRepository->getAllBySlugs(array_values(array_merge($departments ?? [], $ots ?? [], $tourisms ?? [])));
         $dashboardFilterDTO = DashboardFilterDTO::from([
             'territoire' => $territoire,
             'territoires' => $territoires,

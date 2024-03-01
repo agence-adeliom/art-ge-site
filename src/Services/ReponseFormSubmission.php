@@ -56,7 +56,7 @@ class ReponseFormSubmission
             }
             $sql = substr($sql, 0, -1);
             if (str_contains($sql, '?')) {
-                $this->entityManager->getConnection()->executeQuery($sql, $params);
+                $this->entityManager->getConnection()->executeQuery($sql, $params ?? []);
             }
         }
     }

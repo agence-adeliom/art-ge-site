@@ -148,6 +148,8 @@ class ScoreRepository extends ServiceEntityRepository
             // le résultat est le produit en croix de toutes les sommes des points des thematiques divisées par les total des thematiques * 100
             $sql = 'SELECT ROUND((SUM(temp.sclr_0) / SUM(temp.sclr_1)) * 100) as percentage FROM ((';
             // pour chaque thematique on construit une requete sql
+
+            /** @phpstan-ignore-next-line */
             $sqlUnion = array_map(fn (QueryBuilder $dql): string => (string) $dql->getQuery()->getSQL(), $dqls);
 
             $sql .= implode(') UNION (', $sqlUnion) . ')) as temp';

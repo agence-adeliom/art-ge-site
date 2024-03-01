@@ -139,7 +139,7 @@ class Thematique implements \Stringable
 
     public function addLink(string $link): static
     {
-        if (false === array_search($link, $this->links, true)) {
+        if (false === array_search($link, $this->links ?? [], true)) {
             $this->links[] = $link;
         }
 

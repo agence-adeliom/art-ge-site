@@ -40,15 +40,15 @@ class ResultatApiPresenter
             }
 
             $choicesToKeep = [];
-            if (!$isRestauration && !$isGreenSpace) {
+            if (!$isRestauration && !$isGreenSpace && $choice->getQuestion()) {
                 $choicesToKeep = $this->restaurationAndGreenSpaceChoiceIgnorer->onlyNotIgnored($choice->getQuestion());
-            } elseif (!$isGreenSpace && $isRestauration) {
+            } elseif (!$isGreenSpace && $isRestauration && $choice->getQuestion()) {
                 $choicesToKeep = $this->greenSpaceChoiceIgnorer->onlyNotIgnored($choice->getQuestion());
-            } elseif ($isGreenSpace && !$isRestauration) {
+            } elseif ($isGreenSpace && !$isRestauration && $choice->getQuestion()) {
                 $choicesToKeep = $this->restaurationChoiceIgnorer->onlyNotIgnored($choice->getQuestion());
             }
 
-            if ([] !== $choicesToKeep) {
+            if ([] !== $choicesToKeep && null !== $choicesToKeep) {
                 return in_array($choice->getId(), $choicesToKeep);
             }
 

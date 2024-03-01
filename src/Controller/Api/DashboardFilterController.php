@@ -82,13 +82,13 @@ class DashboardFilterController extends AbstractController
                 ], 200);
             }
         } else {
-            if ([] !== $departments) {
+            if ([] !== $departments && null !== $departments) {
                 return new JsonResponse([
                     'status' => 'success',
                     'data' => $this->getDataByDepartments($departments),
                 ], 200);
             }
-            if ([] !== $tourisms) {
+            if ([] !== $tourisms && null !== $tourisms) {
                 return new JsonResponse([
                     'status' => 'success',
                     'data' => $this->getDataByTourisms($tourisms),
@@ -142,7 +142,7 @@ class DashboardFilterController extends AbstractController
     private function getDataByTourisms(array $tourismsSlugs): array
     {
         $departments = $this->territoireRepository->getDepartmentsByTourismsTerritoires($tourismsSlugs, $this->columns);
-        $ots = $this->territoireRepository->getOTsByDepartments($departments, $this->columns);
+        $ots = $this->territoireRepository->getOTsByDepartments($departments ?? [], $this->columns);
         $tourisms = $this->territoireRepository->getTourismsBySlugs($tourismsSlugs, $this->columns);
 
         return [

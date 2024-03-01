@@ -29,6 +29,7 @@ class DashboardDataGlobalEventListener
         $repondantUrl = fn (array $repondant): array => [...$repondant, 'url' => $this->router->generate('app_resultat_single', ['uuid' => $repondant['uuid']], UrlGeneratorInterface::ABSOLUTE_URL)];
         $repondants = array_map($repondantUrl, $this->reponseRepository->getRepondantsGlobal($dashboardFilterDTO));
         $event->setGlobals([
+            /* @phpstan-ignore-next-line */
             'lastSubmission' => \DateTime::createFromFormat('Y-m-d H:i:s', $this->reponseRepository->getLastSubmissionDate($dashboardFilterDTO))->format('d.m.Y'),
             'repondants' => $repondants,
             'repondantsCount' => count($responsesIds),
