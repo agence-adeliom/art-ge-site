@@ -112,7 +112,14 @@ const Form = () => {
         answers: answerObject,
       },
     };
+    //Desktop
     form.current!.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+    //Mobile
+    window.scrollTo({
       top: 0,
       left: 0,
       behavior: "smooth",
