@@ -91,7 +91,7 @@ const Resultats = () => {
               <Heading variant="display-2" color="white">{heading}</Heading>
               <Heading variant="display-3" color="white">{subHeading}</Heading>
               <Text size="lg" color="white" className="mt-4">{text}</Text>
-              <Text size="sm" color="white" className="mt-4">Pour partager et conserver vos résultats (vous recevrez également ce lien par e-mail, pensez à regarder vos spams) :</Text>
+              <Text size="sm" color="white" className="mt-4">Vous allez recevoir vos résultats par e-mail (pensez à vérifier vos spams). Vous pouvez d’ores et déjà partager vos résultats en copiant ce lien</Text>
               <Button
                 iconSide="left"
                 size={'lg'}

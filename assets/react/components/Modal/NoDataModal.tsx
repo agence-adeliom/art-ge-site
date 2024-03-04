@@ -14,7 +14,7 @@ const NoDataModal = ( { closeModal }: {
         <QuitForm isVisible>
             <div className="flex flex-col gap-5">
                 <div className="flex gap-3 items-baseline">
-                    <Text size="2xl" className="font-title">Aucune données n'est disponible aujourd'hui pour votre recherche.</Text>
+                    <Text size="2xl" className="font-title">Il n’existe pas encore de résultat pour votre recherche</Text>
                     <div
                         className="w-fit h-fit"
                         onClick={() => closeModal()}>
@@ -26,10 +26,10 @@ const NoDataModal = ( { closeModal }: {
                         </Icon>
                     </div>
                 </div>
-
-                <Text weight={400} color="neutral-700">N'hésitez pas à revenir ultérieurement pour voir si de nouvelles données sont disponibles.</Text>
+                
+                <Text weight={400} color="neutral-700">Nos données s'enrichissent de jour en jour. Nous vous invitons à formuler votre requête ultérieurement.</Text>
                 <div className="flex gap-3 flex-wrap">
-                    <Button onClick={() => closeModal()} className="w-full sm:w-fit" variant="secondary">Je comprends</Button>
+                    <Button onClick={() => closeModal()} className="w-full sm:w-fit" variant="secondary">J'ai compris</Button>
                 </div>
             </div>
         </QuitForm>

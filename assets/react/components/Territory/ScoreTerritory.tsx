@@ -25,7 +25,7 @@ const ScoreTerritory = ({territoryScore, respondantsTotal, } : {
                     <div className="text-5xl font-title text-black">{territoryScore}</div>
                     <div className="text-3xl text-neutral-600 font-title">/100</div>
                 </div>
-                <div className="ml-2 text-2xl text-neutral-600 font-title">pour {respondantsTotal} répondants</div>
+                <div className="ml-2 text-2xl text-neutral-600 font-title">pour {respondantsTotal} répondant{respondantsTotal > 1 ? 's' : ''}</div>
             </div>      
             <div className="mt-8">
                 <ProgressBarTerritory percentage={territoryScore}></ProgressBarTerritory>
