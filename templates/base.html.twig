@@ -4,14 +4,13 @@
         <meta charset="UTF-8">
         {% block robots %}{% endblock %}
         <title>{% block title %}ÉcoBoussole : autodiagnostic de votre engagement durable!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        <link rel="icon" href="/favicon.png">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="{% block description %}Acteur du tourisme en Grand-Est ? Découvrez le calculateur ÉcoBoussole et accédez à votre niveau d’engagement pour le tourisme durable.{% endblock %}">
         <script src="https://kit.fontawesome.com/75c45f041d.js" crossorigin="anonymous"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
