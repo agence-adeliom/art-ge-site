@@ -39,7 +39,7 @@ const Bar = ({percentage, type} : {
     } else if (type === 'activite'){
         color = '#664E76';
         icon = "fa-duotone fa-tree";
-        name = 'Loisirs';
+        name = 'Activités de loisirs';
     }
 
     return (
