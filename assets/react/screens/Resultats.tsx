@@ -82,7 +82,7 @@ const Resultats = () => {
             type: 'primary',
             icon: 'fa-minus',
             iconSide: 'left',
-            link: 'https://www.art-grandest.fr/services-et-accompagnement/tourisme-durable',
+            link: 'mailto:ecoboussole@art-grandest.fr',
           }}
         />
         <div className="bg-primary-600">
