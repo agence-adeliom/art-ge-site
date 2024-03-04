@@ -75,6 +75,16 @@ const StepThree = () => {
     trigger();
   }, [arrayQuestions]);
 
+  
+  // check typologie in LocalStorage
+  const [isRestaurant, setIsRestaurant] = useState<number | undefined>(JSON.parse(localStorage!.getItem('_etablissement')!)); 
+  useEffect(() => {
+    const typologie =JSON.parse(localStorage!.getItem('_wizard')!).reponse.repondant.typologie;
+    //console.log(typologie)
+    setIsRestaurant(typologie === 8 ? 1 : undefined)
+  }, [])
+
+
   return (
     <>
       <StepAnim>
@@ -107,7 +117,9 @@ const StepThree = () => {
                 >
                   {item.text}
                 </Text>
-                <YesNoCard name={item.id} control={control}></YesNoCard>
+                <YesNoCard name={item.id} control={control} 
+                defaultValue={isRestaurant == 8 && item.id === 'restauration' ? 1 : undefined}
+                ></YesNoCard>
               </div>
             );
           })}

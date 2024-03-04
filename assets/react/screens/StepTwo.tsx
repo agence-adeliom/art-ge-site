@@ -110,7 +110,7 @@ const StepTwo: FunctionComponent = () => {
                   iconSrc: item.iconSrc,
                   alt: item.alt,
                 }}
-                onClick={() => setEtablissement(item.value)}
+                onClick={() => {setEtablissement(item.value), localStorage.setItem('_etablissement', JSON.stringify(item.value))}}
               >
                 <Text color="neutral-700" weight={400} size="sm">
                   {item.title}
