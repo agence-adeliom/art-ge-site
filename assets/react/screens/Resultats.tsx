@@ -47,6 +47,7 @@ interface Resultats {
 declare global {
   interface Window {
     resultats: Resultats;
+    repondant: string;
   }
 }
 
@@ -70,6 +71,8 @@ const Resultats = () => {
       subHeading = 'Ce résultat montre une belle implication.';
       text = 'Regardez vos résultats dans le détail, thématique par thématique, identifiez les pistes d’amélioration et découvrez les actions à mener pour progresser davantage.';
   }
+
+  const repondantName = window.repondant
 
   const [copyUrl, setCopyToUrl] = useState(false)
   return (
@@ -111,7 +114,10 @@ const Resultats = () => {
               </Button>
             </div>
             <div className="col-span-full md:col-span-4 bg-white p-6 lg:p-10 h-fit">
-              <Heading variant="display-5">Votre score</Heading>
+              <div className="flex flex-wrap justify-between gap-x-4 gap-y-2 items-center mb-2">
+                <Heading variant="display-5">Votre score</Heading>
+                <Text size="sm" className="capitalize" weight={500}>{repondantName.toLowerCase()}</Text>
+              </div>
               <Text className="font-title mb-4" size={'4xl'}>
                 <span className="text-6xl">{resultats.reponsePercentage}</span> %
               </Text>
