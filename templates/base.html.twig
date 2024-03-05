@@ -22,8 +22,8 @@
             {% endif %}
             {% if (page | default(false)) is same as 'resultat' %}
             <script>
-                window.resultats = JSON.parse('{{ resultats|json_encode|raw }}')
-                window.repondant = "{{ repondant | raw }}"
+                window.repondant = "{{ repondant | raw }}";
+                window.resultats = JSON.parse('{{ resultats|json_encode|raw }}');
             </script>
             {% endif %}
             {{ encore_entry_script_tags('app') }}
