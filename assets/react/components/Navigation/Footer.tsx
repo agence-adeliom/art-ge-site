@@ -6,8 +6,8 @@ const Footer = () => {
          
          <>
             {/* Footer */}
-            <div className="col-span-full lg:col-span-8 lg:row-start-2 text-white bg-neutral-700 h-fit py-10 lg:py-6 self-end relative lg:mt-4">
-            <div className="w-screen mobileLeftBleed lg:w-full absolute h-full lg:-left-1/2 bg-neutral-700 top-0 z-0"></div>
+            <div className="col-span-full lg:col-span-8 lg:row-start-2 text-white bg-neutral-700 h-fit py-10 lg:py-6 self-end relative">
+            <div className="w-screen mobileLeftBleed lg:w-full absolute h-full lg:-left-1/2 bg-neutral-700 top-0 z-0 lg:-translate-x-[calc(49%)]"></div>
             <div className="relative z-2">
                 <nav>
                     <ul className="flex items-center max-md:justify-center gap-6 text-sm font-normal flex-wrap">
