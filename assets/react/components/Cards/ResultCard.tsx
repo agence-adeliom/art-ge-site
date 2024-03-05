@@ -28,7 +28,6 @@ const ResultCard = ({title, links, percentage, chosenChoices, notChosenChoices, 
 
     const srcImg = props.src ? props.src : 'https://images.unsplash.com/photo-1542202229-7d93c33f5d07?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
     const [open, setOpen] = useState(false)
-    console.log(srcImg)
     return (
         <div className="col-span-1">
             <div className="lg:group h-full">
