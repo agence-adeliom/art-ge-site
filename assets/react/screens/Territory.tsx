@@ -66,7 +66,7 @@ const Territory = () => {
     const [selectedTerritoires, setSelectedTerritoires] = useState<SelectedTerritoires>({departments: [], ots: [], tourisms: [], typologies: []})
 
     // date range
-    const [dateRange, setDateRange] = useState<{startDate: Date|null, endDate: Date|null}>({startDate: null, endDate: null});
+    const [dateRange, setDateRange] = useState<{startDate: any|null, endDate: Date|null}>({startDate: moment('2023-01-01'), endDate: null});
     const [focusedInput, setFocusedInput] = useState(null);
 
     // no data to display
@@ -146,6 +146,7 @@ const Territory = () => {
                             startDateId="inputStartDate"
                             endDate={dateRange.endDate}
                             endDateId="inputEndDate"
+                            initialVisibleMonth={() => moment()}
                             //@ts-ignore
                             onDatesChange={({ startDate, endDate } : { startDate: Date|null, endDate: Date|null }) => setDateRange({startDate, endDate})}
                             focusedInput={focusedInput}
