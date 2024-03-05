@@ -39,9 +39,9 @@ const Header = ({step, ...props} : {
     const actionBtn = button?.quitAction 
     return (
         <>
-            <div className="container flex justify-between items-center py-4">
+            <div className="container flex justify-between items-center py-4 gap-4">
                 <a href="https://www.art-grandest.fr/" target='_blank' >
-                    <img src={Logo} alt="Logo ART GE" width="185" height="61" className=""/>
+                    <img src={Logo} alt="Logo ART GE" width="185" height="61" className="w-[125px] lg:w-[185px]"/>
                 </a>
                 { hasTitle ?
                     <Text color="neutral-500" className="hidden md:block" weight={400}>
@@ -80,6 +80,14 @@ const Header = ({step, ...props} : {
 
 
             </div>
+            { hasTitle ?
+                <div className="container text-center py-2 md:hidden">
+                    <Text color="neutral-500" weight={400}>
+                        { props.title }
+                    </Text>         
+                </div>
+                : false
+            }
             { step != null  && 
             <div className="w-full h-1 bg-neutral-300 relative">
                 <div className="h-full absolute left-0 top-0 bg-primary-600 rounded-top-right rounded-r-sm trans-default" style={{ 'width': `${actualStep}%` }}></div>
