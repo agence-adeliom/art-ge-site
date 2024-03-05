@@ -17,7 +17,7 @@ class ZipApiControllerTest extends WebTestCase
     public function testSomething(string $zip, int $count): void
     {
         $client = static::createClient();
-        $client->request('GET', sprintf('/api/zip/%s', $zip));
+        $client->request('GET', sprintf('/api/zip/%s', $zip), [], [], ['PHP_AUTH_USER' => $_ENV['PHP_AUTH_USER'], 'PHP_AUTH_PW' => $_ENV['PHP_AUTH_PW']]);
 
         $this->assertResponseIsSuccessful();
 

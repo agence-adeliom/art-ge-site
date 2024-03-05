@@ -17,7 +17,7 @@ class PonderationHelper
                 'restaurant' => ['yes' => 14]
             ],
             'gestion-des-dechets' => [
-                'hotel' => ['no' => 15, 'yes' => 21],
+                'hotel' => ['no' => 15, 'yes' => 22],
                 'camping' => ['no' => 13, 'yes' => 21],
                 'visite' => ['no' => 14, 'yes' => 22],
                 'activite' => ['no' => 14, 'yes' => 22],
@@ -38,7 +38,7 @@ class PonderationHelper
                 'restaurant' => ['yes' => 13]
             ],
             'gestion-de-l-energie' => [
-                'hotel' => ['no' => 21, 'yes' => 22],
+                'hotel' => ['no' => 20, 'yes' => 22],
                 'camping' => ['no' => 18, 'yes' => 20],
                 'visite' => ['no' => 20, 'yes' => 22],
                 'activite' => ['no' => 20, 'yes' => 21],
@@ -73,7 +73,7 @@ class PonderationHelper
                 'restaurant' => ['yes' => 3]
             ],
             'sensibilisation-des-acteurs' => [
-                'hotel' => ['no' => 10, 'yes' => 12],
+                'hotel' => ['no' => 9, 'yes' => 12],
                 'camping' => ['no' => 9, 'yes' => 12],
                 'visite' => ['no' => 9, 'yes' => 12],
                 'activite' => ['no' => 9, 'yes' => 12],
@@ -101,7 +101,7 @@ class PonderationHelper
                 'restaurant' => ['yes' => 4]
             ],
             'culture-et-patrimoine' => [
-                'hotel' => ['no' => 4, 'yes' => 5],
+                'hotel' => ['no' => 5, 'yes' => 5],
                 'camping' => ['no' => 4, 'yes' => 5],
                 'visite' => ['no' => 4, 'yes' => 5],
                 'activite' => ['no' => 4, 'yes' => 5],
