@@ -13,7 +13,6 @@ class RestaurationChoiceIgnorer extends AbstractChoiceIgnorer
         ThematiqueSlugEnum::GESTION_DES_DECHETS->value => [
             'j-ai-recours-a-un-systeme-de-consigne-pour-au-moins-la-moitie-de-mes-boissons',
             'si-restauration-a-emporter-je-propose-un-systeme-de-boites-consignees-et-la-possibilite-d-utiliser-les-boites-des-clients',
-            'j-ai-forme-mes-equipes-ou-me-suis-forme-e-si-je-travaille-seul-e-a-la-reduction-du-gaspillage-alimentaire',
         ],
         ThematiqueSlugEnum::GESTION_DE_L_ENERGIE->value => [
             'j-affiche-un-plan-d-allumage-pour-les-salaries-pour-les-equipements-de-cuisson',

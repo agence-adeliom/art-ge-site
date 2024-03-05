@@ -40,8 +40,8 @@ class FormApiControllerTest extends WebTestCase
     {
         yield [true, true, ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value, 13];
         yield [true, false, ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value, 13];
-        yield [false, true, ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value, 5];
-        yield [false, false, ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value, 5];
+        yield [false, true, ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value, 6];
+        yield [false, false, ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value, 6];
 
         yield [true, true, ThematiqueSlugEnum::GESTION_DES_DECHETS->value, 14];
         yield [true, false, ThematiqueSlugEnum::GESTION_DES_DECHETS->value, 12];
