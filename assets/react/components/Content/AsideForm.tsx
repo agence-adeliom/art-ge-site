@@ -1,14 +1,5 @@
 import React from "react"
-import backgroundBiodiversity from '@images/background-biodiversity.jpeg';
-import backgroundEcoBuilding from '@images/background-ecoconstruction.jpeg';
-import backgroundMobility from '@images/background-mobility.jpeg';
-import backgroundInclusivity from '@images/background-inclusivity.jpeg';
-import backgroundSensibility from '@images/background-sensibility.jpeg';
-import backgroundEconomy from '@images/background-economy.jpeg';
-import backgroundCoop from '@images/background-coop.jpeg';
-import backgroundCulture from '@images/background-culture.jpeg';
-import backgroundWater from '@images/background-water.jpeg';
-
+import {allSrc} from '@components/Thematique/ImagesSrc';
 
 const biodiversity = "biodiversite-et-conservation-de-la-nature-sur-site"
 const trash = "gestion-des-dechets"
@@ -27,88 +18,117 @@ const culture = "culture-et-patrimoine"
 const label = "labels"
 
 
+
 const AsideForm = ({thematique} : {
     thematique: string
 }) => {
     return (
-        <div className="bg-neutral-600 max-lg:h-32 mobileLeftBleed lg:left-0 max-lg:order-first lg:col-start-9 lg:col-span-4 containerBleed relative">
-            <img src={backgroundBiodiversity}
+        <div className="bg-neutral-600 max-lg:h-[200px] mobileLeftBleed lg:left-0 max-lg:order-first lg:col-start-9 lg:col-span-4 containerBleed relative">
+            <img src={allSrc.backgroundBiodiversity}
+            alt={biodiversity}
             className={`${
                 thematique === biodiversity ? 'opacity-100' : 'opacity-0'
                 } trans-default absolute object-cover w-full h-full`}
             ></img>
 
-            <img src={'https://media.istockphoto.com/id/1273367579/fr/photo/homme-de-race-m%C3%A9lang%C3%A9-gai-regardant-loin-tout-en-collectant-la-poubelle-avec-des-amis.jpg?s=1024x1024&w=is&k=20&c=JDAliPd_QkWEb8G2DswjhtIx27yjUDGhls6lu_8JBO4='}
+            <img src={allSrc.backgroundTrash}
+            alt={trash}
             className={`${
                 thematique === trash ? 'opacity-100' : 'opacity-0'
                 } trans-default absolute object-cover w-full h-full`}
             ></img>
 
-            <img src={backgroundWater}
+            <img src={allSrc.backgroundWater}
+            alt={water}
             className={`${
                 thematique === water ? 'opacity-100' : 'opacity-0'
                 } trans-default absolute object-cover w-full h-full`}
             ></img>
-            <img src={backgroundEcoBuilding}
+
+            <img src={allSrc.backgroundEcoBuilding}
+            alt={building}
             className={`${
                 thematique === building ? 'opacity-100' : 'opacity-0'
                 } trans-default absolute object-cover w-full h-full`}
             ></img>
-            <img src={'https://media.istockphoto.com/id/1343774494/fr/photo/un-lac-en-forme-de-bulbe-au-milieu-dune-for%C3%AAt-luxuriante-symbolisant-des-id%C3%A9es-fra%C3%AEches-de.jpg?s=1024x1024&w=is&k=20&c=DKks5Iq4iL8F6bfOBCMhk9O3EgpBoUO1xjNkauFpnVs='}
+
+            <img src={allSrc.backgroundEnergy}
+            alt={energy}
             className={`${
                 thematique === energy ? 'opacity-100' : 'opacity-0'
                 } trans-default absolute object-cover w-full h-full`}
             ></img>
-            <img src={'https://media.istockphoto.com/id/1345347776/fr/photo/une-femme-pr%C3%A9pare-un-nettoyant-d%C3%A9vier-naturel-non-chimique-%C3%A0-la-maison-avec-du-bicarbonate.jpg?s=1024x1024&w=is&k=20&c=NhrFDViCQTHwPv7BQS_DcZd2OaxzQTsykCRobPwRmsg='}
+
+            <img src={allSrc.backgroundCleaning}
+            alt={cleaning}
             className={`${
                 thematique === cleaning ? 'opacity-100' : 'opacity-0'
                 } trans-default absolute object-cover w-full h-full`}
             ></img>
-            <img src={backgroundMobility}
+
+            <img src={allSrc.backgroundMobility}
+            alt={mobility}
             className={`${
                 thematique === mobility ? 'opacity-100' : 'opacity-0'
                 } trans-default absolute object-cover w-full h-full`}
             ></img>
-            <img src={'https://media.istockphoto.com/id/180758739/fr/photo/p%C3%A8re-aider-sa-petite-soeur-%C3%A0-mobilit%C3%A9-r%C3%A9duite-profitez-de-la-journ%C3%A9e.jpg?s=1024x1024&w=is&k=20&c=FvzW2F6QZ0GTidhmp8o7-AC6JG-vdUlby29k7vadGcI='}
+
+            <img src={allSrc.backgroundHandicap}
+            alt={handicap}
             className={`${
                 thematique === handicap ? 'opacity-100' : 'opacity-0'
                 } trans-default absolute object-cover w-full h-full`}
             ></img>
-            <img src={backgroundInclusivity}
+
+            <img src={allSrc.backgroundInclusivity}
+            alt={social}
             className={`${
                 thematique === social ? 'opacity-100' : 'opacity-0'
                 } trans-default absolute object-cover w-full h-full`}
             ></img>
-            <img src={backgroundSensibility}
+
+            <img src={allSrc.backgroundSensibility}
+            alt={sensibility}
             className={`${
                 thematique === sensibility ? 'opacity-100' : 'opacity-0'
                 } trans-default absolute object-cover w-full h-full`}
             ></img>
-            <img src={'https://media.istockphoto.com/id/881484382/fr/photo/jeunes-gens-travaillent-dans-les-bureaux-modernes.jpg?s=1024x1024&w=is&k=20&c=7BPv628VnBIWpN-qGT3NQotUh6nDzF0z5UxrLosIyCo='}
+
+            <img src={allSrc.backgroundTeam} 
+            alt={team}
             className={`${
                 thematique === team ? 'opacity-100' : 'opacity-0'
                 } trans-default absolute object-cover w-full h-full`}
             ></img>
-            <img src={backgroundEconomy}
+
+            <img src={allSrc.backgroundEconomy}
+            alt={economy}
             className={`${
                 thematique === economy ? 'opacity-100' : 'opacity-0'
                 } trans-default absolute object-cover w-full h-full`}
             ></img>
-             <img src={backgroundCoop}
+
+            <img src={allSrc.backgroundCoop}
+            alt={local}
             className={`${
                 thematique === local ? 'opacity-100' : 'opacity-0'
                 } trans-default absolute object-cover w-full h-full`}
             ></img>
-             <img src={backgroundCulture}
+
+            <img src={allSrc.backgroundCulture}
+            alt={culture}
             className={`${
                 thematique === culture ? 'opacity-100' : 'opacity-0'
                 } trans-default absolute object-cover w-full h-full`}
             ></img>
-             <img src={backgroundBiodiversity}
+
+            <img src={allSrc.backgroundLabel}
+            alt={label}
             className={`${
                 thematique === label ? 'opacity-100' : 'opacity-0'
                 } trans-default absolute object-cover w-full h-full`}
             ></img>
+
         </div>
     )
 }

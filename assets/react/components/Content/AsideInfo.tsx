@@ -1,7 +1,7 @@
 import React from 'react'
-import InfoImage1 from '@images/informations-image-1.jpg';
+import InfoImage1 from '@images/informations-image-1.jpeg';
 import InfoImage2 from '@images/informations-image-2.jpeg';
-import InfoImage3 from '@images/background-green-space.jpeg';
+import InfoImage3 from '@images/informations-image-3.jpeg';
 import InfoImage4 from '@images/background-address.jpeg';
 
 const AsideForm = ({step} : {
@@ -9,7 +9,7 @@ const AsideForm = ({step} : {
 }) => {
     return( 
         <>
-            <div className="bg-neutral-600 max-lg:h-32 mobileLeftBleed lg:left-0 max-lg:order-first lg:col-start-9 lg:col-span-4 containerBleed relative">
+            <div className="bg-neutral-600 max-lg:h-[200px] mobileLeftBleed lg:left-0 max-lg:order-first lg:col-start-9 lg:col-span-4 containerBleed relative">
             <img
                 src={InfoImage1}
                 alt="image de paysage"

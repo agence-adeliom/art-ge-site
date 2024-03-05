@@ -5,12 +5,14 @@ import { Text } from "@components/Typography/Text";
 import { Button } from "@components/Action/Button";
 import LateralPanel from "@components/Modal/LateralPanel"
 import {Choice, ScoreLink} from "@screens/Resultats";
+import Images from "@components/Thematique/Image";
 
 const ResultCard = ({title, links, percentage, chosenChoices, notChosenChoices, ...props} : {
     title: string,
     links: ScoreLink[],
     percentage: number,
     src?: string,
+    key?: string,
     chosenChoices: Choice[],
     notChosenChoices: Choice[],
 }) => {
@@ -22,18 +24,18 @@ const ResultCard = ({title, links, percentage, chosenChoices, notChosenChoices, 
     const closeDropdown = () => {
         setOpen(false)
     }
+    
 
     const srcImg = props.src ? props.src : 'https://images.unsplash.com/photo-1542202229-7d93c33f5d07?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
     const [open, setOpen] = useState(false)
+    console.log(srcImg)
     return (
         <div className="col-span-1">
             <div className="lg:group h-full">
                 <div className="bg-white h-full flex items-stretch cursor-pointer trans-default group-hover:-translate-y-2" onClick={ event => handleDropdown(event)}>
                     <div className="h-full flex flex-col w-full">
                         <div className="h-[152px] flex-shrink-0">
-                            <img
-                            className="w-full h-full object-cover"
-                            src={srcImg} alt=""/>
+                            <Images slug={srcImg} class="w-full h-full object-cover"></Images>
                         </div>
                         <div className="p-6 flex flex-col h-full flex-shrink-1">
                             <Heading variant={'display-5'} className="group-hover:text-primary-600 trans-default" raw={true}>{title}</Heading>

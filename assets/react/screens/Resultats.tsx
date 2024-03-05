@@ -142,6 +142,7 @@ const Resultats = () => {
                 links={score.links}
                 chosenChoices={score.chosenChoices}
                 notChosenChoices={score.notChosenChoices}
+                src={score.slug}
               ></ResultCard>
             ))}
           </div>
