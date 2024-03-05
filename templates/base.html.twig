@@ -21,7 +21,10 @@
             <script defer data-domain="ecoboussole.art-grandest.fr" src=https://plausible.io/js/script.js></script>
             {% endif %}
             {% if (page | default(false)) is same as 'resultat' %}
-            <script>window.resultats = JSON.parse('{{ resultats|json_encode|raw }}')</script>
+            <script>
+                window.resultats = JSON.parse('{{ resultats|json_encode|raw }}')
+                window.repondant = "{{ repondant | raw }}"
+            </script>
             {% endif %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
