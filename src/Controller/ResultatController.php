@@ -26,6 +26,7 @@ class ResultatController extends AbstractController
             'id' => $reponse->getId(),
             'page' => 'resultat',
             'resultats' => $this->resultatApiPresenter->present($reponse),
+            'repondant' => $reponse->getRepondant()->getCompany()
         ];
     }
 }
