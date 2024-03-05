@@ -145,7 +145,7 @@ const Form = () => {
       };
 
       await setTimeout(() => {
-        navigate(`${RoutePaths.RESULT_ARCHIVE}/${results.uuid}`, {state: results.resultats});
+        navigate(`${RoutePaths.RESULT_ARCHIVE}/${results.uuid}`, {state: {resultats: results.resultats, repondantName: wizard?.reponse?.repondant?.company} });
         clearWizard();
       }, 2000);
     } catch (error) {

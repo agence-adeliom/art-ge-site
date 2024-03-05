@@ -54,10 +54,13 @@ declare global {
 const Resultats = () => {
   const location = useLocation();
   let resultats;
+  let repondantName;
   if (location.state !== null){
-    resultats = location.state as Resultats;
+    resultats = location.state.resultats as Resultats;
+    repondantName = location.state.repondantName as string;
   } else {
-    resultats = window.resultats;
+    resultats = window.resultats as Resultats;
+    repondantName = window.repondant as string;
   }
   let heading = 'Félicitations !';
   let subHeading = 'Vos engagements font la différence.';
@@ -72,7 +75,6 @@ const Resultats = () => {
       text = 'Regardez vos résultats dans le détail, thématique par thématique, identifiez les pistes d’amélioration et découvrez les actions à mener pour progresser davantage.';
   }
 
-  const repondantName = window.repondant
 
   const [copyUrl, setCopyToUrl] = useState(false)
   return (

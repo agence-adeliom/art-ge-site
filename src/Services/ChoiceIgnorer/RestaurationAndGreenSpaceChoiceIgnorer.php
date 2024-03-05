@@ -14,7 +14,6 @@ class RestaurationAndGreenSpaceChoiceIgnorer extends AbstractChoiceIgnorer
             'je-composte-paille-broie-pour-les-disposer-au-pied-des-plantations-si-espaces-verts',
             'j-ai-recours-a-un-systeme-de-consigne-pour-au-moins-la-moitie-de-mes-boissons',
             'si-restauration-a-emporter-je-propose-un-systeme-de-boites-consignees-et-la-possibilite-d-utiliser-les-boites-des-clients',
-            'j-ai-forme-mes-equipes-ou-me-suis-forme-e-si-je-travaille-seul-e-a-la-reduction-du-gaspillage-alimentaire',
         ],
         ThematiqueSlugEnum::GESTION_DE_L_ENERGIE->value => [
             'j-affiche-un-plan-d-allumage-pour-les-salaries-pour-les-equipements-de-cuisson',
@@ -31,7 +30,6 @@ class RestaurationAndGreenSpaceChoiceIgnorer extends AbstractChoiceIgnorer
             'je-procede-a-un-fauchage-tardif-des-espaces-verts-apres-l-ete',
             'je-conserve-des-arbres-morts-ou-du-bois-mort-au-sol',
             'j-ai-cree-des-passages-pour-la-petite-faune-au-pied-des-clotures',
-            'j-ai-un-potager-en-permaculture-0-phyto-sur-au-moins-2-de-mon-terrain-et-je-valorise-sa-production-sur-ma-carte',
         ],
         ThematiqueSlugEnum::GESTION_DE_L_EAU_ET_DE_L_EROSION->value => [
             'j-ai-installe-un-systeme-de-phyto-epuration-traitement-de-l-eau-d-assainissement-par-les-plantes',
