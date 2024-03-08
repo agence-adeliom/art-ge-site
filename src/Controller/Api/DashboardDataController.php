@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\Dto\DashboardFilterDTO;
+use App\Entity\Territoire;
+use App\Enum\TerritoireAreaEnum;
 use App\Event\DashboardDataGlobalEvent;
 use App\Event\DashboardDataListsEvent;
 use App\Event\DashboardDataScoresEvent;
@@ -88,7 +90,10 @@ class DashboardDataController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        $territoires = $this->territoireRepository->getAllBySlugs(array_values(array_merge($departments ?? [], $ots ?? [], $tourisms ?? [])));
+        $territoires = $this->excludeParentDepartmentIfOT(
+            $this->territoireRepository->getAllBySlugs(array_values(array_merge($departments ?? [], $ots ?? [], $tourisms ?? [])))
+        );
+
         $dashboardFilterDTO = DashboardFilterDTO::from([
             'territoire' => $territoire,
             'territoires' => $territoires,
@@ -126,5 +131,32 @@ class DashboardDataController extends AbstractController
                 'lists' => $lists,
             ],
         ], Response::HTTP_OK, [], ['groups' => self::DASHBOARD_API_DATA_GROUP]);
+    }
+
+    /**
+     * Enleve de la liste des territoires le département parent s'il fait partie des filtres
+     * et que l'OT enfant fait aussi parti des filtres.
+     * Par exemple si je filtre sur Alsace et sur Grand-Ried, alors le problème c'est que
+     * grand-ried est contenu dans Alsace, alors il n'y a pas de changement.
+     * Tandis que si on choisi Alsace et ensuite Grand-Ried cela montre une volonté de
+     * mieux filtrer.
+     * @param array<Territoire>|null $territoires
+     *
+     * @return array<Territoire>
+     */
+    private function excludeParentDepartmentIfOT(?array $territoires = []): array
+    {
+        $territoiresKeys = [];
+        foreach ($territoires as $key => $territoire) {
+            if ($territoire->getArea() === TerritoireAreaEnum::OT) {
+                foreach ($territoires as $territoire2) {
+                    if ($territoire->getParents()->contains($territoire2)) {
+                        $territoiresKeys[] = $territoire2->getId();
+                    }
+                }
+            }
+        }
+
+        return array_values(array_filter($territoires, fn (Territoire $territoire) => ! in_array($territoire->getId(), $territoiresKeys)));
     }
 }
