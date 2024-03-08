@@ -13,7 +13,7 @@ const Footer = () => {
                     <ul className="flex items-center max-md:justify-center gap-6 text-sm font-normal flex-wrap">
                         <li><a href="https://www.art-grandest.fr/mentions-legales" target="_blank">Mentions légales</a></li>
                         <li><a href="">Gestion des cookies</a></li>
-                        <li><a href="">Politique de confidentialité</a></li>
+                        <li><a href="https://www.art-grandest.fr/politique-de-confidentialite">Politique de confidentialité</a></li>
                     </ul>
                 </nav>
             </div>

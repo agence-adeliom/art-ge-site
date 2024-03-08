@@ -106,7 +106,7 @@ const StepOne: FunctionComponent = () => {
               <Text weight={400} color="neutral-800">
                 J’accepte que mes données soient transmises à l’ART GE et à ses
                 partenaires. Pour en savoir plus, consultez la{' '}
-                <a href="#" className="classic-link">
+                <a href="https://www.art-grandest.fr/politique-de-confidentialite" className="classic-link">
                   politique de confidentialité
                 </a>
               </Text>

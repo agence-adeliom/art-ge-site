@@ -14,7 +14,7 @@ const FooterResult = () => {
                         <ul className="flex items-center max-lg:justify-center gap-6 text-sm font-normal flex-wrap">
                             <li><a href="https://www.art-grandest.fr/mentions-legales" target="_blank" className="trans-default hover:text-neutral-400">Mentions légales</a></li>
                             <li><a href="" className="trans-default hover:text-neutral-400">Gestion des cookies</a></li>
-                            <li><a href="" className="trans-default hover:text-neutral-400">Politique de confidentialité</a></li>
+                            <li><a href="https://www.art-grandest.fr/politique-de-confidentialite" className="trans-default hover:text-neutral-400">Politique de confidentialité</a></li>
                         </ul>
                     </nav>
                 </div>
