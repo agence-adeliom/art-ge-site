@@ -66,7 +66,7 @@ const Territory = () => {
     const [selectedTerritoires, setSelectedTerritoires] = useState<SelectedTerritoires>({departments: [], ots: [], tourisms: [], typologies: []})
 
     // date range
-    const [dateRange, setDateRange] = useState<{startDate: any|null, endDate: Date|null}>({startDate: moment('2023-01-01'), endDate: null});
+    const [dateRange, setDateRange] = useState<{startDate: any|null, endDate: Date|null}>({startDate: moment('2024-01-01'), endDate: null});
     const [focusedInput, setFocusedInput] = useState(null);
 
     // no data to display
@@ -152,7 +152,7 @@ const Territory = () => {
                             focusedInput={focusedInput}
                             onFocusChange={(focusedInput: any) => setFocusedInput(focusedInput)}
                             numberOfMonths={1}
-                            startDatePlaceholderText={'01/01/2023'}
+                            startDatePlaceholderText={'01/01/2024'}
                             endDatePlaceholderText={`Aujourd'hui`}
                             customArrowIcon={'-'}
                             openDirection={'up'}

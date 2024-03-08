@@ -76,7 +76,7 @@ class DashboardDataController extends AbstractController
         #[MapQueryParameter] ?array $ots = [],
         #[MapQueryParameter] ?array $tourisms = [],
         #[MapQueryParameter] ?array $typologies = [],
-        #[MapQueryParameter] string $from = null,
+        #[MapQueryParameter] string $from = '2024-01-01',
         #[MapQueryParameter] string $to = null,
     ): JsonResponse {
         $territoire = $this->territoireRepository->getOneByUuidOrSlug($identifier);
