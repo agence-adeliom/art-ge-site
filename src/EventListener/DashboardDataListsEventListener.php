@@ -37,13 +37,13 @@ class DashboardDataListsEventListener
                 foreach ($children as $child) {
                     $child->setScore($this->territoireRepository->getPercentageByTerritoire($child, $responsesIds));
                     $child->setNumberOfReponses($this->reponseRepository->getNumberOfReponsesGlobal(DashboardFilterDTO::from(['territoire' => $child, 'territoires' => [$child]]), $responsesIds));
-                    usort($children, static fn (Territoire $a, Territoire $b) => $a->getName() <=> $b->getName());
                     foreach ($child->getTerritoiresChildren()->toArray() as $subChild) {
                         $subChild->setScore($this->territoireRepository->getPercentageByTerritoire($subChild, $responsesIds));
                         $subChild->setNumberOfReponses($this->reponseRepository->getNumberOfReponsesGlobal(DashboardFilterDTO::from(['territoire' => $subChild, 'territoires' => [$subChild]]), $responsesIds));
                         $subChildren[] = $subChild;
                     }
                 }
+                usort($subChildren, static fn (Territoire $a, Territoire $b) => $a->getName() <=> $b->getName());
                 $lists = [
                     'departments' => $children,
                     'ots' => $subChildren,
