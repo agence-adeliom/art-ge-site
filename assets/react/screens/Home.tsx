@@ -79,7 +79,7 @@ const Home = () => {
                 <Text weight={600}>Des questions ?</Text>
                 <Text>
                   Retrouvez plus d’informations sur ce questionnaire dans notre{' '}
-                  <a href="#" className="classic-link">
+                  <a href="https://www.art-grandest.fr/faq-ecoboussole" className="classic-link">
                     FAQ
                   </a>
                 </Text>

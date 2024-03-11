@@ -26,7 +26,7 @@ const Filters = ({apiData, children, setOt, setFilterMobile, ot, etablishment, t
 }) => {
     const { territoire = 'grand-est' } = useParams();
     // cf DepartementEnum.php
-    const predefinedDepartments = ['alsace', 'ardennes', 'aube', 'marne', 'haute-marne', 'meurthe-et-moselle', 'meuse', 'moselle', 'vosges'] as const;
+    const predefinedDepartments: string[] = ['alsace', 'ardennes', 'aube', 'marne', 'haute-marne', 'meurthe-et-moselle', 'meuse', 'moselle', 'vosges'];
 
     const [departmentsFilter, setDepartmentsFilter] = useState()
     const [otsFilter, setOtsFilter] = useState()
