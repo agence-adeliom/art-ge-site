@@ -25,6 +25,8 @@ const Filters = ({apiData, children, setOt, setFilterMobile, ot, etablishment, t
     children: ReactNode
 }) => {
     const { territoire = 'grand-est' } = useParams();
+    // cf DepartementEnum.php
+    const predefinedDepartments = ['alsace', 'ardennes', 'aube', 'marne', 'haute-marne', 'meurthe-et-moselle', 'meuse', 'moselle', 'vosges'] as const;
 
     const [departmentsFilter, setDepartmentsFilter] = useState()
     const [otsFilter, setOtsFilter] = useState()
@@ -51,9 +53,9 @@ const Filters = ({apiData, children, setOt, setFilterMobile, ot, etablishment, t
                     { territoire === 'grand-est' && <div onClick={() => setFilterId(2)}>
                         <Filter id={2} filterId={filterId} setFilterId={setFilterId} setOt={setOt}  filterValue={departmentsFilter} allFilter={departments} type={'Départements'} setFilterValue={setDepartmentsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
                     </div>}
-                    <div onClick={() => setFilterId(3)}>
+                    { (territoire === 'grand-est' || predefinedDepartments.includes(territoire)) && <div onClick={() => setFilterId(3)}>
                         <Filter id={3} filterId={filterId} setFilterId={setFilterId} setOt={setOt}  filterValue={otsFilter} allFilter={ot} type={'Offices de tourisme'} setFilterValue={setOtsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
-                    </div>
+                    </div>}
                     <div onClick={() => setFilterId(4)}>
                         <Filter id={4} filterId={filterId} setFilterId={setFilterId}  setOt={setOt} filterValue={EstablishmentsFilter} allFilter={etablishment} type={'Établissements'} setFilterValue={setEstablishmentsFilter} setSelectedTerritoires={setSelectedTerritoires} selectedTerritoires={selectedTerritoires}></Filter>
                     </div>
