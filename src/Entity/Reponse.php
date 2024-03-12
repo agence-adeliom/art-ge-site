@@ -240,4 +240,9 @@ class Reponse
 
         return $this;
     }
+
+    public function getLabelsIds(): array
+    {
+        return array_keys($this->getRawForm()['15']['answers'] ?? []) ?? [];
+    }
 }
