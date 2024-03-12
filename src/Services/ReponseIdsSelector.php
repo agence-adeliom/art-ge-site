@@ -21,7 +21,7 @@ class ReponseIdsSelector
         $zipCriteria = '';
         $zipCriterias = [];
         $zipParams = [];
-        $territoires = $dashboardFilterDTO->getTerritoires();
+        $territoires = array_values(array_merge([$dashboardFilterDTO->getTerritoire()], $dashboardFilterDTO->getTerritoires()));
         if ([] !== $territoires) {
             foreach ($territoires as $key => $territoire) {
                 if (TerritoireAreaEnum::REGION !== $territoire->getArea()) {
