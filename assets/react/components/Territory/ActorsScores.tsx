@@ -15,8 +15,7 @@ const ActorsScores = ({ scores } : {
             <div className="w-full overflow-auto">
                 <div className="grid grid-cols-8 gap-4 mt-10 relative w-max lg:w-full max-lg:mr-10 ">
                     {Object.entries(scores).map(([actor, score]) => (
-                        score && 
-                            <Bar 
+                        parseInt(score, 10) >= 0 && <Bar
                             key={actor}
                             percentage={parseInt(score, 10)} 
                             type={actor}
