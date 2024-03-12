@@ -114,7 +114,7 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
             ->andWhere('tt.id = :linkedId')
             ->setParameter('linkedId', $linkedTerritoire->getId())
             ->setParameter('area', TerritoireAreaEnum::TOURISME->value)
-            ->orderBy('t.name', 'ASC')
+            ->orderBy('t.name, tt.name', 'ASC')
         ;
 
         $qb = $this->selectOnlyColumns($columns, $qb, 't');
@@ -136,7 +136,7 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
             ->innerJoin('t.linkedTerritoires', 'tt')
             ->andWhere('t.area = :area')
             ->setParameter('area', TerritoireAreaEnum::TOURISME->value)
-            ->orderBy('t.name', 'ASC')
+            ->orderBy('t.name, tt.name', 'ASC')
         ;
 
         $orModule = $qb->expr()->orX();
@@ -164,7 +164,7 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
             ->innerJoin('t.tourismTerritoires', 'tt')
             ->andWhere('t.area = :area')
             ->setParameter('area', TerritoireAreaEnum::DEPARTEMENT->value)
-            ->orderBy('t.name', 'ASC')
+            ->orderBy('t.name, tt.name', 'ASC')
         ;
 
         foreach ($tourismsTerritoires as $tourismTerritoire) {
@@ -195,7 +195,7 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
             ->andWhere('t.slug IN (:departments)')
             ->setParameter('departments', $departments)
             ->setParameter('area', TerritoireAreaEnum::DEPARTEMENT->value)
-            ->orderBy('t.name', 'ASC')
+            ->orderBy('t.name, tc.name', 'ASC')
         ;
 
         $qb = $this->selectOnlyColumns($columns, $qb, 'tc');
