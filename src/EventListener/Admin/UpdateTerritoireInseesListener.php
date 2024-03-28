@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Encoder\CsvEncoder;
 #[AsEventListener(event: BeforeCrudActionEvent::class, method: 'setFileDataInRequestAttribute')]
 #[AsEventListener(event: BeforeEntityUpdatedEvent::class, method: 'updateEntityWithRequestAttributes')]
 #[AsEventListener(event: BeforeEntityPersistedEvent::class, method: 'updateEntityWithRequestAttributes')]
-class UpdateTerritoireZipsListener
+class UpdateTerritoireInseesListener
 {
     public function __construct(
         private readonly RequestStack $requestStack,
@@ -31,8 +31,8 @@ class UpdateTerritoireZipsListener
 
         $request = $this->requestStack->getCurrentRequest();
         $datas = [];
-        $zips = [];
-        $fieldName = 'postalCodesFile';
+        $insees = [];
+        $fieldName = 'inseeCodesFile';
 
         if (null !== $request) {
             $files = $this->requestStack->getCurrentRequest()?->files->get('Territoire');
@@ -51,10 +51,10 @@ class UpdateTerritoireZipsListener
                 }
             }
             foreach ($datas as $row) {
-                $zips[] = $row['zip'];
+                $insees[] = $row['insee'];
             }
 
-            $request->attributes->set('_zips', $zips);
+            $request->attributes->set('_insees', $insees);
         }
     }
 
@@ -67,12 +67,12 @@ class UpdateTerritoireZipsListener
             return;
         }
 
-        $zips = $this->requestStack->getCurrentRequest()?->attributes->get('_zips');
+        $insees = $this->requestStack->getCurrentRequest()?->attributes->get('_insees');
 
-        if ([] === $zips) {
+        if ([] === $insees) {
             return;
         }
 
-        $entity->setZips(array_values($zips));
+        $entity->setInsees(array_values($insees));
     }
 }

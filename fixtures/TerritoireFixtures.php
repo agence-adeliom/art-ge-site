@@ -48,7 +48,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
             $region->setSlug('grand-est');
             $region->setUseSlug(true);
             $region->setIsPublic(true);
-            $region->setZips([]);
+            $region->setInsees([]);
             $region->setArea(TerritoireAreaEnum::REGION);
             $manager->persist($region);
 
@@ -59,7 +59,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
             $routeDesVins->setSlug('route-du-vin');
             $routeDesVins->setUseSlug(true);
             $routeDesVins->setIsPublic(true);
-            $routeDesVins->setZips([67140, 67680]);
+            $routeDesVins->setInsees([67140, 67680]);
             $routeDesVins->setArea(TerritoireAreaEnum::TOURISME);
             $manager->persist($routeDesVins);
 
@@ -72,7 +72,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                 $departement->setUseSlug(true);
                 $departement->setIsPublic(true);
                 $departement->addParent($region);
-                $departement->setZips([]);
+                $departement->setInsees([]);
                 $departement->setArea(TerritoireAreaEnum::DEPARTEMENT);
                 $departements[DepartementEnum::getCode($departementEnum)] = $departement;
                 $manager->persist($departement);
@@ -146,7 +146,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                     }
                 }
                 foreach ($cityCodes[$sirenEPCI] as $city) {
-                    $territoire->addZip($city->getZip());
+                    $territoire->addInsee($city->getInsee());
                 }
                 $territoire->setArea(TerritoireAreaEnum::OT);
                 $territoire->addEpci($epci);
