@@ -18,11 +18,13 @@ interface DataFields {
   address: string;
   zip: string;
   city: string;
+  insee: string;
 }
 
 interface LocationProps {
   zip: string;
   name: string;
+  insee: string;
 }
 
 const autoCompleteAPI = '/api/insee/';
@@ -45,6 +47,7 @@ const StepFour = () => {
     address: textRequired,
     zip: zipCodeRequired,
     city: textRequired,
+    insee: textRequired,
   });
 
   const {
@@ -60,6 +63,9 @@ const StepFour = () => {
   const selectLocation = (location: LocationProps, e: React.MouseEvent) => {
     e.preventDefault();
     setValue('zip', location.zip, {
+      shouldValidate: true,
+    });
+    setValue('insee', location.insee, {
       shouldValidate: true,
     });
     setValue('city', location.name, {
@@ -141,6 +147,12 @@ const StepFour = () => {
               defaultValue={repondant?.address}
             ></TextInput>
             <div className="relative col-span-1">
+              <TextInput
+                  type={Fields.HIDDEN}
+                  name={'insee'}
+                  defaultValue={repondant?.insee}
+                  control={control}
+              ></TextInput>
               <TextInput
                 label={'Code postal'}
                 name={'zip'}

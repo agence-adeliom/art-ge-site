@@ -34,6 +34,7 @@ class RepondantType extends AbstractType
             ->add('address', TextType::class)
             ->add('city', TextType::class)
             ->add('zip', TextType::class)
+            ->add('insee', TextType::class)
             ->add('country', TextType::class)
             ->add('contact_by_bird', HoneypotType::class)
             ->add('restauration', CheckboxType::class, [

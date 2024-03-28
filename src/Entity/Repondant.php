@@ -41,6 +41,9 @@ class Repondant implements \Stringable
     #[ORM\Column(length: 255)]
     private ?string $zip = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $insee = null;
+
     #[ORM\ManyToOne(inversedBy: 'repondants')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Department $department = null;
@@ -163,6 +166,18 @@ class Repondant implements \Stringable
     public function setZip(string $zip): static
     {
         $this->zip = $zip;
+
+        return $this;
+    }
+
+    public function getInsee(): ?string
+    {
+        return $this->insee;
+    }
+
+    public function setInsee(string $insee): static
+    {
+        $this->insee = $insee;
 
         return $this;
     }

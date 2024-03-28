@@ -20,4 +20,5 @@ export enum Fields {
   NUMBER = 'number',
   EMAIL = 'email',
   PHONE = 'tel',
+  HIDDEN = 'hidden',
 }

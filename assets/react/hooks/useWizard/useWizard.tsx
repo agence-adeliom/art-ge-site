@@ -25,6 +25,7 @@ interface RepondantProps {
   address?: string;
   city?: string;
   zip?: string;
+  insee?: string;
   country?: string;
   restauration?: number;
   greenSpace?: number;
