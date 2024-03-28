@@ -35,9 +35,9 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
     #[Groups([DashboardDataController::DASHBOARD_API_DATA_GROUP, DashboardFilterController::DASHBOARD_API_FILTER_GROUP])]
     private string $slug;
 
-    /** @var array<mixed> $zips */
+    /** @var array<mixed> $insees */
     #[ORM\Column]
-    private array $zips = [];
+    private array $insees = [];
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $code = null;
@@ -128,23 +128,23 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
     }
 
     /** @return array<mixed> */
-    public function getZips(): array
+    public function getInsees(): array
     {
-        return $this->zips;
+        return $this->insees;
     }
 
     /** @param array<mixed> $zips */
-    public function setZips(array $zips): static
+    public function setInsees(array $insees): static
     {
-        $this->zips = $zips;
+        $this->insees = $insees;
 
         return $this;
     }
 
-    public function addZip(string $zip): static
+    public function addInsee(string $insee): static
     {
-        if (false === array_search($zip, $this->zips, true)) {
-            $this->zips[] = $zip;
+        if (false === array_search($insee, $this->insees, true)) {
+            $this->insees[] = $insee;
         }
 
         return $this;

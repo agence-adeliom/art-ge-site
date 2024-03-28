@@ -30,6 +30,7 @@ class EmailToRepondantListener
                 $repondant->setAddress($reponse->getRepondant()->getAddress());
                 $repondant->setCity($reponse->getRepondant()->getCity());
                 $repondant->setZip((string) $reponse->getRepondant()->getZip());
+                $repondant->setInsee((string) $reponse->getRepondant()->getInsee());
                 $repondant->setCountry((string) $reponse->getRepondant()->getCountry());
                 $repondant->setRestauration($reponse->getRepondant()->isRestauration());
                 $repondant->setGreenSpace($reponse->getRepondant()->isGreenSpace());

@@ -18,9 +18,9 @@ class ReponseIdsSelector
 
     public function getLastReponsesIds(DashboardFilterDTO $dashboardFilterDTO): array
     {
-        $zipCriteria = '';
-        $zipCriterias = [];
-        $zipParams = [];
+        $inseeCriteria = '';
+        $inseeCriterias = [];
+        $inseeParams = [];
         $territoires = array_values(array_merge([$dashboardFilterDTO->getTerritoire()], $dashboardFilterDTO->getTerritoires()));
         if ([] !== $territoires) {
             foreach ($territoires as $key => $territoire) {
@@ -29,21 +29,21 @@ class ReponseIdsSelector
                         $department = DepartementEnum::tryFrom($territoire->getSlug());
                         if ($department) {
                             if (DepartementEnum::ALSACE === $department) {
-                                $zipCriterias[] = ' U.zip BETWEEN :zip67' . $key . ' AND :zip69' . $key . ' ';
-                                $zipParams['zip67' . $key] = '67%';
-                                $zipParams['zip69' . $key] = '69%';
+                                $inseeCriterias[] = ' U.insee BETWEEN :insee67' . $key . ' AND :insee69' . $key . ' ';
+                                $inseeParams['insee67' . $key] = '67%';
+                                $inseeParams['insee69' . $key] = '69%';
                             } else {
-                                $zipCriterias[] = ' U.zip LIKE :zip' . $key . ' ';
-                                $zipParams['zip' . $key] = DepartementEnum::getCode($department) . '%';
+                                $inseeCriterias[] = ' U.insee LIKE :insee' . $key . ' ';
+                                $inseeParams['insee' . $key] = DepartementEnum::getCode($department) . '%';
                             }
                         }
                     } else {
-                        $zipCriterias[] = ' U.zip IN ("' . implode('","', $territoire->getZips()) . '") ';
+                        $inseeCriterias[] = ' U.insee IN ("' . implode('","', $territoire->getInsees()) . '") ';
                     }
                 }
             }
-            if ([] !== $zipCriterias) {
-                $zipCriteria = 'AND (' . implode(' OR ', $zipCriterias) . ') ';
+            if ([] !== $inseeCriterias) {
+                $inseeCriteria = 'AND (' . implode(' OR ', $inseeCriterias) . ') ';
             }
         }
 
@@ -84,8 +84,8 @@ class ReponseIdsSelector
             INNER JOIN typologie TY ON TY.id = U.typologie_id
             WHERE 1 = 1
                     ' . $typologyCriteria . '
-                    ' . $zipCriteria . '
+                    ' . $inseeCriteria . '
                     ' . $dateCriteria . '
-            GROUP BY R.repondant_id', [...$typologyParams, ...$zipParams, ...$dateParams])->fetchFirstColumn();
+            GROUP BY R.repondant_id', [...$typologyParams, ...$inseeParams, ...$dateParams])->fetchFirstColumn();
     }
 }

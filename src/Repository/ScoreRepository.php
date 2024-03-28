@@ -108,7 +108,7 @@ class ScoreRepository extends ServiceEntityRepository
                                         }
                                     }
                                 } else {
-                                    $ors[] = $dql->expr()->in('u.zip', implode(',', $territoire->getZips()));
+                                    $ors[] = $dql->expr()->in('u.zip', implode(',', $territoire->getInsees()));
                                 }
                             }
                         }

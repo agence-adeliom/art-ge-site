@@ -15,7 +15,7 @@ use Doctrine\ORM\QueryBuilder;
 
 trait RepositoryFilterTrait
 {
-    private function filterByAreaZipCodes(QueryBuilder $qb, Territoire $territoire, int $key = 0, bool $orWhere = true): QueryBuilder
+    private function filterByAreaInseeCodes(QueryBuilder $qb, Territoire $territoire, int $key = 0, bool $orWhere = true): QueryBuilder
     {
         if (TerritoireAreaEnum::REGION !== $territoire->getArea()) {
             $ors = [];
@@ -23,17 +23,17 @@ trait RepositoryFilterTrait
                 $department = DepartementEnum::tryFrom($territoire->getSlug());
                 if ($department) {
                     if (DepartementEnum::ALSACE === $department) {
-                        $ors[] = $qb->expr()->between('u.zip', ':zip67', ':zip69');
-                        $qb->setParameter('zip67', '67%');
-                        $qb->setParameter('zip69', '69%');
+                        $ors[] = $qb->expr()->between('u.insee', ':insee67', ':insee69');
+                        $qb->setParameter('insee67', '67%');
+                        $qb->setParameter('insee69', '69%');
                     } else {
-                        $ors[] = $qb->expr()->like('u.zip', ':zip' . $key);
-                        $qb->setParameter('zip' . $key, DepartementEnum::getCode($department) . '%');
+                        $ors[] = $qb->expr()->like('u.insee', ':insee' . $key);
+                        $qb->setParameter('insee' . $key, DepartementEnum::getCode($department) . '%');
                     }
                 }
             } else {
-                $ors[] = $qb->expr()->in('u.zip', ':zip' . $key);
-                $qb->setParameter('zip' . $key, $territoire->getZips());
+                $ors[] = $qb->expr()->in('u.insee', ':insee' . $key);
+                $qb->setParameter('insee' . $key, $territoire->getInsees());
             }
             if ([] !== $ors) {
                 $addJoin = true;
@@ -99,14 +99,14 @@ trait RepositoryFilterTrait
     private function addFilters(QueryBuilder $qb, DashboardFilterDTO | TerritoireFilterDTO $filterDTO, bool $orWhere = true): QueryBuilder
     {
         if ($filterDTO instanceof TerritoireFilterDTO || ($filterDTO instanceof DashboardFilterDTO && [] === $filterDTO->getTerritoires())) {
-            $qb = $this->filterByAreaZipCodes($qb, $filterDTO->getTerritoire());
+            $qb = $this->filterByAreaInseeCodes($qb, $filterDTO->getTerritoire());
         }
 
         if ($filterDTO instanceof DashboardFilterDTO) {
             $territoires = $filterDTO->getTerritoires();
             if ([] !== $territoires) {
                 foreach ($territoires as $key => $territoire) {
-                    $qb = $this->filterByAreaZipCodes($qb, $territoire, $key, $orWhere);
+                    $qb = $this->filterByAreaInseeCodes($qb, $territoire, $key, $orWhere);
                 }
             }
         }
