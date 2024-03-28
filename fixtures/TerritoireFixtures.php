@@ -32,6 +32,11 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager): void
     {
+        $allCities = [];
+        foreach ($this->cityRepository->findAll() as $c) {
+            $allCities[$c->getInsee()] = $c;
+        }
+
         $slugger = new AsciiSlugger();
         /** @var string $datasDirectory */
         $datasDirectory = $this->parameterBag->get('datas_directory');
@@ -48,7 +53,6 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
             $region->setSlug('grand-est');
             $region->setUseSlug(true);
             $region->setIsPublic(true);
-            $region->setInsees([]);
             $region->setArea(TerritoireAreaEnum::REGION);
             $manager->persist($region);
 
@@ -59,12 +63,17 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
             $routeDesVins->setSlug('route-du-vin');
             $routeDesVins->setUseSlug(true);
             $routeDesVins->setIsPublic(true);
-            $routeDesVins->setInsees([67140, 67680]);
             $routeDesVins->setArea(TerritoireAreaEnum::TOURISME);
+            // add cities to route des vins
+            $routesDesVinsCities = $this->cityRepository->findBy(['zip' => [67140, 67680]]);
+            foreach ($routesDesVinsCities as $city) {
+                $routeDesVins->addCity($city);
+            }
             $manager->persist($routeDesVins);
 
             $departements = [];
             foreach (DepartementEnum::cases() as $departementEnum) {
+                $departementCode = DepartementEnum::getCode($departementEnum);
                 $departement = new Territoire();
                 $departement->setUuid(new Ulid());
                 $departement->setName(DepartementEnum::getLabel($departementEnum));
@@ -72,9 +81,8 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                 $departement->setUseSlug(true);
                 $departement->setIsPublic(true);
                 $departement->addParent($region);
-                $departement->setInsees([]);
                 $departement->setArea(TerritoireAreaEnum::DEPARTEMENT);
-                $departements[DepartementEnum::getCode($departementEnum)] = $departement;
+                $departements[$departementCode] = $departement;
                 $manager->persist($departement);
                 if ($departement->getSlug() === 'alsace') {
                     $routeDesVins->addLinkedTerritoire($departement);
@@ -146,7 +154,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                     }
                 }
                 foreach ($cityCodes[$sirenEPCI] as $city) {
-                    $territoire->addInsee($city->getInsee());
+                    $territoire->addCity($allCities[$city->getInsee()]);
                 }
                 $territoire->setArea(TerritoireAreaEnum::OT);
                 $territoire->addEpci($epci);
