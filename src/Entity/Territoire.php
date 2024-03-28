@@ -35,10 +35,6 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
     #[Groups([DashboardDataController::DASHBOARD_API_DATA_GROUP, DashboardFilterController::DASHBOARD_API_FILTER_GROUP])]
     private string $slug;
 
-    /** @var array<mixed> $insees */
-    #[ORM\Column]
-    private array $insees = [];
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $code = null;
 
@@ -76,6 +72,9 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
     #[Groups([DashboardDataController::DASHBOARD_API_DATA_GROUP, DashboardFilterController::DASHBOARD_API_FILTER_GROUP])]
     private ?int $score;
 
+    #[ORM\ManyToMany(targetEntity: City::class, inversedBy: 'territoires')]
+    private Collection $cities;
+
     public function __construct()
     {
         $this->uuid = new Ulid();
@@ -84,6 +83,7 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
         $this->territoiresChildren = new ArrayCollection();
         $this->linkedTerritoires = new ArrayCollection();
         $this->tourismTerritoires = new ArrayCollection();
+        $this->cities = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -130,24 +130,7 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
     /** @return array<mixed> */
     public function getInsees(): array
     {
-        return $this->insees;
-    }
-
-    /** @param array<mixed> $zips */
-    public function setInsees(array $insees): static
-    {
-        $this->insees = $insees;
-
-        return $this;
-    }
-
-    public function addInsee(string $insee): static
-    {
-        if (false === array_search($insee, $this->insees, true)) {
-            $this->insees[] = $insee;
-        }
-
-        return $this;
+        return $this->getCities()->map(fn (City $city) => $city->getInsee())->toArray();
     }
 
     public function getCode(): ?string
@@ -373,5 +356,29 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
     public function __toString(): string
     {
         return (string) $this->getName();
+    }
+
+    /**
+     * @return Collection<int, City>
+     */
+    public function getCities(): Collection
+    {
+        return $this->cities;
+    }
+
+    public function addCity(City $city): static
+    {
+        if (!$this->cities->contains($city)) {
+            $this->cities->add($city);
+        }
+
+        return $this;
+    }
+
+    public function removeCity(City $city): static
+    {
+        $this->cities->removeElement($city);
+
+        return $this;
     }
 }

@@ -37,9 +37,13 @@ class City implements \Stringable
     #[ORM\ManyToMany(targetEntity: Epci::class, mappedBy: 'cities')]
     private Collection $epcis;
 
+    #[ORM\ManyToMany(targetEntity: Territoire::class, mappedBy: 'cities')]
+    private Collection $territoires;
+
     public function __construct()
     {
         $this->epcis = new ArrayCollection();
+        $this->territoires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -122,8 +126,35 @@ class City implements \Stringable
         return $this;
     }
 
+    /**
+     * @return Collection<int, Territoire>
+     */
+    public function getTerritoires(): Collection
+    {
+        return $this->territoires;
+    }
+
+    public function addTerritoire(Territoire $territoire): static
+    {
+        if (!$this->territoires->contains($territoire)) {
+            $this->territoires->add($territoire);
+            $territoire->addCity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTerritoire(Territoire $territoire): static
+    {
+        if ($this->territoires->removeElement($territoire)) {
+            $territoire->removeCity($this);
+        }
+
+        return $this;
+    }
+
     public function __toString(): string
     {
-        return $this->getName();
+        return $this->getName() . ' – ' . $this->getInsee();
     }
 }

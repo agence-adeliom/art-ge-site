@@ -6,6 +6,7 @@ namespace App\EventListener\Admin;
 
 use App\Controller\Admin\TerritoireCrudController;
 use App\Entity\Territoire;
+use App\Repository\CityRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeCrudActionEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
@@ -20,6 +21,7 @@ class UpdateTerritoireInseesListener
 {
     public function __construct(
         private readonly RequestStack $requestStack,
+        private readonly CityRepository $cityRepository,
     ) {
     }
 
@@ -73,6 +75,11 @@ class UpdateTerritoireInseesListener
             return;
         }
 
-        $entity->setInsees(array_values($insees));
+        foreach ($insees as $insee) {
+            $city = $this->cityRepository->findOneBy(['insee' => $insee]);
+            if (null !== $city) {
+                $entity->addCity($city);
+            }
+        }
     }
 }
