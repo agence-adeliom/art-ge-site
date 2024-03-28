@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Entity\Territoire;
+use App\Enum\TerritoireAreaEnum;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -12,10 +13,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -27,6 +30,7 @@ class TerritoireCrudController extends AbstractCrudController
     public function __construct(
         private readonly ParameterBagInterface $parameterBag,
         private readonly RouterInterface $router,
+        private readonly AdminContextProvider $adminContextProvider,
     ) {
     }
 
@@ -58,10 +62,17 @@ class TerritoireCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
+        $instance = $this->adminContextProvider->getContext()->getEntity()->getInstance();
         yield FormField::addTab('Informations');
         yield TextField::new('uuid', 'Identifiant')->hideOnForm();
         yield TextField::new('name', 'Nom');
         yield TextField::new('slug', 'Identifiant unique (slug)');
+        if ($instance instanceof Territoire && $instance->getArea() !== TerritoireAreaEnum::REGION && $instance->getArea() !== TerritoireAreaEnum::DEPARTEMENT) {
+            yield ChoiceField::new('area', 'Type de territoire')->setChoices([
+                'Office de tourisme' => TerritoireAreaEnum::OT,
+                'Territoire sur-mesure' => TerritoireAreaEnum::TOURISME,
+            ]);
+        }
         yield BooleanField::new('useSlug', Crud::PAGE_INDEX === $pageName ? 'Utiliser le slug ?' : 'Utiliser le slug dans l\'URL du dashboard ?')->renderAsSwitch(Crud::PAGE_EDIT === $pageName);
 
         yield FormField::addTab('Autorisations');
@@ -81,6 +92,9 @@ class TerritoireCrudController extends AbstractCrudController
         ;
 
         yield FormField::addTab('Relation');
+        if ($instance instanceof Territoire && $instance->getArea() !== TerritoireAreaEnum::REGION && $instance->getArea() !== TerritoireAreaEnum::DEPARTEMENT) {
+            yield AssociationField::new('parents', 'Territoires parents')->hideOnIndex();
+        }
         yield AssociationField::new('linkedTerritoires', 'Quels territoires peuvent accéder à ce territoire ?')
             ->hideOnIndex()
             ->setHelp('Cette information est seulement utilisée pour afficher ou non le territoire sur les dashboard des territoires sélectionnés.')
