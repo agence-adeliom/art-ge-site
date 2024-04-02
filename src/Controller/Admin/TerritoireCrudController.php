@@ -8,6 +8,7 @@ use App\Entity\Territoire;
 use App\Enum\TerritoireAreaEnum;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -48,6 +49,14 @@ class TerritoireCrudController extends AbstractCrudController
             ->showEntityActionsInlined()
         ;
     }
+
+    public function configureAssets(Assets $assets): Assets
+    {
+        return parent::configureAssets($assets)->addHtmlContentToHead(
+            '<style>#tab-codes-postaux .ts-control { display: block; } #tab-codes-postaux .ts-wrapper.multi .ts-control > div.item { display: block; width: fit-content; }</style>'
+        );
+    }
+
 
     public function configureActions(Actions $actions): Actions
     {

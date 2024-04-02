@@ -155,6 +155,6 @@ class City implements \Stringable
 
     public function __toString(): string
     {
-        return $this->getName() . ' – ' . $this->getInsee();
+        return $this->getName() . ' – insee: ' . $this->getInsee() . ' – cp:' . $this->getZip();
     }
 }

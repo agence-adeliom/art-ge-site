@@ -7,6 +7,7 @@ namespace App\Controller\Admin;
 use App\Entity\Epci;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -27,6 +28,13 @@ class EpciCrudController extends AbstractCrudController
             ->setEntityLabelInPlural('EPCIs')
             ->showEntityActionsInlined()
         ;
+    }
+
+    public function configureAssets(Assets $assets): Assets
+    {
+        return parent::configureAssets($assets)->addHtmlContentToHead(
+            '<style>form[name="Epci"] .ts-control { display: block; } form[name="Epci"] .ts-wrapper.multi .ts-control > div.item { display: block; width: fit-content; }</style>'
+        );
     }
 
     public function configureActions(Actions $actions): Actions
