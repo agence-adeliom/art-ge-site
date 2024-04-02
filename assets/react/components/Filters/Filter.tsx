@@ -121,9 +121,9 @@ const Filter = ({id, setOt,setFilterId, filterId, setFilterValue, type, allFilte
                         </div>
                         <Text size="4xl" className="p-10 pb-7 font-title" weight={500}>{type}</Text>
                         <div className="flex flex-col mt-2">
-                        
-                        {allFilter && Object.values(allFilter).map((el : any, key : any) => (
-                            <div key={key} className={`flex items-center inputContainer ${inputContainer}`} onClick={(e) => {e.stopPropagation(), handleCheckbox(e)}}>
+
+                        {allFilter && Object.values(allFilter).map((el : any) => (
+                            <div key={el.slug} className={`flex items-center inputContainer ${inputContainer}`} onClick={(e) => {e.stopPropagation(), handleCheckbox(e)}}>
                                 <input type="checkbox"  className={`filterCheckbox rounded ml-10 m-2 cursor-pointer`} id={el.slug} data-name={el.name} data-type={type}></input>
                                 <label className="w-full py-2 pr-10 text-sm cursor-pointer" onClick={(e) => e.stopPropagation()} htmlFor={el.slug}>{el.name}</label>
                             </div>
