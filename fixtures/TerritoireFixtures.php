@@ -73,6 +73,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
 
             /** STOCKAGES DES INSEE PAR SIREN D'EPCI */
             $cityCodes = [];
+            $ot2s = [];
             foreach ($ecpiDatas as $e) {
                 $inseeCommune = str_pad((string) $e['INSEE_commune'], 5, '0', STR_PAD_LEFT);
                 $sirenEPCI = $e['sirenEPCI'];
@@ -85,6 +86,9 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                 }
                 if ($city) {
                     $cityCodes[$sirenEPCI][] = $city;
+                }
+                if ($e['Office de tourisme 2'] !== '') {
+                    $ot2s[$e['Office de tourisme 2']][] = $inseeCommune;
                 }
             }
 
@@ -148,8 +152,16 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                         }
                     }
                 }
-                foreach ($cityCodes[$sirenEPCI] as $city) {
-                    $territoire->addCity($allCities[$city->getInsee()]);
+                if ($nameTerritoire === 'Destination Nancy' || $nameTerritoire === 'Destination Vittel'){
+                    foreach ($cityCodes[$sirenEPCI] as $city) {
+                        if (in_array($city->getInsee(), $ot2s[$nameTerritoire])) {
+                            $territoire->addCity($allCities[$city->getInsee()]);
+                        }
+                    }
+                } else {
+                    foreach ($cityCodes[$sirenEPCI] as $city) {
+                        $territoire->addCity($allCities[$city->getInsee()]);
+                    }
                 }
                 $territoire->setArea($areaTerritoire);
                 $territoire->addEpci($epci);
@@ -157,6 +169,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                 $manager->persist($territoire);
                 $territoiresImported[$territoireSlug] = $territoire;
             }
+
             $manager->flush();
         }
     }
