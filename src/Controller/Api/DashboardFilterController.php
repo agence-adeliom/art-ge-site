@@ -94,6 +94,12 @@ class DashboardFilterController extends AbstractController
                     'data' => $this->getDataByTourisms($tourisms),
                 ], 200);
             }
+            if ([] !== $ots && null !== $ots && $territoire->getArea() === TerritoireAreaEnum::DEPARTEMENT) {
+                return new JsonResponse([
+                    'status' => 'success',
+                    'data' => $this->getDataByDepartments([$territoire->getSlug()]),
+                ], 200);
+            }
         }
 
         return $this->json([
@@ -138,7 +144,7 @@ class DashboardFilterController extends AbstractController
         ];
     }
 
-    /** @param array<string> $tourismsSlugs les slugs des departements passés via les filtres URL encodés */
+    /** @param array<string> $tourismsSlugs les slugs des tourisms passés via les filtres URL encodés */
     private function getDataByTourisms(array $tourismsSlugs): array
     {
         $departments = $this->territoireRepository->getDepartmentsByTourismsTerritoires($tourismsSlugs, $this->columns);
