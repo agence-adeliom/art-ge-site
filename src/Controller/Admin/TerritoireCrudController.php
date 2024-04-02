@@ -96,10 +96,10 @@ class TerritoireCrudController extends AbstractCrudController
             yield FormField::addTab('Codes postaux');
             if ($instance instanceof Territoire && TerritoireAreaEnum::DEPARTEMENT === $instance->getArea()) {
                 // DEPARTEMENT EDITION
-                yield AssociationField::new('citiesToAdd', 'Ajout de données de ville')
+                yield AssociationField::new('citiesToAdd', 'Ajout de données de ville pour le département')
                     ->setHelp('Dans ce champ, rajoutez les villes qui doivent être comptabibilisées dans les données du département.<br /> Par défaut le département fait une recherche avec toutes les codes insées commençant par son numéro de département')
                     ->hideOnIndex();
-                yield AssociationField::new('citiesToRemove', 'Suppression de données de ville')
+                yield AssociationField::new('citiesToRemove', 'Suppression de données de ville pour le département')
                     ->setHelp('Dans ce champ, rajoutez les villes qui ne doivent pas être comptabibilisées dans les données du département.<br /> Par défaut le département fait une recherche avec toutes les codes insées commençant par son numéro de département')
                     ->hideOnIndex();
             } else {

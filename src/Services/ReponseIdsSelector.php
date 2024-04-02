@@ -20,6 +20,8 @@ class ReponseIdsSelector
     {
         $inseeCriteria = '';
         $inseeCriterias = [];
+        $inseeCriteriaDpt = '';
+        $inseeCriteriasDpt = [];
         $inseeParams = [];
         $territoires = array_values(array_merge([$dashboardFilterDTO->getTerritoire()], $dashboardFilterDTO->getTerritoires()));
         if ([] !== $territoires) {
@@ -29,12 +31,22 @@ class ReponseIdsSelector
                         $department = DepartementEnum::tryFrom($territoire->getSlug());
                         if ($department) {
                             if (DepartementEnum::ALSACE === $department) {
-                                $inseeCriterias[] = ' U.insee BETWEEN :insee67' . $key . ' AND :insee69' . $key . ' ';
+                                $inseeCriteriasDpt[] = ' (U.insee BETWEEN :insee67' . $key . ' AND :insee69' . $key . ') ';
                                 $inseeParams['insee67' . $key] = '67%';
                                 $inseeParams['insee69' . $key] = '69%';
                             } else {
-                                $inseeCriterias[] = ' U.insee LIKE :insee' . $key . ' ';
+                                $inseeCriteriasDpt[] = ' U.insee LIKE :insee' . $key . ' ';
                                 $inseeParams['insee' . $key] = DepartementEnum::getCode($department) . '%';
+                            }
+                            if ($territoire->getCitiesToRemove()->count() > 0) {
+                                $inseeCriteriasDpt[] = ' U.insee NOT IN ("' . implode('","', $territoire->getInseesToRemove()) . '") ';
+                            }
+
+                            if ([] !== $inseeCriteriasDpt) {
+                                $inseeCriterias[] = '(' . implode(' AND ', $inseeCriteriasDpt) . ')';
+                            }
+                            if ($territoire->getCitiesToAdd()->count() > 0) {
+                                $inseeCriterias[count($inseeCriterias) - 1] = $inseeCriterias[count($inseeCriterias) - 1] . ' OR U.insee IN ("' . implode('","', $territoire->getInseesToAdd()) . '") ';
                             }
                         }
                     } else {

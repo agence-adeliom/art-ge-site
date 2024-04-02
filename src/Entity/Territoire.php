@@ -416,6 +416,12 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
         return $this;
     }
 
+    /** @return array<mixed> */
+    public function getInseesToAdd(): array
+    {
+        return array_unique($this->getCitiesToAdd()->map(fn (City $city) => $city->getInsee())->toArray());
+    }
+
     /**
      * @return Collection<int, City>
      */
@@ -438,5 +444,11 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
         $this->citiesToRemove->removeElement($citiesToRemove);
 
         return $this;
+    }
+
+    /** @return array<mixed> */
+    public function getInseesToRemove(): array
+    {
+        return array_unique($this->getCitiesToRemove()->map(fn (City $city) => $city->getInsee())->toArray());
     }
 }
