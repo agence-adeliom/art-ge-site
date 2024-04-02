@@ -94,7 +94,7 @@ class DashboardFilterController extends AbstractController
                     'data' => $this->getDataByTourisms($tourisms),
                 ], 200);
             }
-            if ([] !== $ots && null !== $ots && $territoire->getArea() === TerritoireAreaEnum::DEPARTEMENT) {
+            if ([] !== $ots && null !== $ots && TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
                 return new JsonResponse([
                     'status' => 'success',
                     'data' => $this->getDataByDepartments([$territoire->getSlug()]),
@@ -116,8 +116,10 @@ class DashboardFilterController extends AbstractController
     private function getAllDatas(array $departmentsFilters = null): array
     {
         if (null === $departmentsFilters || [] === $departmentsFilters) {
+            /** @var array<array{slug: string, name: string}> $ots */
             $ots = $this->allOts();
         } else {
+            /** @var array<array{slug: string, name: string}> $ots */
             $ots = $this->territoireRepository->getOTsByDepartments($departmentsFilters, $this->columns);
         }
 
@@ -133,6 +135,7 @@ class DashboardFilterController extends AbstractController
     private function getDataByDepartments(array $departmentsSlugs): array
     {
         $departments = $this->allDepartments();
+        /** @var array<array{slug: string, name: string}> $ots */
         $ots = $this->territoireRepository->getOTsByDepartments($departmentsSlugs, $this->columns);
         $tourisms = $this->territoireRepository->getTourismsByLinkedTerritoires($departmentsSlugs, $this->columns);
 
@@ -148,6 +151,7 @@ class DashboardFilterController extends AbstractController
     private function getDataByTourisms(array $tourismsSlugs): array
     {
         $departments = $this->territoireRepository->getDepartmentsByTourismsTerritoires($tourismsSlugs, $this->columns);
+        /** @var array<array{slug: string, name: string}> $ots */
         $ots = $this->territoireRepository->getOTsByDepartments($departments ?? [], $this->columns);
         $tourisms = $this->territoireRepository->getTourismsBySlugs($tourismsSlugs, $this->columns);
 
@@ -162,6 +166,7 @@ class DashboardFilterController extends AbstractController
     private function getDataByDepartment(Territoire $department): array
     {
         $departments = $this->allDepartments();
+        /** @var array<array{slug: string, name: string}> $ots */
         $ots = $this->territoireRepository->getOTsByDepartments([$department->getSlug()], $this->columns);
         $tourisms = $this->territoireRepository->getTourismsByLinkedTerritoire($department, $this->columns);
 
@@ -200,7 +205,13 @@ class DashboardFilterController extends AbstractController
         return $this->territoireRepository->getAllByType(TerritoireAreaEnum::TOURISME, $this->columns);
     }
 
-    private function removeEmptyOts($ots): array{
-        return array_values(array_filter($ots, static fn (array $ot): bool => $ot['slug'] !== ''));
+    /**
+     * @param array<array{slug: string, name: string}> $ots
+     *
+     * @return array<array{slug: string, name: string}>
+     */
+    private function removeEmptyOts(array $ots): array
+    {
+        return array_values(array_filter($ots, static fn (array $ot): bool => '' !== $ot['slug']));
     }
 }

@@ -14,7 +14,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -62,13 +61,13 @@ class TerritoireCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        /** @var Territoire | null $instance */
-        $instance = $this->adminContextProvider->getContext()->getEntity()->getInstance();
+        /** @var Territoire|null $instance */
+        $instance = $this->adminContextProvider->getContext()?->getEntity()->getInstance();
         yield FormField::addTab('Informations');
         yield TextField::new('uuid', 'Identifiant')->hideOnForm();
         yield TextField::new('name', 'Nom');
         yield TextField::new('slug', 'Identifiant unique (slug)');
-        if ($instance instanceof Territoire && $instance->getArea() !== TerritoireAreaEnum::REGION && $instance->getArea() !== TerritoireAreaEnum::DEPARTEMENT) {
+        if ($instance instanceof Territoire && TerritoireAreaEnum::REGION !== $instance->getArea() && TerritoireAreaEnum::DEPARTEMENT !== $instance->getArea()) {
             yield ChoiceField::new('area', 'Type de territoire')->setChoices([
                 'Office de tourisme' => TerritoireAreaEnum::OT,
                 'Territoire sur-mesure' => TerritoireAreaEnum::TOURISME,
@@ -93,7 +92,7 @@ class TerritoireCrudController extends AbstractCrudController
         ;
 
         yield FormField::addTab('Relations');
-        if ($instance instanceof Territoire && $instance->getArea() !== TerritoireAreaEnum::REGION && $instance->getArea() !== TerritoireAreaEnum::DEPARTEMENT) {
+        if ($instance instanceof Territoire && TerritoireAreaEnum::REGION !== $instance->getArea() && TerritoireAreaEnum::DEPARTEMENT !== $instance->getArea()) {
             yield AssociationField::new('parents', 'Territoires parents')->hideOnIndex();
         }
         yield AssociationField::new('linkedTerritoires', 'Quels territoires peuvent accéder à ce territoire ?')

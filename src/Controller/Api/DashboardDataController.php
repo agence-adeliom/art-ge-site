@@ -141,15 +141,16 @@ class DashboardDataController extends AbstractController
      * grand-ried est contenu dans Alsace, alors il n'y a pas de changement.
      * Tandis que si on choisi Alsace et ensuite Grand-Ried cela montre une volonté de
      * mieux filtrer.
-     * @param array<Territoire>|null $territoires
+     *
+     * @param array<Territoire> $territoires
      *
      * @return array<Territoire>
      */
-    private function excludeParentDepartmentIfOT(Territoire $mainTerritoire, ?array $territoires = []): array
+    private function excludeParentDepartmentIfOT(Territoire $mainTerritoire, array $territoires = []): array
     {
         $territoiresKeys = [];
         foreach ($territoires as $territoire) {
-            if ($territoire->getArea() === TerritoireAreaEnum::OT) {
+            if (TerritoireAreaEnum::OT === $territoire->getArea()) {
                 foreach ($territoires as $territoire2) {
                     if ($territoire->getParents()->contains($territoire2)) {
                         $territoiresKeys[] = $territoire2->getId();
@@ -158,7 +159,7 @@ class DashboardDataController extends AbstractController
             }
         }
 
-        if ($mainTerritoire->getArea() === TerritoireAreaEnum::DEPARTEMENT) {
+        if (TerritoireAreaEnum::DEPARTEMENT === $mainTerritoire->getArea()) {
             foreach ($territoires as $t) {
                 if (in_array($t, $mainTerritoire->getTerritoiresChildren()->toArray())) {
                     $territoiresKeys[] = $mainTerritoire->getId();

@@ -243,6 +243,6 @@ class Reponse
 
     public function getLabelsIds(): array
     {
-        return array_keys($this->getRawForm()['15']['answers'] ?? []) ?? [];
+        return array_keys($this->getRawForm()['15']['answers'] ?? []);
     }
 }

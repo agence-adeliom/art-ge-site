@@ -76,20 +76,21 @@ class ReponseCrudController extends AbstractCrudController
         yield NumberField::new('total');
         yield TextField::new('percentage', 'Note')->hideOnForm();
         yield BooleanField::new('completed')->renderAsSwitch(false);
-        if ($this->adminContextProvider->getContext()->getEntity()->getInstance()){
+        if ($this->adminContextProvider->getContext()?->getEntity()->getInstance()) {
             $labelsIds = $this->adminContextProvider->getContext()->getEntity()->getInstance()->getLabelsIds();
             $labels = $this->choiceRepository->findBy(['id' => $labelsIds]);
-            $labels = array_map(fn(Choice $choice) => $choice->getLibelle(), $labels);
+            $labels = array_map(fn (Choice $choice) => $choice->getLibelle(), $labels);
             yield TextField::new('labels', 'Labels')
                 ->setValue(implode(', ', $labels))
                 ->setCustomOption('mapped', false)
-                ->hideOnForm();
+                ->hideOnForm()
+            ;
         }
         yield CollectionField::new('scores')
             ->setEntryType(ScoreAdminType::class)
             ->setTemplatePath('admin/crud/score_admin.html.twig')
-            ->hideOnIndex();
-
+            ->hideOnIndex()
+        ;
     }
 
     public function view(AdminContext $context): Response
