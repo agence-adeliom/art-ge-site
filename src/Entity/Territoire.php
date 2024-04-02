@@ -75,6 +75,14 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
     #[ORM\ManyToMany(targetEntity: City::class, inversedBy: 'territoires')]
     private Collection $cities;
 
+    #[ORM\ManyToMany(targetEntity: City::class)]
+    #[ORM\JoinTable(name: 'department_city_to_add')]
+    private Collection $citiesToAdd;
+
+    #[ORM\ManyToMany(targetEntity: City::class)]
+    #[ORM\JoinTable(name: 'department_city_to_remove')]
+    private Collection $citiesToRemove;
+
     public function __construct()
     {
         $this->uuid = new Ulid();
@@ -84,6 +92,8 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
         $this->linkedTerritoires = new ArrayCollection();
         $this->tourismTerritoires = new ArrayCollection();
         $this->cities = new ArrayCollection();
+        $this->citiesToAdd = new ArrayCollection();
+        $this->citiesToRemove = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -378,6 +388,54 @@ class Territoire implements UserInterface, PasswordAuthenticatedUserInterface, \
     public function removeCity(City $city): static
     {
         $this->cities->removeElement($city);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, City>
+     */
+    public function getCitiesToAdd(): Collection
+    {
+        return $this->citiesToAdd;
+    }
+
+    public function addCitiesToAdd(City $citiesToAdd): static
+    {
+        if (!$this->citiesToAdd->contains($citiesToAdd)) {
+            $this->citiesToAdd->add($citiesToAdd);
+        }
+
+        return $this;
+    }
+
+    public function removeCitiesToAdd(City $citiesToAdd): static
+    {
+        $this->citiesToAdd->removeElement($citiesToAdd);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, City>
+     */
+    public function getCitiesToRemove(): Collection
+    {
+        return $this->citiesToRemove;
+    }
+
+    public function addCitiesToRemove(City $citiesToRemove): static
+    {
+        if (!$this->citiesToRemove->contains($citiesToRemove)) {
+            $this->citiesToRemove->add($citiesToRemove);
+        }
+
+        return $this;
+    }
+
+    public function removeCitiesToRemove(City $citiesToRemove): static
+    {
+        $this->citiesToRemove->removeElement($citiesToRemove);
 
         return $this;
     }

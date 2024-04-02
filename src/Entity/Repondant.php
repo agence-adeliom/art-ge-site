@@ -41,7 +41,7 @@ class Repondant implements \Stringable
     #[ORM\Column(length: 255)]
     private ?string $zip = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true, options: ['comment' => 'INSEE qui est reellement utilisé, et non pas le code postal'])]
     private ?string $insee = null;
 
     #[ORM\ManyToOne(inversedBy: 'repondants')]
