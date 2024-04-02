@@ -136,11 +136,16 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                 $territoire->setSlug($territoireSlug);
                 $territoire->setUseSlug(true);
                 $territoire->setIsPublic(true);
-                foreach ($departementsCodes[$sirenEPCI] as $departmentParentCode) {
-                    if ((int) $departmentParentCode === 67 || (int) $departmentParentCode === 68) {
-                        $territoire->addParent($departements['67|68']);
-                    } else {
-                        $territoire->addParent($departements[$departmentParentCode]);
+                // si le slug se finit par un chiffre, on est sur un ot séparé en 2 départements
+                if (preg_match('#\d+$#', $territoire->getSlug(), $matches)) {
+                    $territoire->addParent($departements[(int) $matches[0]]);
+                } else {
+                    foreach ($departementsCodes[$sirenEPCI] as $departmentParentCode) {
+                        if ((int) $departmentParentCode === 67 || (int) $departmentParentCode === 68) {
+                            $territoire->addParent($departements['67|68']);
+                        } else {
+                            $territoire->addParent($departements[$departmentParentCode]);
+                        }
                     }
                 }
                 foreach ($cityCodes[$sirenEPCI] as $city) {

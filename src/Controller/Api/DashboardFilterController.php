@@ -123,7 +123,7 @@ class DashboardFilterController extends AbstractController
 
         return [
             'departments' => $this->allDepartments(),
-            'ots' => $ots,
+            'ots' => $this->removeEmptyOts($ots),
             'tourisms' => $this->allTourisms() ?: null,
             'typologies' => $this->typologieRepository->getSlugsAndNames(),
         ];
@@ -138,7 +138,7 @@ class DashboardFilterController extends AbstractController
 
         return [
             'departments' => $departments,
-            'ots' => $ots,
+            'ots' => $this->removeEmptyOts($ots),
             'tourisms' => $tourisms ?: null,
             'typologies' => $this->typologieRepository->getSlugsAndNames(),
         ];
@@ -153,7 +153,7 @@ class DashboardFilterController extends AbstractController
 
         return [
             'departments' => $departments,
-            'ots' => $ots,
+            'ots' => $this->removeEmptyOts($ots),
             'tourisms' => $tourisms ?: null,
             'typologies' => $this->typologieRepository->getSlugsAndNames(),
         ];
@@ -167,7 +167,7 @@ class DashboardFilterController extends AbstractController
 
         return [
             'departments' => $departments,
-            'ots' => $ots,
+            'ots' => $this->removeEmptyOts($ots),
             'tourisms' => $tourisms ?: null,
             'typologies' => $this->typologieRepository->getSlugsAndNames(),
         ];
@@ -198,5 +198,9 @@ class DashboardFilterController extends AbstractController
     private function allTourisms(): null | array | Territoire
     {
         return $this->territoireRepository->getAllByType(TerritoireAreaEnum::TOURISME, $this->columns);
+    }
+
+    private function removeEmptyOts($ots): array{
+        return array_values(array_filter($ots, static fn (array $ot): bool => $ot['slug'] !== ''));
     }
 }

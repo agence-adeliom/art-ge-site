@@ -92,7 +92,7 @@ class TerritoireCrudController extends AbstractCrudController
             ->setUploadedFileNamePattern('[year]/[month]/[day]/[slug]-[contenthash].[extension]')
         ;
 
-        yield FormField::addTab('Relation');
+        yield FormField::addTab('Relations');
         if ($instance instanceof Territoire && $instance->getArea() !== TerritoireAreaEnum::REGION && $instance->getArea() !== TerritoireAreaEnum::DEPARTEMENT) {
             yield AssociationField::new('parents', 'Territoires parents')->hideOnIndex();
         }
