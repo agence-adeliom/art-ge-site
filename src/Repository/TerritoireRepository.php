@@ -245,7 +245,7 @@ class TerritoireRepository extends ServiceEntityRepository implements UserLoader
                 $departmentCode = DepartementEnum::getCode($department);
                 $params = [$departmentCode . '%'];
             }
-        } elseif (TerritoireAreaEnum::OT === $territoire->getArea() || TerritoireAreaEnum::TOURISME === $territoire->getArea()) {
+        } elseif ((TerritoireAreaEnum::OT === $territoire->getArea() || TerritoireAreaEnum::TOURISME === $territoire->getArea()) && !empty($territoire->getInsees())) {
             $sql .= ([] === $reponsesIds ? ' WHERE ' : ' AND ') . ' U.insee IN (' . implode(',', $territoire->getInsees()) . ')';
             $params = [];
         } else {

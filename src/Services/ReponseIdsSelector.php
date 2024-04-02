@@ -66,14 +66,14 @@ class ReponseIdsSelector
             $dateCriteria = 'AND ';
             if (null !== $dashboardFilterDTO->getFrom() && null !== $dashboardFilterDTO->getTo()) {
                 $dateCriteria .= 'R.submitted_at BETWEEN :from AND :to';
-                $dateParams['from'] = $dashboardFilterDTO->getFrom()->format($dateFormat);
-                $dateParams['to'] = $dashboardFilterDTO->getTo()->format($dateFormat);
+                $dateParams['from'] = $dashboardFilterDTO->getFrom()->setTime(0,0)->format($dateFormat);
+                $dateParams['to'] = $dashboardFilterDTO->getTo()->setTime(23,59)->format($dateFormat);
             } elseif (null !== $dashboardFilterDTO->getFrom() && null === $dashboardFilterDTO->getTo()) {
                 $dateCriteria .= 'R.submitted_at >= :from';
-                $dateParams['from'] = $dashboardFilterDTO->getFrom()->format($dateFormat);
+                $dateParams['from'] = $dashboardFilterDTO->getFrom()->setTime(0,0)->format($dateFormat);
             } elseif (null === $dashboardFilterDTO->getFrom() && null !== $dashboardFilterDTO->getTo()) {
                 $dateCriteria .= 'R.submitted_at <= :to';
-                $dateParams['to'] = $dashboardFilterDTO->getTo()->format($dateFormat);
+                $dateParams['to'] = $dashboardFilterDTO->getTo()->setTime(23,59)->format($dateFormat);
             }
         }
 
