@@ -32,7 +32,7 @@ class CitiesFixtures extends Fixture
             $citiesImported = [];
 
             foreach ($citiesDatas as $c){
-                if (in_array($c['codeINSEE_commuune'], $citiesImported)) {
+                if (in_array($c['codeINSEE_commuune'].$c['codeINSEE_commuune'].$c['Code_Postal'], $citiesImported)) {
                     continue;
                 }
                 $city = new City();
@@ -41,7 +41,7 @@ class CitiesFixtures extends Fixture
                 $city->setSlug($slugger->slug(strtolower($name))->toString());
                 $city->setZip($c['Code_Postal']);
                 $city->setInsee($c['codeINSEE_commuune']);
-                $citiesImported[] = $city->getInsee();
+                $citiesImported[] = $city->getInsee().$city->getInsee().$city->getZip();
                 $manager->persist($city);
             }
             $manager->flush();
