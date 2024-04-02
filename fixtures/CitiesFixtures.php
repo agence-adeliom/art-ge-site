@@ -29,14 +29,19 @@ class CitiesFixtures extends Fixture
             $csvEncoder = new CsvEncoder(['csv_delimiter' => '	']);
             /** @var array{Code_Postal: string, codeINSEE_commuune: string, Nom_de_la_commune: string} $citiesDatas */
             $citiesDatas = $csvEncoder->decode($citiesFile, 'csv');
+            $citiesImported = [];
 
             foreach ($citiesDatas as $c){
+                if (in_array($c['codeINSEE_commuune'], $citiesImported)) {
+                    continue;
+                }
                 $city = new City();
-                $name = $c['Nom_de_la_commune'];
+                $name = trim($c['Nom_de_la_commune']);
                 $city->setName($name);
-                $city->setSlug($slugger->slug(strtolower((string) $name))->toString());
+                $city->setSlug($slugger->slug(strtolower($name))->toString());
                 $city->setZip($c['Code_Postal']);
                 $city->setInsee($c['codeINSEE_commuune']);
+                $citiesImported[] = $city->getInsee();
                 $manager->persist($city);
             }
             $manager->flush();

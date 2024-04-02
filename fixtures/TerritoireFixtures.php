@@ -40,7 +40,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
         $slugger = new AsciiSlugger();
         /** @var string $datasDirectory */
         $datasDirectory = $this->parameterBag->get('datas_directory');
-        $ecpiFile = file_get_contents($datasDirectory . '/OT_EPCI_dec2023.csv');
+        $ecpiFile = file_get_contents($datasDirectory . '/OT_EPCI_dec2024.csv');
         if ($ecpiFile) {
             $csvEncoder = new CsvEncoder(['csv_delimiter' => ',']);
             /** @var array{INSEE_commune: string, NOM_COMMUNES: string, Nom_EPCI: string} $ecpiDatas */
@@ -56,21 +56,6 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
             $region->setArea(TerritoireAreaEnum::REGION);
             $manager->persist($region);
 
-            /** IMPORT DE LA ROUTE DU VIN POUR TEST */
-            $routeDesVins = new Territoire();
-            $routeDesVins->setUuid(new Ulid());
-            $routeDesVins->setName('Route du Vin');
-            $routeDesVins->setSlug('route-du-vin');
-            $routeDesVins->setUseSlug(true);
-            $routeDesVins->setIsPublic(true);
-            $routeDesVins->setArea(TerritoireAreaEnum::TOURISME);
-            // add cities to route des vins
-            $routesDesVinsCities = $this->cityRepository->findBy(['zip' => [67140, 67680]]);
-            foreach ($routesDesVinsCities as $city) {
-                $routeDesVins->addCity($city);
-            }
-            $manager->persist($routeDesVins);
-
             $departements = [];
             foreach (DepartementEnum::cases() as $departementEnum) {
                 $departementCode = DepartementEnum::getCode($departementEnum);
@@ -84,10 +69,6 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                 $departement->setArea(TerritoireAreaEnum::DEPARTEMENT);
                 $departements[$departementCode] = $departement;
                 $manager->persist($departement);
-                if ($departement->getSlug() === 'alsace') {
-                    $routeDesVins->addLinkedTerritoire($departement);
-                    $departement->addTourismTerritoire($routeDesVins);
-                }
             }
 
             /** STOCKAGES DES INSEE PAR SIREN D'EPCI */
@@ -99,6 +80,9 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                     $cityCodes[$sirenEPCI] = [];
                 }
                 $city = $this->cityRepository->findOneBy(['insee' => $inseeCommune]);
+                if (!$city) {
+                    dump($inseeCommune);
+                }
                 if ($city) {
                     $cityCodes[$sirenEPCI][] = $city;
                 }
@@ -134,8 +118,14 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                 $ecpisImported[$sirenEPCI] = $epci;
 
                 /** IMPORT DES TERRITOIRES */
-                $nameTerritoire = preg_replace('#^OT #', '', $e['Office de tourisme ']);
-                $territoireSlug = $slugger->slug(strtolower((string) $nameTerritoire))->toString();
+                $nameTerritoire = trim($e['Office de tourisme ']);
+                $areaTerritoire = TerritoireAreaEnum::OT;
+                $customTerritoires = ['CA de Chaumont', 'CC des Savoir-Faire', 'CC Meuse Rognon', 'CC du Bassin de Joinville en Champagne', 'CC des Trois Forêts', 'CC du Grand Langres', 'CC Auberive Vingeanne et Montsaugeonnais'];
+                if ($nameTerritoire === '' && in_array(trim($e['Nom_EPCI']), $customTerritoires)) {
+                    $nameTerritoire = trim($e['Nom_EPCI']);
+                    $areaTerritoire = TerritoireAreaEnum::TOURISME;
+                }
+                $territoireSlug = $slugger->slug(strtolower($nameTerritoire))->toString();
                 if (in_array($territoireSlug, array_keys($territoiresImported))) {
                     $territoire = $territoiresImported[$territoireSlug];
                 } else {
@@ -156,7 +146,7 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                 foreach ($cityCodes[$sirenEPCI] as $city) {
                     $territoire->addCity($allCities[$city->getInsee()]);
                 }
-                $territoire->setArea(TerritoireAreaEnum::OT);
+                $territoire->setArea($areaTerritoire);
                 $territoire->addEpci($epci);
                 $epci->addTerritoire($territoire);
                 $manager->persist($territoire);

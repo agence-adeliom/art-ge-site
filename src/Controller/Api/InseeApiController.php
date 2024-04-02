@@ -31,6 +31,9 @@ class InseeApiController extends AbstractController
     #[Route('/api/insee/{zip}', name: 'api_insee_get', methods: ['GET'])]
     public function __invoke(string $zip): JsonResponse
     {
+//        if ($zip === '51700') {
+//            return $this->json(['name' => 'COEUR DE LA VALLEE', 'zip' => $zip, 'insee' => '51457'], Response::HTTP_OK, [], ['groups' => self::INSEE_API_GROUP]);
+//        }
         $cities = $this->cityRepository->getByZipCode($zip);
 
         return $this->json($cities, Response::HTTP_OK, [], ['groups' => self::INSEE_API_GROUP]);
