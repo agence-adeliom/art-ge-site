@@ -44,7 +44,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $repondantDatas = [
-            ['NATALIE', 'RECEPTION', '0389426476', 'reception@camping-mulhouse.com', "CAMPING DE L'ILL OTC", '1 rue Pierre de Coubertin', '68100', 'MULHOUSE', 'camping', false, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+            ['NATALIE', 'RECEPTION', '0389426476', 'reception@camping-mulhouse.com', "CAMPING DE L'ILL OTC", '1 rue Pierre de Coubertin', '68100', '68224', 'MULHOUSE', 'camping', false, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
                 [
                     ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value => [
                         'je-n-utilise-jamais-de-produits-de-traitements-fongiques-chimiques',
@@ -98,7 +98,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                     ],
                 ]
             ],
-            ['Julien', 'LUTZ', '03750616237', 'H0627-GM@accor.com', "CLR hotels Hotels Ibis", '34 ALLEE NATHAN KATZ, RUE DES CEVENNES', '68100', 'SAUSHEIM MULHOUSE', 'hotel', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+            ['Julien', 'LUTZ', '03750616237', 'H0627-GM@accor.com', "CLR hotels Hotels Ibis", '34 ALLEE NATHAN KATZ, RUE DES CEVENNES', '68100', '68224', 'SAUSHEIM MULHOUSE', 'hotel', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
                 [
                     ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value => [
                         "je-n-utilise-jamais-d-insecticides",
@@ -162,7 +162,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                     ],
                 ]
             ],
-            ['Farid', 'Sellemet', '0389562362', 'reception@aubergejeunesse-mulhouse.com', "Auberge de Jeunesse", "37 rue de l'Illberg", '68200', 'MULHOUSE', 'hotel', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+            ['Farid', 'Sellemet', '0389562362', 'reception@aubergejeunesse-mulhouse.com', "Auberge de Jeunesse", "37 rue de l'Illberg", '68200', '68224', 'MULHOUSE', 'hotel', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
                 [
                     ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value => [
                         "je-n-utilise-jamais-d-insecticides",
@@ -219,7 +219,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                     ],
                 ]
             ],
-            ['SYLVAIN', 'VERNEREY', '0688745404', 'vernerey@citedutrain.com', "CITE DU TRAIN/PATRIMOINE SNCF", '2 RUE ALFRED DE GLEHN', '68200', 'MULHOUSE', 'visite', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+            ['SYLVAIN', 'VERNEREY', '0688745404', 'vernerey@citedutrain.com', "CITE DU TRAIN/PATRIMOINE SNCF", '2 RUE ALFRED DE GLEHN', '68200', '68224', 'MULHOUSE', 'visite', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
                 [
                     ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value => [
                         "je-n-utilise-jamais-d-insecticides",
@@ -279,7 +279,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                     ],
                 ]
             ],
-            ['Marie', 'Basenach', '0634315287', 'marie.basenach@mulhouse-alsace.fr', "Parc zoologique et botanique de Mulhouse", '111 avenue de la 1ère Division Blindée', '68100', 'MULHOUSE', 'visite', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+            ['Marie', 'Basenach', '0634315287', 'marie.basenach@mulhouse-alsace.fr', "Parc zoologique et botanique de Mulhouse", '111 avenue de la 1ère Division Blindée', '68100', '68224', 'MULHOUSE', 'visite', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
                 [
                     ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value => [
                         "j-ai-amenage-un-jardin-avec-differentes-herbes-aromatiques-sur-au-moins-1-du-terrain",
@@ -354,7 +354,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                     ],
                 ]
             ],
-            ['Guillaume', 'GASSER', '0664981214', 'g.gasser@museedelauto.org', "Musee national automobile", '192, avenue de colmar', '68100', 'MULHOUSE', 'visite', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+            ['Guillaume', 'GASSER', '0664981214', 'g.gasser@museedelauto.org', "Musee national automobile", '192, avenue de colmar', '68100', '68224', 'MULHOUSE', 'visite', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
                 [
                     ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value => [
                         "je-n-utilise-jamais-d-insecticides",
@@ -411,7 +411,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                     ],
                 ]
             ],
-            ['gaetan', 'loeb', '0777737468', 'loeb.gaetan@gmail.com', "BEST WESTERN PLUS Hôtel **** Au Cheval Blanc", '27 rue principale', '68390', 'MULHOUSE', 'hotel', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+            ['gaetan', 'loeb', '0777737468', 'loeb.gaetan@gmail.com', "BEST WESTERN PLUS Hôtel **** Au Cheval Blanc", '27 rue principale', '68390', '68015', 'MULHOUSE', 'hotel', true, true, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
                 [
                     ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value => [
                         "j-ai-amenage-un-jardin-avec-differentes-herbes-aromatiques-sur-au-moins-1-du-terrain",
@@ -487,7 +487,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                     ],
                 ]
             ],
-            ['MARIE', 'GUTZWILLER', '0675666838', 'info@hotelbristol.com', "HOTEL BRISTOL", '18 AVENUE DE COLMAR', '68390', 'MULHOUSE', 'hotel', true, false, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+            ['MARIE', 'GUTZWILLER', '0675666838', 'info@hotelbristol.com', "HOTEL BRISTOL", '18 AVENUE DE COLMAR', '68390', '68224', 'MULHOUSE', 'hotel', true, false, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
                 [
                     ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value => [
                         "je-limite-drastiquement-l-eclairage-nocturne-les-lumieres-exterieures-sont-eteintes-au-plus-tard-2h-apres-le-coucher-du-soleil-sans-passage",
@@ -548,7 +548,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
                     ],
                 ]
             ],
-            ['EMMA', 'ARTGE', '0123456789', 'test@test.com', "TEST EMMA", '18 AVENUE DE COLMAR', '68390', 'MULHOUSE', 'hotel', false, false, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
+            ['EMMA', 'ARTGE', '0123456789', 'test@test.com', "TEST EMMA", '18 AVENUE DE COLMAR', '68390', '68300', 'MULHOUSE', 'hotel', false, false, '2023-04-21 14:29:56', '2023-04-21 14:43:34',
                 [
                     ThematiqueSlugEnum::BIODIVERSITE_ET_CONSERVATION_DE_LA_NATURE_SUR_SITE->value => [
                         "je-limite-drastiquement-l-eclairage-nocturne-les-lumieres-exterieures-sont-eteintes-au-plus-tard-2h-apres-le-coucher-du-soleil-sans-passage",
@@ -614,7 +614,7 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
 
         foreach ($repondantDatas as $repondantData) {
             $repondant = new Repondant();
-            $typologie = $repondantData[8];
+            $typologie = $repondantData[9];
 
             $repondant->setFirstname($repondantData[0]);
             $repondant->setLastname($repondantData[1]);
@@ -623,10 +623,11 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
             $repondant->setCompany($repondantData[4]);
             $repondant->setAddress($repondantData[5]);
             $repondant->setZip($repondantData[6]);
-            $repondant->setCity($repondantData[7]);
+            $repondant->setInsee($repondantData[7]);
+            $repondant->setCity($repondantData[8]);
             $repondant->setCountry('France');
-            $repondant->setRestauration($repondantData[9]);
-            $repondant->setGreenSpace($repondantData[10]);
+            $repondant->setRestauration($repondantData[10]);
+            $repondant->setGreenSpace($repondantData[11]);
             $repondant->setDepartment($this->departmentRepository->findOneBy(['slug' => 'alsace']));
             $repondant->setTypologie($this->typologieRepository->findOneBy(['slug' => $typologie]));
             $manager->persist($repondant);
@@ -644,12 +645,12 @@ class RepondantsFixtures extends Fixture implements DependentFixtureInterface
             $reponse = new Reponse();
             $reponse->setUuid(Ulid::fromString($this->faker->uuid()));
             $reponse->setRepondant($repondant);
-            $reponse->setCreatedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $repondantData[11]));
-            $reponse->setSubmittedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $repondantData[12]));
+            $reponse->setCreatedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $repondantData[12]));
+            $reponse->setSubmittedAt(\DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $repondantData[13]));
             $reponse->setCompleted(true);
 
             $rawForm = [];
-            foreach ($repondantData[13] as $thematiqueSlug => $repondantChoicesSlugs) {
+            foreach ($repondantData[14] as $thematiqueSlug => $repondantChoicesSlugs) {
                 $thematique = $this->thematiqueRepository->findOneBy(['slug' => $thematiqueSlug]);
                 $question = $thematique->getQuestion();
 

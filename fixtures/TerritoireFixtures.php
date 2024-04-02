@@ -153,9 +153,10 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                     }
                 }
                 if ($nameTerritoire === 'Destination Nancy' || $nameTerritoire === 'Destination Vittel'){
-                    foreach ($cityCodes[$sirenEPCI] as $city) {
-                        if (in_array($city->getInsee(), $ot2s[$nameTerritoire])) {
-                            $territoire->addCity($allCities[$city->getInsee()]);
+                    foreach ($ot2s as $ot2) {
+                        $cityOt2 = $this->cityRepository->findOneBy(['insee' => $ot2]);
+                        if ($cityOt2) {
+                            $territoire->addCity($cityOt2);
                         }
                     }
                 } else {
