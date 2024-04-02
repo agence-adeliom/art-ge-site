@@ -91,6 +91,7 @@ class DashboardDataController extends AbstractController
         }
 
         $territoires = $this->excludeParentDepartmentIfOT(
+            $territoire,
             $this->territoireRepository->getAllBySlugs(array_values(array_merge($departments ?? [], $ots ?? [], $tourisms ?? [])))
         );
 
@@ -144,15 +145,23 @@ class DashboardDataController extends AbstractController
      *
      * @return array<Territoire>
      */
-    private function excludeParentDepartmentIfOT(?array $territoires = []): array
+    private function excludeParentDepartmentIfOT(Territoire $mainTerritoire, ?array $territoires = []): array
     {
         $territoiresKeys = [];
-        foreach ($territoires as $key => $territoire) {
+        foreach ($territoires as $territoire) {
             if ($territoire->getArea() === TerritoireAreaEnum::OT) {
                 foreach ($territoires as $territoire2) {
                     if ($territoire->getParents()->contains($territoire2)) {
                         $territoiresKeys[] = $territoire2->getId();
                     }
+                }
+            }
+        }
+
+        if ($mainTerritoire->getArea() === TerritoireAreaEnum::DEPARTEMENT) {
+            foreach ($territoires as $t) {
+                if (in_array($t, $mainTerritoire->getTerritoiresChildren()->toArray())) {
+                    $territoiresKeys[] = $mainTerritoire->getId();
                 }
             }
         }
