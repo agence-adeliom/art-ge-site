@@ -49,16 +49,40 @@ class ReponseRepository extends ServiceEntityRepository
         return count($qb->getQuery()->getSingleColumnResult());
     }
 
-    public function getRepondantsGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO): array
+    public function getRepondantsGlobal(DashboardFilterDTO | TerritoireFilterDTO $filterDTO, array $reponsesIds = []): array
     {
         $qb = $this->createQueryBuilder('r')
-            ->select('ty.name as typologie, r.uuid, u.company, u.city, MAX(r.points) as points, r.total')
+            ->select('ty.name as typologie, r.uuid, u.company, u.city, MAX(r.points) as points, r.total, u.insee')
             ->innerJoin('r.repondant', 'u')
             ->innerJoin('u.typologie', 'ty')
             ->groupBy('u.id')
         ;
 
         $qb = $this->addFilters($qb, $filterDTO);
+
+        if ([] !== $reponsesIds) {
+            $qb
+                ->andWhere('r.id IN (:reponsesIds)')
+                ->setParameter('reponsesIds', $reponsesIds)
+            ;
+        }
+
+        return $qb
+            ->getQuery()
+            ->getArrayResult()
+            ;
+    }
+
+    public function getRepondantsToAdd(array $insees): array
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('ty.name as typologie, r.uuid, u.company, u.city, MAX(r.points) as points, r.total, u.insee')
+            ->innerJoin('r.repondant', 'u')
+            ->innerJoin('u.typologie', 'ty')
+            ->andWhere('u.insee IN (:insee)')
+            ->setParameter('insee', $insees)
+            ->groupBy('u.id')
+        ;
 
         return $qb
             ->getQuery()
