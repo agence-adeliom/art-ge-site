@@ -15,6 +15,11 @@ web_environment: []
 nodejs_version: "18"
 disable_upload_dirs_warning: true
 performance_mode: mutagen
+hooks:
+    post-start:
+        - exec-host: ddev auth ssh
+        - composer: install
+        - exec: npm install && npm run build
 
 # Key features of DDEV's config.yaml:
 

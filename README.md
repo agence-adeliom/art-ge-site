@@ -12,11 +12,12 @@ ddev console doctrine:migrations:migrate -n
 
 # Lancer les fixtures
 
-Avant de lancer cette commande, 3 fichiers sont à ajouter manuellement :
+Avant de lancer cette commande, 3 fichiers (téléchargeables sur Bitwarden) sont à ajouter manuellement :
 
-- ponderations.csv dans `/var`
+- ponderations.csv dans `/var/datas`
 - ExportCPxCOMMUNES_nov2023.txt dans `/var/datas`
 - ExportCommunes_nov2023.txt dans `/var/datas`
+- OT_EPCI_dec2023.csv dans `/var/datas`
 
 ```
 ddev console doctrine:fixtures:load -n
@@ -29,7 +30,7 @@ ddev console doctrine:fixtures:load -n
 Pour déployer le site, il faut d'abord déchiffrer le fichier `.secrets/.inventory.yaml`,
 car il contient les informations pour pouvoir déployer le code sur le serveur.
 
-Le dossier .secrets doit contenir :
+Le dossier .secrets doit contenir (fichiers à trouver dans "ARTGE – Fichiers secrets" sur Bitwarden) :
 
 - .inventory.yaml (ne pas commiter)
 - age-key.txt (ne pas commiter)
