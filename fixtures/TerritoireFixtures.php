@@ -161,7 +161,11 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                     }
                 } else {
                     foreach ($cityCodes[$sirenEPCI] as $city) {
-                        $territoire->addCity($allCities[$city->getInsee()]);
+                        if (in_array($territoire->getName(), ['Lac du Der en Champagne 51', 'Lac du Der en Champagne 52', 'Mad et Moselle 54', 'Mad et Moselle 57', "Vosges Portes d'Alsace 54", "Vosges Portes d'Alsace 88"])) {
+                            $this->handleSplitTerritoiresCities($territoire, $allCities);
+                        } else {
+                            $territoire->addCity($allCities[$city->getInsee()]);
+                        }
                     }
                 }
                 $territoire->setArea($areaTerritoire);
@@ -169,6 +173,39 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
                 $epci->addTerritoire($territoire);
                 $manager->persist($territoire);
                 $territoiresImported[$territoireSlug] = $territoire;
+            }
+
+            $splitTerritoires = [
+                "Lac Du Der en Champagne" => [51001, 51008, 51016, 51017, 51022, 51059, 51065, 51066, 51080, 51084, 51125, 51134, 51135, 51141, 51144, 51156, 51167, 51169, 51184, 51195, 51215, 51219, 51220, 51223, 51224, 51246, 51262, 51269, 51270, 51275, 51277, 51284, 51286, 51288, 51295, 51296, 51300, 51315, 51316, 51322, 51328, 51334, 51340, 51349, 51352, 51356, 51358, 51361, 51373, 51406, 51417, 51419, 51446, 51463, 51475, 51478, 51508, 51513, 51520, 51521, 51522, 51528, 51550, 51551, 51552, 51557, 51567, 51583, 51649, 51654,52006,52021,52034,52045,52079,52088,52099,52104,52123,52156,52169,52171,52179,52182,52194,52198,52203,52206,52235,52244,52265,52266,52267,52294,52300,52302,52327,52331,52336,52341,52347,52370,52386,52391,52411,52413,52414,52429,52448,52475,52479,52487,52497,52500,52502,52510,52528,52534,52543,52550],
+                "Mad et Mozelle" => [54022,54055,54057,54063,54087,54112,54119,54153,54166,54182,54187,54193,54200,54244,54248,54249,54275,54316,54317,54340,54343,54353,54410,54416,54435,54441,54453,54470,54477,54499,54511,54518,54535,54544,54564,54566,54570,54593,54594,54599, 57021,57030,57153,57254,57350,57416,57515,57578],
+                "Vosges Portes d'Alsace" => [54075, 54427, 54443,88005,88009,88014,88032,88033,88035,88053,88054,88057,88059,88064,88068,88082,88089,88093,88106,88111,88113,88115,88120,88128,88159,88165,88181,88182,88193,88198,88213,88215,88244,88245,88268,88275,88276,88277,88284,88300,88306,88315,88317,88319,88320,88326,88328,88341,88345,88346,88349,88356,88361,88362,88372,88373,88375,88386,88398,88413,88419,88423,88424,88428,88435,88436,88438,88444,88445,88451,88463,88501,88503,88505,88506,88519,88526],
+            ];
+            foreach ($splitTerritoires as $splitTerritoire => $cityInsees) {
+                $territoire = new Territoire();
+                $areaTerritoire = TerritoireAreaEnum::OT;
+                $territoireSlug = $slugger->slug(strtolower($splitTerritoire))->toString();
+                $territoire->setUuid(new Ulid());
+                $territoire->setName($splitTerritoire);
+                $territoire->setSlug($territoireSlug);
+                $territoire->setUseSlug(true);
+                $territoire->setIsPublic(true);
+                if ($splitTerritoire === 'Lac Du Der en Champagne') {
+                    $territoire->addParent($departements['51']);
+                    $territoire->addParent($departements['52']);
+                }
+                if ($splitTerritoire === 'Mad et Mozelle') {
+                    $territoire->addParent($departements['54']);
+                    $territoire->addParent($departements['57']);
+                }
+                if ($splitTerritoire === 'Vosges Portes d\'Alsace') {
+                    $territoire->addParent($departements['67|68']);
+                    $territoire->addParent($departements['88']);
+                }
+                foreach ($cityInsees as $cityInsee) {
+                    $territoire->addCity($allCities[(string) $cityInsee]);
+                }
+                $territoire->setArea($areaTerritoire);
+                $manager->persist($territoire);
             }
 
             $manager->flush();
@@ -180,5 +217,30 @@ class TerritoireFixtures extends Fixture implements DependentFixtureInterface
         return [
             CitiesFixtures::class
         ];
+    }
+
+    private function handleSplitTerritoiresCities(mixed $territoire, array $allCities): void
+    {
+        if ($territoire->getName() === 'Lac du Der en Champagne 51') {
+            $insees = [51001, 51008, 51016, 51017, 51022, 51059, 51065, 51066, 51080, 51084, 51125, 51134, 51135, 51141, 51144, 51156, 51167, 51169, 51184, 51195, 51215, 51219, 51220, 51223, 51224, 51246, 51262, 51269, 51270, 51275, 51277, 51284, 51286, 51288, 51295, 51296, 51300, 51315, 51316, 51322, 51328, 51334, 51340, 51349, 51352, 51356, 51358, 51361, 51373, 51406, 51417, 51419, 51446, 51463, 51475, 51478, 51508, 51513, 51520, 51521, 51522, 51528, 51550, 51551, 51552, 51557, 51567, 51583, 51649, 51654];
+        }
+        if ($territoire->getName() === 'Lac du Der en Champagne 52') {
+            $insees = [52006,52021,52034,52045,52079,52088,52099,52104,52123,52156,52169,52171,52179,52182,52194,52198,52203,52206,52235,52244,52265,52266,52267,52294,52300,52302,52327,52331,52336,52341,52347,52370,52386,52391,52411,52413,52414,52429,52448,52475,52479,52487,52497,52500,52502,52510,52528,52534,52543,52550];
+        }
+        if ($territoire->getName() === 'Mad et Moselle 54') {
+            $insees = [54022,54055,54057,54063,54087,54112,54119,54153,54166,54182,54187,54193,54200,54244,54248,54249,54275,54316,54317,54340,54343,54353,54410,54416,54435,54441,54453,54470,54477,54499,54511,54518,54535,54544,54564,54566,54570,54593,54594,54599];
+        }
+        if ($territoire->getName() === 'Mad et Moselle 57') {
+            $insees = [57021,57030,57153,57254,57350,57416,57515,57578];
+        }
+        if ($territoire->getName() === "Vosges Portes d'Alsace 54") {
+            $insees = [54075, 54427, 54443];
+        }
+        if ($territoire->getName() === "Vosges Portes d'Alsace 88") {
+            $insees = [88005,88009,88014,88032,88033,88035,88053,88054,88057,88059,88064,88068,88082,88089,88093,88106,88111,88113,88115,88120,88128,88159,88165,88181,88182,88193,88198,88213,88215,88244,88245,88268,88275,88276,88277,88284,88300,88306,88315,88317,88319,88320,88326,88328,88341,88345,88346,88349,88356,88361,88362,88372,88373,88375,88386,88398,88413,88419,88423,88424,88428,88435,88436,88438,88444,88445,88451,88463,88501,88503,88505,88506,88519,88526];
+        }
+        foreach ($insees as $insee) {
+            $territoire->addCity($allCities[$insee]);
+        }
     }
 }
