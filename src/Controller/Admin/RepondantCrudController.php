@@ -54,6 +54,7 @@ class RepondantCrudController extends AbstractCrudController
             yield TextField::new('lastname', 'Nom de famille')->hideOnIndex();
             yield TextField::new('address', 'Adresse')->hideOnIndex();
             yield TextField::new('zip', 'Code postal')->hideOnIndex();
+            yield TextField::new('insee', 'Code INSEE')->hideOnIndex();
             yield TextField::new('city', 'Ville')->hideOnIndex();
             yield TextField::new('department', 'Département');
             yield TextField::new('country', 'Pays')->hideOnIndex();
@@ -73,6 +74,7 @@ class RepondantCrudController extends AbstractCrudController
             yield TextField::new('lastname', 'Nom');
             yield TextField::new('address', 'Adresse');
             yield TextField::new('zip', 'Code postal');
+            yield TextField::new('insee', 'Code INSEE');
             yield TextField::new('city', 'Ville');
             yield AssociationField::new('department', 'Département');
             yield TextField::new('country', 'Pays');
