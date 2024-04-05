@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Controller\Api\DashboardDataController;
 use App\Dto\DashboardFilterDTO;
 use App\Enum\DepartementEnum;
 use App\Enum\TerritoireAreaEnum;
@@ -20,10 +21,13 @@ class ReponseIdsSelector
     {
         $inseeCriteria = '';
         $inseeCriterias = [];
-        $inseeCriteriaDpt = '';
         $inseeCriteriasDpt = [];
         $inseeParams = [];
-        $territoires = array_values(array_merge([$dashboardFilterDTO->getTerritoire()], $dashboardFilterDTO->getTerritoires()));
+        if ([] !== $dashboardFilterDTO->getTerritoires()) {
+            $territoires = DashboardDataController::excludeParentDepartmentIfOT($dashboardFilterDTO->getTerritoire(), $dashboardFilterDTO->getTerritoires());
+        } else {
+            $territoires = array_values(array_merge([$dashboardFilterDTO->getTerritoire()], $dashboardFilterDTO->getTerritoires()));
+        }
         if ([] !== $territoires) {
             foreach ($territoires as $key => $territoire) {
                 if (TerritoireAreaEnum::REGION !== $territoire->getArea()) {
