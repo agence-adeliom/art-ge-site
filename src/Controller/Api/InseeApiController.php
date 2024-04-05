@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller\Api;
 
-use App\Entity\City;
 use App\Repository\CityRepository;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,18 +32,6 @@ class InseeApiController extends AbstractController
     public function __invoke(string $zip): JsonResponse
     {
         $cities = $this->cityRepository->getByZipCode($zip);
-        if ('51700' === $zip || '51480' === $zip) {
-            $coeurDeLaVallee = new City();
-            $coeurDeLaVallee->setName('COEUR DE LA VALLEE');
-            $coeurDeLaVallee->setZip($zip);
-            $coeurDeLaVallee->setInsee('51457');
-
-            $cities[] = $coeurDeLaVallee;
-        }
-
-        usort($cities, function (City $a, City $b) {
-            return $a->getName() <=> $b->getName();
-        });
 
         return $this->json($cities, Response::HTTP_OK, [], ['groups' => self::INSEE_API_GROUP]);
     }
