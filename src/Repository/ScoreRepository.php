@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Controller\Api\DashboardDataController;
 use App\Dto\DashboardFilterDTO;
 use App\Dto\TerritoireFilterDTO;
 use App\Entity\Score;
@@ -67,6 +68,12 @@ class ScoreRepository extends ServiceEntityRepository
     {
         $percentagesByPiliers = [];
 
+        if ([] !== $filterDTO->getTerritoires()) {
+            $territoires = DashboardDataController::excludeParentDepartmentIfOT($filterDTO->getTerritoire(), $filterDTO->getTerritoires());
+        } else {
+            $territoires = array_values(array_merge([$filterDTO->getTerritoire()], $filterDTO->getTerritoires()));
+        }
+
         foreach (PilierEnum::cases() as $pilier) {
             $counter = 0;
             $dqls = [];
@@ -89,56 +96,58 @@ class ScoreRepository extends ServiceEntityRepository
                     ;
                 }
 
-                if ($filterDTO instanceof DashboardFilterDTO) {
-                    $territoires = $filterDTO->getTerritoires() ?: [$filterDTO->getTerritoire()];
-                    if ([] !== $territoires) {
-                        $ors = [];
-                        foreach ($territoires as $territoire) {
-                            if (TerritoireAreaEnum::REGION !== $territoire->getArea()) {
-                                if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
-                                    $department = DepartementEnum::tryFrom($territoire->getSlug());
-                                    if ($department) {
-                                        if (DepartementEnum::ALSACE === $department) {
-                                            $ors[] = $dql->expr()->between('u.zip', '?' . $counter++, '?' . $counter++);
-                                            $parameters[] = '67%';
-                                            $parameters[] = '69%';
-                                        } else {
-                                            $ors[] = $dql->expr()->like('u.zip', '?' . $counter++);
-                                            $parameters[] = DepartementEnum::getCode($department) . '%';
+
+                if ([] === $reponsesIds) {
+                    if ($filterDTO instanceof DashboardFilterDTO) {
+                        if ([] !== $territoires) {
+                            $ors = [];
+                            foreach ($territoires as $territoire) {
+                                if (TerritoireAreaEnum::REGION !== $territoire->getArea()) {
+                                    if (TerritoireAreaEnum::DEPARTEMENT === $territoire->getArea()) {
+                                        $department = DepartementEnum::tryFrom($territoire->getSlug());
+                                        if ($department) {
+                                            if (DepartementEnum::ALSACE === $department) {
+                                                $ors[] = $dql->expr()->between('u.zip', '?' . $counter++, '?' . $counter++);
+                                                $parameters[] = '67%';
+                                                $parameters[] = '69%';
+                                            } else {
+                                                $ors[] = $dql->expr()->like('u.zip', '?' . $counter++);
+                                                $parameters[] = DepartementEnum::getCode($department) . '%';
+                                            }
                                         }
+                                    } else {
+                                        $ors[] = $dql->expr()->in('u.zip', implode(',', $territoire->getInsees()));
                                     }
-                                } else {
-                                    $ors[] = $dql->expr()->in('u.zip', implode(',', $territoire->getInsees()));
                                 }
                             }
-                        }
-                        if ([] !== $ors) {
-                            $dql->andWhere($dql->expr()->orX(...$ors));
+                            if ([] !== $ors) {
+                                $dql->andWhere($dql->expr()->orX(...$ors));
+                            }
                         }
                     }
-                }
 
-                if (!empty($filterDTO->getTypologies())) {
-                    $ors = [];
-                    foreach ($filterDTO->getTypologies() as $typologie) {
-                        $ors[] = $dql->expr()->eq('ty.slug', '?' . $counter++);
-                        $parameters[] = $typologie;
+                    if (! empty($filterDTO->getTypologies())) {
+                        $ors = [];
+                        foreach ($filterDTO->getTypologies() as $typologie) {
+                            $ors[] = $dql->expr()->eq('ty.slug', '?' . $counter++);
+                            $parameters[] = $typologie;
+                        }
+                        $dql->andWhere($dql->expr()->orX(...$ors));
                     }
-                    $dql->andWhere($dql->expr()->orX(...$ors));
-                }
 
-                if ($filterDTO->hasDateRange()) {
-                    $dateFormat = 'Y-m-d H:i:s';
-                    if (null !== $filterDTO->getFrom() && null !== $filterDTO->getTo()) {
-                        $dql->andWhere('r.submittedAt BETWEEN ?' . $counter++ . ' AND ?' . $counter++);
-                        $parameters[] = $filterDTO->getFrom()->format($dateFormat);
-                        $parameters[] = $filterDTO->getTo()->format($dateFormat);
-                    } elseif (null !== $filterDTO->getFrom() && null === $filterDTO->getTo()) {
-                        $dql->andWhere('r.submittedAt >= ?' . $counter++);
-                        $parameters[] = $filterDTO->getFrom()->format($dateFormat);
-                    } elseif (null === $filterDTO->getFrom() && null !== $filterDTO->getTo()) {
-                        $dql->andWhere('r.submittedAt <= ?' . $counter++);
-                        $parameters[] = $filterDTO->getTo()->format($dateFormat);
+                    if ($filterDTO->hasDateRange()) {
+                        $dateFormat = 'Y-m-d H:i:s';
+                        if (null !== $filterDTO->getFrom() && null !== $filterDTO->getTo()) {
+                            $dql->andWhere('r.submittedAt BETWEEN ?' . $counter++ . ' AND ?' . $counter++);
+                            $parameters[] = $filterDTO->getFrom()->format($dateFormat);
+                            $parameters[] = $filterDTO->getTo()->format($dateFormat);
+                        } elseif (null !== $filterDTO->getFrom() && null === $filterDTO->getTo()) {
+                            $dql->andWhere('r.submittedAt >= ?' . $counter++);
+                            $parameters[] = $filterDTO->getFrom()->format($dateFormat);
+                        } elseif (null === $filterDTO->getFrom() && null !== $filterDTO->getTo()) {
+                            $dql->andWhere('r.submittedAt <= ?' . $counter++);
+                            $parameters[] = $filterDTO->getTo()->format($dateFormat);
+                        }
                     }
                 }
 
