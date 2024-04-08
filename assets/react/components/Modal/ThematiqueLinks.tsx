@@ -14,7 +14,7 @@ const ThematiqueLinks = ({ links }: {
             {links.map((link, index) => (
                 <a href={link.link} key={index} className="flex gap-2 items-center group" target={'_blank'} rel={"noopener"}>
                     <Icon icon={link.type === 'doc' ? 'fa-file' : (link.type === 'video' ? 'fa-circle-play' : 'fa-arrow-up-right-from-square')} color="primary-600" className="group-hover:text-tertiary-800 trans-default"></Icon>
-                    <Text weight={600} color="primary-600" className="group-hover:text-primary-800 trans-default">{link.label}</Text>
+                    <Text weight={600} color="primary-600" className="group-hover:text-primary-800 trans-default" dangerouslySetInnerHTML={{__html:link.label}}></Text>
                 </a>
             ))}
         </div>

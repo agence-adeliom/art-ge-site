@@ -66,6 +66,14 @@ class ResultatApiPresenter
             'notChosenChoices' => array_values(array_map($choiceMapper, array_filter($score->getNotChosenChoices(), $removeNonApplicableChoices))),
         ], $reponse->getScores()->toArray());
 
+        foreach ($scores as $kS => $score) {
+            if (null !== $score['links'] && [] !== $score['links']) {
+                foreach ($score['links'] as $key => $link) {
+                    $scores[$kS]['links'][$key]['label'] = htmlentities($link['label']);
+                }
+            }
+        }
+
         return [
             'reponsePercentage' => $this->percentagePresenter->displayPercentage($reponse),
             'submitDate' => $reponse->getSubmittedAt()?->format('d.m.Y'),
