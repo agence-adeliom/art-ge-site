@@ -218,7 +218,7 @@ const Territory = () => {
                     color="tertiary-800"
                     barColor="#75B369"
                     percentage={socialScore}
-                    desc="Favoriser les échanges, donner du sens, sensibiliser et transmettre sont les valeurs du pilier social dont les résultats sont visibles ci-après"
+                    desc="Favoriser les échanges, donner du sens, sensibiliser et transmettre sont les valeurs du pilier social dont les résultats sont visibles ci-après."
                     thematiques={thematiques.slice(7,11)}
                     selectedTerritoires={selectedTerritoires}
                     dateRange={dateRange}
