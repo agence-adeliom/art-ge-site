@@ -36,8 +36,20 @@ class TerritoireController extends AbstractController
 
         $territoire = $this->territoireRepository->getOneByUuidOrSlug($identifier);
 
-        if (!$territoire) {
+        if (! $territoire) {
             throw new TerritoireNotFound();
+        }
+
+        if (! $territoire->isPublic()) {
+            $user = $this->getUser();
+            if ($user->getSlug() !== 'grand-est') {
+                if (! $user || ! $user instanceof Territoire) {
+                    throw new BadCredentialsException('Invalid credentials.');
+                }
+                if ($user->getSlug() !== $identifier) {
+                    throw new BadCredentialsException('Invalid credentials.');
+                }
+            }
         }
 
         return [
