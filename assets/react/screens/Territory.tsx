@@ -216,7 +216,7 @@ const Territory = () => {
                     icon="fa-thin fa-people-group"
                     type="Social"
                     color="tertiary-800"
-                    barColor="#75B369"
+                    barColor="#7A9B91"
                     percentage={socialScore}
                     desc="Favoriser les échanges, donner du sens, sensibiliser et transmettre sont les valeurs du pilier social dont les résultats sont visibles ci-après."
                     thematiques={thematiques.slice(7,11)}
