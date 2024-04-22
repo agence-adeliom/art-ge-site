@@ -72,6 +72,24 @@ class DashboardDataListsEventListener
             ];
         }
 
+        // remove duplicata du OT vide sans nom / (prestataire-territoire-sans-office-de-tourisme)
+        $noOtCount = 0;
+        if (!empty($lists['ots'])) {
+            foreach ($lists['ots'] as $key => $territoire) {
+                $isNoOt = $territoire->getSlug() === '' || 'prestataire-territoire-sans-office-de-tourisme' === $territoire->getSlug();
+                if (!$isNoOt) {
+                    continue;
+                } else {
+                    $noOtCount++;
+                    if ($noOtCount > 1) {
+                        unset($lists['ots'][$key]);
+                    }
+                }
+            }
+            $lists['ots'] = array_values($lists['ots']);
+            usort($lists['ots'], static fn (Territoire $a, Territoire $b) => $a->getName() <=> $b->getName());
+        }
+
         if (isset($lists)) {
             $event->setLists($lists);
         }
