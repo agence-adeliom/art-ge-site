@@ -14,7 +14,7 @@ const Cta = () => {
                     <Text color="white">Nous vous accompagnons dans votre transition durable, découvrez tous les outils mis à votre disposition pour passer à l’action.</Text>
                 </div>
                 <div className="w-fit md:ml-auto">
-                    <Button href={"https://www.art-grandest.fr/services-et-accompagnement/tourisme-durable"} target={"_blank"} rel={"noopener"} icon="fa-minus" iconSide="left" variant="secondary" className="whitespace-nowrap">Centre de ressources Tourisme Durable</Button>
+                    <Button href={"https://www.art-grandest.fr/services-et-accompagnement/centre-de-ressources-tourisme-durable"} target={"_blank"} rel={"noopener"} icon="fa-minus" iconSide="left" variant="secondary" className="whitespace-nowrap">Centre de ressources Tourisme Durable</Button>
                 </div>
             </div>
 

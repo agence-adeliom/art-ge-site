@@ -63,13 +63,31 @@ class DashboardDataListsEventListener
                 $children = $territoire->getTerritoiresChildren()->toArray();
                 foreach ($children as $child) {
                     $child->setScore($this->territoireRepository->getPercentageByTerritoire($child, $responsesIds));
-                    $child->setNumberOfReponses($this->reponseRepository->getNumberOfReponsesGlobal(DashboardFilterDTO::from(['territoire' => $child, 'territoires' => [$child]])));
+                    $child->setNumberOfReponses($this->reponseRepository->getNumberOfReponsesGlobal(DashboardFilterDTO::from(['territoire' => $child, 'territoires' => [$child]]), $responsesIds));
                     $childrens[] = $child;
                 }
             }
             $lists = [
                 'ots' => $childrens,
             ];
+        }
+
+        // remove duplicata du OT vide sans nom / (prestataire-territoire-sans-office-de-tourisme)
+        $noOtCount = 0;
+        if (!empty($lists['ots'])) {
+            foreach ($lists['ots'] as $key => $territoire) {
+                $isNoOt = $territoire->getSlug() === '' || 'prestataire-territoire-sans-office-de-tourisme' === $territoire->getSlug();
+                if (!$isNoOt) {
+                    continue;
+                } else {
+                    $noOtCount++;
+                    if ($noOtCount > 1) {
+                        unset($lists['ots'][$key]);
+                    }
+                }
+            }
+            $lists['ots'] = array_values($lists['ots']);
+            usort($lists['ots'], static fn (Territoire $a, Territoire $b) => $a->getName() <=> $b->getName());
         }
 
         if (isset($lists)) {

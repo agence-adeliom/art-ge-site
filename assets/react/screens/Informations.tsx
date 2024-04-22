@@ -31,6 +31,19 @@ const Informations: FunctionComponent = () => {
     step === 5 && handleSubmit();
   });
 
+  useEffect(() => {
+    scrollTop();
+    console.log('scrollTo')
+  }, [step]);
+
+  const scrollTop = () => {
+    window!.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  }
+
   return (
     <div className="">
       <Header
