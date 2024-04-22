@@ -63,7 +63,7 @@ class DashboardDataListsEventListener
                 $children = $territoire->getTerritoiresChildren()->toArray();
                 foreach ($children as $child) {
                     $child->setScore($this->territoireRepository->getPercentageByTerritoire($child, $responsesIds));
-                    $child->setNumberOfReponses($this->reponseRepository->getNumberOfReponsesGlobal(DashboardFilterDTO::from(['territoire' => $child, 'territoires' => [$child]])));
+                    $child->setNumberOfReponses($this->reponseRepository->getNumberOfReponsesGlobal(DashboardFilterDTO::from(['territoire' => $child, 'territoires' => [$child]]), $responsesIds));
                     $childrens[] = $child;
                 }
             }
