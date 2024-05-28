@@ -97,7 +97,7 @@ class DashboardDataController extends AbstractController
         $isPublic = $territoire->getSlug() === 'grand-est' || $territoire->isPublic();
         $username = $request->headers->get('X-User-Name');
         $usertoken = $request->headers->get('X-User-Token');
-        if ($username && $usertoken) {
+        if (!$territoire->isPublic() && $territoire->getSlug() !== 'grand-est') {
             if ($username === $territoire->getSlug() && $usertoken === $territoire->getCode()) {
                 $isPublic = false;
             } else {
@@ -106,6 +106,9 @@ class DashboardDataController extends AbstractController
                     'data' => 'Invalid credentials.',
                 ], Response::HTTP_UNAUTHORIZED);
             }
+        }
+        if ($territoire->getSlug() === 'grand-est') {
+            $isPublic = $username !== $territoire->getSlug() || $usertoken !== $territoire->getCode();
         }
 
         $territoires = self::excludeParentDepartmentIfOT(
