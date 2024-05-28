@@ -10,6 +10,7 @@ use App\Enum\TerritoireAreaEnum;
 use App\Event\DashboardDataGlobalEvent;
 use App\Event\DashboardDataListsEvent;
 use App\Event\DashboardDataScoresEvent;
+use App\Exception\TerritoireNotFound;
 use App\Repository\TerritoireRepository;
 use App\Repository\TypologieRepository;
 use App\Services\ReponseIdsSelector;
@@ -17,9 +18,11 @@ use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class DashboardDataController extends AbstractController
 {
@@ -73,6 +76,7 @@ class DashboardDataController extends AbstractController
     )]
     #[Route('/api/dashboard/{identifier}/data', name: 'app_dashboard_data', methods: ['GET'])]
     public function __invoke(
+        Request $request,
         string $identifier,
         #[MapQueryParameter] ?array $departments = [],
         #[MapQueryParameter] ?array $ots = [],
@@ -90,18 +94,41 @@ class DashboardDataController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
+        $isPublic = $territoire->getSlug() === 'grand-est' || $territoire->isPublic();
+        $username = $request->headers->get('X-User-Name');
+        $usertoken = $request->headers->get('X-User-Token');
+        if ($username && $usertoken) {
+            if ($username === $territoire->getSlug() && $usertoken === $territoire->getCode()) {
+                $isPublic = false;
+            } else {
+                return $this->json([
+                    'status' => 'error',
+                    'data' => 'Invalid credentials.',
+                ], Response::HTTP_UNAUTHORIZED);
+            }
+        }
+
         $territoires = self::excludeParentDepartmentIfOT(
             $territoire,
             $this->territoireRepository->getAllBySlugs(array_values(array_merge($departments ?? [], $ots ?? [], $tourisms ?? [])))
         );
 
-        $dashboardFilterDTO = DashboardFilterDTO::from([
-            'territoire' => $territoire,
-            'territoires' => $territoires,
-            'typologies' => $typologies ?? $this->typologieRepository->getSlugs(),
-            'from' => $from,
-            'to' => $to,
-        ]);
+        if (!$isPublic) {
+            $dashboardFilterDTO = DashboardFilterDTO::from([
+                'territoire' => $territoire,
+                'territoires' => $territoires,
+                'typologies' => $typologies ?? $this->typologieRepository->getSlugs(),
+                'from' => $from,
+                'to' => $to,
+            ]);
+        } else {
+            $dashboardFilterDTO = DashboardFilterDTO::from([
+                'territoire' => $territoire,
+                'typologies' => $typologies ?? $this->typologieRepository->getSlugs(),
+                'from' => $from,
+                'to' => $to,
+            ]);
+        }
 
         $reponsesIds = $this->reponseIdsSelector->getLastReponsesIds($dashboardFilterDTO);
 
@@ -124,13 +151,19 @@ class DashboardDataController extends AbstractController
             ], Response::HTTP_INTERNAL_SERVER_ERROR, [], ['groups' => self::DASHBOARD_API_DATA_GROUP]);
         }
 
+        $data = [
+            'globals' => $globals,
+            'scores' => $scores,
+            'lists' => $lists,
+        ];
+
+        if ($isPublic) {
+            $data = $this->restrictPublicData($data);
+        }
+
         return $this->json([
             'status' => 'success',
-            'data' => [
-                'globals' => $globals,
-                'scores' => $scores,
-                'lists' => $lists,
-            ],
+            'data' => $data,
         ], Response::HTTP_OK, [], ['groups' => self::DASHBOARD_API_DATA_GROUP]);
     }
 
@@ -168,5 +201,16 @@ class DashboardDataController extends AbstractController
         }
 
         return array_values(array_filter($territoires, fn (Territoire $territoire) => ! in_array($territoire->getId(), $territoiresKeys)));
+    }
+
+    private function restrictPublicData (array $data)
+    {
+        foreach ($data['globals']['repondants'] as $key => $value) {
+            unset($data['globals']['repondants'][$key]['uuid']);
+            unset($data['globals']['repondants'][$key]['url']);
+            unset($data['globals']['repondants'][$key]['company']);
+        }
+        unset($data['lists']);
+        return $data;
     }
 }
