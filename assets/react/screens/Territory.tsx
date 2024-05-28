@@ -88,7 +88,13 @@ const Territory = () => {
     const apiData = () => {
         const search = getSearchParamsFromTerritories(selectedTerritoires, dateRange);
 
-        fetch(`/api/dashboard/${territoire}/data?${search}`)
+        fetch(`/api/dashboard/${territoire}/data?${search}`, {
+            headers: {
+                'X-User-Name': territoire,
+                // @ts-ignore
+                'X-User-Token': window.ARTGE_token
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'error') {

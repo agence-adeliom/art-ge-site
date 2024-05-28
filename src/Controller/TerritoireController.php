@@ -53,6 +53,7 @@ class TerritoireController extends AbstractController
         }
 
         return [
+            'code' => $territoire->getCode()
         ];
     }
 }

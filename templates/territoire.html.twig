@@ -3,3 +3,8 @@
 {% block title %}ÉcoBoussole : les résultats de votre territoire{% endblock %}
 {% block description %}Grâce à l’autodiagnostic ÉcoBoussole, accédez au niveau d’engagement durable des prestataires touristiques de votre territoire pour comprendre leurs besoins et les accompagner.{% endblock %}
 {% block robots %}<meta name="robots" content="noindex">{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>window.ARTGE_token = "{{ code }}"</script>
+{% endblock %}
