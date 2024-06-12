@@ -94,7 +94,7 @@ class ReponseIdsSelector
         }
 
         return $this->entityManager->getConnection()->executeQuery('
-            SELECT R.id, MAX(R.submitted_at)
+            SELECT MAX(R.id) as id, MAX(R.submitted_at) as submitted_at 
             FROM reponse R
             INNER JOIN repondant U ON U.id = R.repondant_id
             INNER JOIN typologie TY ON TY.id = U.typologie_id
